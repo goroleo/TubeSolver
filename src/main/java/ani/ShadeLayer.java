@@ -1,24 +1,22 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package ani;
 
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
 
 public class ShadeLayer extends JComponent implements Runnable {
 
-    private Thread t;
-
-    private final Double deltaUp = 0.06d;    // Alpha-channel change value when the picture appear
-    private final Double deltaDown = -0.1d;  // Alpha-channel change value when the picture disappear
+    private final Double alphaIncUp = 0.06d;    // Alpha-channel change value when the picture appear
+    private final Double alphaIncDown = -0.1d;  // Alpha-channel change value when the picture disappear
     private final int delayStd = 30;         // delay between every frame (milliseconds)
     private final int delayAtUp = 100;       // delay when the picture has fully appeared
     private final int delayAtDown = 0;       // delay when the picture disappear
@@ -33,7 +31,7 @@ public class ShadeLayer extends JComponent implements Runnable {
     private double alphaLimit;               // Alpha-channel value for cycle stop
 
     private Double alpha;                    // current alpha value
-    private Double delta;                    // current delta value
+    private Double alphaInc;                 // current alpha increment
 
     public Boolean useAnimation = true;      // 
 
@@ -57,55 +55,49 @@ public class ShadeLayer extends JComponent implements Runnable {
     public void start() {
         if (!working) {
             working = true;
-            t = new Thread(this);
+            Thread t = new Thread(this);
             t.start();
         }
     }
 
     public void startUnlimited() {
-        limited = false;
         if (useAnimation) {
+            limited = false;
             start();
         }
     }
 
     public void doShow() {
-        stopWhenShow();
-        delta = deltaUp;
+        limited = true;
+        alphaLimit = 1.0d;
+        alphaInc = alphaIncUp;
 
         if (useAnimation) {
             start();
         } else {
             alpha = alphaLimit;
+            calculateCurrentFrame();
             repaint();
         }
     }
 
     public void doHide() {
-        stopWhenHide();
-        delta = deltaDown;
+        limited = true;
+        alphaLimit = 0.0d;
+        alphaInc = alphaIncDown;
 
         if (useAnimation) {
             start();
         } else {
             alpha = alphaLimit;
+            calculateCurrentFrame();
             repaint();
         }
     }
 
-    public void stopWhenShow() {
-        limited = true;
-        alphaLimit = 1.0d;
-    }
-
-    public void stopWhenHide() {
-        limited = true;
-        alphaLimit = 0.0d;
-    }
-
     public final void restoreAlpha() {
         alpha = 0.0d;
-        delta = deltaUp;
+        alphaInc = alphaIncUp;
     }
 
     public void calculateCurrentFrame() {
@@ -122,7 +114,6 @@ public class ShadeLayer extends JComponent implements Runnable {
 
     @Override
     public void paintComponent(Graphics g) {
-        calculateCurrentFrame();
         g.drawImage(imgFrame, 0, 0, null);
     }
 
@@ -131,18 +122,19 @@ public class ShadeLayer extends JComponent implements Runnable {
         while (!(limited && alpha == alphaLimit)) {
 
             int delay = delayStd;
-            alpha += delta;
+            alpha += alphaInc;
 
             if (alpha > 1.0d) {
                 alpha = 1.0d;
-                delta = deltaDown;
+                alphaInc = alphaIncDown;
                 delay = limited ? 0 : delayAtUp;
             } else if (alpha < 0.0d) {
                 alpha = 0.0d;
-                delta = deltaUp;
+                alphaInc = alphaIncUp;
                 delay = limited ? 0 : delayAtDown;
             }
 
+            calculateCurrentFrame();
             repaint();
 
             try {

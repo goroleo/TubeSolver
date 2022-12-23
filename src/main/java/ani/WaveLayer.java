@@ -17,12 +17,12 @@ import java.awt.image.BufferedImage;
  * WaveLayer is a layer with some picture through which waves of opacity pass. As the wave passes,
  * the picture is partially "muted" (becomes transparent), and then restored again.
  * The wavefront can pass through the image in different directions: vertical, horizontal or diagonal.
- * I called them <i>axis</i>.<br><br>
- * The wave consists of four parts:<br>
- * 1) <b>Prow</b> (nose, head). The opacity of the picture increases from minimum to maximum value.<br>
- * 2) <b>Body</b>. The opacity is maximum.<br>
- * 3) <b>Tail</b>. The opacity of the picture decreases from the maximum to the minimum value.<br>
- * 4) <b>Space</b>. The opacity is minimum.<br><br>
+ * I called those directions as <i>axis</i>.<br>
+ * The wave consists of four parts:<ul>
+ * <li><b>Prow</b> (nose, head). The opacity of the picture increases from minimum to maximum value.<br>
+ * <li><b>Body</b>. The opacity is maximum.<br>
+ * <li><b>Tail</b>. The opacity of the picture decreases from the maximum to the minimum value.<br>
+ * <li><b>Space</b>. The opacity is minimum.</ul>
  * <i>See description of wave shape values at JavaDoc of <b>body</b>.</i>
  * @see #body
  * @see #axis
@@ -54,34 +54,34 @@ public class WaveLayer extends JComponent implements Runnable {
 //
 
     /**
-     * Axis to run the color wave: <br>
-     * 0) vertical axis; <br>
-     * 1) horizontal;<br>
-     * 2) diagonal 1 (SW-NE, BottomLeft to TopRight);<br>
-     * 3) diagonal 2 (NW-SE, TopLeft to BottomRight).
+     * Axis to run the color wave: <ul>
+     * <li><b>0</b> - vertical axis;
+     * <li><b>1</b> - horizontal;<br>
+     * <li><b>2</b> - diagonal 1 (SW-NE, BottomLeft to TopRight);<br>
+     * <li><b>3</b> - diagonal 2 (NW-SE, TopLeft to BottomRight).</ul>
      */
     public int axis = 2;
 
     /**
-     * Forward direction is from left to right preferably. If TRUE the direction
-     * is: <br>
-     * 1) from Left to Right,<br>
-     * 2) from Top-Left to Bottom-Right, <br>
-     * 3) from Bottom-Left To Top-Right.<br>
-     * 4) or (in vertical direction) from Top to Bottom.
+     * Forward direction is from left to right preferably. If <b>true</b> the direction
+     * is: <ul>
+     * <li>from Left to Right,
+     * <li>from Top-Left to Bottom-Right,
+     * <li>from Bottom-Left To Top-Right,
+     * <li>or (in vertical direction) from Top to Bottom.</ul>
      */
     public boolean forward = true; // else backward :)
 
     /**
      * Direction field is deprecated and not used 'cause we have two previous variables: <br>
-     * 0 (Top-To-Bottom): axis = vertical, forward = true<br>
-     * 1 (Bottom-To-Top): axis = vertical, forward = false <br>
-     * 2 (Left-To-Right): axis = horizontal, forward = true<br>
-     * 3 (Right-To-Left): axis = horizontal, forward = false<br>
-     * 4 (TopLeft-To-BottomRight): axis = diagonal2, forward = true<br>
-     * 5 (TopRight-To-BottomLeft): axis = diagonal1, forward = false<br>
-     * 6 (BottomLeft-To-TopRight): axis = diagonal1, forward = true<br>
-     * 7 (BottomRight-To-TopLeft): axis = diagonal2, forward = false
+     * 0 (Top-to-Bottom): axis = vertical, forward = true<br>
+     * 1 (Bottom-to-Top): axis = vertical, forward = false <br>
+     * 2 (Left-to-Right): axis = horizontal, forward = true<br>
+     * 3 (Right-to-Left): axis = horizontal, forward = false<br>
+     * 4 (TopLeft-to-BottomRight): axis = diagonal2, forward = true<br>
+     * 5 (TopRight-to-BottomLeft): axis = diagonal1, forward = false<br>
+     * 6 (BottomLeft-to-TopRight): axis = diagonal1, forward = true<br>
+     * 7 (BottomRight-to-TopLeft): axis = diagonal2, forward = false
      *
      * @see #axis
      * @see #forward
@@ -127,53 +127,35 @@ public class WaveLayer extends JComponent implements Runnable {
 //     Opacity settings
 //
 
-    /**
-     * Minimum opacity value (0 - fully transparent, 1 - fully opacity).
-     */
+    /** Minimum opacity value (0 - fully transparent, 1 - fully opacity). */
     private final float minOpacity = 0.5f;
 
-    /**
-     * Maximum opacity value (0 - fully transparent, 1 - fully opacity).
-     */
+    /** Maximum opacity value (0 - fully transparent, 1 - fully opacity). */
     private final float maxOpacity = 1.0f;
 
 // -----------------------------------------------------
 //     Variables / fields
 //
 
-    /**
-     * Original image.
-     */
+    /** An original image. */
     private BufferedImage imgOrig;
 
-    /**
-     * Image for the every single frame.
-     */
+    /** The image for the every single frame.  */
     private BufferedImage imgFrame;
 
-    /**
-     * Temporal image to replace the original in the future, when the cycle will stop.
-     */
+    /** Temporal image to replace the original in the future, when the cycle will stop. */
     private BufferedImage imgTemp;
 
-    /**
-     * The width of the image.
-     */
+    /** The width of the image. */
     private int w;
 
-    /**
-     * The height of the image.
-     */
+    /** The height of the image. */
     private int h;
 
-    /**
-     * The size of the image's diagonal (in pixels).
-     */
+    /** The size of the image's diagonal (in pixels). */
     private float diagSize;
 
-    /**
-     * Size of the wave shape (in pixels).
-     */
+    /** Size of the wave shape (in pixels). */
     private float shapeSize;
 
     /**
@@ -182,38 +164,26 @@ public class WaveLayer extends JComponent implements Runnable {
      */
     private float prowLimit, bodyLimit, tailLimit;
 
-    /**
-     * If <b>true</b> then the thread is working, and we don't need to start it again.
-     */
+    /** If <b>true</b> then the thread is working, and we don't need to start it again.  */
     private boolean working = false;
 
-    /**
-     * Appear or disappear the image
-     */
+    /** Appear or disappear the image */
     private boolean disappear = false;
 
-    /**
-     * if <b>true</b> then the cycle will work until the external break
-     */
+    /** If <b>true</b> then the cycle will work until the external break.  */
     private Boolean unlimited = true;
 
-    /**
-     * Switcher to replace the original image with the temporal, when the cycle will stop.
-     */
+    /** The switcher to replace the original image with the temporal, when the cycle will stop.  */
     private boolean changeWhenHide = false;
 
 // -----------------------------------------------------
 //     Cycle variables
 //
 
-    /**
-     * Current wave position
-     */
+    /** The current wave position  */
     private float curPos = 0.0f;
 
-    /**
-     * Current master value of the Alpha-channel
-     */
+    /** Current master value of the Alpha-channel */
     private float masterAlpha = 0.0f;
 
 
@@ -240,6 +210,11 @@ public class WaveLayer extends JComponent implements Runnable {
         updateCurrentFrame();
     }
 
+    /**
+     * This routine will set the new image to this layer, not right now, but when the cycle will stop and
+     * the previous picture will disappear.
+     * @param bi new image
+     */
     public void setImageWhenHide(BufferedImage bi) {
         if (!working & masterAlpha == 0) {
             setImage(bi);
@@ -250,6 +225,15 @@ public class WaveLayer extends JComponent implements Runnable {
         }
     }
 
+    /**
+     * Sets the shape of the wave.
+     * <i>See description of wave shape values at JavaDoc of <b>body</b>.</i>
+     * @param p prow
+     * @param b body
+     * @param t tail
+     * @param s space
+     * @see #body
+     */
     public void setShape(float p, float b, float t, float s) {
         prow = p;
         body = b;
@@ -258,6 +242,11 @@ public class WaveLayer extends JComponent implements Runnable {
         calculateShapeSize();
     }
 
+    /**
+     * This routine calculates the size of the wave shape and sets the limits of the wave's parts for further calculations.
+     * @see #shapeSize
+     * @see #bodyLimit
+     */
     private void calculateShapeSize() {
         shapeSize = (prow + body + tail + space);
 
@@ -301,6 +290,9 @@ public class WaveLayer extends JComponent implements Runnable {
         start();
     }
 
+    /**
+     *
+     */
     public void startShow() {
         curPos = -1.0f / (prow + body + tail + space);
         unlimited = false;
@@ -315,13 +307,19 @@ public class WaveLayer extends JComponent implements Runnable {
         start();
     }
 
+    /**
+     * This routine calculates the
+     * @param x the X coordinate of the image's pixel
+     * @param y the Y coordinate of the image's pixel
+     * @return
+     */
     private float calculateAlpha(int x, int y) {
         float result;
 
         // Coordinate of the current point, depending on the wave propagation axis and its direction.
         float coordinate;
 
-        // The part of the wave on which the current coordinate is located: prow, body, tail, empty.
+        // The part of the wave on which the current coordinate is located: prow, body, tail, space.
         float fraction;
 
         switch (axis) {
@@ -387,12 +385,15 @@ public class WaveLayer extends JComponent implements Runnable {
         return result;
     }
 
+    /**
+     * Draws the every single frame.
+     */
     private void updateCurrentFrame() {
 
         // A pixel from the original image
         int pix;
 
-        // Value of the alpha channel calculated by the current pixel's coordinate
+        // Value of the alpha channel calculated from the current pixel coordinates
         float alphaValue;
 
         // Value of the alpha channel that will be set to the pixel
@@ -509,6 +510,9 @@ public class WaveLayer extends JComponent implements Runnable {
         onThreadFinished();
     }
 
+    /**
+     * Override this routine if you want to get to know when the cycle has done.
+     */
     public void onThreadFinished() {
         // routine to override 
     }

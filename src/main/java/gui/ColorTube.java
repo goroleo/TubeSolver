@@ -36,12 +36,13 @@ public class ColorTube extends JComponent {
     private static BufferedImage imgArrowYellow = null;
     private static BufferedImage imgArrowGreen = null;
     // Layers:
-    private final ColorLayer ColorLayer;
+    private final ColorLayer colors;
     private final ShadeLayer hover;
     private final ShadeLayer shade;
     private final ImageLayer bottle;
     private final SlideLayer cork;
     private final WaveLayer arrow;
+
     // shades:
     private int shadeNum = 0;
     public final static int SHADE_NO_COLOR = 0;
@@ -82,9 +83,9 @@ public class ColorTube extends JComponent {
         hover = new ShadeLayer(imgShadeGray);
         this.add(hover);
 
-        ColorLayer = new ColorLayer(w, h - 20);
-        this.add(ColorLayer);
-        ColorLayer.useAnimation = true;
+        colors = new ColorLayer(w, h - 20);
+        this.add(colors);
+        colors.useAnimation = true;
 
         setSize(w, h);
 
@@ -165,7 +166,6 @@ public class ColorTube extends JComponent {
             cork.start();
         }
     }
-
 
     public boolean isEmpty() {
         return model.isEmpty();
@@ -287,13 +287,13 @@ public class ColorTube extends JComponent {
 
     public void putColor(int colorNum) {
         if (model.putColor((byte) colorNum)) {
-            ColorLayer.addColor(colorNum);
+            colors.addColor(colorNum);
         }
     }
 
     public void extractColor() {
         if (model.extractColor() != 0) {
-            ColorLayer.removeColor();
+            colors.removeColor();
         }
     }
 
@@ -306,12 +306,12 @@ public class ColorTube extends JComponent {
     public void repaintColors() {
         for (int i = 0; i < 4; i++) {
             if (i < model.count) {
-                ColorLayer.repaintColor(i + 1, getColor(i), false);
+                colors.repaintColor(i + 1, getColor(i), false);
             } else {
-                ColorLayer.repaintColor(i + 1, 0, false);
+                colors.repaintColor(i + 1, 0, false);
             }
         }
-        ColorLayer.repaint();
+        colors.repaint();
     }
 
     public void restoreColors(int StoredColors) {
@@ -327,19 +327,19 @@ public class ColorTube extends JComponent {
     }
 
     public void setColorsAnimation(boolean b) {
-        ColorLayer.useAnimation = b;
+        colors.useAnimation = b;
     }
 
     public boolean getColorsAnimation() {
-        return ColorLayer.useAnimation;
+        return colors.useAnimation;
     }
 
     public void clear() {
-        boolean oldUseAnimation = ColorLayer.useAnimation;
-        ColorLayer.useAnimation = false;
+        boolean oldUseAnimation = colors.useAnimation;
+        colors.useAnimation = false;
         model.clear();
-        ColorLayer.clearColors();
-        ColorLayer.useAnimation = oldUseAnimation;
+        colors.clearColors();
+        colors.useAnimation = oldUseAnimation;
         updateState();
     }
 
@@ -392,7 +392,7 @@ public class ColorTube extends JComponent {
 
     @Override
     public void setBounds(int x, int y, int width, int height) {
-        ColorLayer.setBounds(0, 20, width, height - 20);
+        colors.setBounds(0, 20, width, height - 20);
         hover.setBounds(0, 20, width, height - 20);
         shade.setBounds(0, 20, width, height - 20);
         bottle.setBounds(0, 20, width, height - 20);

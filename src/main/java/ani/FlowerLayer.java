@@ -18,10 +18,7 @@ import javax.swing.JComponent;
 
 public class FlowerLayer extends JComponent implements Runnable {
 
-    private Thread t;
-
     private final BufferedImage imgOrig = new BufferedImage(400, 400, 2);
-    private final Graphics2D gOrig = (Graphics2D) imgOrig.getGraphics();
 
     private BufferedImage imgFrame;
 
@@ -31,8 +28,8 @@ public class FlowerLayer extends JComponent implements Runnable {
 
     private final long delay = 30;
 
-    private final double origCenterX = imgOrig.getWidth() / 2;
-    private final double origCenterY = imgOrig.getHeight() / 2;
+    private final double origCenterX = imgOrig.getWidth() / 2.0d;
+    private final double origCenterY = imgOrig.getHeight() / 2.0d;
 
     private double rotationX = 250;
     private double rotationY = 250;
@@ -52,6 +49,7 @@ public class FlowerLayer extends JComponent implements Runnable {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         rh.put(RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_QUALITY);
+        Graphics2D gOrig = (Graphics2D) imgOrig.getGraphics();
         gOrig.setRenderingHints(rh);
     }
 
@@ -72,7 +70,7 @@ public class FlowerLayer extends JComponent implements Runnable {
         masterAlpha = 0.0d;
         clearFrame();
         working = true;
-        t = new Thread(this);
+        Thread t = new Thread(this);
         t.start();
     }
 
@@ -146,15 +144,15 @@ public class FlowerLayer extends JComponent implements Runnable {
                 if (a < shadeAngle) {
                     // color 2 -> color 1
                     alpha1 = a / shadeAngle;
-                    alpha2 = 1 - alpha1;
+                    alpha2 = 1.0 - alpha1;
                     maxRad = maxRad1 * alpha1 + maxRad2 * alpha2;
                     shRad = shRad1 * alpha1 + shRad2 * alpha2;
                     clr = mixColors(clr1.getRGB(), clr2.getRGB(), alpha1, alpha2);
 
                 } else if (a < clrAngle - shadeAngle) {
                     // body of the color 1 
-                    alpha1 = 1;
-                    alpha2 = 0;
+                    // alpha1 = 1; // don't need to assign
+                    // alpha2 = 0; // don't need to assign
                     maxRad = maxRad1;
                     shRad = shRad1;
                     clr = clr1.getRGB();
@@ -162,7 +160,7 @@ public class FlowerLayer extends JComponent implements Runnable {
                 } else if (a < clrAngle) {
                     // color 1 -> color 2
                     alpha1 = (clrAngle - a) / shadeAngle;
-                    alpha2 = 1 - alpha1;
+                    alpha2 = 1.0 - alpha1;
                     maxRad = maxRad1 * alpha1 + maxRad2 * alpha2;
                     shRad = shRad1 * alpha1 + shRad2 * alpha2;
                     clr = mixColors(clr1.getRGB(), clr2.getRGB(), alpha1, alpha2);
@@ -170,8 +168,8 @@ public class FlowerLayer extends JComponent implements Runnable {
                 } else {
                     // (a < secAngle)
                     // body of the color 2
-                    alpha1 = 0;
-                    alpha2 = 1;
+                    // alpha1 = 0; // don't need to assign
+                    // alpha2 = 1; // don't need to assign
                     maxRad = maxRad2;
                     shRad = shRad2;
                     clr = clr2.getRGB();

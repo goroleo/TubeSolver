@@ -17,8 +17,6 @@ import javax.swing.JComponent;
 
 public class ScaleLayer extends JComponent implements Runnable {
 
-    private Thread t;
-
     private BufferedImage imgOrig;
     private BufferedImage imgStretch;
 
@@ -96,7 +94,7 @@ public class ScaleLayer extends JComponent implements Runnable {
         masterAlpha = 0.0d;
         clearFrame();
         working = true;
-        t = new Thread(this);
+        Thread t = new Thread(this);
         t.start();
     }
 
@@ -122,8 +120,8 @@ public class ScaleLayer extends JComponent implements Runnable {
         }
 
         for (int x = 0; x < dw; x++) {
+            double dx = (double) x * (w - 1) / (dw - 1);
             for (int y = 0; y < dh; y++) {
-                double dx = (double) x * (w - 1) / (dw - 1);
                 double dy = (double) y * (h - 1) / (dh - 1);
                 pix = imgStretch.getRGB((int) dx, (int) dy);
                 alpha = (int) (((pix >> 24) & 0xff) * masterAlpha);

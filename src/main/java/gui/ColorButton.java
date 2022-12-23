@@ -209,18 +209,6 @@ public class ColorButton extends JButton {
         super.setBounds(x, y, width, height);
     }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        if (!enabled) {
-            bevelLayer.setImage(imgBevelDisabled);
-            shadeLayer.doHide();
-            count = -1;
-        } else {
-            bevelLayer.setImage(imgBevelUp);
-        }
-    }
-
     private void loadImages() {
         if (imgShade == null) {
             imgShade = core.Options.createBufImage("imgColor_shade_gray.png");

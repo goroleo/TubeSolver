@@ -1,31 +1,45 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package ani;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
+
 import static gui.MainFrame.pal;
 
+/**
+ * This layer draws and rotates a drum (a torus) composed of the palette colors. <br>
+ * The drum (tor) consists of color sectors. Each sector has its own color
+ * corresponding to the color from the palette. The number of drum sectors
+ * matches the number of colors in the palette.
+ * Sectors are separated by gaps.
+ * All values here are in relative terms.
+ * For example each sector size is 1.00. Spacing size is 0.08 of the sector size.<br>
+ * The transparency fan will draw above the drum. It rotates in the opposite direction.
+ */
 public class WheelLayer extends JComponent implements Runnable {
 
     // radian constants
     final double PI = Math.PI;
     final double TWO_PI = 2 * PI;
 
-    // Radius of the tor. r_Min is an inner radius, r_Max is an outer radius.
+    /**
+     * The inner radius of the drum (tor).
+     */
     private final int r_Min = 50;
+
+    /**
+     * The outer radius of the drum (tor).
+     */
     private final int r_Max = 70;
 
     // buffer to render frames 
@@ -33,7 +47,7 @@ public class WheelLayer extends JComponent implements Runnable {
     private final Graphics2D g2d = (Graphics2D) imgFrame.getGraphics();
 
     // -------------------------------------------------------------------
-    //                 Values to render drum (tor) of colors. 
+    //                 Values to render a drum (a torus) of colors.
     //
     // The drum (tor) consists of color sectors. Each sector has its own color 
     // corresponding to the color from the palette. The number of drum sectors 
@@ -41,68 +55,114 @@ public class WheelLayer extends JComponent implements Runnable {
     // Sectors are separated by gaps.    
     // All values here are in relative terms. 
     // For example each sector size is 1.00. Spacing size is 0.08 of the sector size.
-    // see WheelLayer.png
-    // 
-    // spacing (gap) between sectors 
+    //
+
+    /**
+     * The spacing (gap) between drum's sectors in relative terms of the sector angle.
+     */
     private final double spacing = 0.08;
 
-    // angle size of sector, in radians 
+    /**
+     * The angle size of sector, in radians.
+     */
     private final double colorsSectorAngle
             = TWO_PI / (pal.size() - 1) / (1 + spacing);
 
-    // angle size of spacing (gap), in radians 
+    /**
+     * The angle size of spacing (gap), in radians
+     */
     private final double colorsSpaceAngle
             = colorsSectorAngle * spacing;
 
-    // Bezier angle to create a curve 
+    /**
+     * Bezier angle to create a drum's curve.
+     */
     private final double bezierAngle = Math.atan(Math.tan(colorsSectorAngle / 4) * 4 / 3);
 
-    // inner and outer radius for Bezier points
+    /**
+     * The outer radius for Bezier points.
+     */
     private final double br_Max = r_Max / Math.cos(bezierAngle);
+
+    /**
+     * The inner radius for Bezier points.
+     */
     private final double br_Min = r_Min / Math.cos(bezierAngle);
 
-    // arrays of sector coordinates 
+    /**
+     * The array of sector points <b>X</b> coordinates.
+     */
     private final double[] cooX = new double[4];
+
+    /**
+     * The array of sector points <b>Y</b> coordinates.
+     */
     private final double[] cooY = new double[4];
 
     // -------------------------------------------------------------------
-    //                Values to render a transparency fan. 
+    //                Values to render a transparency fan.
     //
     // Alpha is an Alpha channel of pixels
-    // 
-    // number of fan blades (sectors) 
+    //
+
+    /**
+     * The number of the fan blades (sectors).
+     */
     private final int funSectorsNumber = 3;
-    
-    // angle size of blade, in radians 
+
+    /**
+     * The angle size of each fun blade, in radians
+     */
     private final double funSectorAngle = TWO_PI / funSectorsNumber;  // radians
 
-    // maximum of alpha (from 0 to 1)
+    /**
+     * Maximum of fun's alpha-channel (from 0 to 1)
+     */
     private final double maxOpacity = 1.0;
-    // minimum of alpha (from 0 to 1)
-    private final double minOpacity = 0.4;
 
+    /**
+     * Minimum of fun's alpha-channel (from 0 to 1)
+     */
+    private final double minOpacity = 0.4;
 
     // -------------------------------------------------------------------
     //                        Rotation values
-    // 
-    // delay before start creating a new frame, in milliseconds 
-    private final long delay = 30;                    
+    //
 
-    // An angle speed of Drum Of Colors, in radians
-    private final double drumAngleIncrement = PI * 0.02;         
+    /**
+     * Delay before start creating a new frame, in milliseconds
+     */
+    private final long delay = 30;
 
-    // An angle speed of Transparency Fan, in radians
-    private final double funAngleIncrement = PI * 0.03;          
-    
-    // Current Drum angle 
-    private double drumAngle;                               
-    
-    // Current Fan angle 
-    private double funAngle;          
-    
-    // This uses for external interrupt
+    /**
+     * An angle speed of the Drum Of Colors, in radians.
+     */
+    private final double drumAngleIncrement = PI * 0.02;
+
+    /**
+     * An angle speed of the Transparency Fan, in radians.
+     */
+    private final double funAngleIncrement = PI * 0.03;
+
+    /**
+     * The current angle of the Drum, to create the current frame.
+     */
+    // Current Drum angle
+    private double drumAngle;
+
+    /**
+     * The current angle of the Fun, to create the current frame.
+     */
+    private double funAngle;
+
+    /**
+     * This variable uses for an external interrupt of rotation cycle.
+     */
     private boolean doStop = false;
 
+    // -------------------------------------------------------------------
+    //                        Routines
+    //
     public WheelLayer() {
         super();
         setBackground(null);
@@ -127,7 +187,7 @@ public class WheelLayer extends JComponent implements Runnable {
         doStop = true;
     }
 
-    private void drawFrame() {
+    private void drawCurrentFrame() {
 
         // variables 
         double angle1, angle2; // sector angles
@@ -141,8 +201,8 @@ public class WheelLayer extends JComponent implements Runnable {
         // clear image frame
         g2d.clearRect(0, 0, r_Max * 2, r_Max * 2);
 
-        // draw DRUM or TOR: 
-        for (int i = 0; i < pal.size() - 1; i++) {
+        // draw DRUM (TOR) of colors:
+        for (int i = 1; i < pal.size(); i++) {
 
             angle1 = (colorsSectorAngle + colorsSpaceAngle) * i + drumAngle;
             sin_a1 = Math.sin(angle1);
@@ -160,51 +220,66 @@ public class WheelLayer extends JComponent implements Runnable {
             sin_ba2 = Math.sin(bezierAngle2);
             cos_ba2 = Math.cos(bezierAngle2);
 
-            g2d.setPaint(pal.getColor(i + 1));
+            g2d.setPaint(pal.getColor(i));
             GeneralPath poly = new GeneralPath();
 
-            cooX[0] = (cos_a1 * r_Max + r_Max);
-            cooY[0] = (sin_a1 * r_Max + r_Max);
+            // first point at the outer curve
+            cooX[0] = cos_a1 * r_Max + r_Max;
+            cooY[0] = sin_a1 * r_Max + r_Max;
             poly.moveTo(cooX[0], cooY[0]);
 
-            cooX[1] = (cos_ba1 * br_Max + r_Max);
-            cooY[1] = (sin_ba1 * br_Max + r_Max);
+            // Points to create the outer curve
+            // first bezier point
+            cooX[1] = cos_ba1 * br_Max + r_Max;
+            cooY[1] = sin_ba1 * br_Max + r_Max;
 
-            cooX[2] = (cos_ba2 * br_Max + r_Max);
-            cooY[2] = (sin_ba2 * br_Max + r_Max);
+            // second bezier point
+            cooX[2] = cos_ba2 * br_Max + r_Max;
+            cooY[2] = sin_ba2 * br_Max + r_Max;
 
-            cooX[3] = (cos_a2 * r_Max + r_Max);
-            cooY[3] = (sin_a2 * r_Max + r_Max);
+            // second point at the outer curve
+            cooX[3] = cos_a2 * r_Max + r_Max;
+            cooY[3] = sin_a2 * r_Max + r_Max;
+
+            // draw an outer curve
             poly.curveTo(cooX[1], cooY[1], cooX[2], cooY[2], cooX[3], cooY[3]);
 
-            cooX[1] = (cos_a2 * r_Min + r_Max);
-            cooY[1] = (sin_a2 * r_Min + r_Max);
+            // second point at the inner curve
+            cooX[1] = cos_a2 * r_Min + r_Max;
+            cooY[1] = sin_a2 * r_Min + r_Max;
+            // draw the sector edge
             poly.lineTo(cooX[1], cooY[1]);
 
-            cooX[1] = (cos_ba2 * br_Min + r_Max);
-            cooY[1] = (sin_ba2 * br_Min + r_Max);
+            // Points to create the inner curve
+            // second bezier point
+            cooX[1] = cos_ba2 * br_Min + r_Max;
+            cooY[1] = sin_ba2 * br_Min + r_Max;
 
-            cooX[2] = (cos_ba1 * br_Min + r_Max);
-            cooY[2] = (sin_ba1 * br_Min + r_Max);
+            // first bezier point
+            cooX[2] = cos_ba1 * br_Min + r_Max;
+            cooY[2] = sin_ba1 * br_Min + r_Max;
 
-            cooX[3] = (cos_a1 * r_Min + r_Max);
-            cooY[3] = (sin_a1 * r_Min + r_Max);
+            // first point at the inner curve
+            cooX[3] = cos_a1 * r_Min + r_Max;
+            cooY[3] = sin_a1 * r_Min + r_Max;
+
+            // draw an inner curve
             poly.curveTo(cooX[1], cooY[1], cooX[2], cooY[2], cooX[3], cooY[3]);
+            // draw the sector edge to the first point at the outer curve
             poly.lineTo(cooX[0], cooY[0]);
+
             poly.closePath();
             g2d.fill(poly);
         }
 
         // draw Transparency Fan above the Drum: 
         for (int i = 0; i < r_Max * 2; i++) {
-            double x = i - r_Max;
             for (int j = 0; j < r_Max * 2; j++) {
-                double y = r_Max - j;
                 pix = imgFrame.getRGB(i, j);
                 oldAlpha = (pix >> 24) & 0xff;
 
                 if (oldAlpha != 0) {
-                    double angle = Math.atan2(y, x) - funAngle;
+                    double angle = Math.atan2((i - r_Max), (r_Max - j)) + funAngle;
                     if (angle < 0) {
                         angle += TWO_PI;
                     }
@@ -240,7 +315,7 @@ public class WheelLayer extends JComponent implements Runnable {
                 funAngle -= TWO_PI;
             }
 
-            drawFrame();
+            drawCurrentFrame();
             repaint();
 
             try {
@@ -248,7 +323,6 @@ public class WheelLayer extends JComponent implements Runnable {
             } catch (InterruptedException e) {
                 // do nothing
             }
-
         }
     }
 
