@@ -36,15 +36,6 @@ public class UsedColors {
         buf = new int[size];
     }
 
-    /*
-     * Getting size of the array for cycles.
-     *
-     * @return size of the counts array.
-     */
-//  public int getSize() {
-//        return buf.length;
-//    }
-
     /**
      * Increases color's count by one.
      *

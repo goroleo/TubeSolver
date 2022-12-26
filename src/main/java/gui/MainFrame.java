@@ -1,28 +1,28 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package gui;
 
+import ani.PatternLayer;
+import core.GameMoves;
 import core.Options;
 import core.ResStrings;
-import ani.PatternLayer;
+import core.TubesIO;
 import dlg.MessageDlg;
 import dlg.StartDlg;
-import core.GameMoves;
-import core.TubesIO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-//import static gui.Palette.usedColors;
 
 public class MainFrame extends JFrame {
 
@@ -40,7 +40,6 @@ public class MainFrame extends JFrame {
 
     CongratsPanel congPan = new CongratsPanel();
 
-//  public static UsedColors usedColors;
     public static GameMoves gameMoves = new GameMoves();
     public static int movesDone;
 
@@ -52,7 +51,7 @@ public class MainFrame extends JFrame {
     public final static int FILL_MODE = 100;
     public final static int PLAY_MODE = 200;
     public final static int ASSIST_MODE = 300;
-    public final static int VIEW_MODE = 400;
+    public final static int VIEW_MODE = 400; // reserved for future use
 
     public static int filledTubes;
     public static int emptyTubes;
@@ -66,31 +65,31 @@ public class MainFrame extends JFrame {
 //////////////////////////////////////////////////////////////////////////////
 
     public MainFrame() {
-    super(ResStrings.getString("strColorTubes"));
+        super(ResStrings.getString("strColorTubes"));
 
-    pal = new Palette();
+        pal = new Palette();
 
-    createFrame();
-    initElements();
+        createFrame();
+        initElements();
 
-    addComponentListener(new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            pattern.setBounds(getColorsArea());
-            toolPan.resize();
-            updatePanelsPos();
-            if (congPan.isVisible()) {
-                congPan.updatePos();
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                pattern.setBounds(getColorsArea());
+                toolPan.resize();
+                updatePanelsPos();
+                if (congPan.isVisible()) {
+                    congPan.updatePos();
+                }
             }
-        }
-    });
+        });
 
-}
+    }
 
     private void createFrame() {
 
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
-        
+
         if (Options.mainSizeX >= 300 && Options.mainSizeY >= 200
                 && Options.mainPositionX >= 0
                 && Options.mainPositionY >= 0
@@ -103,13 +102,13 @@ public class MainFrame extends JFrame {
         } else {
             width = Math.min(width, sSize.width - 40);
             height = Math.min(height, sSize.height - 40);
-            setBounds((sSize.width - width) / 2, (sSize.height - height) / 2, width, height);            
+            setBounds((sSize.width - width) / 2, (sSize.height - height) / 2, width, height);
         }
 
         if (Options.mainMaximized) {
             setExtendedState(getExtendedState() | Frame.MAXIMIZED_BOTH);
         }
-            
+
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         Image img;
         switch (core.Options.getOS()) {
@@ -176,6 +175,12 @@ public class MainFrame extends JFrame {
     public void setGameMode(int aMode) {
         gameMode = aMode;
         toolPan.updateButtons(aMode);
+    }
+
+    public void updateLanguage() {
+        setTitle(ResStrings.getString("strColorTubes"));
+        if (toolPan != null)
+            toolPan.updateLanguage();
     }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -248,7 +253,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-//////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
 //
 //                  *  modes *
 //
@@ -474,7 +479,7 @@ public class MainFrame extends JFrame {
 
     }
 
-//////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
 //
 //                  *  ALL MODES routines *
 //
@@ -612,7 +617,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-//////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
 //                  
 //                  *  FILL MODE routines *
 //                  

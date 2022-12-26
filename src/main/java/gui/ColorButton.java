@@ -85,12 +85,10 @@ public class ColorButton extends JButton {
         setSize(w, h);
 
         addFocusListener(new FocusAdapter() {
-
             @Override
             public void focusGained(FocusEvent e) {
                 fireStateChanged();
             }
-
             @Override
             public void focusLost(FocusEvent e) {
                 fireStateChanged();
@@ -133,10 +131,8 @@ public class ColorButton extends JButton {
             lcd.setLocation(Options.ccdPositionX, Options.ccdPositionY);
         }
         Color newColor = lcd.chooseColor();
+        lcd.saveOptions();
 
-        Options.ccdPositionX = lcd.getX();
-        Options.ccdPositionY = lcd.getY();
-                
         if (newColor != oldColor) {
             MainFrame.pal.set(colorNumber, newColor);
             MainFrame.pal.savePalette();

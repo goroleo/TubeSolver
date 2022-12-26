@@ -30,7 +30,7 @@ public class BoardPanel extends JComponent {
     private int cols;
     private int docked = 0;
 
-    private BoardModel model = null;
+    private final BoardModel model;
     private ColorTube tubeFrom = null;
     private ColorTube tubeTo = null;
 
@@ -526,6 +526,11 @@ public class BoardPanel extends JComponent {
         return model.isSolved();
     }
 
+    /**
+     * Set spaces between color tubes
+     * @param spaceX horizontal space between tubes
+     * @param spaceY vertical spaces between tubes
+     */
     public void setSpaces(int spaceX, int spaceY) {
         this.spaceX = spaceX;
         this.spaceY = spaceY;

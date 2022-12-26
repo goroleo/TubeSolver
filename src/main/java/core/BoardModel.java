@@ -13,6 +13,9 @@ import static gui.Palette.usedColors;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * The logical model of the board with some color tubes.
+ */
 public class BoardModel extends ArrayList<TubeModel> {
 
     /**

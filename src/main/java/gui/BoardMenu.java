@@ -11,18 +11,13 @@ package gui;
 
 import core.Options;
 import core.ResStrings;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import javax.swing.BorderFactory;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.border.Border;
+import lib.lMenus.LPopupMenu;
 import run.Main;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
-public class BoardMenu extends JPopupMenu {
+public class BoardMenu extends LPopupMenu {
 
     private final JMenu pos;
     private final JMenuItem center;
@@ -49,18 +44,9 @@ public class BoardMenu extends JPopupMenu {
 
     private ColorTube correspTube;
 
-    private final Border border = BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.gray),
-            BorderFactory.createEmptyBorder(2, 2, 2, 2));
-    private final Border itemBorder = BorderFactory.createCompoundBorder(
-            BorderFactory.createEmptyBorder(0, 0, 0, 0),
-            BorderFactory.createEmptyBorder(3, 3, 3, 3));
-
     public BoardMenu() {
 
-        setBackground(Palette.dialogColor);
-        setForeground(Color.white);
-        setBorder(border);
+        super();
 
         JMenuItem ct = addMenuItem(null, ResStrings.getString("strColorTubes"));
         ct.setFont(ct.getFont().deriveFont(1));
@@ -123,49 +109,6 @@ public class BoardMenu extends JPopupMenu {
 
     }
 
-    private JMenu addMenu(JMenu parent, String text) {
-        JMenu menu = new JMenu(text);
-        menu.setBackground(Palette.dialogColor);
-        menu.setForeground(Color.white);
-        menu.setBorder(itemBorder);
-        menu.setFont(menu.getFont().deriveFont(0));
-        menu.getPopupMenu().setBackground(Palette.dialogColor);
-        menu.getPopupMenu().setForeground(Color.white);
-        menu.getPopupMenu().setBorder(border);
-        if (parent != null) {
-            parent.add(menu);
-        } else {
-            this.add(menu);
-        }
-        return menu;
-    }
-
-    private JMenuItem addMenuItem(JMenu parent, String text) {
-        JMenuItem menu = new JMenuItem(text);
-        menu.setBackground(Palette.dialogColor);
-        menu.setForeground(Color.white);
-        menu.setBorder(itemBorder);
-        menu.setIcon(null);
-        menu.setFont(menu.getFont().deriveFont(0));
-        if (parent != null) {
-            parent.add(menu);
-        } else {
-            this.add(menu);
-        }
-        return menu;
-    }
-
-    private JSeparator addSeparator(JMenu parent) {
-        JSeparator sep = new JSeparator();
-        sep.setBackground(Palette.dialogColor);
-        sep.setForeground(Color.gray);
-        if (parent != null) {
-            parent.add(sep);
-        } else {
-            this.add(sep);
-        }
-        return sep;
-    }
 
     private void positionClick(int number) {
         MainFrame.tubesPan.setDockedTo(number);

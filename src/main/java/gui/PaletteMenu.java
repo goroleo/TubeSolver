@@ -11,21 +11,15 @@ package gui;
 
 import core.Options;
 import core.ResStrings;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
+import lib.lMenus.LPopupMenu;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.border.Border;
 import static gui.MainFrame.palPan;
 
-public class PaletteMenu extends JPopupMenu {
+public class PaletteMenu extends LPopupMenu {
 
     private final JMenu pos;
     private final JMenuItem top;
@@ -46,26 +40,15 @@ public class PaletteMenu extends JPopupMenu {
     private ColorButton correspButton;
     
     private final BufferedImage icon = new BufferedImage(16, 16, 1);
-    private final Border border = BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.gray),
-            BorderFactory.createEmptyBorder(2, 2, 2, 2));
-    private final Border itemBorder = BorderFactory.createCompoundBorder(
-            BorderFactory.createEmptyBorder(0, 0, 0, 0),
-            BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
     public PaletteMenu() {
-
-        setBackground(Palette.dialogColor);
-        setForeground(Color.white);
-        setBorder(border);
+        super();
 
         JMenuItem pal = addMenuItem(null, ResStrings.getString("strPalette"));
         pal.setFont(pal.getFont().deriveFont(1));
         pal.setFont(pal.getFont().deriveFont(13f));
         addSeparator(null);
-        
-        
-        
+
         // position menu
         pos = addMenu(null, ResStrings.getString("strPosition"));
         {
@@ -76,9 +59,7 @@ public class PaletteMenu extends JPopupMenu {
             bottom.addActionListener((ActionEvent e) -> positionClick(1));
 
             left = addMenuItem(pos, ResStrings.getString("strLeft"));
-            left.addActionListener((ActionEvent e) -> {
-                positionClick(2);
-            });
+            left.addActionListener((ActionEvent e) -> positionClick(2));
 
             right = addMenuItem(pos, ResStrings.getString("strRight"));
             right.addActionListener((ActionEvent e) -> positionClick(3));
@@ -112,50 +93,6 @@ public class PaletteMenu extends JPopupMenu {
             def = addMenuItem(null, ResStrings.getString("strDefaultPalette"));
             def.addActionListener((ActionEvent e) -> defaultClick());
         }
-    }
-
-    private JMenu addMenu(JMenu parent, String text) {
-        JMenu menu = new JMenu(text);
-        menu.setBackground(Palette.dialogColor);
-        menu.setForeground(Color.white);
-        menu.setBorder(itemBorder);
-        menu.setFont(menu.getFont().deriveFont(0));
-        menu.getPopupMenu().setBackground(Palette.dialogColor);
-        menu.getPopupMenu().setForeground(Color.white);
-        menu.getPopupMenu().setBorder(border);
-        if (parent != null) {
-            parent.add(menu);
-        } else {
-            this.add(menu);
-        }
-        return menu;
-    }
-
-    private JMenuItem addMenuItem(JMenu parent, String text) {
-        JMenuItem menu = new JMenuItem(text);
-        menu.setBackground(Palette.dialogColor);
-        menu.setForeground(Color.white);
-        menu.setBorder(itemBorder);
-        menu.setIcon(null);
-        menu.setFont(menu.getFont().deriveFont(0));
-        if (parent != null) {
-            parent.add(menu);
-        } else {
-            this.add(menu);
-        }
-        return menu;
-    }
-
-    private JSeparator addSeparator(JMenu parent) {
-        JSeparator sep = new JSeparator();
-        sep.setBackground(Palette.dialogColor);
-        sep.setForeground(Color.gray);
-        if (parent != null) {
-            parent.add(sep);
-        } else {
-            this.add(sep);
-        }
-        return sep;
     }
 
     private void positionClick(int number) {

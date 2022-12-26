@@ -115,6 +115,7 @@ public class ToolPanel extends JPanel {
             docked = Options.menuDockedTo;
             align = Options.menuAlign;
         }
+
     }
 
     public LToolButton addNewButton(String imgFName, String hint) {
@@ -382,6 +383,21 @@ public class ToolPanel extends JPanel {
                 }
             }
         }
+    }
+
+    public void updateLanguage() {
+        buttons[0].setToolTipText(ResStrings.getString("strStartGame"));
+        buttons[2].setToolTipText(ResStrings.getString("strLoadGame"));
+        buttons[3].setToolTipText(ResStrings.getString("strSaveGame"));
+        buttons[5].setToolTipText(ResStrings.getString("strRefresh"));
+        buttons[6].setToolTipText(ResStrings.getString("strSolve"));
+        buttons[8].setToolTipText(ResStrings.getString("strUndoMove"));
+        buttons[9].setToolTipText(ResStrings.getString("strStartAgain"));
+        buttons[10].setToolTipText(ResStrings.getString("strClearAllTubes"));
+        buttons[11].setToolTipText(ResStrings.getString("strAutoFill"));
+        buttons[13].setToolTipText(ResStrings.getString("strChangePalette"));
+        buttons[14].setToolTipText(ResStrings.getString("strOptions"));
+        buttons[16].setToolTipText(ResStrings.getString("strExit"));
     }
 
     public void saveOptions() {

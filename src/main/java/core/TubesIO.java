@@ -29,7 +29,7 @@ public class TubesIO {
     private static final int FILE_EOF = 0x1a;
 
     /**
-     * Version of the file. Currently, ver.1 and ver.2 are exist.<br>
+     * Version of the file. Currently, ver.1 and ver.2 are available.<br>
      * New versions can be added if the application will get any new features.
      */
     private static int fileVer;

@@ -93,7 +93,6 @@ public class CreateNewDlg extends JDialog {
         btnOk.setForeground(null);
         btnOk.setFocusable(true);
         btnOk.addActionListener((ActionEvent e) -> confirmAndClose());
-
         pan.add(btnOk);
 
         LPictureButton btnCancel = new LPictureButton(this, "btnDialog");
@@ -167,8 +166,8 @@ public class CreateNewDlg extends JDialog {
         setPreferredSize(dim);
         pack();
 
-        int dx = (getWidth() - getContentPane().getWidth());
-        int dy = (getHeight() - getContentPane().getHeight());
+        int dx = getWidth() - getContentPane().getWidth();
+        int dy = getHeight() - getContentPane().getHeight();
         dim.width += dx;
         dim.height += dy;
         setPreferredSize(dim);
