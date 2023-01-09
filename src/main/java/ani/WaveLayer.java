@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
  * <li><b>Tail</b>. The opacity of the picture decreases from the maximum to the minimum value.<br>
  * <li><b>Space</b>. The opacity is minimum.</ul>
  * <i>See description of wave shape values at JavaDoc of <b>body</b>.</i>
+ *
  * @see #body
  * @see #axis
  * @see #forward
@@ -60,17 +61,17 @@ public class WaveLayer extends JComponent implements Runnable {
      * <li><b>2</b> - diagonal 1 (SW-NE, BottomLeft to TopRight);<br>
      * <li><b>3</b> - diagonal 2 (NW-SE, TopLeft to BottomRight).</ul>
      */
-    public int axis = 2;
+    private int axis = 2;
 
     /**
-     * Forward direction is from left to right preferably. If <b>true</b> the direction
+     * Depending on the axis, the Forward direction is from left to right preferably. If <b>true</b> the direction
      * is: <ul>
      * <li>from Left to Right,
      * <li>from Top-Left to Bottom-Right,
      * <li>from Bottom-Left To Top-Right,
      * <li>or (in vertical direction) from Top to Bottom.</ul>
      */
-    public boolean forward = true; // else backward :)
+    private boolean forward = true; // else backward :)
 
     /**
      * Direction field is deprecated and not used 'cause we have two previous variables: <br>
@@ -87,7 +88,7 @@ public class WaveLayer extends JComponent implements Runnable {
      * @see #forward
      */
     @Deprecated
-    private final int direction = 0;   // deprecated
+    private int direction = 0;   // deprecated
 
 // -----------------------------------------------------
 //     Wave shape settings
@@ -96,6 +97,7 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * The first part of the wave shape. The opacity of the picture increases from minimum to maximum value.<br>
      * <i>See description of wave shape values at JavaDoc of <b>body</b>.</i>
+     *
      * @see #body
      */
     private float prow = 0.15f;
@@ -112,50 +114,70 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * The third part of the wave shape. The opacity of the picture decreases from the maximum to the minimum value.<br>
      * <i>See description of wave shape values at JavaDoc of <b>body</b>.</i>
+     *
      * @see #body
      */
     private float tail = 0.15f;
 
-     /**
+    /**
      * The last part of the wave shape. The opacity is minimum.<br>
-      * <i>See description of wave shape values at JavaDoc of <b>body</b>.</i>
-      * @see #body
-      */
+     * <i>See description of wave shape values at JavaDoc of <b>body</b>.</i>
+     *
+     * @see #body
+     */
     private float space = 0.0f;
 
 // -----------------------------------------------------
 //     Opacity settings
 //
 
-    /** Minimum opacity value (0 - fully transparent, 1 - fully opacity). */
+    /**
+     * Minimum opacity value (0 - fully transparent, 1 - fully opacity).
+     */
     private final float minOpacity = 0.5f;
 
-    /** Maximum opacity value (0 - fully transparent, 1 - fully opacity). */
+    /**
+     * Maximum opacity value (0 - fully transparent, 1 - fully opacity).
+     */
     private final float maxOpacity = 1.0f;
 
 // -----------------------------------------------------
 //     Variables / fields
 //
 
-    /** An original image. */
+    /**
+     * An original image.
+     */
     private BufferedImage imgOrig;
 
-    /** The image for the every single frame.  */
+    /**
+     * The image for the every single frame.
+     */
     private BufferedImage imgFrame;
 
-    /** Temporal image to replace the original in the future, when the cycle will stop. */
+    /**
+     * Temporal image to replace the original in the future, when the cycle will stop.
+     */
     private BufferedImage imgTemp;
 
-    /** The width of the image. */
+    /**
+     * The width of the image.
+     */
     private int w;
 
-    /** The height of the image. */
+    /**
+     * The height of the image.
+     */
     private int h;
 
-    /** The size of the image's diagonal (in pixels). */
+    /**
+     * The size of the image's diagonal (in pixels).
+     */
     private float diagSize;
 
-    /** Size of the wave shape (in pixels). */
+    /**
+     * Size of the wave shape (in pixels).
+     */
     private float shapeSize;
 
     /**
@@ -164,26 +186,38 @@ public class WaveLayer extends JComponent implements Runnable {
      */
     private float prowLimit, bodyLimit, tailLimit;
 
-    /** If <b>true</b> then the thread is working, and we don't need to start it again.  */
+    /**
+     * If <b>true</b> then the thread is working, and we don't need to start it again.
+     */
     private boolean working = false;
 
-    /** Appear or disappear the image */
+    /**
+     * Appear or disappear the image
+     */
     private boolean disappear = false;
 
-    /** If <b>true</b> then the cycle will work until the external break.  */
+    /**
+     * If <b>true</b> then the cycle will work until the external break.
+     */
     private Boolean unlimited = true;
 
-    /** The switcher to replace the original image with the temporal, when the cycle will stop.  */
+    /**
+     * The switcher to replace the original image with the temporal, when the cycle will stop.
+     */
     private boolean changeWhenHide = false;
 
 // -----------------------------------------------------
 //     Cycle variables
 //
 
-    /** The current wave position  */
+    /**
+     * The current wave position
+     */
     private float curPos = 0.0f;
 
-    /** Current master value of the Alpha-channel */
+    /**
+     * Current master value of the Alpha-channel
+     */
     private float masterAlpha = 0.0f;
 
 
@@ -213,6 +247,7 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * This routine will set the new image to this layer, not right now, but when the cycle will stop and
      * the previous picture will disappear.
+     *
      * @param bi new image
      */
     public void setImageWhenHide(BufferedImage bi) {
@@ -226,8 +261,68 @@ public class WaveLayer extends JComponent implements Runnable {
     }
 
     /**
+     * Direction is deprecated and not used 'cause we have <i>axis</i> and <i>forward</i> variables.
+     * @param d new direction
+     */
+    @Deprecated
+    public void setDirection(int d) {
+        if (d >= 0 && d <= 7) {
+            direction = d;
+            switch (d) {
+                case 0: // (Top-to-Bottom)
+                    axis = 0; // vertical
+                    forward = true;
+                    break;
+                case 1: // (Bottom-to-Top)
+                    axis = 0; // vertical
+                    forward = false;
+                    break;
+                case 2: // (Left-to-Right)
+                    axis = 1; // horizontal
+                    forward = true;
+                    break;
+                case 3: // (Right-to-Left)
+                    axis = 1; // horizontal
+                    forward = false;
+                    break;
+                case 4: // (TopLeft-to-BottomRight)
+                    axis = 3; // diagonal2
+                    forward = true;
+                    break;
+                case 5: // (TopRight-to-BottomLeft)
+                    axis = 2; // diagonal1
+                    forward = false;
+                    break;
+                case 6: // (BottomLeft-to-TopRight)
+                    axis = 2; // diagonal1
+                    forward = true;
+                    break;
+                case 7: // (BottomRight-to-TopLeft)
+                    axis = 3; // diagonal2
+                    forward = false;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Set the direction of the wave pass. More information at the description of the <i>axis</i> and <i>forward</i> variables.
+     * @param a new axis
+     * @param f new forward
+     * @see #axis
+     * @see #forward
+     */
+    public void setDirection(int a, boolean f) {
+        if (a >= 0 && a <= 3) {
+            axis = a;
+            forward = f;
+        }
+    }
+
+    /**
      * Sets the shape of the wave.
      * <i>See description of wave shape values at JavaDoc of <b>body</b>.</i>
+     *
      * @param p prow
      * @param b body
      * @param t tail
@@ -244,6 +339,7 @@ public class WaveLayer extends JComponent implements Runnable {
 
     /**
      * This routine calculates the size of the wave shape and sets the limits of the wave's parts for further calculations.
+     *
      * @see #shapeSize
      * @see #bodyLimit
      */
@@ -309,6 +405,7 @@ public class WaveLayer extends JComponent implements Runnable {
 
     /**
      * This routine calculates the
+     *
      * @param x the X coordinate of the image's pixel
      * @param y the Y coordinate of the image's pixel
      * @return

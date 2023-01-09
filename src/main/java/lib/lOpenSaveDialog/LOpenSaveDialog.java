@@ -252,6 +252,8 @@ public class LOpenSaveDialog extends JDialog {
         Options.osdSizeColS = osPan.getColumnWidth(2);
         Options.osdSizeColD = osPan.getColumnWidth(3);
         Options.osdCurrentDir = osPan.getCurrentFolder().getAbsolutePath();
+        Options.osdSortCol = osPan.getFileSortNumber();
+        Options.osdSortOrder = osPan.getFileSortAscending() ? 1: 0;
     }
 
     public final String getStoredFolder() {

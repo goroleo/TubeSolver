@@ -28,7 +28,7 @@ public class ScaleLayer extends JComponent implements Runnable {
     private final long delay = 20;
 
     private double masterAlpha;
-    private final double deltaAlpha = 0.06d;
+    private final double alphaIncrement = 0.06d;
     public boolean working = false;
 
     public ScaleLayer(BufferedImage bi) {
@@ -142,7 +142,7 @@ public class ScaleLayer extends JComponent implements Runnable {
         while (working) {
 
             if (masterAlpha < 1) {
-                masterAlpha += deltaAlpha;
+                masterAlpha += alphaIncrement;
                 if (masterAlpha > 1) {
                     masterAlpha = 1.0d;
                     working = false;

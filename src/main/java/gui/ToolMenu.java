@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package gui;
@@ -21,6 +21,7 @@ import static gui.MainFrame.toolPan;
 
 public class ToolMenu extends LPopupMenu {
 
+    private final JMenuItem tools;
     private final JMenu pos;
     private final JMenuItem top;
     private final JMenuItem bottom;
@@ -35,15 +36,13 @@ public class ToolMenu extends LPopupMenu {
     public ToolMenu() {
         super();
 
-        JMenuItem ct = addMenuItem(null, ResStrings.getString("strToolbar"));
-        ct.setFont(ct.getFont().deriveFont(1));
-        ct.setFont(ct.getFont().deriveFont(13f));
+        tools = addMenuItem(null, ResStrings.getString("strToolbar"));
+        tools.setFont(tools.getFont().deriveFont(1, 13f));
         addSeparator(null);
 
         // position menu
         pos = addMenu(null, ResStrings.getString("strPosition"));
         {
-
             top = addMenuItem(pos, ResStrings.getString("strTop"));
             top.addActionListener((ActionEvent e) -> positionClick(0));
 
@@ -62,7 +61,7 @@ public class ToolMenu extends LPopupMenu {
         {
             begin = addMenuItem(align, ResStrings.getString("strBegin"));
             begin.addActionListener((ActionEvent e) -> alignClick(0));
-            center = addMenuItem(align,ResStrings.getString("strCenter"));
+            center = addMenuItem(align, ResStrings.getString("strCenter"));
             center.addActionListener((ActionEvent e) -> alignClick(1));
             end = addMenuItem(align, ResStrings.getString("strEnd"));
             end.addActionListener((ActionEvent e) -> alignClick(2));
@@ -122,7 +121,21 @@ public class ToolMenu extends LPopupMenu {
     public void show(Component invoker, int x, int y) {
         updatePosIcons();
         updateAlignIcons();
+        updateLanguage();
         super.show(invoker, x, y);
+    }
+
+    public void updateLanguage() {
+        tools.setText(ResStrings.getString("strToolbar"));
+        pos.setText(ResStrings.getString("strPosition"));
+        top.setText(ResStrings.getString("strTop"));
+        bottom.setText(ResStrings.getString("strBottom"));
+        left.setText(ResStrings.getString("strLeft"));
+        right.setText(ResStrings.getString("strRight"));
+        align.setText(ResStrings.getString("strAlignment"));
+        begin.setText(ResStrings.getString("strBegin"));
+        center.setText(ResStrings.getString("strCenter"));
+        end.setText(ResStrings.getString("strEnd"));
     }
 
 }

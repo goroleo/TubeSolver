@@ -45,7 +45,11 @@ public class ResStrings {
         if ("".equals(langs[0][1]))
             fillLangsArray();
     }
-    
+
+    public static int getLangsCount() {
+        return langs.length;
+    }
+
     public static String getLangCode(int number) {
         if (number >= 0 && number <= langs.length) {
             return langs[number][0];
@@ -59,6 +63,16 @@ public class ResStrings {
             return langs[number][1];
         }
         return "";
+    }
+
+    public static int getLangNumber(String langCode) {
+        checkLangsArray();
+        for (int i = 0; i < langs.length; i++) {
+            if (langCode.equalsIgnoreCase(langs[i][0])) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     public static String getLangName(String langCode) {

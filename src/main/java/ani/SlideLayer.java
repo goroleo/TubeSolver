@@ -28,7 +28,7 @@ public class SlideLayer extends JComponent implements Runnable {
 //     Animation settings
 //
     /**
-     * Delay (in milliseconds) before start to calculate and draw next frame.
+     * Delay (in milliseconds) before start to calculate and draw the next frame.
      */
     private final int delay = 12;
 
@@ -98,7 +98,7 @@ public class SlideLayer extends JComponent implements Runnable {
     /**
      * End position of the <i>imgFirst</i>, where it goes to.<br>
      * H - horizontal direction, V - vertical direction.<br>
-     * Positive horizontal value means move an image to right / negative moves to left<br>
+     * Positive horizontal value means move an image to right / negative moves to left.<br>
      * Positive vertical value means move an image to bottom / negative moves to top.<br>
      * 0 means it stands right in the frame.
      */
@@ -136,7 +136,7 @@ public class SlideLayer extends JComponent implements Runnable {
 //
 
     /**
-     * Current frame's alpha for ImgFirst <i>ImgFirst</i>.
+     * Current frame's alpha for <i>ImgFirst</i>.
      *
      * @see #expDegree1
      */
@@ -404,8 +404,8 @@ public class SlideLayer extends JComponent implements Runnable {
         alpha1 = 0.0;
         alpha2 = 1.0;
         curH1 = endH1;
-        curH2 = endH2;
         curV1 = endV1;
+        curH2 = endH2;
         curV2 = endV2;
         calculateCurrentFrame();
         repaint();

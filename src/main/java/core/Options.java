@@ -25,6 +25,13 @@ public class Options {
 
 
     /*
+        saving options
+     */
+    public static boolean saveGameAfterFill = true;
+    public static boolean saveGameAfterSolve = true;
+    public static boolean saveGameAfterWin = true;
+
+    /*
         language
      */
     public static String langCode = "eng";
@@ -90,6 +97,9 @@ public class Options {
     public static void saveOptions() {
         Properties sProps = new Properties();
         sProps.setProperty("Language", langCode);
+        sProps.setProperty("SaveGameAfterFill", (saveGameAfterFill) ? "1" : "0");
+        sProps.setProperty("SaveGameAfterSolve", (saveGameAfterSolve) ? "1" : "0");
+        sProps.setProperty("SaveGameAfterWin", (saveGameAfterWin) ? "1" : "0");
 
         sProps.setProperty("MainMaximized", (mainMaximized) ? "1" : "0");
         sProps.setProperty("MainPosX", Integer.toString(mainPositionX));
@@ -119,6 +129,8 @@ public class Options {
         sProps.setProperty("OpenSaveDialogColS", Integer.toString(osdSizeColS));
         sProps.setProperty("OpenSaveDialogColD", Integer.toString(osdSizeColD));
         sProps.setProperty("OpenSaveDialogDir", osdCurrentDir);
+        sProps.setProperty("OpenSaveDialogSortColumn",Integer.toString(osdSortCol));
+        sProps.setProperty("OpenSaveDialogSortOrder",Integer.toString(osdSortOrder));
 
         sProps.setProperty("PaletteDialogPosX", Integer.toString(pdPositionX));
         sProps.setProperty("PaletteDialogPosY", Integer.toString(pdPositionY));
@@ -137,6 +149,9 @@ public class Options {
                 langCode = "eng";
             }
 
+            saveGameAfterFill = Integer.parseInt(sProps.getProperty("SaveGameAfterFill", "1")) == 1;
+            saveGameAfterSolve = Integer.parseInt(sProps.getProperty("SaveGameAfterSolve", "1")) == 1;
+            saveGameAfterWin = Integer.parseInt(sProps.getProperty("SaveGameAfterWin", "1")) == 1;
             mainMaximized = Integer.parseInt(sProps.getProperty("MainMaximized", "-1")) == 1;
             mainPositionX = Integer.parseInt(sProps.getProperty("MainPosX", "-1"));
             mainPositionY = Integer.parseInt(sProps.getProperty("MainPosY", "-1"));
@@ -163,6 +178,8 @@ public class Options {
             osdSizeColS = Integer.parseInt(sProps.getProperty("OpenSaveDialogColS", "-1"));
             osdSizeColD = Integer.parseInt(sProps.getProperty("OpenSaveDialogColD", "-1"));
             osdCurrentDir = sProps.getProperty("OpenSaveDialogDir", "");
+            osdSortCol = Integer.parseInt(sProps.getProperty("OpenSaveDialogSortColumn", "-1"));
+            osdSortOrder = Integer.parseInt(sProps.getProperty("OpenSaveDialogSortOrder", "-1"));
 
             pdPositionX = Integer.parseInt(sProps.getProperty("PaletteDialogPosX", "-1"));
             pdPositionY = Integer.parseInt(sProps.getProperty("PaletteDialogPosY", "-1"));

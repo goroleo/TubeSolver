@@ -96,26 +96,26 @@ public class ColorButton extends JButton {
         }); // addFocusListener
 
         addChangeListener((ChangeEvent e) -> {
-            if (getModel().isPressed()) {
-                bevelLayer.setImage(imgBevelDown);
-            } else {
-                if (isEnabled()) {
-                    bevelLayer.setImage(imgBevelUp);
+            if (isEnabled()) {
+                if (getModel().isPressed()) {
+                    bevelLayer.setImage(imgBevelDown);
                 } else {
-                    bevelLayer.setImage(imgBevelDisabled);
+                    bevelLayer.setImage(imgBevelUp);
                 }
-            }
-            if (getModel().isRollover()) {
-                if (isEnabled()) {
+                if (getModel().isRollover()) {
                     shadeLayer.doShow();
+                } else {
+                    shadeLayer.doHide();
                 }
-            } else {
-                shadeLayer.doHide();
-            }
-            if (hasFocus() && isEnabled()) {
-                frameLayer.setImage(imgFrameFocused);
+                if (hasFocus()) {
+                    frameLayer.setImage(imgFrameFocused);
+                } else {
+                    frameLayer.setImage(imgFrameEnabled);
+                }
             } else {
                 frameLayer.setImage(imgFrameEnabled);
+                bevelLayer.setImage(imgBevelDisabled);
+                shadeLayer.doHide();
             }
         });
     }

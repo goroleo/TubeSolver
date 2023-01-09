@@ -183,7 +183,8 @@ public class FilesPanel extends JComponent {
         sbVert.setLocation(w - sbV_width + 2, 2);
         viewport.setLocation(2, 2 + header.getHeight());
 
-        header.setSize(w - 1 - sbV_width, header.getHeight());
+        header.setSize(w - sbV_width, header.getHeight());
+
         sbVert.setSize(sbV_width, h);
         viewport.setSize(w - sbV_width, h - header.getHeight() - 1);
         filelist.setSize(viewport.getWidth(), filelist.getHeight());

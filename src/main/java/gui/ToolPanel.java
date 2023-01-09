@@ -10,6 +10,7 @@
 package gui;
 
 import core.Options;
+import dlg.OptionsDlg;
 import dlg.PaletteDlg;
 import dlg.StartDlg;
 import java.awt.Color;
@@ -82,7 +83,7 @@ public class ToolPanel extends JPanel {
         tb.addActionListener((ActionEvent e) -> paletteClick());
 
         tb = addNewButton("options", ResStrings.getString("strOptions"));                 // buttons[14]
-        tb.setEnabled(false);
+        tb.setEnabled(true);
         tb.addActionListener((ActionEvent e) -> optionsClick());
 
         addSeparator();                                          // buttons[15]
@@ -266,6 +267,8 @@ public class ToolPanel extends JPanel {
     }
 
     public void optionsClick() {
+        OptionsDlg od = new OptionsDlg(Main.frame);
+        od.setVisible(true);
         // TODO Options.
     }
 

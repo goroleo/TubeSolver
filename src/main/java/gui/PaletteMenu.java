@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package gui;
@@ -17,10 +17,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+
 import static gui.MainFrame.palPan;
 
 public class PaletteMenu extends LPopupMenu {
 
+    private final JMenuItem pal;
     private final JMenu pos;
     private final JMenuItem top;
     private final JMenuItem bottom;
@@ -38,15 +40,14 @@ public class PaletteMenu extends LPopupMenu {
     private final JMenuItem def;
 
     private ColorButton correspButton;
-    
+
     private final BufferedImage icon = new BufferedImage(16, 16, 1);
 
     public PaletteMenu() {
         super();
 
-        JMenuItem pal = addMenuItem(null, ResStrings.getString("strPalette"));
-        pal.setFont(pal.getFont().deriveFont(1));
-        pal.setFont(pal.getFont().deriveFont(13f));
+        pal = addMenuItem(null, ResStrings.getString("strPalette"));
+        pal.setFont(pal.getFont().deriveFont(1, 13f));
         addSeparator(null);
 
         // position menu
@@ -190,7 +191,19 @@ public class PaletteMenu extends LPopupMenu {
             showColorChange(false);
         }
         updateIcons();
+        updateLanguage();
         super.show(invoker, x, y);
     }
 
+    public void updateLanguage() {
+        pal.setText(ResStrings.getString("strPalette"));
+        pos.setText(ResStrings.getString("strPosition"));
+        top.setText(ResStrings.getString("strTop"));
+        bottom.setText(ResStrings.getString("strBottom"));
+        left.setText(ResStrings.getString("strLeft"));
+        right.setText(ResStrings.getString("strRight"));
+        lines.setText(ResStrings.getString("strRows"));
+        change.setText(ResStrings.getString("strChangeColor"));
+        def.setText(ResStrings.getString("strDefaultPalette"));
+    }
 }

@@ -1,23 +1,22 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package lib.lOpenSaveDialog;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
+import core.ResStrings;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import core.ResStrings;
+
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 import static lib.lOpenSaveDialog.OpenSavePanel.imgBtnDown;
 import static lib.lOpenSaveDialog.OpenSavePanel.imgBtnUp;
@@ -110,7 +109,7 @@ public class FileListHeader extends JComponent {
             public void mouseDragged(MouseEvent e) {
                 if (isEnabled()) {
                     if (dragged) {
-                        
+
                         if (sepNumber == 11) { // separator between Name and Size
                             int w1 = e.getX() - draggedPos;
                             if (w1 < 50) {
@@ -121,7 +120,7 @@ public class FileListHeader extends JComponent {
                                 w2 = 50;
                             }
                             setWidths(w2, dateWidth);
-                            
+
                         } else if (sepNumber == 12) { // separator between Size and Date
                             int w1 = e.getX() - draggedPos - nameWidth;
                             if (w1 < 50) {

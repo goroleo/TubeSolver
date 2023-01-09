@@ -45,6 +45,12 @@ public class ListView extends JComponent {
         return addNewItem(f, false, 0);
     }
 
+    public FileItem addNewItem(File f, boolean folderMode, int level) {
+        FileItem fi = createNewItem(f, folderMode, level);
+        fileList.add(fi);
+        return fi;
+    }
+
     public FileItem createNewItem(File f) {
         return createNewItem(f, false, 0);
     }
@@ -71,12 +77,6 @@ public class ListView extends JComponent {
                 ListView.this.itemExited(this);
             }
         };
-    }
-
-    public FileItem addNewItem(File f, boolean folderMode, int level) {
-        FileItem fi = createNewItem(f, folderMode, level);
-        fileList.add(fi);
-        return fi;
     }
 
     public int getItemHeight() {

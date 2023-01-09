@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 
 public class BoardMenu extends LPopupMenu {
 
+    private final JMenuItem board;
     private final JMenu pos;
     private final JMenuItem center;
     private final JMenuItem top;
@@ -48,9 +49,8 @@ public class BoardMenu extends LPopupMenu {
 
         super();
 
-        JMenuItem ct = addMenuItem(null, ResStrings.getString("strColorTubes"));
-        ct.setFont(ct.getFont().deriveFont(1));
-        ct.setFont(ct.getFont().deriveFont(13f));
+        board = addMenuItem(null, ResStrings.getString("strColorTubes"));
+        board.setFont(board.getFont().deriveFont(1, 13f));
         addSeparator(null);
 
         // position menu
@@ -234,7 +234,23 @@ public class BoardMenu extends LPopupMenu {
 
         updatePosIcons();
         updateLinesIcons();
+        updateLanguage();
         super.show(invoker, x, y);
     }
 
+    public void updateLanguage() {
+        board.setText(ResStrings.getString("strColorTubes"));
+        pos.setText(ResStrings.getString("strPosition"));
+        center.setText(ResStrings.getString("strCenter"));
+        top.setText(ResStrings.getString("strTop"));
+        bottom.setText(ResStrings.getString("strBottom"));
+        left.setText(ResStrings.getString("strLeft"));
+        right.setText(ResStrings.getString("strRight"));
+        lines.setText(ResStrings.getString("strRows"));
+        clear.setText(ResStrings.getString("strClearTube"));
+        clearAll.setText(ResStrings.getString("strClearAllTubes"));
+        undo.setText(ResStrings.getString("strUndoMove"));
+        start.setText(ResStrings.getString("strStartAgain"));
+        solve.setText(ResStrings.getString("strSolve"));
+    }
 }
