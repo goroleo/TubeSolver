@@ -32,14 +32,14 @@ public class TubeModel {
     public byte[] colors = new byte[4];
 
     /**
-     * The state of the tube. The states can be as follows: <br>
-     * <b>STATE_EMPTY (0).</b> The tube has no colors. <br>
-     * <b>STATE_REGULAR (1).</b> The tube has different colors and their count 
-     * less than 4. So this tube can both put and extract a color.<br>
-     * <b>STATE_FILLED (2).</b> The whole tube is filled with different colors. 
-     * It can extract a color, but there is no place to put them more.<br>
-     * <b>STATE_CLOSED (3).</b> The whole tube is filled with one color. So 
-     * this tube is no longer in the game.<br><br>
+     * The state of the tube. The states can be as follows: <ul>
+     * <li><b>STATE_EMPTY</b> (0). The tube has no colors. <br>
+     * <li><b>STATE_REGULAR</b> (1). The tube has different colors and their count
+     * less than 4. So this tube can both put and extract a color.
+     * <li><b>STATE_FILLED</b> (2). The whole tube is filled with different colors.
+     * It can extract a color, but there is no place to put them more.
+     * <li><b>STATE_CLOSED</b> (3). The whole tube is filled with one color. So
+     * this tube is no longer in the game.<br></ul>
      * I don't want to add neither another class no list of constants for the 
      * <b>state</b>. I just use an integer value.
      */
@@ -120,7 +120,7 @@ public class TubeModel {
 
     /**
      * Puts the color into the tube. Please note this routine don't check the 
-     * possibility of the operation that's why it can be used for initial 
+     * possibility of the operation that's why it can be also used for initial
      * filling the tube. 
      * @param value color number 
      * @return true if the operation was successful, false otherwise
@@ -204,7 +204,7 @@ public class TubeModel {
     }
 
     /**
-     * Is the tube have a specific color? Used as the trigger to redraw the 
+     * Is the tube have a specific color? Use this as the trigger to redraw the
      * tube when the color (or palette) was changed.
      * @param value color number
      * @return true if the tube has this color, false otherwise
@@ -274,7 +274,7 @@ public class TubeModel {
      * @param tm another tube to compare.
      * @return true if both the tubes are consists of the same colors.
      */
-    public boolean isEqualsTo(TubeModel tm) {
+    public boolean equalsTo(TubeModel tm) {
         boolean result = true;
         for (int i = 0; i < 4; i++) {
             if (this.colors[i] != tm.colors[i]) {

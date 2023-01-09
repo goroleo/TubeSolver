@@ -18,11 +18,10 @@ public class OptionsDlg extends JDialog {
     private final int dimY = 40;
     private final int dimX = 40;
     private int w = 500, h; // width and height
-    private int langNum;
     private int oldLangNum;
     private final JCheckBox cbSaveAfterFill = newCheckBox();
     private final JCheckBox cbSaveAfterSolve = newCheckBox();
-    private final JCheckBox cbSaveAfterWin = newCheckBox();
+    private final JCheckBox cbSaveBeforeClose = newCheckBox();
 
     LPictureButton btnOk;
     LPictureButton btnCancel;
@@ -35,12 +34,9 @@ public class OptionsDlg extends JDialog {
         getContentPane().setLayout(null);
         setResizable(false);
 
-
-        langsPan.setName(ResStrings.getString("strLanguage"));
         addLanguages();
-
-        savePan.setName("Saving options");
         addSavingOptions();
+
 
         // ESCAPE pressed
         getRootPane().registerKeyboardAction(
@@ -73,8 +69,6 @@ public class OptionsDlg extends JDialog {
 
         h = langsPan.getHeight() + savePan.getHeight() + dimY / 2 + btnCancel.getHeight();
 
-
-//        langsPan.setSize(w, h - dimY / 2 - btnCancel.getHeight());
         getContentPane().add(langsPan);
         getContentPane().add(savePan);
 
@@ -87,19 +81,19 @@ public class OptionsDlg extends JDialog {
         btnOk.setLocation(
                 btnCancel.getLocation().x - btnOk.getWidth() - 15,
                 btnCancel.getLocation().y);
-
     }
 
     private void refuseAndClose() {
         setLangNum(oldLangNum);
+        saveOptions();
         EventQueue.invokeLater(this::dispose);
     }
 
     private void confirmAndClose() {
         Options.saveGameAfterFill = cbSaveAfterFill.isSelected();
         Options.saveGameAfterSolve = cbSaveAfterSolve.isSelected();
-        Options.saveGameAfterWin = cbSaveAfterWin.isSelected();
-        Options.saveOptions();
+        Options.saveGameBeforeClose = cbSaveBeforeClose.isSelected();
+        saveOptions();
         EventQueue.invokeLater(this::dispose);
     }
 
@@ -119,10 +113,14 @@ public class OptionsDlg extends JDialog {
     }
 
     private void calculatePos() {
-        if (parent != null) {
+        Rectangle r = getGraphicsConfiguration().getBounds();
+        if (Options.odPositionX >= 0 && Options.odPositionY >= 0
+                && Options.odPositionX + getWidth() <= r.width
+                && Options.odPositionY + getHeight() <= r.height) {
+            setLocation(Options.odPositionX, Options.odPositionY);
+        } else if (parent != null) {
             setLocationRelativeTo(parent);
         } else {
-            Rectangle r = getGraphicsConfiguration().getBounds();
             r.x = r.x + (r.width - getWidth()) / 2;
             r.y = r.y + (r.height - getHeight()) / 2;
             setLocation(r.x, r.y);
@@ -135,7 +133,7 @@ public class OptionsDlg extends JDialog {
             setLangNum(oldLangNum);
             cbSaveAfterFill.setSelected(Options.saveGameAfterFill);
             cbSaveAfterSolve.setSelected(Options.saveGameAfterSolve);
-            cbSaveAfterWin.setSelected(Options.saveGameAfterWin);
+            cbSaveBeforeClose.setSelected(Options.saveGameBeforeClose);
         }
         super.setVisible(b);
     }
@@ -188,36 +186,32 @@ public class OptionsDlg extends JDialog {
         langsPan.setLocation(0, 0);
     }
 
-
     private void addSavingOptions() {
         savePan.setSize(w, dimY + 30 + 30 + 24 + 20);
         savePan.setLocation(0, langsPan.getHeight());
 
-        cbSaveAfterFill.setText("Prompt to save the game after fill all tubes");
         cbSaveAfterFill.setLocation(dimX, dimY);
         cbSaveAfterFill.setSize(w - dimX * 2, 24);
         savePan.add(cbSaveAfterFill);
 
-        cbSaveAfterSolve.setText("Prompt to save the game after find a solution");
         cbSaveAfterSolve.setLocation(dimX, dimY + 30);
         cbSaveAfterSolve.setSize(w - dimX * 2, 24);
         savePan.add(cbSaveAfterSolve);
 
-        cbSaveAfterWin.setText("Prompt to save the game after win");
-        cbSaveAfterWin.setLocation(dimX, dimY + 60);
-        cbSaveAfterWin.setSize(w - dimX * 2, 24);
-        savePan.add(cbSaveAfterWin);
+        cbSaveBeforeClose.setLocation(dimX, dimY + 60);
+        cbSaveBeforeClose.setSize(w - dimX * 2, 24);
+        savePan.add(cbSaveBeforeClose);
     }
 
 
     private void setLangNum(int num) {
-        langNum = num;
+//        langNum = num;
         for (int i = 0; i < langsPan.getComponentCount(); i++) {
             if (langsPan.getComponent(i) instanceof JCheckBox) {
                 ((JCheckBox) langsPan.getComponent(i)).setSelected(i == num);
             }
         }
-        Options.langCode = ResStrings.getLangCode(langNum);
+        Options.langCode = ResStrings.getLangCode(num);
         ResStrings.setBundle(Options.langCode);
         updateLanguage();
         Main.frame.updateLanguage();
@@ -227,7 +221,13 @@ public class OptionsDlg extends JDialog {
         setTitle(ResStrings.getString("strOptions"));
         btnOk.setText(ResStrings.getString("strOk"));
         btnCancel.setText(ResStrings.getString("strCancel"));
+
         langsPan.setName(ResStrings.getString("strLanguage"));
+        savePan.setName(ResStrings.getString("strSaveOptions"));
+
+        cbSaveAfterFill.setText(ResStrings.getString("strSaveAfterFill"));
+        cbSaveAfterSolve.setText(ResStrings.getString("strSaveAfterSolve"));
+        cbSaveBeforeClose.setText(ResStrings.getString("strSaveBeforeClose"));
     }
 
     public void drawPanelCaption(Graphics g, String s) {
@@ -238,7 +238,7 @@ public class OptionsDlg extends JDialog {
         FontMetrics fm = g.getFontMetrics(f);
 
         int th = (int) (72.0 * f.getSize() / Toolkit.getDefaultToolkit().getScreenResolution());
-        int tw = (s != null) ? tw = fm.stringWidth(s) : 0;
+        int tw = (s != null) ? fm.stringWidth(s) : 0;
 
         if (s != null) {
             g.setColor(Color.white);
@@ -247,5 +247,11 @@ public class OptionsDlg extends JDialog {
         g.setColor(Color.darkGray);
         g.drawLine(dimX + tw, 16 + th / 2, w - dimX, 16 + th / 2);
     }
+
+    private void saveOptions() {
+        Options.odPositionX = getX();
+        Options.odPositionY = getY();
+    }
+
 
 }

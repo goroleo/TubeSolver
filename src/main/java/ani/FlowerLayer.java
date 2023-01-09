@@ -151,8 +151,8 @@ public class FlowerLayer extends JComponent implements Runnable {
 
                 } else if (a < clrAngle - shadeAngle) {
                     // body of the color 1 
-                    // alpha1 = 1; // don't need to assign
-                    // alpha2 = 0; // don't need to assign
+                    // alpha1 = 1; - don't need to assign
+                    // alpha2 = 0; - don't need to assign
                     maxRad = maxRad1;
                     shRad = shRad1;
                     clr = clr1.getRGB();
@@ -168,8 +168,8 @@ public class FlowerLayer extends JComponent implements Runnable {
                 } else {
                     // (a < secAngle)
                     // body of the color 2
-                    // alpha1 = 0; // don't need to assign
-                    // alpha2 = 1; // don't need to assign
+                    // alpha1 = 0; - don't need to assign
+                    // alpha2 = 1; - don't need to assign
                     maxRad = maxRad2;
                     shRad = shRad2;
                     clr = clr2.getRGB();

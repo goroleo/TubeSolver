@@ -209,7 +209,7 @@ public class MessageDlg extends JDialog {
             for (LPictureButton button : buttons) {
                 btnPan.remove(button);
                 btnCount--;
-                button = null;
+//                button = null;
             }
         }
 

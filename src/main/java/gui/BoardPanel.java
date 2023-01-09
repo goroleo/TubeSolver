@@ -180,7 +180,7 @@ public class BoardPanel extends JComponent {
         reDock();
     }
 
-    public void setColumns(int newCols) {
+    public void setCols(int newCols) {
         cols = newCols;
         calculateRows();
         calculateSize();

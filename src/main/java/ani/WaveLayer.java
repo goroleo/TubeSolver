@@ -156,7 +156,7 @@ public class WaveLayer extends JComponent implements Runnable {
     private BufferedImage imgFrame;
 
     /**
-     * Temporal image to replace the original in the future, when the cycle will stop.
+     * Temporal image to replace the original in the future, when the cycle will stop. a.k.a. delayed replacement
      */
     private BufferedImage imgTemp;
 
@@ -203,6 +203,7 @@ public class WaveLayer extends JComponent implements Runnable {
 
     /**
      * The switcher to replace the original image with the temporal, when the cycle will stop.
+     * a.k.a. delayed replacement.
      */
     private boolean changeWhenHide = false;
 
@@ -246,7 +247,7 @@ public class WaveLayer extends JComponent implements Runnable {
 
     /**
      * This routine will set the new image to this layer, not right now, but when the cycle will stop and
-     * the previous picture will disappear.
+     * the previous picture will disappear. Delayed replacement.
      *
      * @param bi new image
      */
@@ -262,6 +263,7 @@ public class WaveLayer extends JComponent implements Runnable {
 
     /**
      * Direction is deprecated and not used 'cause we have <i>axis</i> and <i>forward</i> variables.
+     *
      * @param d new direction
      */
     @Deprecated
@@ -307,6 +309,7 @@ public class WaveLayer extends JComponent implements Runnable {
 
     /**
      * Set the direction of the wave pass. More information at the description of the <i>axis</i> and <i>forward</i> variables.
+     *
      * @param a new axis
      * @param f new forward
      * @see #axis
@@ -329,7 +332,7 @@ public class WaveLayer extends JComponent implements Runnable {
      * @param s space
      * @see #body
      */
-    public void setShape(float p, float b, float t, float s) {
+    public void setWaveShape(float p, float b, float t, float s) {
         prow = p;
         body = b;
         tail = t;
@@ -363,6 +366,9 @@ public class WaveLayer extends JComponent implements Runnable {
         }
     }
 
+    /**
+     * Starts the animation thread.
+     */
     public void start() {
         if (!working) {
             working = true;
@@ -373,12 +379,18 @@ public class WaveLayer extends JComponent implements Runnable {
         }
     }
 
+    /**
+     * Stops the animation thread. It just switches the <i>dissappear</i> field and then the cycle will stop after doing it.
+     */
     public void stop() {
         if (working) {
             disappear = true;
         }
     }
 
+    /**
+     * Starts the animation thread with an unlimited cycle
+     */
     public void startUnlimited() {
         curPos = -1.0f / (prow + body + tail + space);
         unlimited = true;
@@ -387,7 +399,7 @@ public class WaveLayer extends JComponent implements Runnable {
     }
 
     /**
-     *
+     * Starts the animation to show the picture. The cycle will repeat once: from full transparency to full opacity.
      */
     public void startShow() {
         curPos = -1.0f / (prow + body + tail + space);
@@ -396,6 +408,9 @@ public class WaveLayer extends JComponent implements Runnable {
         start();
     }
 
+    /**
+     * Starts the animation to hide the picture. The cycle will repeat once: from current opacity to full transparency.
+     */
     public void startHide() {
         curPos = tailLimit - 1.0f / (prow + body + tail + space);
         disappear = true;
@@ -404,11 +419,11 @@ public class WaveLayer extends JComponent implements Runnable {
     }
 
     /**
-     * This routine calculates the
+     * This routine calculates the alpha value of the specified point according to the current shape values.
      *
      * @param x the X coordinate of the image's pixel
      * @param y the Y coordinate of the image's pixel
-     * @return
+     * @return alpha-channel value of the current point
      */
     private float calculateAlpha(int x, int y) {
         float result;
@@ -419,6 +434,7 @@ public class WaveLayer extends JComponent implements Runnable {
         // The part of the wave on which the current coordinate is located: prow, body, tail, space.
         float fraction;
 
+        // first we need to calculate the coordinate of the current pixel on the wave shape
         switch (axis) {
             case 0: // vertical
                 coordinate = (forward) ? h - y : y;
@@ -442,6 +458,7 @@ public class WaveLayer extends JComponent implements Runnable {
                 coordinate = (x * w + y * h) / diagSize;
         }
 
+        // second calculate the fraction and find alpha-channel value from the shape
         if (unlimited) {
             fraction = (((coordinate - shapeSize) + (curPos * shapeSize)) / shapeSize) % 1;
             if (fraction < 0) {
@@ -546,8 +563,10 @@ public class WaveLayer extends JComponent implements Runnable {
 
         while (!stop) {
 
+            // appear and disappear the picture. using MasterAlpha value
             if (unlimited) {
                 if (!disappear) {
+                    // picture is appearing: master alpha will change from 0 to 1
                     if (masterAlpha < 1) {
                         masterAlpha = masterAlpha + alphaInc;
                         if (masterAlpha > 1) {
@@ -555,16 +574,19 @@ public class WaveLayer extends JComponent implements Runnable {
                         }
                     }
                 } else {
+                    // picture is disappearing: master alpha will change from 1 to 0
                     if (masterAlpha > 0) {
                         masterAlpha = masterAlpha - alphaInc;
                         if (masterAlpha < 0) {
                             masterAlpha = 0.0f;
                         }
                     }
+                    // unlimited cycle will stop when the picture will fully disappear
                     stop = masterAlpha == 0;
                 }
 
-            } else { // unlimited is false
+            } else {
+                // unlimited is false
                 if (!disappear) {
                     stop = curPos >= prowLimit;
                     if (stop) {
@@ -580,6 +602,7 @@ public class WaveLayer extends JComponent implements Runnable {
                 }
             }
 
+            // moving the wave shape
             curPos = curPos + pathInc;
             if (curPos > 1) {
                 curPos = curPos - 1.0f;
@@ -600,6 +623,7 @@ public class WaveLayer extends JComponent implements Runnable {
         }
         working = false; // thread is done 
 
+        // replace the picture if we have delayed replacement
         if (changeWhenHide && masterAlpha == 0) {
             setImage(imgTemp);
             changeWhenHide = false;

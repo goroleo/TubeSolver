@@ -140,12 +140,7 @@ public class BoardMenu extends LPopupMenu {
     }
 
     private void solveClick() {
-        if (MainFrame.tubesPan.doSolve()) {
-            Main.frame.startAssistMode();
-        } else {
-            Main.frame.endAssistMode();
-            Main.frame.resumePlayMode();
-        }
+        Main.frame.doSolve();
     }
 
     private void updatePosIcons() {

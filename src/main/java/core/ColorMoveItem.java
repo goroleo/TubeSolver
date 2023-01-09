@@ -11,6 +11,12 @@ package core;
 
 import java.util.Comparator;
 
+/**
+ * This is a class which keeps the data about every game move at the board.<br>
+ * Every game move puts one color from one tube <i>(Donator)</i> to another tube <i>(Recipient)</i>.
+ * Every move knows the board configuration before the move and after it. Every move knows a parent
+ * (previous) move. Every move has a rank.
+ */
 public class ColorMoveItem implements Comparator<ColorMoveItem> {
 
     /**
@@ -21,13 +27,13 @@ public class ColorMoveItem implements Comparator<ColorMoveItem> {
 
     /**
      * Number (index) of the tube where we'll get the color(s). A.k.a. color's
-     * donator.
+     * Donator.
      */
     public int idxFrom;
 
     /**
      * Number (index) of the tube where we'll put the color(s). A.k.a. color's
-     * recipient.
+     * Recipient.
      */
     public int idxTo;
 
@@ -37,7 +43,7 @@ public class ColorMoveItem implements Comparator<ColorMoveItem> {
     public int rank;
 
     /**
-     * How many colors have been moved
+     * How many colors have been moved.
      */
     public int count;
 

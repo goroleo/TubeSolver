@@ -38,10 +38,6 @@ public class StartDlg extends JDialog {
     int startX = 40, sizeX = 90, spaceX = 20;
     int btnY = 40;
 
-    public StartDlg() {
-        this(null);
-    }
-
     public StartDlg(JFrame owner) {
         super(owner, ResStrings.getString("strStartGame"), true);
         this.parent = owner;

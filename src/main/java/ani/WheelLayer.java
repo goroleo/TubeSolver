@@ -18,7 +18,7 @@ import static gui.MainFrame.pal;
 
 /**
  * This layer draws and rotates a drum (a torus) composed of the palette colors. <br>
- * The drum (tor) consists of color sectors. Each sector has its own color
+ * The drum (torus) consists of color sectors. Each sector has its own color
  * corresponding to the color from the palette. The number of drum sectors
  * matches the number of colors in the palette.
  * Sectors are separated by gaps.
@@ -42,9 +42,17 @@ public class WheelLayer extends JComponent implements Runnable {
      */
     private final int r_Max = 70;
 
-    // buffer to render frames 
-    private final BufferedImage imgFrame = new BufferedImage(r_Max * 2, r_Max * 2, BufferedImage.TYPE_INT_ARGB);
-    private final Graphics2D g2d = (Graphics2D) imgFrame.getGraphics();
+    /**
+     * Every single frame image
+     */
+    private final BufferedImage imgFrame
+            = new BufferedImage(r_Max * 2, r_Max * 2, BufferedImage.TYPE_INT_ARGB);
+
+    /**
+     * Graphics instance to access the frame image
+     */
+    private final Graphics2D g2d
+            = (Graphics2D) imgFrame.getGraphics();
 
     // -------------------------------------------------------------------
     //                 Values to render a drum (a torus) of colors.
@@ -77,17 +85,20 @@ public class WheelLayer extends JComponent implements Runnable {
     /**
      * Bezier angle to create a drum's curve.
      */
-    private final double bezierAngle = Math.atan(Math.tan(colorsSectorAngle / 4) * 4 / 3);
+    private final double bezierAngle
+            = Math.atan(Math.tan(colorsSectorAngle / 4) * 4 / 3);
 
     /**
      * The outer radius for Bezier points.
      */
-    private final double br_Max = r_Max / Math.cos(bezierAngle);
+    private final double br_Max
+            = r_Max / Math.cos(bezierAngle);
 
     /**
      * The inner radius for Bezier points.
      */
-    private final double br_Min = r_Min / Math.cos(bezierAngle);
+    private final double br_Min
+            = r_Min / Math.cos(bezierAngle);
 
     /**
      * The array of sector points <b>X</b> coordinates.
@@ -147,7 +158,6 @@ public class WheelLayer extends JComponent implements Runnable {
     /**
      * The current angle of the Drum, to create the current frame.
      */
-    // Current Drum angle
     private double drumAngle;
 
     /**
@@ -179,6 +189,7 @@ public class WheelLayer extends JComponent implements Runnable {
     }
 
     public void start() {
+        doStop = false;
         Thread t = new Thread(this);
         t.start();
     }
@@ -283,14 +294,14 @@ public class WheelLayer extends JComponent implements Runnable {
                     if (angle < 0) {
                         angle += TWO_PI;
                     }
-                    double range = (angle / funSectorAngle) % 1;
-                    if (range < 0.9) {
-                        range = range / 0.9;
+                    double fraction = (angle / funSectorAngle) % 1;
+                    if (fraction < 0.9) {
+                        fraction = fraction / 0.9;
                     } else {
-                        range = (1 - range) / 0.1;
+                        fraction = (1 - fraction) / 0.1;
                     }
 
-                    newAlpha = (int) ((range * (maxOpacity - minOpacity) + minOpacity) * oldAlpha);
+                    newAlpha = (int) ((fraction * (maxOpacity - minOpacity) + minOpacity) * oldAlpha);
                     pix = (pix & 0xffffff) | ((newAlpha & 0xff) << 24);
                     imgFrame.setRGB(i, j, pix);
                 }

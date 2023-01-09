@@ -46,7 +46,8 @@ public class ColorButton extends JButton {
     private final ImageLayer bevelLayer;
     private final ImageLayer frameLayer;
     private final SlideLayer countLayer;
-// Automatization:     
+
+// Automation:
     private final int colorNumber;
     private int count;
 

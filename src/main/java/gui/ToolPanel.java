@@ -1,33 +1,34 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package gui;
 
 import core.Options;
+import core.ResStrings;
 import dlg.OptionsDlg;
 import dlg.PaletteDlg;
 import dlg.StartDlg;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JPanel;
-import core.ResStrings;
 import lib.lButtons.LToolButton;
 import lib.lOpenSaveDialog.LOpenSaveDialog;
 import run.Main;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ToolPanel extends JPanel {
 
     private final int dimX = 10;
     private final int dimY = 10;
-    private final int skipX = 20; // size for separator
+    private final int sepX = 20; // size for separator
     private final int buttonsMax = 20;
     private static final ToolMenu menu = new ToolMenu();
     private final LToolButton[] buttons = new LToolButton[buttonsMax];
@@ -87,7 +88,7 @@ public class ToolPanel extends JPanel {
         tb.addActionListener((ActionEvent e) -> optionsClick());
 
         addSeparator();                                          // buttons[15]
-        tb = addNewButton("exit",  ResStrings.getString("strExit"));                  // buttons[16]
+        tb = addNewButton("exit", ResStrings.getString("strExit"));                  // buttons[16]
         tb.addActionListener((ActionEvent e) -> exitClick());
 
         updateButtons(0);
@@ -188,11 +189,11 @@ public class ToolPanel extends JPanel {
         }
     }
 
-//////////////// 
+////////////////
 //////////////// actions!
 ////////////////     
     public void newGameClick() {
-        Main.frame.saveGame();
+        Main.frame.saveTempGame();
         StartDlg dlg = new StartDlg(Main.frame);
         dlg.setVisible(true);
     }
@@ -220,11 +221,7 @@ public class ToolPanel extends JPanel {
     }
 
     public void saveClick() {
-        LOpenSaveDialog os = new LOpenSaveDialog(Main.frame);
-        String fileName = os.showSaveDialog();
-        if (!"".equals(fileName)) {
-            Main.frame.saveGame(fileName);
-        }
+        Main.frame.saveGameAs("save");
     }
 
     public void undoClick() {
@@ -245,12 +242,7 @@ public class ToolPanel extends JPanel {
     }
 
     public void solveClick() {
-        if (MainFrame.tubesPan.doSolve()) {
-            Main.frame.startAssistMode();
-        } else {
-            Main.frame.endAssistMode();
-            Main.frame.resumePlayMode();
-        }
+        Main.frame.doSolve();
     }
 
     public void paletteClick() {
@@ -269,14 +261,13 @@ public class ToolPanel extends JPanel {
     public void optionsClick() {
         OptionsDlg od = new OptionsDlg(Main.frame);
         od.setVisible(true);
-        // TODO Options.
     }
 
     public void exitClick() {
         Main.frame.closeFrame();
     }
 
-//////////////// 
+    ////////////////
 //////////////// dock and align
 ////////////////     
     public int getDockedTo() {
@@ -298,7 +289,7 @@ public class ToolPanel extends JPanel {
         updateButtonsPos();
     }
 
-//////////////// 
+////////////////
 //////////////// size and position routines 
 ////////////////     
     public void resize() {
@@ -346,7 +337,7 @@ public class ToolPanel extends JPanel {
                 result += buttons[i].getWidth();
                 wasSkipped = false;
             } else if (buttons[i] == null && !wasSkipped) {
-                result += skipX;
+                result += sepX;
                 wasSkipped = true;
             }
         }

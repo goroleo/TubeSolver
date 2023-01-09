@@ -16,6 +16,8 @@ import core.ResStrings;
 import core.TubesIO;
 import dlg.MessageDlg;
 import dlg.StartDlg;
+import lib.lOpenSaveDialog.LOpenSaveDialog;
+import run.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +25,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 
 public class MainFrame extends JFrame {
 
@@ -56,7 +59,9 @@ public class MainFrame extends JFrame {
     public static int filledTubes;
     public static int emptyTubes;
 
-    private boolean saveOnExit = false;
+    private boolean saveTempOnExit = false;
+    private String fileNameSuffix;
+
 
 //////////////////////////////////////////////////////////////////////////////
 //                  
@@ -152,8 +157,11 @@ public class MainFrame extends JFrame {
         }
 
         Options.saveOptions();
-        if (saveOnExit) {
-            saveGame();
+        if (saveTempOnExit) {
+            saveTempGame();
+        }
+        if (Options.saveGameBeforeClose) {
+            saveGameAs("before close");
         }
         System.exit(0);
     }
@@ -229,7 +237,7 @@ public class MainFrame extends JFrame {
         return result;
     }
 
-    public void saveGame() {
+    public void saveTempGame() {
         saveGame(TubesIO.tempFileName);
     }
 
@@ -243,6 +251,28 @@ public class MainFrame extends JFrame {
         }
     }
 
+    public void saveGameAs() {
+        saveGameAs("");
+    }
+
+    public void saveGameAs(String suffix) {
+        LOpenSaveDialog os;
+
+        if (!"".equals(suffix)) {
+            os = new LOpenSaveDialog(this,
+                    LOpenSaveDialog.SAVE_MODE,
+                    Options.getDateTimeStr() + " " + suffix);
+        } else {
+            os = new LOpenSaveDialog(this, LOpenSaveDialog.SAVE_MODE);
+        }
+
+        String fileName = os.showSaveDialog();
+        if (!"".equals(fileName)) {
+            saveGame(fileName);
+        }
+
+    }
+
     private void saveOptions() {
         Options.mainMaximized = (getExtendedState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH;
         if (!Options.mainMaximized) {
@@ -253,7 +283,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //
 //                  *  modes *
 //
@@ -265,12 +295,14 @@ public class MainFrame extends JFrame {
         addTubesPanel(aFilled, aEmpty);
         filledTubes = aFilled;
         emptyTubes = aEmpty;
-        saveOnExit = true;
+        saveTempOnExit = true;
+        fileNameSuffix = "manual fill";
         startFindTubesTo();
         nextTubeTo(0);
     }
 
     public void startAutoFillMode(int aFilled, int aEmpty) {
+        fileNameSuffix = "auto fill";
         setGameMode(FILL_MODE);
         clearBoard();
         addTubesPanel(aFilled, aEmpty);
@@ -280,6 +312,7 @@ public class MainFrame extends JFrame {
     }
 
     public void resumeFillMode() {
+        fileNameSuffix = "manual fill";
         startFindTubesTo();
         nextTubeTo(0);
     }
@@ -288,13 +321,18 @@ public class MainFrame extends JFrame {
         gameMode = PLAY_MODE;
         gameMoves.clear();
         movesDone = 0;
-        saveGame(TubesIO.tempFileName);
+        saveTempGame();
 
         if (palPan != null) {
             palPan.setVisible(false);
             colorsVisible = false;
             redockTubes();
         }
+
+        if (Options.saveGameAfterFill) {
+            saveGameAs(fileNameSuffix);
+        }
+
         startPlayMode();
     }
 
@@ -308,7 +346,7 @@ public class MainFrame extends JFrame {
             tube.setActive(!tube.isClosed());
             tube.setShade((tube.isClosed()) ? 4 : 0);
         }
-        saveOnExit = true;
+        saveTempOnExit = true;
         setTubeFrom(null);
         movesDone = 0;
     }
@@ -321,21 +359,21 @@ public class MainFrame extends JFrame {
                 tubesPan.getTube(i).setActive(true);
             }
         }
-        saveOnExit = true;
+        saveTempOnExit = true;
         setTubeFrom(null);
     }
 
     public void startAssistMode() {
         setGameMode(ASSIST_MODE);
         setTubeFrom(null);
-        saveOnExit = true;
+        saveTempOnExit = true;
         hideMove();
         showMove();
     }
 
     public void endAssistMode() {
         setGameMode(PLAY_MODE);
-        saveOnExit = true;
+        saveTempOnExit = true;
         if (gameMoves.size() > movesDone) {
             tubesPan.getTube(gameMoves.getTubeFrom(movesDone)).hideArrow();
             tubesPan.getTube(gameMoves.getTubeFrom(movesDone)).hideShade();
@@ -350,8 +388,7 @@ public class MainFrame extends JFrame {
     }
 
     public void endGame() {
-        saveOnExit = false;
-        setGameMode(END_GAME);
+        saveTempOnExit = false;
         TubesIO.fileDelete(TubesIO.tempFileName);
 
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
@@ -361,8 +398,10 @@ public class MainFrame extends JFrame {
             tubesPan.getTube(i).showShade();
         }
 
+        setGameMode(END_GAME);
         gameMoves.clear();
         movesDone = 0;
+
         congPan.setVisible(true);
     }
 
@@ -389,6 +428,20 @@ public class MainFrame extends JFrame {
         Palette.usedColors.clearAllColorCounts();
         toolPan.updateButtons();
         repaint();
+    }
+
+    public void doSolve() {
+        if (tubesPan.doSolve()) {
+            startAssistMode();
+            if (Options.saveGameAfterSolve) {
+                fileNameSuffix = "solved";
+                saveGameAs(fileNameSuffix);
+                fileNameSuffix = "";
+            }
+        } else {
+            endAssistMode();
+            resumePlayMode();
+        }
     }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -677,6 +730,7 @@ public class MainFrame extends JFrame {
     }
 
     public void autoFillTheRest() {
+        fileNameSuffix = "auto fill";
         for (int t = 0; t < filledTubes; t++) {
             for (int i = tubesPan.getTube(t).getColorsCount(); i < 4; i++) {
                 int clr = Palette.usedColors.getRandomColor();
@@ -834,7 +888,7 @@ public class MainFrame extends JFrame {
                         setTubeFrom(tube);
                     } else {
                         if (!tube.isClosed() && !tube.isEmpty()) {
-                            // выход из режима помощника
+                            // exit from the assist mode
                             MessageDlg msgFrame = new MessageDlg(this,
                                     ResStrings.getString("strExitAssistMode"),
                                     MessageDlg.BTN_YES_NO);
@@ -851,7 +905,7 @@ public class MainFrame extends JFrame {
                     setTubeTo(tube);
                 } else {
                     if (!tube.isClosed()) {
-                        // выход из режима помощника
+                        // exit from the assist mode
                         MessageDlg msgFrame = new MessageDlg(this,
                                 ResStrings.getString("strExitAssistMode"),
                                 MessageDlg.BTN_YES_NO);
@@ -950,7 +1004,7 @@ public class MainFrame extends JFrame {
                 if (palPan.getDockedTo() > 1) { // left, right
                     dim.width = dim.width + palPan.getWidth();
                     dim.height = Math.max(dim.height, palPan.getHeight());
-                } else {
+                } else { // top, bottom
                     dim.width = Math.max(dim.width, palPan.getWidth());
                     dim.height = dim.height + palPan.getHeight();
                 }
@@ -959,16 +1013,14 @@ public class MainFrame extends JFrame {
                 if (toolPan.getDockedTo() > 1) { // left, right
                     dim.width = dim.width + toolPan.getButtonsHeight();
                     dim.height = Math.max(dim.height, toolPan.getButtonsWidth());
-                } else {
+                } else { // top, bottom
                     dim.width = Math.max(dim.width, toolPan.getButtonsWidth());
                     dim.height = dim.height + toolPan.getButtonsHeight();
                 }
-
             }
 
             dim.width += getWidth() - getContentPane().getWidth();
             dim.height += getHeight() - getContentPane().getHeight();
-
         }
 
         setMinimumSize(dim);

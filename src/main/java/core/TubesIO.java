@@ -141,7 +141,7 @@ public class TubesIO {
     }
 
     /**
-     * Checks if the file is exist.
+     * Checks if the file is existing.
      *
      * @param fileName name of the file
      * @return true or false
@@ -284,7 +284,7 @@ public class TubesIO {
      * algorithm. This routine counts only part of the buffer.
      *
      * @param buffer array of bytes
-     * @param length which part of bufer will be used to count the CRC
+     * @param length which part of buffer will be used to count the CRC
      * @return CRC in 2 bytes
      */
     public static int getCRCver2(byte[] buffer, int length) {
@@ -309,9 +309,10 @@ public class TubesIO {
             }
             pos++;                               // next buffer position
         }
+
         // Now you can get LOW and HIGH bytes of the CRC.
-        //   crcLo = crc & 0xff;                   
-        //   crcHi = (crc >> 8) & 0xff;
+        //   Low byte:    crcLo = crc & 0xff;
+        //   High byte:   crcHi = (crc >> 8) & 0xff;
         return crc;
     }
 
@@ -482,7 +483,7 @@ public class TubesIO {
             if (ver == 1) {
                 fileCRC = getCRCver1();
                 baos.writeInt(fileCRC);
-            } else if (ver == 2) {
+            } else { // if (ver == 2)
                 fileCRC = getCRCver2(baos.toByteArray());
                 baos.writeWord(fileCRC);
             }
@@ -581,15 +582,11 @@ public class TubesIO {
                 for (int i = 0; i < movesCount; i++) {
                     dw = bais.readInt();
                     storedMoves[i] = dw;
-                    // tubeFrom = (w >> 24) & 0xff;
-                    // tubeTo = (w >> 16) & 0xff;
-                    // mCount = (w >> 8) & 0xff;
-                    // color = (w) & 0xff;
 
                     result = result
-                            && ((dw >> 24) & 0xff) < tubesCount
-                            && ((dw >> 16) & 0xff) < tubesCount
-                            && ((dw >> 8) & 0xff) > 0;
+                            && ((dw >> 24) & 0xff) < tubesCount // check tubeFrom
+                            && ((dw >> 16) & 0xff) < tubesCount // check tubeTo
+                            && ((dw >> 8) & 0xff) > 0; // checks count
                 }
             }
 
@@ -628,10 +625,10 @@ public class TubesIO {
         try ( FileInputStream S = new FileInputStream(fileName)) {
             result = loadFromStream(S);
         } catch (FileNotFoundException ex) {
-            System.err.println("Could not find file: " + fileName);
+            System.err.println("TubesIO.loadFromFile: Could not find file " + fileName);
             result = false;
         } catch (IOException ex) {
-            System.err.println("Error while loading file: " + fileName);
+            System.err.println("TubesIO.loadFromFile: Error while loading file " + fileName);
             result = false;
         }
         return result;
@@ -656,9 +653,9 @@ public class TubesIO {
         try ( FileOutputStream S = new FileOutputStream(fileName)) {
             saveToStream(S, fileVer);
         } catch (FileNotFoundException ex) {
-            System.err.println("Could not find file: " + fileName);
+            System.err.println("TubesIO.saveToFile: Could not find file " + fileName);
         } catch (IOException ex) {
-            System.err.println("Error while saving file: " + fileName);
+            System.err.println("TubesIO.saveToFile: Error while saving file " + fileName);
         }
     }
 
@@ -711,7 +708,7 @@ public class TubesIO {
      * @return true if success, false if IO error
      */
     public static boolean loadOptions(Properties props) {
-        try ( FileInputStream in
+        try (FileInputStream in
                 = new FileInputStream(getAppDirFile("tubesolvergui.properties"))) {
             props.load(in);
         } catch (IOException ignore) {

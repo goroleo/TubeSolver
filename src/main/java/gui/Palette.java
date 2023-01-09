@@ -70,9 +70,9 @@ public class Palette extends ArrayList<Color> {
         paletteProps.setProperty("colors", Integer.toString(size()-1));
         paletteProps.setProperty("bg", "0x" + Integer.toHexString(backgroundColor.getRGB()));
         paletteProps.setProperty("dlg", "0x" + Integer.toHexString(dialogColor.getRGB()));
-        for (int i = 0; i < size(); i++) {
+        for (int i = 1; i < size(); i++) {
             hexColor = Integer.toHexString(getColorValue(i));
-            paletteProps.setProperty("color" + (i), "0x" + hexColor);
+            paletteProps.setProperty("color" + i, "0x" + hexColor);
         }
         TubesIO.savePalette(paletteProps);
     }
@@ -85,17 +85,17 @@ public class Palette extends ArrayList<Color> {
 
         this.add(backgroundColor);
         this.add(Options.colorFromHex("#ff38ff4d")); // 1
-        this.add(Options.colorFromHex("#ff27deff")); // 2
-        this.add(Options.colorFromHex("#ff8b5331")); // 3
-        this.add(Options.colorFromHex("#ff92ad21")); // 4
-        this.add(Options.colorFromHex("#ff757778")); // 5
-        this.add(Options.colorFromHex("#ff006f00")); // 6
+        this.add(Options.colorFromHex("#ff1dd3f4")); // 2
+        this.add(Options.colorFromHex("#ff884822")); // 3
+        this.add(Options.colorFromHex("#ff8eaf00")); // 4
+        this.add(Options.colorFromHex("#ff737f8c")); // 5
+        this.add(Options.colorFromHex("#ff067606")); // 6
         this.add(Options.colorFromHex("#ff3632de")); // 7 
-        this.add(Options.colorFromHex("#fff98f0f")); // 8
-        this.add(Options.colorFromHex("#ffa6158c")); // 9
-        this.add(Options.colorFromHex("#ffea1a0f")); // 10
-        this.add(Options.colorFromHex("#fffd68b3")); // 11
-        this.add(Options.colorFromHex("#fffff03e")); // 12
+        this.add(Options.colorFromHex("#fff36d00")); // 8
+        this.add(Options.colorFromHex("#ffaf008f")); // 9
+        this.add(Options.colorFromHex("#ffe60f04")); // 10
+        this.add(Options.colorFromHex("#ffff7abc")); // 11
+        this.add(Options.colorFromHex("#ffffeb04")); // 12
     }
 
 }
