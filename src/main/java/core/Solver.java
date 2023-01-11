@@ -13,7 +13,7 @@ import static gui.MainFrame.gameMoves;
 import static gui.MainFrame.movesDone;
 
 /**
- * The solver is the solver. He passes through the moves' tree  and finds a solution to the game. Or does not find.
+ * The solver is the solver. It passes through the moves' tree  and finds a solution to the game. Or does not find.
  */
 public class Solver implements Runnable {
 
