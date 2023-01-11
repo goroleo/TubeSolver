@@ -119,7 +119,7 @@ public class ColorMoveItem implements Comparator<ColorMoveItem> {
                 // are we going in circles?
                 bmOneOfParents = bmBefore;
                 do {
-                    result = !bmAfter.isEqualsTo(bmOneOfParents);
+                    result = !bmAfter.equalsTo(bmOneOfParents);
                     bmOneOfParents = bmOneOfParents.parent;
                 } while (result && bmOneOfParents != null);
             }

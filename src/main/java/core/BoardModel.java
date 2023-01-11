@@ -111,13 +111,13 @@ public class BoardModel extends ArrayList<TubeModel> {
     }
 
     /**
-     * Is this board equals to another tubes board? The routine stores both
+     * Is this board equal to another tubes board? The routine stores both
      * boards to integer arrays then sort and compares them.
      *
      * @param tm another tubes board
      * @return true or false
      */
-    public boolean isEqualsTo(BoardModel tm) {
+    public boolean equalsTo(BoardModel tm) {
         boolean result = this.size() == tm.size();
 
         if (result) {
