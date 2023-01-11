@@ -21,11 +21,14 @@ lib\lOpenSaveDialog\FoldersPanel$1.class
 ani\SlideLayer.class
 lib\lOpenSaveDialog\FileEditPanel.class
 lib\lOpenSaveDialog\FoldersPanel.class
+dlg\OptionsDlg.class
 lib\lOpenSaveDialog\FilesPanel$2.class
 lib\lColorDialog\ColorBox.class
 gui\BoardPanel$1.class
+dlg\OptionsDlg$1.class
 lib\lTextFields\LDecTextField.class
 lib\lColorDialog\ColorListener.class
+lib\lMenus\LPopupMenu.class
 run\Main.class
 gui\CongratsPanel$2.class
 lib\lOpenSaveDialog\FileEditPanel$1.class

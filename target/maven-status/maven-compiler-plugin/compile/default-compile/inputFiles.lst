@@ -27,6 +27,7 @@ D:\JavaProjects\TubeSolver\src\main\java\gui\PaletteMenu.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\ScrollBar.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\OpenSavePanel.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FoldersPanel.java
+D:\JavaProjects\TubeSolver\src\main\java\lib\lMenus\LPopupMenu.java
 D:\JavaProjects\TubeSolver\src\main\java\dlg\SolveDlg.java
 D:\JavaProjects\TubeSolver\src\main\java\gui\ColorTube.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lColorDialog\ColorCurrent.java
@@ -47,6 +48,7 @@ D:\JavaProjects\TubeSolver\src\main\java\lib\lColorDialog\ColorPanel.java
 D:\JavaProjects\TubeSolver\src\main\java\dlg\MessageDlg.java
 D:\JavaProjects\TubeSolver\src\main\java\gui\ToolMenu.java
 D:\JavaProjects\TubeSolver\src\main\java\gui\ColorButton.java
+D:\JavaProjects\TubeSolver\src\main\java\dlg\OptionsDlg.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FolderChooser.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FilesPanel.java
 D:\JavaProjects\TubeSolver\src\main\java\ani\ShadeLayer.java
