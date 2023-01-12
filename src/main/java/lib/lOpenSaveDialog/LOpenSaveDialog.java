@@ -96,7 +96,7 @@ public class LOpenSaveDialog extends JDialog {
         addListeners();
         this.owner = owner;
         initFrame();
-        if (!file.isDirectory()) {
+        if (file != null && !file.isDirectory()) {
             setFileName(file);
         }
     }
