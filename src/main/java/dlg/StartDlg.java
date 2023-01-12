@@ -139,17 +139,17 @@ public class StartDlg extends JDialog {
                 newFrame = new CreateNewDlg(parent);
                 newFrame.setVisible(true);
                 if (newFrame.ok) {
+                    dispose();
                     Main.frame.setGameMode(MainFrame.PLAY_MODE);
                     Main.frame.startAutoFillMode(newFrame.tubesFilled, newFrame.tubesEmpty);
-                    dispose();
                 }
                 break;
             case 2: // manual
                 newFrame = new CreateNewDlg(parent);
                 newFrame.setVisible(true);
                 if (newFrame.ok) {
-                    Main.frame.startFillMode(newFrame.tubesFilled, newFrame.tubesEmpty);
                     dispose();
+                    Main.frame.startFillMode(newFrame.tubesFilled, newFrame.tubesEmpty);
                 }
                 break;
             case 3: // load
