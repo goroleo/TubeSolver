@@ -471,7 +471,7 @@ public class BoardPanel extends JComponent {
             getTube(i).restoreColors(newTube);
         }
         if (MainFrame.gameMode == MainFrame.PLAY_MODE) {
-            Main.frame.resumePlayMode();
+            Main.frame.startPlayMode();
         } else if (MainFrame.gameMode == MainFrame.ASSIST_MODE) {
             Main.frame.startAssistMode();
         }

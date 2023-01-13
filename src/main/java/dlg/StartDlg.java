@@ -12,11 +12,11 @@ package dlg;
 import core.TubesIO;
 import gui.MainFrame;
 import gui.Palette;
-import java.awt.Color;
+
+import java.awt.*;
+
 import core.ResStrings;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Rectangle;
+
 import java.awt.event.ActionEvent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -121,7 +121,7 @@ public class StartDlg extends JDialog {
             case 0: // resume
                 switch (MainFrame.gameMode) {
                     case MainFrame.PLAY_MODE:
-                        Main.frame.resumePlayMode();
+                        Main.frame.startPlayMode();
                         break;
                     case MainFrame.ASSIST_MODE:
                         Main.frame.startAssistMode();
@@ -149,7 +149,7 @@ public class StartDlg extends JDialog {
                 newFrame.setVisible(true);
                 if (newFrame.ok) {
                     dispose();
-                    Main.frame.startFillMode(newFrame.tubesFilled, newFrame.tubesEmpty);
+                    Main.frame.startManualFillMode(newFrame.tubesFilled, newFrame.tubesEmpty);
                 }
                 break;
             case 3: // load
@@ -159,7 +159,7 @@ public class StartDlg extends JDialog {
                     if (Main.frame.loadGame(fileName)) {
                         switch (MainFrame.gameMode) {
                             case MainFrame.PLAY_MODE:
-                                Main.frame.resumePlayMode();
+                                Main.frame.startPlayMode();
                                 break;
                             case MainFrame.ASSIST_MODE:
                                 Main.frame.startAssistMode();
@@ -173,7 +173,7 @@ public class StartDlg extends JDialog {
                         dispose();
                     } else {
                         MessageDlg msgDlg = new MessageDlg(Main.frame,
-                                "Cannot load the game. Please, try again",
+                                ResStrings.getString("strCannotLoad"),
                                 MessageDlg.BTN_OK);
                         msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
                         msgDlg.setVisible(true);

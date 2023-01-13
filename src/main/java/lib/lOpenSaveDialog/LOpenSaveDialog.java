@@ -12,9 +12,8 @@ package lib.lOpenSaveDialog;
 import core.Options;
 import gui.Palette;
 import core.ResStrings;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -24,6 +23,8 @@ import java.io.File;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
+
+import static java.awt.EventQueue.invokeLater;
 import static lib.lOpenSaveDialog.OpenSavePanel.fsv;
 
 /**

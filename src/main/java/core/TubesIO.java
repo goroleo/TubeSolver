@@ -355,12 +355,16 @@ public class TubesIO {
     }
 
     public static void restoreTubes(BoardPanel bp) {
+        restoreTubes(bp, true);
+    }
+    public static void restoreTubes(BoardPanel bp, boolean hideFillAnimation) {
         if (bp.getTubesCount() > 0) {
             bp.clearTubes();
         }
         for (int i = 0; i < tubesCount; i++) {
             ColorTube tube = bp.addNewTube();
-            tube.setColorsAnimation(false);
+            if (hideFillAnimation)
+                tube.setColorsAnimation(false);
             tube.restoreColors(storedTubes[i]);
             tube.updateState();
             tube.setActive(!tube.isClosed());

@@ -205,7 +205,7 @@ public class ToolPanel extends JPanel {
             if (Main.frame.loadGame(fileName)) {
                 switch (MainFrame.gameMode) {
                     case MainFrame.PLAY_MODE:
-                        Main.frame.resumePlayMode();
+                        Main.frame.startPlayMode();
                         break;
                     case MainFrame.ASSIST_MODE:
                         Main.frame.startAssistMode();
@@ -221,7 +221,7 @@ public class ToolPanel extends JPanel {
     }
 
     public void saveClick() {
-        Main.frame.saveGameAs("save");
+        Main.frame.saveGameAs();
     }
 
     public void undoClick() {

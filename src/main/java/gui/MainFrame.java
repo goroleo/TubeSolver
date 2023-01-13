@@ -17,7 +17,6 @@ import core.TubesIO;
 import dlg.MessageDlg;
 import dlg.StartDlg;
 import lib.lOpenSaveDialog.LOpenSaveDialog;
-import run.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -138,7 +137,6 @@ public class MainFrame extends JFrame {
 
     public void showFrame() {
         EventQueue.invokeLater(() -> setVisible(true));
-
         StartDlg startFrame = new StartDlg(this);
         EventQueue.invokeLater(() -> startFrame.setVisible(true));
     }
@@ -161,7 +159,7 @@ public class MainFrame extends JFrame {
             saveTempGame();
         }
         if (Options.saveGameBeforeClose) {
-            saveGameAs("before close");
+            saveGameAs(ResStrings.getString("strSaveIDBeforeClose"));
         }
         System.exit(0);
     }
@@ -288,7 +286,7 @@ public class MainFrame extends JFrame {
 //                  *  modes *
 //
 //////////////////////////////////////////////////////////////////////////////
-    public void startFillMode(int aFilled, int aEmpty) {
+    public void startManualFillMode(int aFilled, int aEmpty) {
         setGameMode(FILL_MODE);
         clearBoard();
         addColorsPanel();
@@ -296,62 +294,61 @@ public class MainFrame extends JFrame {
         filledTubes = aFilled;
         emptyTubes = aEmpty;
         saveTempOnExit = true;
-        fileNameSuffix = "manual fill";
+        fileNameSuffix = ResStrings.getString("strSaveIDManualFill");
+        tubesPan.paintImmediately(tubesPan.getBounds());
         startFindTubesTo();
         nextTubeTo(0);
     }
 
     public void startAutoFillMode(int aFilled, int aEmpty) {
-        fileNameSuffix = "auto fill";
+        fileNameSuffix = ResStrings.getString("strSaveIDAutoFill");
         setGameMode(FILL_MODE);
         clearBoard();
         addTubesPanel(aFilled, aEmpty);
         filledTubes = aFilled;
         emptyTubes = aEmpty;
+        tubesPan.paintImmediately(tubesPan.getBounds());
         autoFillTheRest();
     }
 
     public void resumeFillMode() {
-        fileNameSuffix = "manual fill";
+        fileNameSuffix = ResStrings.getString("strSaveIDManualFill");
+        tubesPan.paintImmediately(tubesPan.getBounds());
         startFindTubesTo();
         nextTubeTo(0);
     }
 
     public void endFillMode() {
-        gameMode = PLAY_MODE;
-        gameMoves.clear();
-        movesDone = 0;
-        saveTempGame();
-
+        // hiding palette
         if (palPan != null) {
             palPan.setVisible(false);
             colorsVisible = false;
             redockTubes();
         }
 
-        if (Options.saveGameAfterFill) {
-            saveGameAs(fileNameSuffix);
-        }
-
-        startPlayMode();
-    }
-
-    public void startPlayMode() {
-        congPan.setVisible(false);
-        setGameMode(PLAY_MODE);
-
+        // preparing tubes for the play mode
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             ColorTube tube = tubesPan.getTube(i);
             tube.updateState();
             tube.setActive(!tube.isClosed());
             tube.setShade((tube.isClosed()) ? 4 : 0);
         }
-        saveTempOnExit = true;
         setTubeFrom(null);
+
+        // switching to play mode
+        setGameMode(PLAY_MODE);
+        gameMoves.clear();
         movesDone = 0;
+        saveTempOnExit = true;
+
+        // saving
+        saveTempGame();
+        if (Options.saveGameAfterFill) {
+            saveGameAs(fileNameSuffix);
+        }
     }
 
-    public void resumePlayMode() {
+    public void startPlayMode() {
         setGameMode(PLAY_MODE);
 
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
@@ -434,13 +431,11 @@ public class MainFrame extends JFrame {
         if (tubesPan.doSolve()) {
             startAssistMode();
             if (Options.saveGameAfterSolve) {
-                fileNameSuffix = "solved";
-                saveGameAs(fileNameSuffix);
-                fileNameSuffix = "";
+                saveGameAs(ResStrings.getString("strSaveIDSolved"));
             }
         } else {
             endAssistMode();
-            resumePlayMode();
+            startPlayMode();
         }
     }
 
@@ -730,7 +725,7 @@ public class MainFrame extends JFrame {
     }
 
     public void autoFillTheRest() {
-        fileNameSuffix = "auto fill";
+        fileNameSuffix = ResStrings.getString("strSaveIDAutoFill");
         for (int t = 0; t < filledTubes; t++) {
             for (int i = tubesPan.getTube(t).getColorsCount(); i < 4; i++) {
                 int clr = Palette.usedColors.getRandomColor();
@@ -741,6 +736,7 @@ public class MainFrame extends JFrame {
                 }
             }
         }
+        tubesPan.paintImmediately(tubesPan.getBounds());
         endFillMode();
     }
 

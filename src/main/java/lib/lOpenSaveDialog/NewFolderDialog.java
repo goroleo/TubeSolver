@@ -209,7 +209,7 @@ public class NewFolderDialog extends JDialog {
                 setFolder(f);
                 EventQueue.invokeLater(() -> dispose());
             } else {
-                lbError.setText("Error");
+                lbError.setText(ResStrings.getString("strError"));
                 lbError.setVisible(true);
             }
         } else {
