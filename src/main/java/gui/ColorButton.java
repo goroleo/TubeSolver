@@ -25,22 +25,58 @@ import javax.swing.event.ChangeEvent;
 
 public class ColorButton extends JButton {
 
-// Size:     
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Fields / variables *
+//
+///////////////////////////////////////////////////////////////////////////
+
+// Size values:
+
+    /** Width of the component  */
     private int w;
+
+    /** Height  of the component  */
     private int h;
-// Images:     
+
+// Layers images:
+
+    /** An image for the Shade/shadow layer  */
     private static BufferedImage imgShade = null;
+
+    /** An image for the color shape layer  */
     private static BufferedImage imgColorShape = null;
+
+    /** An image for the bevel layer: enabled button state */
     private static BufferedImage imgBevelUp = null;
+
+    /** An image for the bevel layer: Down/clicked button state */
     private static BufferedImage imgBevelDown = null;
+
+    /** An image for the bevel layer: disabled button state */
     private static BufferedImage imgBevelDisabled = null;
+
+    /** An image for the button frame: enabled */
     private static BufferedImage imgFrameEnabled = null;
+
+    /** An image for the button frame: focused */
     private static BufferedImage imgFrameFocused = null;
+
+    /** An image for the counter layer: 1 */
     private static BufferedImage imgCount1 = null;
+
+    /** An image for the counter layer: 2 */
     private static BufferedImage imgCount2 = null;
+
+    /** An image for the counter layer: 3 */
     private static BufferedImage imgCount3 = null;
+
+    /** An image for the counter layer: 4 */
     private static BufferedImage imgCount4 = null;
-// Layers:     
+
+// Buttons layers:
+
+    /** An image for the counter layer: 4 */
     private final ShadeLayer shadeLayer;
     private final ShapeLayer colorLayer;
     private final ImageLayer bevelLayer;
@@ -118,7 +154,7 @@ public class ColorButton extends JButton {
                 bevelLayer.setImage(imgBevelDisabled);
                 shadeLayer.doHide();
             }
-        });
+        }); // addChangeListener
     }
 
     public void colorChange() {

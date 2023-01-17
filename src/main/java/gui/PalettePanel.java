@@ -1,45 +1,98 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package gui;
 
 import core.Options;
-import java.awt.Color;
-import java.awt.Rectangle;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import javax.swing.JComponent;
+
 import static gui.MainFrame.pal;
 import static run.Main.frame;
-import java.awt.event.ActionEvent;
 
+/**
+ * A Panel consists of color buttons, one button per one palette color. So the count of Color Buttons is the
+ * count of the palette colors. The main actions of the buttons are to choose a color to put to the tube
+ * and to change the color of the palette.
+ *
+ * @see ColorButton
+ */
 public class PalettePanel extends JComponent {
 
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Fields / variables *
+//
+///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Color Buttons array.
+     */
     private final ArrayList<ColorButton> colors = new ArrayList<>();
+
+    /**
+     * The space between buttons by horizontal direction.
+     */
     private int spaceX = 15;
+
+    /**
+     * The space between buttons by vertical direction.
+     */
     private int spaceY = 12;
+
+    /**
+     * Number of rows to display color buttons.
+     */
     private int rows;
+
+    /**
+     * Number of columns to display color buttons.
+     */
     private int cols;
+
+    /**
+     * Which edge of the client area the panel will be docked to: <ul>
+     * <li>0 - top;
+     * <li>1 - bottom;
+     * <li>2 - left;
+     * <li>3 - right.</ul>
+     */
     private int docked = 0;
 
+    /**
+     * The popup menu with Color Buttons actions.
+     */
     private static final PaletteMenu menu = new PaletteMenu();
 
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Routines *
+//
+///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Constructor of the Palette Panel. It creates all color buttons and positioned itself to the
+     * proper place of the Main frame.
+     */
     public PalettePanel() {
 
         for (int i = 0; i < pal.size() - 1; i++) {
             ColorButton cb = new ColorButton(i);
             cb.setCount(4);
+            cb.addActionListener((ActionEvent e) -> clickButton(cb));
             colors.add(cb);
             this.add(cb);
-
-            cb.addActionListener((ActionEvent e) -> clickButton(cb));
         }
 
         if (Options.palDockedTo >= 0
@@ -47,37 +100,32 @@ public class PalettePanel extends JComponent {
                 && Options.palLines > 0
                 && Options.palLines < 4) {
             docked = Options.palDockedTo;
-            switch (docked) {
-                case 0: // top
-                case 1: // bottom
-                    rows = Options.palLines;
-                    calculateColumns();
-                    break;
-                case 2: // left
-                case 3: // right
-                    cols = Options.palLines;
-                    calculateRows();
-                    break;
+            if (docked < 2) { // horizontal
+                setRows(Options.palLines);
+            } else { // vertical
+                setColumns(Options.palLines);
             }
         } else {
-            rows = 2;
-            calculateColumns();
+            setRows(2);
         }
-
-        calculateSize();
-        updateButtonsPos();
     }
 
+    /**
+     * The routine to add Popup Menu for the Panel and all Color Buttons. We don't need popups at the Palette
+     * Dialog, so adding popups is the separate routine.
+     */
     public void addPopups() {
         addPopupMenu(this);
-        for (int i = 0; i < pal.size() - 1; i++) {
-            addPopupMenu(getButton(i));
+        for (ColorButton cb : colors) {
+            addPopupMenu(cb);
         }
     }
 
+    /**
+     * The routine to add Palette Popup to the specified component.
+     */
     public void addPopupMenu(JComponent comp) {
         comp.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mousePressed(MouseEvent e) {
                 maybeShowPopup(e);
@@ -97,45 +145,61 @@ public class PalettePanel extends JComponent {
         });
     }
 
+    /**
+     * Get number of rows of the palette buttons.
+     */
     public int getRows() {
         return rows;
     }
 
+    /**
+     * Get number of columns of the palette buttons.
+     */
     public int getCols() {
         return cols;
     }
 
+    /**
+     * Set palette buttons rows.
+     * @param newRows new rows value
+     */
     public void setRows(int newRows) {
         rows = newRows;
-        calculateColumns();
-        calculateSize();
-        updateButtonsPos();
-        reDock();
-    }
 
-    public void setColumns(int newCols) {
-        cols = newCols;
-        calculateRows();
-        calculateSize();
-        updateButtonsPos();
-        reDock();
-    }
-
-    private void calculateColumns() {
+        // calculating columns
         cols = colors.size() / rows;
         if (cols * rows < colors.size()) {
             cols++;
         }
+
+        updateSize();
+        updateAllButtonsPos();
+        reDock();
     }
 
-    private void calculateRows() {
+    /**
+     * Set palette buttons columns.
+     * @param newCols new columns value
+     */
+    public void setColumns(int newCols) {
+        cols = newCols;
+
+        // calculating rows
         rows = colors.size() / cols;
         if (cols * rows < colors.size()) {
             rows++;
         }
+
+        updateSize();
+        updateAllButtonsPos();
+        reDock();
     }
 
-    private void setBtnPos(int number) {
+    /**
+     * Set location of the specified button used current values of rows and columns.
+     * @param number button's number
+     */
+    private void locateButton(int number) {
         int col = number % cols;
         int row = number / cols;
         int x = spaceX + col * (getButton(number).getWidth() + spaceX);
@@ -149,23 +213,40 @@ public class PalettePanel extends JComponent {
         getButton(number).setLocation(x, y);
     }
 
-    private void updateButtonsPos() {
+    /**
+     * Update all buttons' location.
+     */
+    private void updateAllButtonsPos() {
         for (int i = 0; i < colors.size(); i++) {
-            setBtnPos(i);
+            locateButton(i);
         }
     }
 
-    public final void calculateSize() {
+    /**
+     * Calculates and sets the component size. The size depends on current value of rows and columns.
+     */
+    public final void updateSize() {
         setSize(spaceX + cols * (spaceX + colors.get(0).getWidth()),
                 spaceY + rows * (spaceY + colors.get(0).getHeight()));
     }
 
+    /**
+     * Gets the edge of the MainFrame the toolbar is docked to.
+     *
+     * @return current dockedTo value
+     * @see #docked
+     */
     public int getDockedTo() {
         return docked;
     }
 
-    public void setDockedTo(int number) {
-        docked = number;
+    /**
+     * Sets the edge of the MainFrame the toolbar is docked to.
+     * @param newDocked the new docked value.
+     * @see #docked
+     */
+    public void setDockedTo(int newDocked) {
+        docked = newDocked;
         if (docked < 2) {
             setRows(Math.min(rows, cols));
         } else {
@@ -174,6 +255,9 @@ public class PalettePanel extends JComponent {
         reDock();
     }
 
+    /**
+     * Relocates the panel and then relocates the tubes panel too.
+     */
     public void reDock() {
         Rectangle r = frame.getColorsArea();
         switch (docked) {
@@ -196,63 +280,105 @@ public class PalettePanel extends JComponent {
         frame.redockTubes();
     }
 
+    /**
+     * Sets new spaces values between color buttons.
+     * @param spaceX horizontal space
+     * @param spaceY vertical space
+     */
     public void setSpaces(int spaceX, int spaceY) {
         this.spaceX = spaceX;
         this.spaceY = spaceY;
+        updateSize();
+        updateAllButtonsPos();
         reDock();
     }
 
+    /**
+     * Gets the button by its number.
+     * @param number button number
+     * @return Color button
+     */
     public ColorButton getButton(int number) {
         return colors.get(number);
     }
 
+    /**
+     * Gets the button by color number at palette.
+     * @param colorNum number of color
+     * @return Color button
+     */
     public ColorButton getButtonByColor(int colorNum) {
         return colors.get(colorNum - 1);
     }
 
+    /**
+     * Gets the palette's color number from the specified button
+     * @param number button number
+     * @return number of color at the palette
+     */
     public int getButtonColorNum(int number) {
         return colors.get(number).getColorNumber();
     }
 
+    /**
+     * Gets the color of the specified button.
+     * @param number button number
+     * @return Color
+     */
     public Color getColor(int number) {
         return colors.get(number).getColor();
     }
 
+    /**
+     * Sets the default palette colors to all color buttons
+     */
     public void setDefaultPalette() {
         pal.defaultPalette();
         updateColors();
     }
 
+    /**
+     * This routine updates and repaints all the color buttons
+     */
     public void updateColors() {
         for (int i = 0; i < pal.size() - 1; i++) {
             getButton(i).repaintColor();
         }
     }
 
+    /**
+     * Gets the count of color buttons.
+     */
     public int getColorsCount() {
         return colors.size();
     }
 
+    /**
+     * Saves this panel options, docked and number of lines.
+     */
     public void saveOptions() {
-        switch (docked) {
-            case 0: // top
-            case 1: // bottom
-                Options.palLines = rows;
-                break;
-            case 2: // left
-            case 3: // right
-                Options.palLines = cols;
-                break;
+        if (docked < 2) { // horizontal
+            Options.palLines = rows;
+        } else { // vertical
+            Options.palLines = cols;
         }
         Options.palDockedTo = docked;
     }
 
+    /**
+     * Calls the color picked dialog of the specified Color Button.
+     * @param cb specified color button
+     */
     public void changeColor(ColorButton cb) {
         cb.colorChange();
     }
 
+    /**
+     * Handles the mouse click or Enter/Space press on the specified button.
+     * @param cb specified color button
+     */
     public void clickButton(ColorButton cb) {
-
+        // the routine to override it
     }
 
 }

@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
+ *
+ * This software is distributed under the <b>MIT License.</b>
+ * The full text of the License you can read here:
+ * https://choosealicense.com/licenses/mit/
+ *
+ * Use this as you want! ))
+ */
 package dlg;
 
 import core.Options;
@@ -237,7 +246,9 @@ public class OptionsDlg extends JDialog {
         Font f = g.getFont();
         FontMetrics fm = g.getFontMetrics(f);
 
+        // text height
         int th = (int) (72.0 * f.getSize() / Toolkit.getDefaultToolkit().getScreenResolution());
+        // text width
         int tw = (s != null) ? fm.stringWidth(s) : 0;
 
         if (s != null) {

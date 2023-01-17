@@ -19,25 +19,62 @@ import java.awt.event.ActionEvent;
 
 import static gui.MainFrame.toolPan;
 
+/**
+ * The popup menu for the toolbar / tool panel.
+ */
 public class ToolMenu extends LPopupMenu {
 
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Fields / variables *
+//
+///////////////////////////////////////////////////////////////////////////
+
+    /** This menu caption. */
     private final JMenuItem tools;
+
+    /** Docked position menu item. */
     private final JMenu pos;
+
+    /** Position menu item: docked to top. */
     private final JMenuItem top;
+
+    /** Position menu item: docked to bottom. */
     private final JMenuItem bottom;
+
+    /** Position menu item: docked to left. */
     private final JMenuItem left;
+
+    /** Position menu item: docked to right. */
     private final JMenuItem right;
 
+    /** Alignment menu item. */
     private final JMenu align;
+
+    /** Alignment menu item: align to begin (top / left). */
     private final JMenuItem begin;
+
+    /** Alignment menu item: align to center. */
     private final JMenuItem center;
+
+    /** Alignment menu item: align to end (bottom / right). */
     private final JMenuItem end;
 
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Routines *
+//
+///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * The constructor. Creates the Tool menu and adds menu items.
+     */
     public ToolMenu() {
         super();
 
         tools = addMenuItem(null, ResStrings.getString("strToolbar"));
         tools.setFont(tools.getFont().deriveFont(1, 13f));
+
         addSeparator(null);
 
         // position menu
@@ -56,7 +93,7 @@ public class ToolMenu extends LPopupMenu {
             right.addActionListener((ActionEvent e) -> positionClick(3));
         }
 
-        // number of lines menu
+        // alignment menu
         align = addMenu(null, ResStrings.getString("strAlignment"));
         {
             begin = addMenuItem(align, ResStrings.getString("strBegin"));
@@ -68,55 +105,6 @@ public class ToolMenu extends LPopupMenu {
         }
     }
 
-    private void positionClick(int number) {
-        toolPan.setDockedTo(number);
-        updatePosIcons();
-    }
-
-    private void alignClick(int number) {
-        toolPan.setAlignment(number);
-        updateAlignIcons();
-    }
-
-    private void updatePosIcons() {
-        top.setIcon(null);
-        bottom.setIcon(null);
-        left.setIcon(null);
-        right.setIcon(null);
-
-        switch (toolPan.getDockedTo()) {
-            case 0:
-                top.setIcon(Options.cbIconSelected);
-                break;
-            case 1:
-                bottom.setIcon(Options.cbIconSelected);
-                break;
-            case 2:
-                left.setIcon(Options.cbIconSelected);
-                break;
-            case 3:
-                right.setIcon(Options.cbIconSelected);
-                break;
-        }
-    }
-
-    private void updateAlignIcons() {
-        begin.setIcon(null);
-        center.setIcon(null);
-        end.setIcon(null);
-        switch (toolPan.getAlignment()) {
-            case 0:
-                begin.setIcon(Options.cbIconSelected);
-                break;
-            case 1:
-                center.setIcon(Options.cbIconSelected);
-                break;
-            case 2:
-                end.setIcon(Options.cbIconSelected);
-                break;
-        }
-    }
-
     @Override
     public void show(Component invoker, int x, int y) {
         updatePosIcons();
@@ -125,6 +113,80 @@ public class ToolMenu extends LPopupMenu {
         super.show(invoker, x, y);
     }
 
+    /**
+     * Handles the click on position items.
+     */
+    private void positionClick(int number) {
+        toolPan.setDockedTo(number);
+        updatePosIcons();
+    }
+
+    /**
+     * Handles the click on alignment items.
+     */
+    private void alignClick(int number) {
+        toolPan.setAlignment(number);
+        updateAlignIcons();
+    }
+
+    /**
+     * Gets the current docked position value and shows icon at the proper item.
+     */
+    private void updatePosIcons() {
+        switch (toolPan.getDockedTo()) {
+            case 0:
+                top.setIcon(Options.cbIconSelected);
+                bottom.setIcon(null);
+                left.setIcon(null);
+                right.setIcon(null);
+                break;
+            case 1:
+                top.setIcon(null);
+                bottom.setIcon(Options.cbIconSelected);
+                left.setIcon(null);
+                right.setIcon(null);
+                break;
+            case 2:
+                top.setIcon(null);
+                bottom.setIcon(null);
+                left.setIcon(Options.cbIconSelected);
+                right.setIcon(null);
+                break;
+            case 3:
+                top.setIcon(null);
+                bottom.setIcon(null);
+                left.setIcon(null);
+                right.setIcon(Options.cbIconSelected);
+                break;
+        }
+    }
+
+    /**
+     * Gets the current alignment value and shows icon at the proper item.
+     */
+    private void updateAlignIcons() {
+        switch (toolPan.getAlignment()) {
+            case 0:
+                begin.setIcon(Options.cbIconSelected);
+                center.setIcon(null);
+                end.setIcon(null);
+                break;
+            case 1:
+                begin.setIcon(null);
+                center.setIcon(Options.cbIconSelected);
+                end.setIcon(null);
+                break;
+            case 2:
+                begin.setIcon(null);
+                center.setIcon(null);
+                end.setIcon(Options.cbIconSelected);
+                break;
+        }
+    }
+
+    /**
+     * Updates menu captions if the application's language has been changed.
+     */
     public void updateLanguage() {
         tools.setText(ResStrings.getString("strToolbar"));
         pos.setText(ResStrings.getString("strPosition"));

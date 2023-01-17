@@ -36,11 +36,16 @@ public class MainFrame extends JFrame {
     public static boolean colorsVisible;
     public static BoardPanel tubesPan;
     public static boolean tubesVisible;
+
+    /**
+     * The toolbar with action buttons.
+     */
     public static ToolPanel toolPan;
 
-    public static PatternLayer pattern;
+    /** The background layer of the Main frame. */
+    private static PatternLayer pattern;
 
-    CongratsPanel congPan = new CongratsPanel();
+    private final CongratsPanel congPan = new CongratsPanel();
 
     public static GameMoves gameMoves = new GameMoves();
     public static int movesDone;
@@ -55,8 +60,8 @@ public class MainFrame extends JFrame {
     public final static int ASSIST_MODE = 300;
     public final static int VIEW_MODE = 400; // reserved for future use
 
-    public static int filledTubes;
-    public static int emptyTubes;
+    private static int filledTubes;
+    private static int emptyTubes;
 
     private boolean saveTempOnExit = false;
     private String fileNameSuffix;
@@ -83,7 +88,7 @@ public class MainFrame extends JFrame {
                 toolPan.resize();
                 updatePanelsPos();
                 if (congPan.isVisible()) {
-                    congPan.updatePos();
+                    congPan.updateSizeAndPos();
                 }
             }
         });
@@ -788,17 +793,17 @@ public class MainFrame extends JFrame {
                 getTubeTo().hideArrow();
             }
             if (gameMoves.size() > movesDone) {
-                ColorTube tubeFrom = tubesPan.getTube(gameMoves.getTubeFrom(movesDone));
-                ColorTube tubeTo = tubesPan.getTube(gameMoves.getTubeTo(movesDone));
+                ColorTube tFrom = tubesPan.getTube(gameMoves.getTubeFrom(movesDone));
+                ColorTube tTo = tubesPan.getTube(gameMoves.getTubeTo(movesDone));
 
-                tubeFrom.setArrow(1);
-                tubeFrom.showArrow();
-                tubeFrom.setShade(2);
-                tubeFrom.pulseShade();
+                tFrom.setArrow(1);
+                tFrom.showArrow();
+                tFrom.setShade(2);
+                tFrom.pulseShade();
 
-                tubeTo.setArrow(2);
-                tubeTo.showArrow();
-                tubeTo.hideShade();
+                tTo.setArrow(2);
+                tTo.showArrow();
+                tTo.hideShade();
             }
         }
     }
@@ -986,10 +991,10 @@ public class MainFrame extends JFrame {
             palPan.reDock();
         }
         redockTubes();
-        calculateMinSize();
+        updateMinSize();
     }
 
-    public Dimension calculateMinSize() {
+    public Dimension updateMinSize() {
         Dimension dim = new Dimension(100, 100);
 
         if (tubesPan != null) {
@@ -1007,11 +1012,11 @@ public class MainFrame extends JFrame {
             }
             if (toolPan != null) {
                 if (toolPan.getDockedTo() > 1) { // left, right
-                    dim.width = dim.width + toolPan.getButtonsHeight();
-                    dim.height = Math.max(dim.height, toolPan.getButtonsWidth());
+                    dim.width = dim.width + toolPan.getToolbarY();
+                    dim.height = Math.max(dim.height, toolPan.getButtonsLength());
                 } else { // top, bottom
-                    dim.width = Math.max(dim.width, toolPan.getButtonsWidth());
-                    dim.height = dim.height + toolPan.getButtonsHeight();
+                    dim.width = Math.max(dim.width, toolPan.getButtonsLength());
+                    dim.height = dim.height + toolPan.getToolbarY();
                 }
             }
 

@@ -5,6 +5,9 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 
+/**
+ * The Popup menu with this project's decoration.
+ */
 public class LPopupMenu extends JPopupMenu {
     public final Border menuBorder = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.gray),
@@ -13,12 +16,21 @@ public class LPopupMenu extends JPopupMenu {
             BorderFactory.createEmptyBorder(0, 0, 0, 0),
             BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
+    /**
+     * Creates the popup menu with this project's decoration.
+     */
     public LPopupMenu() {
         setBackground(Palette.dialogColor);
         setForeground(Color.white);
         setBorder(menuBorder);
     }
 
+    /**
+     * Creates the menu item that has a submenu and decorates it.
+     * @param parent the parent menu item
+     * @param text this menu item's caption
+     * @return menu instance
+     */
     public JMenu addMenu(JMenu parent, String text) {
         JMenu menu = new JMenu(text);
         menu.setBackground(Palette.dialogColor);
@@ -36,6 +48,12 @@ public class LPopupMenu extends JPopupMenu {
         return menu;
     }
 
+    /**
+     * Creates the menu item and decorates it.
+     * @param parent the parent menu item
+     * @param text this menu item's caption
+     * @return menu item instance
+     */
     public JMenuItem addMenuItem(JMenu parent, String text) {
         JMenuItem menu = new JMenuItem(text);
         menu.setBackground(Palette.dialogColor);
@@ -51,6 +69,11 @@ public class LPopupMenu extends JPopupMenu {
         return menu;
     }
 
+    /**
+     * Creates the menu separator and decorates it.
+     * @param parent the parent menu item
+     * @return separator instance
+     */
     public JSeparator addSeparator(JMenu parent) {
         JSeparator sep = new JSeparator();
         sep.setBackground(Palette.dialogColor);

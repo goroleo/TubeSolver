@@ -80,14 +80,14 @@ public class TubesIO {
     private static int movesDone = 0;
 
     /**
-     * Data of the stored tube.
+     * Data of the stored tubes.
      *
      * @see TubeModel
      */
     private static int[] storedTubes;
 
     /**
-     * Data of the stored tube.
+     * Data of the stored moves.
      *
      * @see GameMoves
      */
@@ -99,9 +99,10 @@ public class TubesIO {
     private static int fileCRC;
 
     /**
-     * Temporary file name 
+     * Temporary file name.
      */
-    public static String tempFileName = getAppDirFile(".$notsolved.jctl");
+    public static String tempFileName
+            = getAppDirFile(".$notsolved.jctl");
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -152,7 +153,7 @@ public class TubesIO {
     }
 
     /**
-     * Used to delete a temporary files
+     * Used to delete a temporary files.
      *
      * @param fileName name of the file
      * @return true or false
@@ -170,6 +171,7 @@ public class TubesIO {
 //
 //             * Byte Array Stream's extension * 
 //   writing and reading Integer (4 bytes) and Word (2 bytes) values
+//                   to/from the Byte Array
 //
 ///////////////////////////////////////////////////////////////////////////
     private static class myBAOS extends ByteArrayOutputStream {

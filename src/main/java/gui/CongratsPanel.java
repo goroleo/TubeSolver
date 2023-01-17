@@ -1,51 +1,64 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package gui;
 
-import run.Main;
 import ani.FlowerLayer;
-import ani.WaveLayer;
 import ani.ScaleLayer;
+import ani.WaveLayer;
 import dlg.StartDlg;
-import java.awt.EventQueue;
-import java.awt.Rectangle;
+import run.Main;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
 
+/**
+ * The top panel that shows congratulations: "you win!".
+ * It consists of three layers: a rotating flower, an award ribbon and a congratulatory text.
+ */
 public class CongratsPanel extends JComponent {
 
-    private static final BufferedImage imgBadge
-            = core.Options.createBufImage("imgBadge.png");
-    private static final BufferedImage imgBadgeText
+    /** The image of the award ribbon. */
+    private static final BufferedImage imgRibbon
+            = core.Options.createBufImage("imgBadge_ribbon.png");
+
+    /** The image of the congratulatory text. */
+    private static final BufferedImage imgText
             = core.Options.createBufImage("imgBadge_text.png");
 
+    /** The rotating flower layer.  */
     private final FlowerLayer flower;
-    private final ScaleLayer badge;
+
+    /** The award ribbon layer. */
+    private final ScaleLayer ribbon;
+
+    /** The congratulatory text layer. */
     private final WaveLayer text;
 
+    /** Constructor. It creates the panel and adds layers. */
     public CongratsPanel() {
         setBackground(null);
         setForeground(null);
 
-        text = new WaveLayer(imgBadgeText);
+        text = new WaveLayer(imgText);
         add(text);
 
-        badge = new ScaleLayer(imgBadge) {
+        ribbon = new ScaleLayer(imgRibbon) {
             @Override
             public void onThreadFinished() {
                 text.startUnlimited();
             }
         };
-        add(badge);
+        add(ribbon);
 
         flower = new FlowerLayer();
         add(flower);
@@ -56,22 +69,20 @@ public class CongratsPanel extends JComponent {
                 doClick();
             }
         });
-
     }
 
     @Override
-    public void setVisible(boolean aFlag) {
-        if (aFlag) {
+    public void setVisible(boolean b) {
+        if (b) {
             updateSizeAndPos();
-            badge.start();
+            ribbon.start();
             flower.start();
         } else {
             flower.stop();
-            badge.stop();
+            ribbon.stop();
             text.stop();
         }
-
-        super.setVisible(aFlag);
+        super.setVisible(b);
     }
 
     @Override
@@ -79,26 +90,18 @@ public class CongratsPanel extends JComponent {
         super.setBounds(x, y, width, height);
         flower.setSize(width, height);
         flower.setRotationPoint(width / 2, height / 2);
-        badge.setSize(width, height);
+        ribbon.setSize(width, height);
         text.setLocation((width - text.getWidth()) / 2,
                 (height - text.getHeight()) / 2);
     }
 
     public void updateSizeAndPos() {
-        updateSize();
-        updatePos();
-    }
 
-    public void updateSize() {
-        setSize(Math.max(imgBadge.getWidth(), MainFrame.tubesPan.getWidth()),
-                Math.max(imgBadge.getHeight(), MainFrame.tubesPan.getHeight()));
-    }
-
-    public void updatePos() {
         Rectangle r = Main.frame.getTubesArea();
-        setLocation(
-                r.x + (r.width - getWidth()) / 2,
-                r.y + (r.height - getHeight()) / 2);
+        int w = Math.max(imgRibbon.getWidth(), MainFrame.tubesPan.getWidth());
+        int h = Math.max(imgRibbon.getHeight(), MainFrame.tubesPan.getHeight());
+
+        setBounds(r.x + (r.width - w) / 2,r.y + (r.height - h) / 2, w, h);
     }
 
     public void doClick() {

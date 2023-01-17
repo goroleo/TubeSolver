@@ -34,25 +34,35 @@ import lib.lButtons.LPictureButton;
 import lib.lColorDialog.LColorDialog;
 import run.Main;
 
+/**
+ * Dialog to change palette colors.
+ */
 public class PaletteDlg extends JDialog {
 
-    private final JFrame parent;
-//    private final int sY = 15;
-    private final int sX = 15;
-
-    private int btnHeight;
-    private int btnWidth;
-
-    private final JPanel panel;
+    /** Palette panel with color buttons  */
     private final PalettePanel palPan;
-    public int modalResult = 3;
 
-    private ArrayList<Color> oldPalette;
+    /** The parent frame to locate this dialog relative to parent.  */
+    private final JFrame parent;
+
+    /** A CheckBox "Show colors change".  */
     private final JCheckBox cbShowChanges;
 
+    /** Width of control buttons used for calculating dialog size. */
+    private int btnWidth;
+
+    /** Height of control buttons, used for calculating dialog size. */
+    private int btnHeight;
+
+    /** Modal result of the dialog, a number of the button causes it to close. */
+    public int modalResult = 3;
+
+    /** Old palette colors, to restore the palette if the Cancel button will be pressed/clicked.  */
+    private static Color[] oldPalette = new Color[pal.size()-1];
+
+    /** The constructor. Creating a frame of Dialog and adding its components. */
     public PaletteDlg(JFrame owner) {
         super(owner, ResStrings.getString("strPalette"), true);
-        saveOldPalette();
 
         this.parent = owner;
         getContentPane().setBackground(Palette.dialogColor);
@@ -78,6 +88,7 @@ public class PaletteDlg extends JDialog {
                 KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
                 2); // WHEN_IN_FOCUSED_WINDOW
 
+        // adding Palette panel
         palPan = new PalettePanel() {
             @Override
             public void clickButton(ColorButton cb) {
@@ -86,8 +97,7 @@ public class PaletteDlg extends JDialog {
 
             @Override
             public void reDock() {
-                super.reDock();
-                setLocation(0, 0);
+                // do nothing
             }
         };
 
@@ -97,13 +107,9 @@ public class PaletteDlg extends JDialog {
         palPan.setSpaces(5, 5);
         palPan.setRows(3);
         palPan.setLocation(10, 10);
+        getContentPane().add(palPan);
 
-        panel = new JPanel();
-        panel.setBackground(null);
-        panel.setForeground(null);
-        panel.setLayout(null);
-        panel.add(palPan);
-
+        // adding CheckBox "Show changes"
         cbShowChanges = new JCheckBox();
         cbShowChanges.setBackground(null);
         cbShowChanges.setForeground(null);
@@ -121,22 +127,30 @@ public class PaletteDlg extends JDialog {
                 updateColors();
             }
         });
+        getContentPane().add(cbShowChanges);
 
-        panel.add(cbShowChanges);
-
+        // add control buttons: Apply, Cancel and Set default palette
         addButton(1, ResStrings.getString("strApply"), 17);
-        addButton(0, ResStrings.getString("strCancel"), 17 + 10 + btnHeight);
+        addButton(0, ResStrings.getString("strCancel"), 27 + btnHeight);
         addButton(4, ResStrings.getString("strStandard"), palPan.getHeight() - btnHeight);
-
-        panel.setSize(palPan.getWidth() + btnWidth + sX * 2 + 20,
-                palPan.getHeight() + 20 + 10 + 24);
-
-        getContentPane().add(panel);
 
         calculateSize();
         calculatePos();
     }
 
+    @Override
+    public void setVisible(boolean b) {
+        if (b) saveOldPalette();
+        super.setVisible(b);
+    }
+
+    /**
+     * Adds a control button to the dialog.
+     * @param number number of the button that means the dialog modal result.
+     * @param aCaption caption (text) on the button.
+     * @param cooY the Y coordinate.
+     * @return button instance
+     */
     private LPictureButton addButton(int number, String aCaption, int cooY) {
         LPictureButton btn = new LPictureButton(this, "btnDialog");
         btn.setText(aCaption);
@@ -148,15 +162,16 @@ public class PaletteDlg extends JDialog {
         btnHeight = btn.getHeight();
         btnWidth = btn.getWidth();
 
-        panel.add(btn);
+        getContentPane().add(btn);
         return btn;
     }
 
+    /** Calculates and sets the dialog size. */
     private void calculateSize() {
         setResizable(true);
         Dimension dim = new Dimension();
-        dim.width = panel.getWidth();
-        dim.height = panel.getHeight();
+        dim.width = palPan.getWidth() + btnWidth + 50;
+        dim.height = palPan.getHeight() + 54;
         setPreferredSize(dim);
         pack();
 
@@ -169,6 +184,7 @@ public class PaletteDlg extends JDialog {
         setResizable(false);
     }
 
+    /** Calculates and sets the dialog location. */
     private void calculatePos() {
         Rectangle r = getGraphicsConfiguration().getBounds();
         if (Options.pdPositionX >= 0 && Options.pdPositionY >= 0
@@ -184,6 +200,10 @@ public class PaletteDlg extends JDialog {
         }
     }
 
+    /**
+     * Handles the control button click.
+     * @param btnNum number of the button clicked
+     */
     private void btnClick(int btnNum) {
         modalResult = btnNum;
         switch (btnNum) {
@@ -210,20 +230,25 @@ public class PaletteDlg extends JDialog {
         }
     }
 
+    /** Saves palette colors before show this dialog to make a possibility to restore them. */
     private void saveOldPalette() {
-        oldPalette = new ArrayList<>();
-        for (int i = 1; i < pal.size(); i++) {
-            oldPalette.add(pal.get(i));
+        for (int i = 0; i < pal.size()-1; i++) {
+            oldPalette[i] = pal.get(i+1);
         }
     }
 
+    /** Restores palette colors if Cancel button has been clicked. */
     private void restoreOldPalette() {
-        for (int i = 1; i < pal.size(); i++) {
-            pal.set(i, oldPalette.get(i - 1));
+        for (int i = 0; i < pal.size()-1; i++) {
+            pal.set(i+1, oldPalette[i]);
         }
         updateColors();
     }
 
+    /**
+     * Repaints one color on all panels of the MainFrame.
+     * @param colorNum A number of the Color in the Palette.
+     */
     private void updateColor(int colorNum) {
         if (MainFrame.palPan != null) {
             MainFrame.palPan.getButtonByColor(colorNum).repaintColor();
@@ -233,6 +258,9 @@ public class PaletteDlg extends JDialog {
         }
     }
 
+    /**
+     * Repaints all colors on all panels of the MainFrame.
+     */
     private void updateColors() {
         if (MainFrame.palPan != null) {
             MainFrame.palPan.updateColors();
@@ -242,10 +270,13 @@ public class PaletteDlg extends JDialog {
         }
     }
 
+    /**
+     * Change the color by clicked on Color Button.
+     * @param cb Specified Color Button
+     */
     private void changeColor(ColorButton cb) {
-        Color oldColor = pal.getColor(cb.getColorNumber());
 
-        LColorDialog lcd = new LColorDialog(Main.frame, oldColor);
+        LColorDialog lcd = new LColorDialog(Main.frame, pal.getColor(cb.getColorNumber()));
         lcd.setBackground(Palette.dialogColor);
         lcd.addColorListener((int rgb) -> {
 
@@ -269,6 +300,9 @@ public class PaletteDlg extends JDialog {
         cb.repaintColor();
     }
 
+    /**
+     * Saves dialog options: X position, Y position, CheckBox state.
+     */
     private void saveOptions() {
         Options.pdPositionX = getX();
         Options.pdPositionY = getY();

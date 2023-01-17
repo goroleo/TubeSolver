@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import core.ResStrings;
+import core.Options;
 import lib.lButtons.LPictureButton;
 
 public class MessageDlg extends JDialog {
@@ -144,7 +145,7 @@ public class MessageDlg extends JDialog {
     }
 
     private void addContentPanel(String sText) {
-        BufferedImage bi = core.Options.createBufImage("imgMessageDlg_icon.png");
+        BufferedImage bi = Options.createBufImage("imgMessageDlg_icon.png");
 
         contPan = new JPanel();
 
@@ -158,8 +159,7 @@ public class MessageDlg extends JDialog {
 
         JTextArea textArea = new JTextArea(sText);
         textArea.setBounds(
-                dimX * 2 + icon.getWidth(),
-                dimY,
+                dimX * 2 + icon.getWidth(), dimY,
                 Math.max(w, btnPan.getWidth()) - dimX * 3 - bi.getWidth(),
                 icon.getHeight());
         textArea.setBackground(null);
