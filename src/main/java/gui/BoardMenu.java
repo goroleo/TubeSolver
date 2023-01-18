@@ -34,7 +34,7 @@ public class BoardMenu extends LPopupMenu {
 
 //    private final JSeparator sep1;
 
-    private final JMenuItem clear;
+    public final JMenuItem clear;
     private final JMenuItem clearAll;
 
     private final JMenuItem undo;
