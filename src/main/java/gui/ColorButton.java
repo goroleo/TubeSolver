@@ -1,27 +1,27 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package gui;
 
-import run.Main;
+import ani.ImageLayer;
 import ani.ShadeLayer;
 import ani.ShapeLayer;
-import ani.ImageLayer;
 import ani.SlideLayer;
 import core.Options;
+import lib.lColorDialog.LColorDialog;
+import run.Main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
-import lib.lColorDialog.LColorDialog;
-import javax.swing.event.ChangeEvent;
 
 public class ColorButton extends JButton {
 
@@ -32,64 +32,122 @@ public class ColorButton extends JButton {
 ///////////////////////////////////////////////////////////////////////////
 
 // Size values:
-
-    /** Width of the component  */
+    /**
+     * Width of the component
+     */
     private int w;
 
-    /** Height  of the component  */
+    /**
+     * Height  of the component
+     */
     private int h;
 
 // Layers images:
-
-    /** An image for the Shade/shadow layer  */
+    /**
+     * An image for the Shade/shadow layer
+     */
     private static BufferedImage imgShade = null;
 
-    /** An image for the color shape layer  */
+    /**
+     * An image for the color shape layer
+     */
     private static BufferedImage imgColorShape = null;
 
-    /** An image for the bevel layer: enabled button state */
+    /**
+     * An image for the bevel layer: enabled button state
+     */
     private static BufferedImage imgBevelUp = null;
 
-    /** An image for the bevel layer: Down/clicked button state */
+    /**
+     * An image for the bevel layer: Down/clicked button state
+     */
     private static BufferedImage imgBevelDown = null;
 
-    /** An image for the bevel layer: disabled button state */
+    /**
+     * An image for the bevel layer: disabled button state
+     */
     private static BufferedImage imgBevelDisabled = null;
 
-    /** An image for the button frame: enabled */
+    /**
+     * An image for the button frame: enabled
+     */
     private static BufferedImage imgFrameEnabled = null;
 
-    /** An image for the button frame: focused */
+    /**
+     * An image for the button frame: focused
+     */
     private static BufferedImage imgFrameFocused = null;
 
-    /** An image for the counter layer: 1 */
+    /**
+     * An image for the counter layer: 1
+     */
     private static BufferedImage imgCount1 = null;
 
-    /** An image for the counter layer: 2 */
+    /**
+     * An image for the counter layer: 2
+     */
     private static BufferedImage imgCount2 = null;
 
-    /** An image for the counter layer: 3 */
+    /**
+     * An image for the counter layer: 3
+     */
     private static BufferedImage imgCount3 = null;
 
-    /** An image for the counter layer: 4 */
+    /**
+     * An image for the counter layer: 4
+     */
     private static BufferedImage imgCount4 = null;
 
-// Buttons layers:
-
-    /** An image for the counter layer: 4 */
+// Button layers:
+    /**
+     * The layer for shadow around the button.
+     */
     private final ShadeLayer shadeLayer;
+
+    /**
+     * The layer for draw specified palette color.
+     */
     private final ShapeLayer colorLayer;
+
+    /**
+     * The layer for draw the button bevel.
+     */
     private final ImageLayer bevelLayer;
+
+    /**
+     * The layer for draw the button frame.
+     */
     private final ImageLayer frameLayer;
+
+    /**
+     * The layer for draw the counter value.
+     */
     private final SlideLayer countLayer;
 
 // Automation:
+    /**
+     * Number of this button's color from the palette.
+     */
     private final int colorNumber;
+
+    /**
+     * The current counter value.
+     */
     private int count;
 
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Routines *
+//
+///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * The constructor. Creates the Button and adds layers.
+     * @param number Button number in the Palette Panel.
+     */
     public ColorButton(int number) {
 
-        colorNumber = number+1;
+        colorNumber = number + 1; // Color No 0 in the Palette is the background color.
 
         setLayout(null);
         setContentAreaFilled(false);
@@ -126,44 +184,59 @@ public class ColorButton extends JButton {
             public void focusGained(FocusEvent e) {
                 fireStateChanged();
             }
+
             @Override
             public void focusLost(FocusEvent e) {
                 fireStateChanged();
             }
         }); // addFocusListener
 
-        addChangeListener((ChangeEvent e) -> {
-            if (isEnabled()) {
-                if (getModel().isPressed()) {
-                    bevelLayer.setImage(imgBevelDown);
-                } else {
-                    bevelLayer.setImage(imgBevelUp);
-                }
-                if (getModel().isRollover()) {
-                    shadeLayer.doShow();
-                } else {
-                    shadeLayer.doHide();
-                }
-                if (hasFocus()) {
-                    frameLayer.setImage(imgFrameFocused);
-                } else {
-                    frameLayer.setImage(imgFrameEnabled);
-                }
-            } else {
-                frameLayer.setImage(imgFrameEnabled);
-                bevelLayer.setImage(imgBevelDisabled);
-                shadeLayer.doHide();
-            }
-        }); // addChangeListener
+        addChangeListener(e -> changeButtonState());
     }
 
-    public void colorChange() {
+    @Override
+    public void setBounds(int x, int y, int width, int height) {
+        countLayer.setBounds(0, 0, width, height);
+        frameLayer.setBounds(0, 0, width, height);
+        bevelLayer.setBounds(0, 0, width, height);
+        colorLayer.setBounds(0, 0, width, height);
+        shadeLayer.setBounds(0, 0, width, height);
+        super.setBounds(x, y, width, height);
+    }
+
+    /** Redraws button layers depending on the current button state. */
+    private void changeButtonState() {
+        if (isEnabled()) {
+            if (getModel().isPressed()) {
+                bevelLayer.setImage(imgBevelDown);
+            } else {
+                bevelLayer.setImage(imgBevelUp);
+            }
+            if (getModel().isRollover()) {
+                shadeLayer.doShow();
+            } else {
+                shadeLayer.doHide();
+            }
+            if (hasFocus()) {
+                frameLayer.setImage(imgFrameFocused);
+            } else {
+                frameLayer.setImage(imgFrameEnabled);
+            }
+        } else {
+            frameLayer.setImage(imgFrameEnabled);
+            bevelLayer.setImage(imgBevelDisabled);
+            shadeLayer.doHide();
+        }
+    }
+
+    /** Changes the color by call the Color dialog. Used when the button is clicked/pressed.    */
+    public void changeColor() {
         Color oldColor = MainFrame.pal.getColor(colorNumber);
 
         LColorDialog lcd = new LColorDialog(Main.frame, oldColor);
         lcd.setBackground(Palette.dialogColor);
         lcd.addColorListener(colorLayer::setColor);
-        
+
         if (Options.ccdPositionX != -1 && Options.ccdPositionY != -1) {
             lcd.setLocation(Options.ccdPositionX, Options.ccdPositionY);
         }
@@ -177,22 +250,29 @@ public class ColorButton extends JButton {
         repaintColor();
     }
 
+    /** Repaints the color layer by the current palette color value. */
     public void repaintColor() {
         colorLayer.setColor(MainFrame.pal.getColor(colorNumber));
     }
-    
+
+    /** Decrements the counter value by one. */
     public void decCount() {
         setCount(count - 1);
     }
 
+    /** Increments the counter value by one. */
     public void incCount() {
         setCount(count + 1);
     }
 
+    /** Gets the counter value. */
     public int getCount() {
         return count;
     }
 
+    /** Sets the new counter value.
+     * @param newCount new counter value
+     */
     public final void setCount(int newCount) {
         if ((count == newCount) || (newCount > 4)) {
             return;
@@ -224,24 +304,21 @@ public class ColorButton extends JButton {
         countLayer.start();
     }
 
+    /** Gets the color of this button.
+     * @return the current color from the palette.
+     */
     public Color getColor() {
         return MainFrame.pal.get(colorNumber);
     }
 
+    /** Gets the color number of this button.
+     * @return the current color number from the palette.
+     */
     public int getColorNumber() {
         return colorNumber;
     }
 
-    @Override
-    public void setBounds(int x, int y, int width, int height) {
-        countLayer.setBounds(0, 0, width, height);
-        frameLayer.setBounds(0, 0, width, height);
-        bevelLayer.setBounds(0, 0, width, height);
-        colorLayer.setBounds(0, 0, width, height);
-        shadeLayer.setBounds(0, 0, width, height);
-        super.setBounds(x, y, width, height);
-    }
-
+    /** Loads layer images from application resources.  */
     private void loadImages() {
         if (imgShade == null) {
             imgShade = core.Options.createBufImage("imgColor_shade_gray.png");
@@ -279,5 +356,4 @@ public class ColorButton extends JButton {
         w = imgFrameEnabled.getWidth();
         h = imgFrameEnabled.getHeight();
     }
-
 }

@@ -331,17 +331,17 @@ public class MainFrame extends JFrame {
             redockTubes();
         }
 
+        setGameMode(PLAY_MODE);
         // preparing tubes for the play mode
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             ColorTube tube = tubesPan.getTube(i);
             tube.updateState();
             tube.setActive(!tube.isClosed());
-            tube.setShade((tube.isClosed()) ? 4 : 0);
+//            tube.setFrame((tube.isClosed()) ? 4 : 0);
         }
         setTubeFrom(null);
 
         // switching to play mode
-        setGameMode(PLAY_MODE);
         gameMoves.clear();
         movesDone = 0;
         saveTempOnExit = true;
@@ -378,10 +378,9 @@ public class MainFrame extends JFrame {
         saveTempOnExit = true;
         if (gameMoves.size() > movesDone) {
             tubesPan.getTube(gameMoves.getTubeFrom(movesDone)).hideArrow();
-            tubesPan.getTube(gameMoves.getTubeFrom(movesDone)).hideShade();
+            tubesPan.getTube(gameMoves.getTubeFrom(movesDone)).hideFrame();
             tubesPan.getTube(gameMoves.getTubeTo(movesDone)).hideArrow();
-            tubesPan.getTube(gameMoves.getTubeTo(movesDone)).hideShade();
-            tubesPan.getTube(gameMoves.getTubeTo(movesDone)).setArrow(1);
+            tubesPan.getTube(gameMoves.getTubeTo(movesDone)).hideFrame();
         }
         while (gameMoves.size() > movesDone) {
             gameMoves.remove(gameMoves.size() - 1);
@@ -396,8 +395,8 @@ public class MainFrame extends JFrame {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             tubesPan.getTube(i).setActive(false);
             tubesPan.getTube(i).setClosed(true);
-            tubesPan.getTube(i).setShade(4);
-            tubesPan.getTube(i).showShade();
+            tubesPan.getTube(i).setFrame(4);
+            tubesPan.getTube(i).showFrame();
         }
 
         setGameMode(END_GAME);
@@ -565,12 +564,14 @@ public class MainFrame extends JFrame {
     public void setTubeTo(ColorTube tube) {
 
         int howMuch;
-        tubesPan.setTubeTo(tube);
-        if (tube != null && getTubeTo() != null) {
-            getTubeTo().hideArrow();
-        }
+        if (gameMode == FILL_MODE) {
 
-        if (gameMode == PLAY_MODE) {
+            tubesPan.setTubeTo(tube);
+            if (tube != null && getTubeTo() != null) {
+                getTubeTo().hideArrow();
+            }
+
+        } else if (gameMode == PLAY_MODE) {
             if (tube != null && getTubeFrom() != null) {
                 howMuch = tubesPan.moveColor(getTubeFrom(), tube);
                 if (howMuch > 0) {
@@ -601,7 +602,7 @@ public class MainFrame extends JFrame {
                     }
                     tube.hideArrow();
                     if (!tube.isClosed()) {
-                        tube.hideShade();
+                        tube.hideFrame();
                     }
                     setTubeTo(null);
 
@@ -613,7 +614,6 @@ public class MainFrame extends JFrame {
                     } else {
                         showMove();
                     }
-
                 }
             }
         }
@@ -644,11 +644,11 @@ public class MainFrame extends JFrame {
             } else {
                 tube.hideArrow();
                 ColorTube tubeTo = tubesPan.getTube(gameMoves.getTubeTo(movesDone));
-                tubeTo.setArrow(2);
-                tubeTo.setShade(3);
+                tubeTo.setArrow(ColorTube.ARROW_YELLOW);
+                tubeTo.setFrame(3);
 
                 tubeTo.showArrow();
-                tubeTo.pulseShade();
+                tubeTo.pulseFrame();
 
             }
         }
@@ -657,7 +657,7 @@ public class MainFrame extends JFrame {
     public void startFindTubesFrom() {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             if (tubesPan.getTube(i).isActive()) {
-                tubesPan.getTube(i).setArrowWhenHide(1);
+                tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_GREEN);
             }
         }
     }
@@ -665,7 +665,7 @@ public class MainFrame extends JFrame {
     public void startFindTubesTo() {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             if (tubesPan.getTube(i).isActive()) {
-                tubesPan.getTube(i).setArrowWhenHide(2);
+                tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_YELLOW);
             }
         }
     }
@@ -785,25 +785,25 @@ public class MainFrame extends JFrame {
     public void showMove() {
         if (gameMode == ASSIST_MODE) {
             if (getTubeFrom() != null) {
-                getTubeFrom().hideShade();
+                getTubeFrom().hideFrame();
                 getTubeFrom().hideArrow();
             }
             if (getTubeTo() != null) {
-                getTubeTo().hideShade();
+                getTubeTo().hideFrame();
                 getTubeTo().hideArrow();
             }
             if (gameMoves.size() > movesDone) {
                 ColorTube tFrom = tubesPan.getTube(gameMoves.getTubeFrom(movesDone));
                 ColorTube tTo = tubesPan.getTube(gameMoves.getTubeTo(movesDone));
 
-                tFrom.setArrow(1);
+                tFrom.setArrow(ColorTube.ARROW_GREEN);
                 tFrom.showArrow();
-                tFrom.setShade(2);
-                tFrom.pulseShade();
+                tFrom.setFrame(2);
+                tFrom.pulseFrame();
 
-                tTo.setArrow(2);
+                tTo.setArrow(ColorTube.ARROW_YELLOW);
                 tTo.showArrow();
-                tTo.hideShade();
+                tTo.hideFrame();
             }
         }
     }
@@ -813,7 +813,7 @@ public class MainFrame extends JFrame {
             for (int i = 0; i < tubesPan.getTubesCount(); i++) {
                 tubesPan.getTube(i).hideArrow();
                 if (!tubesPan.getTube(i).isClosed()) {
-                    tubesPan.getTube(i).hideShade();
+                    tubesPan.getTube(i).hideFrame();
                 }
             }
         }

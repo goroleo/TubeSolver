@@ -18,9 +18,16 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 /**
- * Color tube is a GUI component.
+ * Color tube is a GUI component a visualization of the TubeModel.
+ * Color tube has 4 cells of colors. The tube can be as filled by different or
+ * same colors, as it can be empty. Colors can be <b>extracted</b> from the tube,
+ * and <b>put</b> into again.
+ * @see TubeModel
  */
 public class ColorTube extends JComponent {
+
+    // TUBE MODEL
+    private final TubeModel model = new TubeModel();
 
     // Size:
     private int w;
@@ -37,28 +44,25 @@ public class ColorTube extends JComponent {
     private static BufferedImage imgArrowGreen = null;
     // Layers:
     private final ColorLayer colors;
-    private final ShadeLayer hover;
     private final ShadeLayer shade;
+    private final ShadeLayer frame;
     private final ImageLayer bottle;
     private final SlideLayer cork;
     private final WaveLayer arrow;
 
-    // shades:
-    private int shadeNum = 0;
-    public final static int SHADE_NO_COLOR = 0;
-    public final static int SHADE_RED = 1;
-    public final static int SHADE_GREEN = 2;
-    public final static int SHADE_YELLOW = 3;
-    public final static int SHADE_BLUE = 4;
+    // frames:
+    private int frameNum = 0;
+    public final static int FRAME_NO_COLOR = 0;
+    public final static int FRAME_RED = 1;
+    public final static int FRAME_GREEN = 2;
+    public final static int FRAME_YELLOW = 3;
+    public final static int FRAME_BLUE = 4;
 
     // arrows:
     private int arrowNum = 0;
     public final static int ARROW_NO_COLOR = 0;
     public final static int ARROW_GREEN = 1;
     public final static int ARROW_YELLOW = 2;
-
-    // TUBE MODEL
-    private final TubeModel model = new TubeModel();
 
     private boolean active = true;
     private boolean closed = false;
@@ -74,14 +78,14 @@ public class ColorTube extends JComponent {
         cork.setExpDegrees(-0.5d, 0.5d);
         this.add(cork);
 
-        shade = new ShadeLayer(imgShadeGray);
-        this.add(shade);
+        frame = new ShadeLayer(imgShadeGray);
+        this.add(frame);
 
         bottle = new ImageLayer(imgBottle);
         this.add(bottle);
 
-        hover = new ShadeLayer(imgShadeGray);
-        this.add(hover);
+        shade = new ShadeLayer(imgShadeGray);
+        this.add(shade);
 
         colors = new ColorLayer(w, h - 20);
         this.add(colors);
@@ -101,7 +105,7 @@ public class ColorTube extends JComponent {
             @Override
             public void mouseEntered(MouseEvent e) {
                 if (active) {
-                    hover.doShow();
+                    shade.doShow();
                     if (canShowArrow()) {
                         arrow.startUnlimited();
                     }
@@ -110,7 +114,7 @@ public class ColorTube extends JComponent {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                hover.doHide();
+                shade.doHide();
                 if (canHideArrow()) {
                     arrow.stop();
                 }
@@ -134,13 +138,13 @@ public class ColorTube extends JComponent {
     public void setActive(boolean b) {
         if (!b) {
             arrow.stop();
-            hover.doHide();
+            shade.doHide();
         }
         active = b;
     }
 
     public boolean isClosed() {
-        return model.isClosed();
+        return closed;
     }
 
     public void setClosed(boolean b) {
@@ -151,19 +155,21 @@ public class ColorTube extends JComponent {
                 cork.setSecondImage(imgCork);
                 cork.setStartPosOfSecondImg(0, -imgCork.getHeight() * 2);
                 cork.setEndPosOfFirstImg(0, 0);
-                if (MainFrame.gameMode == MainFrame.FILL_MODE) {
-                    this.setShade(1);
-                } else {
-                    this.setShade(4);
-                }
-                showShade();
             } else {
                 cork.setSecondImage(null);
                 cork.setStartPosOfSecondImg(0, 0);
                 cork.setEndPosOfFirstImg(0, -imgCork.getHeight() / 2);
-                setShade(0);
+                setFrame(0);
             }
             cork.start();
+        }
+        if (closed) {
+            if (MainFrame.gameMode == MainFrame.FILL_MODE) {
+                this.setFrame(1);
+            } else {
+                this.setFrame(4);
+            }
+            showFrame();
         }
     }
 
@@ -172,48 +178,49 @@ public class ColorTube extends JComponent {
     }
 
     public void updateState() {
-        model.updateState();
-        setClosed(model.isClosed());
+//        model.updateState();
+//        setClosed(model.isClosed());
+        setClosed(model.state == 3);
     }
 
-    public int getShade() {
-        return shadeNum;
+    public int getFrame() {
+        return frameNum;
     }
 
-    public void hideShade() {
-        shade.doHide();
+    public void hideFrame() {
+        frame.doHide();
     }
 
-    public void showShade() {
-        shade.useAnimation = true;
-        shade.doShow();
+    public void showFrame() {
+        frame.useAnimation = true;
+        frame.doShow();
     }
 
-    public void pulseShade() {
-        shade.useAnimation = true;
-        shade.startUnlimited();
+    public void pulseFrame() {
+        frame.useAnimation = true;
+        frame.startUnlimited();
     }
 
-    public void setShade(int newShadeNum) {
-        if (shadeNum != newShadeNum) {
-            switch (newShadeNum) {
-                case SHADE_RED:
-                    shade.setImage(imgShadeRed);
+    public void setFrame(int newFrameNum) {
+        if (frameNum != newFrameNum) {
+            switch (newFrameNum) {
+                case FRAME_RED:
+                    frame.setImage(imgShadeRed);
                     break;
-                case SHADE_GREEN:
-                    shade.setImage(imgShadeGreen);
+                case FRAME_GREEN:
+                    frame.setImage(imgShadeGreen);
                     break;
-                case SHADE_YELLOW:
-                    shade.setImage(imgShadeYellow);
+                case FRAME_YELLOW:
+                    frame.setImage(imgShadeYellow);
                     break;
-                case SHADE_BLUE:
-                    shade.setImage(imgShadeBlue);
+                case FRAME_BLUE:
+                    frame.setImage(imgShadeBlue);
                     break;
                 default: // SHADE_NO_COLOR
-                    shade.doHide();
+                    frame.doHide();
                     break;
             }
-            shadeNum = newShadeNum;
+            frameNum = newFrameNum;
         }
     }
 
@@ -288,12 +295,16 @@ public class ColorTube extends JComponent {
     public void putColor(int colorNum) {
         if (model.putColor((byte) colorNum)) {
             colors.addColor(colorNum);
+            setClosed(model.state == 3);
+            // updateState();
         }
     }
 
     public void extractColor() {
         if (model.extractColor() != 0) {
             colors.removeColor();
+            setClosed(model.state == 3);
+//            updateState();
         }
     }
 
@@ -316,10 +327,9 @@ public class ColorTube extends JComponent {
 
     public void restoreColors(int StoredColors) {
         for (int i = 0; i < 4; i++) {
-            putColor((byte) StoredColors);
+            putColor((byte) (StoredColors & 0xff));
             StoredColors = StoredColors >> 8;
         }
-        updateState();
     }
 
     public boolean hasColor(int colorNum) {
@@ -340,7 +350,7 @@ public class ColorTube extends JComponent {
         model.clear();
         colors.clearColors();
         colors.useAnimation = oldUseAnimation;
-        updateState();
+        setClosed(false);
     }
 
     public void doClick() {
@@ -393,8 +403,8 @@ public class ColorTube extends JComponent {
     @Override
     public void setBounds(int x, int y, int width, int height) {
         colors.setBounds(0, 20, width, height - 20);
-        hover.setBounds(0, 20, width, height - 20);
         shade.setBounds(0, 20, width, height - 20);
+        frame.setBounds(0, 20, width, height - 20);
         bottle.setBounds(0, 20, width, height - 20);
         cork.setBounds(0, 10, imgCork.getWidth(), imgCork.getHeight());
         arrow.setBounds(0, 0, width, height - 20);

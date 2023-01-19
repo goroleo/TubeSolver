@@ -370,7 +370,7 @@ public class PalettePanel extends JComponent {
      * @param cb specified color button
      */
     public void changeColor(ColorButton cb) {
-        cb.colorChange();
+        cb.changeColor();
     }
 
     /**

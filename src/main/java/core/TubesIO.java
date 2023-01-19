@@ -1,17 +1,18 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package core;
 
-import gui.ColorTube;
 import gui.BoardPanel;
+import gui.ColorTube;
 import gui.MainFrame;
+
 import java.io.*;
 import java.net.URL;
 import java.util.Properties;
@@ -109,6 +110,7 @@ public class TubesIO {
 //             * Files and Folders routines * 
 //
 ///////////////////////////////////////////////////////////////////////////
+
     /**
      * Get the folder to read and write application settings, temp files etc.
      *
@@ -167,7 +169,7 @@ public class TubesIO {
         return result;
     }
 
-///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 //
 //             * Byte Array Stream's extension * 
 //   writing and reading Integer (4 bytes) and Word (2 bytes) values
@@ -231,6 +233,7 @@ public class TubesIO {
 //                        * JCTL format routines * 
 //
 ///////////////////////////////////////////////////////////////////////////
+
     /**
      * Computes the size of an output stream to put all the game information.
      * Size of the file depends on format version.
@@ -318,7 +321,7 @@ public class TubesIO {
         return crc;
     }
 
-///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 //
 //               * Store and restore game routines * 
 //
@@ -359,6 +362,7 @@ public class TubesIO {
     public static void restoreTubes(BoardPanel bp) {
         restoreTubes(bp, true);
     }
+
     public static void restoreTubes(BoardPanel bp, boolean hideFillAnimation) {
         if (bp.getTubesCount() > 0) {
             bp.clearTubes();
@@ -368,8 +372,9 @@ public class TubesIO {
             if (hideFillAnimation)
                 tube.setColorsAnimation(false);
             tube.restoreColors(storedTubes[i]);
-            tube.updateState();
-            tube.setActive(!tube.isClosed());
+//            tube.updateState();
+            if (gMode != MainFrame.FILL_MODE)
+                tube.setActive(!tube.isClosed());
             tube.setColorsAnimation(true);
         }
         bp.updateLocation();
@@ -421,6 +426,7 @@ public class TubesIO {
 //             * Read and write JTCL format to/from stream * 
 //
 ///////////////////////////////////////////////////////////////////////////
+
     /**
      * Saving game data to an abstract output stream. Uses format version 2
      *
@@ -434,7 +440,7 @@ public class TubesIO {
     /**
      * Saving game data to an abstract output stream
      *
-     * @param S stream to save JCTL.
+     * @param S   stream to save JCTL.
      * @param ver JCTL format version
      * @return true if success, false otherwise
      */
@@ -447,7 +453,7 @@ public class TubesIO {
         fileVer = ver;
         fileSize = getJCTLsize(ver);
 
-        try ( myBAOS baos = new myBAOS(fileSize)) {
+        try (myBAOS baos = new myBAOS(fileSize)) {
 
             baos.writeInt(FILE_ID);
             baos.writeInt(FILE_EOF);
@@ -620,6 +626,7 @@ public class TubesIO {
 //               * Read and write JTCL to/from file * 
 //
 ///////////////////////////////////////////////////////////////////////////
+
     /**
      * Loads JCTL format from file.
      *
@@ -628,7 +635,7 @@ public class TubesIO {
      */
     public static boolean loadFromFile(String fileName) {
         boolean result;
-        try ( FileInputStream S = new FileInputStream(fileName)) {
+        try (FileInputStream S = new FileInputStream(fileName)) {
             result = loadFromStream(S);
         } catch (FileNotFoundException ex) {
             System.err.println("TubesIO.loadFromFile: Could not find file " + fileName);
@@ -653,10 +660,10 @@ public class TubesIO {
      * Saves JCTL format to specified file.
      *
      * @param fileName file name ))
-     * @param fileVer JCTL format version
+     * @param fileVer  JCTL format version
      */
     public static void saveToFile(String fileName, int fileVer) {
-        try ( FileOutputStream S = new FileOutputStream(fileName)) {
+        try (FileOutputStream S = new FileOutputStream(fileName)) {
             saveToStream(S, fileVer);
         } catch (FileNotFoundException ex) {
             System.err.println("TubesIO.saveToFile: Could not find file " + fileName);
@@ -670,6 +677,7 @@ public class TubesIO {
 //                    * Load and save palette * 
 //
 ///////////////////////////////////////////////////////////////////////////
+
     /**
      * Load colors stored in the properties file
      *
@@ -677,8 +685,8 @@ public class TubesIO {
      * @return true if success, false if IO error
      */
     public static boolean loadPalette(Properties palProps) {
-        try ( FileInputStream in
-                = new FileInputStream(getAppDirFile("tubesolvergui.palette"))) {
+        try (FileInputStream in
+                     = new FileInputStream(getAppDirFile("tubesolvergui.palette"))) {
             palProps.load(in);
         } catch (IOException ignore) {
             return false;
@@ -693,8 +701,8 @@ public class TubesIO {
      * @return true if success, false if IO error
      */
     public static boolean savePalette(Properties palProps) {
-        try ( FileOutputStream out
-                = new FileOutputStream(getAppDirFile("tubesolvergui.palette"))) {
+        try (FileOutputStream out
+                     = new FileOutputStream(getAppDirFile("tubesolvergui.palette"))) {
             palProps.store(out, "");
         } catch (IOException ignore) {
             return false;
@@ -707,6 +715,7 @@ public class TubesIO {
 //                    * Load and save options * 
 //
 ///////////////////////////////////////////////////////////////////////////
+
     /**
      * Load options stored in the properties file
      *
@@ -715,7 +724,7 @@ public class TubesIO {
      */
     public static boolean loadOptions(Properties props) {
         try (FileInputStream in
-                = new FileInputStream(getAppDirFile("tubesolvergui.properties"))) {
+                     = new FileInputStream(getAppDirFile("tubesolvergui.properties"))) {
             props.load(in);
         } catch (IOException ignore) {
             return false;
@@ -730,8 +739,8 @@ public class TubesIO {
      * @return true if success, false if IO error
      */
     public static boolean saveOptions(Properties props) {
-        try ( FileOutputStream out
-                = new FileOutputStream(getAppDirFile("tubesolvergui.properties"))) {
+        try (FileOutputStream out
+                     = new FileOutputStream(getAppDirFile("tubesolvergui.properties"))) {
             props.store(out, "");
         } catch (IOException ignore) {
             return false;

@@ -108,7 +108,7 @@ public class BoardPanel extends JComponent {
     public void addNewTubes(int countFilled, int countEmpty) {
         for (int i = 0; i < countFilled; i++) {
             ColorTube tube = addNewTube();
-            tube.setShade(0);
+            tube.setFrame(0);
             tube.setActive(true);
         }
         for (int i = 0; i < countEmpty; i++) {
@@ -302,13 +302,14 @@ public class BoardPanel extends JComponent {
     public void setTubeTo(ColorTube tube) {
         if (tube != tubeTo) {
             if (tubeTo != null) {
-                tubeTo.setShade(ColorTube.SHADE_NO_COLOR);
+                if (!tubeTo.isClosed())
+                    tubeTo.setFrame(ColorTube.FRAME_NO_COLOR);
                 tubeTo = null;
             }
         }
         if (tube != null && tube.canPutColor(0)) {
-            tube.setShade(ColorTube.SHADE_YELLOW);
-            tube.showShade();
+            tube.setFrame(ColorTube.FRAME_YELLOW);
+            tube.showFrame();
             tubeTo = tube;
         }
     }
@@ -316,13 +317,13 @@ public class BoardPanel extends JComponent {
     public void setTubeFrom(ColorTube tube) {
         if (tube != tubeFrom) {
             if (tubeFrom != null) {
-                tubeFrom.setShade(ColorTube.SHADE_NO_COLOR);
+                tubeFrom.setFrame(ColorTube.FRAME_NO_COLOR);
                 tubeFrom = null;
             }
         }
         if (tube != null && canGetColor(tube)) {
-            tube.setShade(ColorTube.SHADE_GREEN);
-            tube.showShade();
+            tube.setFrame(ColorTube.FRAME_GREEN);
+            tube.showFrame();
             tubeFrom = tube;
         }
     }
@@ -384,8 +385,8 @@ public class BoardPanel extends JComponent {
             } while (cnt > 0);
         }
 
-        tubeFrom.updateState();
-        tubeTo.updateState();
+//        tubeFrom.updateState();
+//        tubeTo.updateState();
 
         return result;
     }
@@ -408,8 +409,8 @@ public class BoardPanel extends JComponent {
                 getTube(idxFrom).putColor(mColor);
                 mCount--;
             }
-            getTube(idxTo).updateState();
-            getTube(idxFrom).updateState();
+//            getTube(idxTo).updateState();
+//            getTube(idxFrom).updateState();
         }
 
         MainFrame.movesDone--;

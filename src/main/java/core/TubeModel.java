@@ -13,7 +13,7 @@ package core;
  * Color tube has 4 cells of colors. The tube can be as filled by different or 
  * same colors, as it can be empty. Colors can be <b>extracted</b> from the tube, 
  * and <b>put</b> into again. This class describes what the tube has to do.
- * This is a logical model of the tube without any visualisation.
+ * This is a logical model of the tube without any visualization.
  * @see #putColor
  * @see #extractColor
  * @see #state
