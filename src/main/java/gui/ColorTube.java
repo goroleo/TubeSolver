@@ -246,7 +246,7 @@ public class ColorTube extends JComponent {
             case ARROW_YELLOW:
                 arrow.setImage(imgArrowYellow);
                 break;
-            default: // SHADE_NO_COLOR
+            default: // ARROW_NO_COLOR
                 break;
         }
         arrowNum = newArrowNum;
@@ -262,7 +262,7 @@ public class ColorTube extends JComponent {
                 case ARROW_YELLOW:
                     arrow.setImageWhenHide(imgArrowYellow);
                     break;
-                default: // SHADE_NO_COLOR
+                default: // ARROW_NO_COLOR
                     break;
             }
             arrowNum = newArrowNum;

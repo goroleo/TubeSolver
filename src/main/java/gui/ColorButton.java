@@ -23,6 +23,12 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 
+/**
+ * ColorButton is a GUI component for the one color of the Palette. The body of the
+ * button is the specified color. It consists of several layers: shadow, body (color),
+ * bevel, frame and counter.
+ * Clicking the button will bring up the color chooser dialog.
+ */
 public class ColorButton extends JButton {
 
 ///////////////////////////////////////////////////////////////////////////
