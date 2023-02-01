@@ -329,7 +329,7 @@ public class ToolPanel extends JPanel {
                         Main.frame.startAssistMode();
                         break;
                     case MainFrame.FILL_MODE:
-                        Main.frame.resumeFillMode();
+                        Main.frame.resumeManualFillMode();
                         break;
                     default:
                         break;

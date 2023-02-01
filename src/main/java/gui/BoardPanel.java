@@ -1,25 +1,26 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package gui;
 
-import run.Main;
 import core.BoardModel;
 import core.Options;
+import core.ResStrings;
 import dlg.MessageDlg;
 import dlg.SolveDlg;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import javax.swing.JComponent;
+import run.Main;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import core.ResStrings;
+import java.util.ArrayList;
 
 public class BoardPanel extends JComponent {
 
@@ -83,13 +84,6 @@ public class BoardPanel extends JComponent {
         addPopup(tube);
 
         return tube;
-    }
-
-    public void addNewTubes(int count) {
-        for (int i = 0; i < count; i++) {
-            addNewTube();
-        }
-        calculateColumns();
     }
 
     @Override
@@ -276,7 +270,7 @@ public class BoardPanel extends JComponent {
         setLocation(r.x, r.y);
     }
 
-    
+
     public void clearTubes() {
         for (int i = 0; i < tubes.size(); i++) {
             getTube(i).clear();
@@ -385,9 +379,6 @@ public class BoardPanel extends JComponent {
             } while (cnt > 0);
         }
 
-//        tubeFrom.updateState();
-//        tubeTo.updateState();
-
         return result;
     }
 
@@ -403,14 +394,10 @@ public class BoardPanel extends JComponent {
         int mCount = MainFrame.gameMoves.getMoveCount(moveNumber);
         byte mColor = MainFrame.gameMoves.getColor(moveNumber);
 
-        if (mCount > 0) {
-            while (mCount > 0) {
-                getTube(idxTo).extractColor();
-                getTube(idxFrom).putColor(mColor);
-                mCount--;
-            }
-//            getTube(idxTo).updateState();
-//            getTube(idxFrom).updateState();
+        while (mCount > 0) {
+            getTube(idxTo).extractColor();
+            getTube(idxFrom).putColor(mColor);
+            mCount--;
         }
 
         MainFrame.movesDone--;
@@ -443,18 +430,15 @@ public class BoardPanel extends JComponent {
         }
 
         for (int i = movesCount; i > 0; i--) {
-//            int moveNumber = i - 1;
             int idxFrom = MainFrame.gameMoves.getTubeFrom(i - 1);
             int idxTo = MainFrame.gameMoves.getTubeTo(i - 1);
             int mCount = MainFrame.gameMoves.getMoveCount(i - 1);
             byte mColor = MainFrame.gameMoves.getColor(i - 1);
 
-            if (mCount > 0) {
-                while (mCount > 0) {
-                    model.get(idxTo).extractColor();
-                    model.get(idxFrom).putColor(mColor);
-                    mCount--;
-                }
+            while (mCount > 0) {
+                model.get(idxTo).extractColor();
+                model.get(idxFrom).putColor(mColor);
+                mCount--;
             }
             if (MainFrame.gameMode == MainFrame.PLAY_MODE) {
                 MainFrame.gameMoves.remove(i - 1);
@@ -463,8 +447,8 @@ public class BoardPanel extends JComponent {
         MainFrame.movesDone = 0;
         MainFrame.toolPan.updateButtons();
         for (int i = 0;
-                i < getTubesCount();
-                i++) {
+             i < getTubesCount();
+             i++) {
             int newTube = model.get(i).storeColors();
             model.get(i).assignColors(storedTubes[i]);
 
@@ -529,6 +513,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Set spaces between color tubes
+     *
      * @param spaceX horizontal space between tubes
      * @param spaceY vertical spaces between tubes
      */

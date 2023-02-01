@@ -316,7 +316,7 @@ public class MainFrame extends JFrame {
         autoFillTheRest();
     }
 
-    public void resumeFillMode() {
+    public void resumeManualFillMode() {
         fileNameSuffix = ResStrings.getString("strSaveIDManualFill");
         tubesPan.paintImmediately(tubesPan.getBounds());
         startFindTubesTo();
@@ -531,7 +531,7 @@ public class MainFrame extends JFrame {
 
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //
 //                  *  ALL MODES routines *
 //
@@ -595,8 +595,7 @@ public class MainFrame extends JFrame {
             if (tube != null) {
                 if (tubesPan.getTubeNumber(tube) == gameMoves.getTubeTo(movesDone)) {
                     howMuch = tubesPan.moveColor(getTubeFrom(), tube);
-                    if (howMuch == gameMoves.getMoveCount(movesDone)) //                    if (movesDone < gameMoves.size())
-                    {
+                    if (howMuch == gameMoves.getMoveCount(movesDone)) {
                         movesDone++;
                         toolPan.updateButtons();
                     }
@@ -670,7 +669,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //                  
 //                  *  FILL MODE routines *
 //                  
@@ -693,7 +692,7 @@ public class MainFrame extends JFrame {
                     Palette.usedColors.decColorCount(clrNum);
                 }
             }
-            MainFrame.toolPan.updateButtons();
+            toolPan.updateButtons();
             setTubeTo(tube);
         }
     }
@@ -994,7 +993,7 @@ public class MainFrame extends JFrame {
         updateMinSize();
     }
 
-    public Dimension updateMinSize() {
+    public void updateMinSize() {
         Dimension dim = new Dimension(100, 100);
 
         if (tubesPan != null) {
@@ -1025,7 +1024,7 @@ public class MainFrame extends JFrame {
         }
 
         setMinimumSize(dim);
-        return dim;
+//        return dim;
     }
 
 }
