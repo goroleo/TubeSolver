@@ -127,7 +127,7 @@ public class StartDlg extends JDialog {
                         Main.frame.startAssistMode();
                         break;
                     case MainFrame.FILL_MODE:
-                        Main.frame.resumeFillMode();
+                        Main.frame.resumeManualFillMode();
                         break;
                     default:
                         break;
@@ -165,7 +165,7 @@ public class StartDlg extends JDialog {
                                 Main.frame.startAssistMode();
                                 break;
                             case MainFrame.FILL_MODE:
-                                Main.frame.resumeFillMode();
+                                Main.frame.resumeManualFillMode();
                                 break;
                             default:
                                 break;
