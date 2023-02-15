@@ -21,10 +21,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
-public class FoldersPanel extends JComponent {
+public class FoldersPanel extends JComponent implements FolderListener {
 
-    private final FolderList folderlist;
+    private final FoldersList folderlist;
     private final ScrollBar sbVert;
 
     private final JComponent viewport = new JComponent() {
@@ -37,13 +38,13 @@ public class FoldersPanel extends JComponent {
             BorderFactory.createLineBorder(new Color(0xb8cfe5)),
             BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-    public FoldersPanel(File folder) {
+    public FoldersPanel() {
 
         setForeground(null);
         setFocusable(true);
         setBorder(border);
 
-        folderlist = new FolderList(this, folder);
+        folderlist = new FoldersList(this);
         viewport.add(folderlist);
         add(viewport);
 
@@ -116,12 +117,6 @@ public class FoldersPanel extends JComponent {
         repaint();
     }
 
-    public void setFolder(File folder) {
-        folderlist.setFolder(folder);
-        sbVert.setValues(0, folderlist.getHeight(), folderlist.getItemHeight(), viewport.getHeight());
-        sbVert.onChangePosition();
-    }
-
     @Override
     public void setSize(int w, int h) {
 
@@ -150,8 +145,8 @@ public class FoldersPanel extends JComponent {
 
     public void chooseFolder(FileItem item) {
         if (osPan != null) {
-            osPan.setCurrentFolder(item.getFile());
-            OpenSavePanel.folderName.doClick();
+            current.setFolder(item.getFile());
+            osPan.showFoldersPanel(false);
         }
     }
 
@@ -166,7 +161,7 @@ public class FoldersPanel extends JComponent {
     @Override
     public void setVisible(boolean b) {
         if (b) {
-            folderlist.setCurrentItem(folderlist.findFolder(osPan.getCurrentFolder()));
+            folderlist.setCurrentItem(folderlist.findFolder(current.getFolder()));
             if (sbVert.isVisible()) {
                 sbVert.setPosition(folderlist.getCurrentItem().getY());
             }
@@ -180,4 +175,10 @@ public class FoldersPanel extends JComponent {
         g.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
     }
 
+    @Override
+    public void updateFolder(File folder) {
+        folderlist.setFolder(folder);
+        sbVert.setValues(0, folderlist.getHeight(), folderlist.getItemHeight(), viewport.getHeight());
+        sbVert.onChangePosition();
+    }
 }

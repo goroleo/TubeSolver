@@ -55,7 +55,10 @@ public class FileItem extends JComponent {
     private String fSizeStr;
     private LocalDateTime fTime;
     private String fTimeStr;
-    private int fMode = 0; // 0 - files, 1 - dirs; 
+    private int viewMode = 0; // 0 - detail (file name, size, date), 1 - list (file name only);
+    public static int DETAIL_MODE = 0; // file name, size, date,
+    public static int LIST_MODE = 1; //  file name only;
+
     private int fLevel = 0;
 
     private final JLabel nameLabel = new JLabel();
@@ -77,19 +80,19 @@ public class FileItem extends JComponent {
 
 
     public FileItem(File f) {
-        this(f, false, 0);
+        this(f, true, 0);
     }
 
-    public FileItem(File f, boolean folderMode, int level) {
+    public FileItem(File f, boolean detailsMode, int level) {
 //        parent = owner;
-        fMode = (folderMode) ? 1 : 0;
+        viewMode = (detailsMode) ? DETAIL_MODE : LIST_MODE;
         fLevel = level;
-        setFile(f);
+        if (f != null) setFile(f);
         setBackground(null);
         setForeground(null);
 
         add(nameLabel);
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             add(sizeLabel);
             add(dateLabel);
         }
@@ -127,7 +130,7 @@ public class FileItem extends JComponent {
 
         if (OpenSavePanel.fsv != null) {
             fName = OpenSavePanel.fsv.getSystemDisplayName(f);
-            if (fMode == 0 && fExt.compareToIgnoreCase(DEFAULT_EXT) == 0) {
+            if (viewMode == DETAIL_MODE && fExt.compareToIgnoreCase(DEFAULT_EXT) == 0) {
                 fIcon = OpenSavePanel.jctlIcon;
             } else {
                 fIcon = OpenSavePanel.fsv.getSystemIcon(f);
@@ -163,7 +166,7 @@ public class FileItem extends JComponent {
             nameLabel.setIcon(getIcon());
         }
 
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             sizeLabel.setText(getLengthStr());
             sizeLabel.setBackground(null);
             sizeLabel.setForeground(null);
@@ -181,7 +184,7 @@ public class FileItem extends JComponent {
     }
 
     public String getFName() {
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             if (fParentDir) {
                 return "[..]";
             } else if (fDir) {
@@ -227,11 +230,16 @@ public class FileItem extends JComponent {
         return fLink;
     }
 
-    public String getFileExt(File f) {
+    public static String getFileExt(File f) {
         if (f.isDirectory()) {
             return "";
         }
-        String[] ss = f.getName().split("\\.");
+        return getFileExt(f.getName());
+    }
+
+    public static String getFileExt(String fName) {
+        if (fName == null || "".equals(fName)) return "";
+        String[] ss = fName.split("\\.");
         if (ss.length > 1) {
             return "." + ss[ss.length - 1];
         } else {
@@ -310,7 +318,7 @@ public class FileItem extends JComponent {
 
     public void updateWidth() {
         int h = getHeight();
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             nameWidth = getWidth() - sizeWidth - dateWidth;
 
             nameLabel.setSize(nameWidth, h);
@@ -332,13 +340,13 @@ public class FileItem extends JComponent {
     }
 
     public void setFileDate(String date) {
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             dateLabel.setText(date);
         }
     }
 
     public void setFileSize(String date) {
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             sizeLabel.setText(date);
         }
     }
@@ -350,7 +358,7 @@ public class FileItem extends JComponent {
     }
 
     public void setWidths(int size, int date) {
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             int oldDW = dateWidth;
             int oldSW = sizeWidth;
             if (date >= 50) {
@@ -366,7 +374,7 @@ public class FileItem extends JComponent {
     }
 
     public void setNameWidth(int width) {
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             setSize(width + dateWidth + sizeWidth, getHeight());
         } else {
             setSize(width, getHeight());
@@ -374,14 +382,14 @@ public class FileItem extends JComponent {
     }
 
     public void setDateWidth(int width) {
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             dateWidth = width;
             updateWidth();
         }
     }
 
     public void setSizeWidth(int width) {
-        if (fMode == 0) {
+        if (viewMode == DETAIL_MODE) {
             sizeWidth = width;
             updateWidth();
         }
@@ -392,7 +400,7 @@ public class FileItem extends JComponent {
     }
 
     public void setLevel(int newLevel) {
-        if (fMode != 0) {
+        if (viewMode == LIST_MODE) {
             fLevel = newLevel;
             nameLabel.setSize(getWidth() - 10 * fLevel, getHeight());
             nameLabel.setLocation(10 * fLevel, 0);

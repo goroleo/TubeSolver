@@ -34,18 +34,15 @@ import static lib.lOpenSaveDialog.LOpenSaveDialog.dialogMode;
 public class OpenSavePanel extends JComponent {
 
     public static final FileSystemView fsv = FileSystemView.getFileSystemView();
-    public static File currentFolder = fsv.getDefaultDirectory();
-    private static File currentFile;
-
+    public static FileChanger current = new FileChanger();
+    //    private static File currentFile;
     private boolean showButtons = true;
-
     JLabel dirLabel = new JLabel(ResStrings.getString("strFolder"));
-
-    public static FilesPanel filesPanel;
-    public static ToolPanel toolPanel;
-    public static FoldersPanel foldersPanel;
-    public static FolderChooser folderName;
-    public static FileEditPanel fileName;
+    private static FilesPanel filesPanel;
+    private static ToolButtonsPanel toolsPanel;
+    private static FoldersPanel foldersPanel;
+    private static FolderDropDown foldersDropDown;
+    private static FileEditPanel fileEditPanel;
 
     public static final String DEFAULT_EXT = ".jctl";
 
@@ -64,36 +61,24 @@ public class OpenSavePanel extends JComponent {
     private static LPictureButton btnCancel;
 
     public static JDialog dlgFrame;
-    public static BufferedImage lnFrameIcon;    // Dialog icon )) 
-    public static BufferedImage imgBtnDown;    // Dialog icon )) 
-    public static BufferedImage imgBtnUp;    // Dialog icon )) 
-    public static ImageIcon jctlIcon;             // Icon for JCTL files
-    public Cursor cursorResize;           // cursor for FileListHeader 
+    public static BufferedImage lnFrameIcon;   // Dialog icon ))
+    public static BufferedImage imgBtnDown;    // ButtonDown icon for folderName
+    public static BufferedImage imgBtnUp;      // ButtonUp icon for folderName  ))
+    public static ImageIcon jctlIcon;          // Icon for JCTL files
+    public Cursor cursorResize;                // cursor for FileListHeader
 
     /**
      * Constructor. <br>
      *
      * @param ownerFrame  the parent dialog frame used to access it from other
      *                    controls (i.e. from buttons).
-     * @param file        file to set as default
      * @param showButtons true or false
      */
-    public OpenSavePanel(JDialog ownerFrame, File file, boolean showButtons) {
+    public OpenSavePanel(JDialog ownerFrame, boolean showButtons) {
         dlgFrame = ownerFrame;
         setBackground(null);
         setForeground(null);
         loadResources();
-
-        if (file != null) {
-            if (file.isDirectory()) {
-                currentFolder = file;
-                currentFile = null;
-            } else if (file.getParentFile() != null) {
-                currentFile = file;
-                currentFolder = file.getParentFile();
-
-            }
-        }
 
         this.showButtons = showButtons;
         dirLabel.setBackground(null);
@@ -101,23 +86,27 @@ public class OpenSavePanel extends JComponent {
         dirLabel.setFont(dirLabel.getFont().deriveFont(0, 12.0f));
         add(dirLabel);
 
-        foldersPanel = new FoldersPanel(currentFolder);
+        foldersPanel = new FoldersPanel();
+        current.addFolderListener(foldersPanel);
         add(foldersPanel);
 
-        filesPanel = new FilesPanel(currentFolder);
+        filesPanel = new FilesPanel();
+        current.addFolderListener(filesPanel);
         add(filesPanel);
 
-        folderName = new FolderChooser(currentFolder);
-        add(folderName);
+        foldersDropDown = new FolderDropDown();
+        current.addFolderListener(foldersDropDown);
+        add(foldersDropDown);
 
-        toolPanel = new ToolPanel();
-        add(toolPanel);
+        toolsPanel = new ToolButtonsPanel();
+        add(toolsPanel);
 
-        fileName = new FileEditPanel(file);
-        add(fileName);
+        fileEditPanel = new FileEditPanel();
+        current.addFolderListener(fileEditPanel);
+        current.addFileListener(fileEditPanel);
+        add(fileEditPanel);
 
         if (showButtons) {
-
             btnOk = addButton((dialogMode == LOpenSaveDialog.SAVE_MODE)
                     ? ResStrings.getString("strSave") : ResStrings.getString("strOpen"));
             btnOk.addActionListener((ActionEvent e) -> confirmAndClose());
@@ -162,36 +151,31 @@ public class OpenSavePanel extends JComponent {
             fm = dirLabel.getFontMetrics(dirLabel.getFont());
             dirLabel.setSize(fm.stringWidth(dirLabel.getText()), fm.getHeight());
             dirLabel.setLocation(10, 10 + (26 - fm.getHeight()) / 2);
-        }
 
-        if (folderName != null) {
-            assert dirLabel != null;
-            folderName.setLocation(20 + dirLabel.getWidth(), 10);
-            folderName.setSize(w - 40 - toolPanel.getWidth() - dirLabel.getWidth(), 26);
-        }
+            if (toolsPanel != null) {
+                toolsPanel.setLocation(w - 10 - toolsPanel.getWidth(), 12);
+            }
 
-        if (toolPanel != null) {
-            toolPanel.setLocation(w - 10 - toolPanel.getWidth(), 12);
-        }
+            if (foldersDropDown != null) {
+                foldersDropDown.setLocation(20 + dirLabel.getWidth(), 10);
+                foldersDropDown.setSize(w - 40 - toolsPanel.getWidth() - dirLabel.getWidth(), 26);
 
-        if (foldersPanel != null) {
-            assert folderName != null;
-            foldersPanel.setLocation(folderName.getX(), folderName.getY() + folderName.getHeight() + 2);
-            foldersPanel.setSize(folderName.getWidth(), foldersPanel.getItemHeight() * 8 + 4);
-        }
+                if (foldersPanel != null) {
+                    foldersPanel.setLocation(foldersDropDown.getX(), foldersDropDown.getY() + foldersDropDown.getHeight() + 2);
+                    foldersPanel.setSize(foldersDropDown.getWidth(), foldersPanel.getItemHeight() * 8 + 4);
+                }
 
-        if (fileName != null) {
-            assert folderName != null;
-            fileName.setLocation(10, getHeight() - ((showButtons) ? 45 : 0) - 20 - fileName.getHeight());
-            fileName.setEndOftext(folderName.getX() + folderName.getWidth() - 10);
-            fileName.setSize(w - 20, fileName.getHeight());
-        }
+                if (fileEditPanel != null) {
+                    fileEditPanel.setLocation(10, getHeight() - ((showButtons) ? 45 : 0) - 20 - fileEditPanel.getHeight());
+                    fileEditPanel.setInputFieldWidth(foldersDropDown.getX() + foldersDropDown.getWidth());
+                    fileEditPanel.setSize(w - 20, fileEditPanel.getHeight());
 
-        if (filesPanel != null) {
-            assert folderName != null;
-            assert fileName != null;
-            filesPanel.setLocation(10, folderName.getY() + folderName.getHeight() + 10);
-            filesPanel.setSize(w - 20, fileName.getY() - 10 - filesPanel.getY());
+                    if (filesPanel != null) {
+                        filesPanel.setLocation(10, foldersDropDown.getY() + foldersDropDown.getHeight() + 10);
+                        filesPanel.setSize(w - 20, fileEditPanel.getY() - 10 - filesPanel.getY());
+                    }
+                }
+            }
         }
     }
 
@@ -211,12 +195,8 @@ public class OpenSavePanel extends JComponent {
         return ((LOpenSaveDialog) dlgFrame).getDialogMode();
     }
 
-    public void setDialogMode() {
-
-    }
-
-    public void folderUp() {
-        setCurrentFolder(fsv.getParentDirectory(currentFolder));
+    public void upFolder() {
+        current.upFolder();
     }
 
     public void folderRefresh() {
@@ -224,7 +204,7 @@ public class OpenSavePanel extends JComponent {
     }
 
     public void createNewFolder() {
-        NewFolderDialog newFolderDlg = new NewFolderDialog(dlgFrame, currentFolder);
+        NewFolderDialog newFolderDlg = new NewFolderDialog(dlgFrame, current.getFolder());
         newFolderDlg.setVisible(true);
         setCurrentFolder(newFolderDlg.getFolder());
     }
@@ -238,42 +218,15 @@ public class OpenSavePanel extends JComponent {
     }
 
     public void setFileName(File f) {
-        if (fileName != null) {
-            if (f != null) {
-                if (f.isDirectory()) {
-                    fileName.setDirName(fsv.getSystemDisplayName(f));
-                } else {
-                    fileName.setFileName(fsv.getSystemDisplayName(f));
-                }
+        if (f != null) {
+            if (f.isDirectory()) {
+                fileEditPanel.setInputFieldValue(f.getName(), true);
             } else {
-                fileName.setFileName("");
+                current.setFile(f.getName());
             }
-        }
-    }
-
-    public String getFile() {
-        return fileName.getFileName();
-    }
-
-    public String getFileExt(String filename) {
-        String[] ss = filename.split("\\.");
-        if (ss.length > 1) {
-            return "." + ss[ss.length - 1];
         } else {
-            return "";
+            current.setFile("");
         }
-    }
-
-    public void fileNameChange() {
-        filesPanel.scrollToFile(fileName.getFileName());
-    }
-
-    public File getCurrentFolder() {
-        return currentFolder;
-    }
-
-    public File getCurrentFile() {
-        return currentFile;
     }
 
     public int getColumnWidth(int colNumber) {
@@ -282,15 +235,13 @@ public class OpenSavePanel extends JComponent {
 
     public void setCurrentFolder(File folder) {
         if (folder != null) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
             if (folder.isFile()) {
                 folder = fsv.getParentDirectory(folder);
             }
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            currentFolder = folder;
-            foldersPanel.setFolder(currentFolder);
-            filesPanel.setFolder(currentFolder);
-            folderName.setFolder(folder);
-            fileName.restoreFileName();
+
+            current.setFolder(folder);
             setCursor(Cursor.getDefaultCursor());
         }
     }
@@ -316,8 +267,8 @@ public class OpenSavePanel extends JComponent {
         filesPanel.setFocusable(!b);
         btnOk.setFocusable(!b);
         btnCancel.setFocusable(!b);
-        fileName.setFocusable(!b);
-        toolPanel.setFocusable(!b);
+        fileEditPanel.setFocusable(!b);
+        toolsPanel.setFocusable(!b);
         if (b) {
             foldersPanel.requestFocus();
         } else {
@@ -343,110 +294,80 @@ public class OpenSavePanel extends JComponent {
     public void confirmAndClose() {
 
         File f;
+        String fName;
         boolean doClose = false;
-        String fPath;
 
-        if (!isFoldersVisible()) {
+        if (isFoldersVisible()) {
+            showFoldersPanel(false);
+            return;
+        }
 
-            String fName = fileName.getFileName();
+        fName = fileEditPanel.getInputFieldValue().trim();
+        if ("".equals(fName)) return;
 
-            // check if the full absolute path is in the file name
-            f = new File(fName);
-            if (f.exists() && f.isDirectory()) {
-                setCurrentFolder(f);
-                fileName.restoreFileName();
-                return;
-            }
+        // first we'll check if the folder is in the path string
+        try {
+            // after this fName will be the file name without the path
+            fName = current.setFolder(fName);
 
-            // check if the relative path is in the file name
-            f = fsv.getChild(currentFolder, fName);
-            if (f != null && f.exists() && f.isDirectory()) {
-                setCurrentFolder(f);
-                fileName.restoreFileName();
-                return;
-            }
+        } catch (IOException e) {
+            // setFolder will raise an exception if the folder path has not found.
+            // In this case we cannot go on
+            String strError = ResStrings.getString("strPathNotFound");
+            if (e.getMessage() != null && !"".equals(e.getMessage()))
+                strError = e.getMessage() + "\n\n" + strError;
+            outErrorMsg(strError);
+            return;
+        }
 
-            // Not a path is stored in the file name. Or at least not only a path
-            f = new File(fName);
-            fPath = f.getParent();
-            fName = f.getName();
+        // after checking and setting a specified folder we can proceed with the last fName
+        if (!fName.equals("")) {
 
-            // check if a path (absolute or relative) is stored there
-            if (fPath != null && !"".equals(fPath)) {
-                f = new File(fPath);
-                if (f.exists() && f.isDirectory()) {
-                    setCurrentFolder(f);
-                } else {
-                    f = fsv.getChild(currentFolder, fPath);
-                    if (f != null && f.exists() && f.isDirectory()) {
-                        setCurrentFolder(f);
-                    } else {
-                        errorMessage(fPath + "\n\n" + ResStrings.getString("strPathNotFound"));
-                        return;
-                    }
-                }
-            }
+            current.setFile(fName);
 
-            // and finally we can process the real file name
-            if (getDialogMode() == LOpenSaveDialog.OPEN_MODE) {
+            if (((LOpenSaveDialog) dlgFrame).getDialogMode()
+                    == LOpenSaveDialog.OPEN_MODE) {
 
-                f = fsv.getChild(currentFolder, fName);
-                if (f != null && f.exists()) {
-                    // OPEN_MODE, File is exist!
+                f = current.findExistingFile();
+                if (f != null) { // file is exist
                     doClose = true;
-                    currentFile = f;
-                } else {
-                    // OPEN_MODE, File is not exist!
-                    // trying to add the default extension
-                    fName = fName + DEFAULT_EXT;
-                    // and check it once more
-                    f = fsv.getChild(currentFolder, fName);
-
-                    if (f != null) {
-                        if (f.exists()) {
-                            doClose = true;
-                            currentFile = f;
-                        } else {
-                            errorMessage(fName + "\n\n" + ResStrings.getString("strFileNotFound"));
-                        }
-                    }
+                } else { // file is not exist
+                    outErrorMsg(current.getFileName() + "\n\n" + ResStrings.getString("strFileNotFound"));
                 }
 
             } else {  // lnOpenSaveDialog.SAVE_MODE
 
-                if (!getFileExt(fName).equalsIgnoreCase(DEFAULT_EXT)) {
-                    fName = fName + DEFAULT_EXT;
-                }
-                f = fsv.getChild(currentFolder, fName);
-                if (f != null) {
-                    if (f.exists()) {
-                        if (questionMessage(f.getName() + "\n\n" + ResStrings.getString("strFileExists"))) {
-                            doClose = true;
-                            currentFile = f;
-                        }
-                    } else { // file is not exists
-                        doClose = true;
-                        currentFile = f;
-                    }
-                }
-            }
+                //
+                current.addDefaultExt();
+                f = current.findExistingFile();
 
-            if (doClose) {
-                EventQueue.invokeLater(() -> dlgFrame.dispose());
-                ((LOpenSaveDialog) dlgFrame).saveOptions();
+                if (f != null) { // the file is already exists!
+                    // we have to ask the user for permission to rewrite it.
+                    if (outQuestionMsg(current.getFileName() + "\n\n" + ResStrings.getString("strFileExists"))) {
+                        doClose = true;
+                    }
+                } else { // file is not exists,
+                    // so we can write it right now
+                    doClose = true;
+                }
             }
         }
-    }
 
-    public void refuseAndClose() {
-        if (!isFoldersVisible()) {
-            currentFile = null;
+        if (doClose) {
             EventQueue.invokeLater(() -> dlgFrame.dispose());
             ((LOpenSaveDialog) dlgFrame).saveOptions();
         }
     }
 
-    private void errorMessage(String msg) {
+    public void refuseAndClose() {
+        if (!isFoldersVisible()) {
+            current.setFile("");
+            EventQueue.invokeLater(() -> dlgFrame.dispose());
+            ((LOpenSaveDialog) dlgFrame).saveOptions();
+        }
+    }
+
+    private void outErrorMsg(String msg) {
         MessageDlg msgDlg = new MessageDlg(null,
                 msg,
                 MessageDlg.BTN_OK);
@@ -456,7 +377,7 @@ public class OpenSavePanel extends JComponent {
         msgDlg.setVisible(true);
     }
 
-    private boolean questionMessage(String msg) {
+    private boolean outQuestionMsg(String msg) {
         MessageDlg msgDlg = new MessageDlg(null,
                 msg,
                 MessageDlg.BTN_YES_NO);
@@ -468,7 +389,7 @@ public class OpenSavePanel extends JComponent {
         return msgDlg.modalResult > 0;
     }
 
-    /////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 //         
 //         Resources loader     
 //         

@@ -15,26 +15,22 @@ import java.io.File;
 import java.util.ArrayList;
 import static lib.lOpenSaveDialog.OpenSavePanel.fsv;
 
-public class FolderList extends ListView {
+public class FoldersList extends ListView {
 
     private static final ArrayList<FileItem> rootList = new ArrayList<>();
     private final ArrayList<FileItem> folderList = new ArrayList<>();
     private int insertFoldersAfter;
     private final FoldersPanel fPanel;
 
-    public FolderList() {
-        this(null, null);
+    public FoldersList() {
+        this(null);
     }
 
-    public FolderList(FoldersPanel owner, File folder) {
-        super(owner);
+    public FoldersList(FoldersPanel owner) {
+        super();
         fPanel = owner;
         setItemHeight(22);
-
         fillRoots();
-        if (folder != null) {
-            setFolder(folder);
-        }
     }
 
     private void fillRoots() {
@@ -56,7 +52,7 @@ public class FolderList extends ListView {
                     }
                 }
             }
-            fi = this.createNewItem(root, true, level);
+            fi = this.createNewItem(root, false, level);
             rootList.add(fi);
         }
     }
@@ -78,7 +74,7 @@ public class FolderList extends ListView {
                 }
             }
             if (!done) {
-                fi = createNewItem(folder, true, 0);
+                fi = createNewItem(folder, false, 0);
                 folderList.add(0, fi);
                 folder = fsv.getParentDirectory(folder);
             }

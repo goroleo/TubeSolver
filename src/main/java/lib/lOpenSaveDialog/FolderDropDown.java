@@ -23,9 +23,9 @@ import java.io.File;
 import javax.swing.JComponent;
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 
-public class FolderChooser extends JComponent {
+public class FolderDropDown extends JComponent implements FolderListener {
 
-    private final FileItem folderInfo;
+    private FileItem folderInfo;
     private final BufferedImage imgFrame;
 
     private boolean rollover = false;
@@ -35,18 +35,16 @@ public class FolderChooser extends JComponent {
     private final Color selectedBackground = new Color(0xb8cfe5);
     private final Color selectedForeground = Color.BLACK;
 
-    public FolderChooser(File folder) {
+    public FolderDropDown() {
 
-//      parent = lnOpenSaveDialog.osPan;
         this.setFocusable(true);
 
         imgFrame = new BufferedImage(OpenSavePanel.imgBtnDown.getWidth(), OpenSavePanel.imgBtnDown.getHeight(), 2);
 
-        folderInfo = new FileItem(folder, true, 0);
+        folderInfo = new FileItem(null, false, 0);
         for (MouseListener ml : folderInfo.getMouseListeners()) {
             folderInfo.removeMouseListener(ml);
         }
-
         add(folderInfo);
 
         setSize(400, 27);
@@ -124,10 +122,6 @@ public class FolderChooser extends JComponent {
         super.setSize(w, h);
     }
 
-    public void setFolder(File folder) {
-        folderInfo.setFile(folder);
-    }
-
     public void setSelected(boolean b) {
         folderInfo.setSelected(b);
         selected = b;
@@ -194,4 +188,8 @@ public class FolderChooser extends JComponent {
         repaint();
     }
 
+    @Override
+    public void updateFolder(File folder) {
+        folderInfo.setFile(folder);
+    }
 }

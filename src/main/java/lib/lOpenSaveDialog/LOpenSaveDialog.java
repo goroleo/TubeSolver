@@ -1,47 +1,36 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package lib.lOpenSaveDialog;
 
 import core.Options;
-import gui.Palette;
 import core.ResStrings;
+import gui.Palette;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.File;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.KeyStroke;
 
-import static java.awt.EventQueue.invokeLater;
-import static lib.lOpenSaveDialog.OpenSavePanel.fsv;
+import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
- *
  * @author leogoro
- *
+ * <p>
  * Color dialog Window. it creates the window and place CoorPanel into the
  * window.
- *
- *
  */
 public class LOpenSaveDialog extends JDialog {
 
     private final JFrame owner;
     private final int defaultWidth = 480; // width
     private final int defaultHeight = 400; // height
-    private File file;
     public static int dialogMode;
     public final static int SAVE_MODE = 101;
     public final static int OPEN_MODE = 202;
@@ -80,32 +69,19 @@ public class LOpenSaveDialog extends JDialog {
             this.setTitle(ResStrings.getString("strSaveFile"));
         }
 
-        if (fName != null && !("".equals(fName))) {
-            file = new File(fName);
-            if (!file.isDirectory() && fsv.getParentDirectory(file) == null) {
-                if (!getStoredFolder().equals("")) {
-                    file = new File(getStoredFolder() + File.separator + fName);
-                }
-            }
-        } else if (!getStoredFolder().equals("")) {
-            file = new File(getStoredFolder() + File.separator + fName);
-        } else {
-            file = null;
-        }
-
-        osPan = new OpenSavePanel(this, file, true);
+        osPan = new OpenSavePanel(this, true);
         addListeners();
         this.owner = owner;
         initFrame();
-        if (file != null && !file.isDirectory()) {
-            setFileName(file);
-        }
+
+        current.setFile(fName);
     }
 
     private void initFrame() {
         setDefaultCloseOperation(0); // DO_NOTHING_ON_CLOSE
         setIconImage(OpenSavePanel.lnFrameIcon);
         calculateSize();
+        setMinimumSize(new Dimension(350, 300));
 
         Rectangle r = getGraphicsConfiguration().getBounds();
         if (Options.osdSizeX >= 300 && Options.osdSizeY >= 200
@@ -123,7 +99,9 @@ public class LOpenSaveDialog extends JDialog {
         setBackground(Palette.dialogColor);
         setForeground(Color.white);
         getContentPane().add(osPan);
-        setMinimumSize(new Dimension(350, 300));
+
+        osPan.setCurrentFolder(new File(getStoredFolder()));
+
     }
 
     private void calculateSize() {
@@ -214,34 +192,25 @@ public class LOpenSaveDialog extends JDialog {
         getContentPane().setForeground(fg);
     }
 
-    public String getFileName() {
-        File f = osPan.getCurrentFile();
-        if (f != null) {
-            return f.getAbsolutePath();
-        } else {
-            return "";
-        }
-    }
-
     public final void setFileName(File f) {
         osPan.setFileName(f);
     }
 
     public String chooseFile() {
         setVisible(true);
-        return getFileName();
+        return current.getFilePath();
     }
 
     public String showOpenDialog() {
         setDialogMode(OPEN_MODE);
         setVisible(true);
-        return getFileName();
+        return current.getFilePath();
     }
 
     public String showSaveDialog() {
         setDialogMode(SAVE_MODE);
         setVisible(true);
-        return getFileName();
+        return current.getFilePath();
     }
 
     public void saveOptions() {
@@ -252,9 +221,9 @@ public class LOpenSaveDialog extends JDialog {
         Options.osdSizeColN = osPan.getColumnWidth(1);
         Options.osdSizeColS = osPan.getColumnWidth(2);
         Options.osdSizeColD = osPan.getColumnWidth(3);
-        Options.osdCurrentDir = osPan.getCurrentFolder().getAbsolutePath();
+        Options.osdCurrentDir = current.getFolder().getAbsolutePath();
         Options.osdSortCol = osPan.getFileSortNumber();
-        Options.osdSortOrder = osPan.getFileSortAscending() ? 1: 0;
+        Options.osdSortOrder = osPan.getFileSortAscending() ? 1 : 0;
     }
 
     public final String getStoredFolder() {

@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package lib.lOpenSaveDialog;
@@ -12,22 +12,22 @@ package lib.lOpenSaveDialog;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 import static lib.lOpenSaveDialog.OpenSavePanel.fsv;
 
-public class FileList extends ListView {
+public class FilesList extends ListView {
 
     private final FilesPanel fPanel;
 
-    public FileList() {
-        this(null, null);
+    public FilesList() {
+        this(null);
     }
 
-    public FileList(FilesPanel owner, File folder) {
-        super(owner);
+    public FilesList(FilesPanel owner) {
+        super();
         fPanel = owner;
         setItemHeight(25);
-        setFolder(folder);
     }
 
     public void setFolder(File folder) {
@@ -39,7 +39,8 @@ public class FileList extends ListView {
             File[] files = fsv.getFiles(folder, true);
             for (File f : files) {
                 if (f.isDirectory()
-                        || OpenSavePanel.DEFAULT_EXT.equalsIgnoreCase(getFileExt(f))) {
+                        || OpenSavePanel.DEFAULT_EXT.equalsIgnoreCase(
+                        FileItem.getFileExt(f))) {
                     addNewItem(f);
                 }
             }
@@ -68,15 +69,15 @@ public class FileList extends ListView {
                     } else {
                         osPan.setCurrentFolder(item.getFile());
                     }
-                } else {
+                } else { // not folder and clickCount = 2
                     osPan.confirmAndClose();
                 }
-            } else {
+            } else { // clickCount = 1
                 setCurrentItem(item);
             }
         }
     }
-    
+
     @Override
     public void itemClicked(FileItem item, MouseEvent e) {
         itemClicked(item, e.getButton(), e.getClickCount());
@@ -85,37 +86,26 @@ public class FileList extends ListView {
     @Override
     public void itemEntered(FileItem item) {
         if (!osPan.isFoldersVisible()) {
-            setRollovedItem(item);
+            setRolloverItem(item);
         }
     }
 
     @Override
     public void itemExited(FileItem item) {
-        setRollovedItem(null);
+        setRolloverItem(null);
     }
 
     @Override
     public void setCurrentItem(FileItem file) {
         super.setCurrentItem(file);
-        fPanel.fileChanged();
+        if (file != null)
+            fPanel.chooseFile(file.getFile());
     }
 
     @Override
     public void addItemToView(FileItem item) {
         item.setWidths(fPanel.getColumnWidth(2), fPanel.getColumnWidth(3));
         add(item);
-    }
-
-    public String getFileExt(File f) {
-        if (f.isDirectory()) {
-            return "";
-        }
-        String[] ss = f.getName().split("\\.");
-        if (ss.length > 1) {
-            return "." + ss[ss.length - 1];
-        } else {
-            return "";
-        }
     }
 
 }

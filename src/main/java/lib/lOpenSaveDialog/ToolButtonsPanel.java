@@ -17,14 +17,14 @@ import core.ResStrings;
 import lib.lButtons.LToolButton;
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 
-public class ToolPanel extends JComponent {
+public class ToolButtonsPanel extends JComponent {
 
     LToolButton btnUp;
     LToolButton btnRefresh;
     LToolButton btnFolder;
     int sep = 7;
 
-    public ToolPanel() {
+    public ToolButtonsPanel() {
         btnUp = addButton(0, "up", ResStrings.getString("strFolderUp"));
         btnUp.addActionListener((ActionEvent e) -> buttonClick(1));
 
@@ -68,7 +68,7 @@ public class ToolPanel extends JComponent {
         } else {
             switch (btnNumber) {
                 case 1:
-                    osPan.folderUp();
+                    osPan.upFolder();
                     break;
                 case 2:
                     osPan.folderRefresh();

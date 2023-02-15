@@ -1,20 +1,19 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package lib.lOpenSaveDialog;
 
-import java.awt.Color;
-import java.awt.Component;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.JComponent;
 
 public class ListView extends JComponent {
 
@@ -23,15 +22,9 @@ public class ListView extends JComponent {
     private int sortNumber = 1;
     private boolean sortAscending = true;
     private FileItem currentItem;
-    private FileItem rollovedItem;
-    private final JComponent fPanel;
-    
-    public ListView() {
-        this(null);
-    }
+    private FileItem rolloverItem;
 
-    public ListView(JComponent parent) {
-        fPanel = parent;
+    public ListView() {
         setBackground(gui.Palette.dialogColor);
         setForeground(Color.WHITE);
         setSize(300, 100);
@@ -42,21 +35,21 @@ public class ListView extends JComponent {
     }
 
     public FileItem addNewItem(File f) {
-        return addNewItem(f, false, 0);
+        return addNewItem(f, true, 0);
     }
 
-    public FileItem addNewItem(File f, boolean folderMode, int level) {
-        FileItem fi = createNewItem(f, folderMode, level);
+    public FileItem addNewItem(File f, boolean detailsMode, int level) {
+        FileItem fi = createNewItem(f, detailsMode, level);
         fileList.add(fi);
         return fi;
     }
 
     public FileItem createNewItem(File f) {
-        return createNewItem(f, false, 0);
+        return createNewItem(f, true, 0);
     }
 
-    public FileItem createNewItem(File f, boolean folderMode, int level) {
-        return new FileItem(f, folderMode, level) {
+    public FileItem createNewItem(File f, boolean detailsMode, int level) {
+        return new FileItem(f, detailsMode, level) {
             @Override
             public void mouseClicked(MouseEvent e) {
                 ListView.this.itemClicked(this, e);
@@ -104,9 +97,9 @@ public class ListView extends JComponent {
         setSize(getWidth(), fileList.size() * itemHeight);
         repaint();
     }
-    
+
     public void addItemToView(FileItem item) {
-        add(item); 
+        add(item);
     }
 
     public void updateItemsPos() {
@@ -279,20 +272,20 @@ public class ListView extends JComponent {
         }
     }
 
-    public FileItem getRollovedItem() {
-        return rollovedItem;
+    public FileItem getRolloverItem() {
+        return rolloverItem;
     }
 
-    public void setRollovedItem(FileItem item) {
-        if (rollovedItem != null) {
-            rollovedItem.setRollover(false);
+    public void setRolloverItem(FileItem item) {
+        if (rolloverItem != null) {
+            rolloverItem.setRollover(false);
         }
 
         if (getItemIndex(item) >= 0) {
             item.setRollover(true);
-            rollovedItem = item;
+            rolloverItem = item;
         } else {
-            rollovedItem = null;
+            rolloverItem = null;
         }
     }
 
@@ -300,7 +293,8 @@ public class ListView extends JComponent {
     }
 
     public void itemPressed(FileItem item) {
-        fPanel.requestFocus();
+        if (getParent() != null)
+            getParent().requestFocus();
     }
 
     public void itemEntered(FileItem item) {
@@ -335,5 +329,5 @@ public class ListView extends JComponent {
         }
         return null;
     }
-    
+
 }
