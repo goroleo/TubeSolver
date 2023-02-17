@@ -25,7 +25,7 @@ import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 public class FoldersPanel extends JComponent implements FolderListener {
 
-    private final FoldersList folderlist;
+    private final FoldersList foldersList;
     private final ScrollBar sbVert;
 
     private final JComponent viewport = new JComponent() {
@@ -44,27 +44,27 @@ public class FoldersPanel extends JComponent implements FolderListener {
         setFocusable(true);
         setBorder(border);
 
-        folderlist = new FoldersList(this);
-        viewport.add(folderlist);
+        foldersList = new FoldersList(this);
+        viewport.add(foldersList);
         add(viewport);
 
         sbVert = new ScrollBar(ScrollBar.VERTICAL) {
             @Override
             public void onChangePosition() {
-                folderlist.setLocation(0, -sbVert.getPosition());
+                foldersList.setLocation(0, -sbVert.getPosition());
             }
         };
-        sbVert.setSize(11, 200);
+//        sbVert.setSize(11, 200);
         add(sbVert);
 
-        setSize(200, 200);
+//        setSize(200, 200);
 
         addMouseWheelListener((MouseWheelEvent e) -> {
-            if (sbVert.isVisible()) {
+            if (sbVert.isVisible() && sbVert.isActive()) {
                 if (e.getWheelRotation() > 0) {
-                    sbVert.setPosition(sbVert.getPosition() + folderlist.getItemHeight(), true);
+                    sbVert.setPosition(sbVert.getPosition() + foldersList.getItemHeight());
                 } else {
-                    sbVert.setPosition(sbVert.getPosition() - folderlist.getItemHeight(), true);
+                    sbVert.setPosition(sbVert.getPosition() - foldersList.getItemHeight());
                 }
             }
         });
@@ -75,31 +75,31 @@ public class FoldersPanel extends JComponent implements FolderListener {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
                     case KeyEvent.VK_KP_UP:
-                        folderlist.setPreviousItem();
+                        foldersList.setPreviousItem();
                         break;
                     case KeyEvent.VK_DOWN:
                     case KeyEvent.VK_KP_DOWN:
-                        folderlist.setNextItem();
+                        foldersList.setNextItem();
                         break;
                     case KeyEvent.VK_PAGE_UP:
                         if (e.isControlDown()) {
-                            folderlist.setFirstItem();
+                            foldersList.setFirstItem();
                         } else {
-                            folderlist.setPreviousPageItem(viewport.getHeight());
+                            foldersList.setPreviousPageItem(viewport.getHeight());
                         }
                         break;
                     case KeyEvent.VK_PAGE_DOWN:
                         if (e.isControlDown()) {
-                            folderlist.setLastItem();
+                            foldersList.setLastItem();
                         } else {
-                            folderlist.setNextPageItem(viewport.getHeight());
+                            foldersList.setNextPageItem(viewport.getHeight());
                         }
                         break;
                     case KeyEvent.VK_ENTER:
-                        chooseFolder(folderlist.getCurrentItem());
+                        chooseFolder(foldersList.getCurrentItem());
                         break;
                 }
-                sbVert.scrollToComponent(folderlist.getCurrentItem());
+                sbVert.scrollToComponent(foldersList.getCurrentItem());
             }
         });
 
@@ -119,13 +119,15 @@ public class FoldersPanel extends JComponent implements FolderListener {
 
     @Override
     public void setSize(int w, int h) {
-
         super.setSize(w, h);
+        updateComponents(w, h);
+    }
 
+    private void updateComponents(int w, int h) {
         w = w - 4;
         h = h - 4;
 
-        sbVert.setValues(0, folderlist.getHeight(), folderlist.getItemHeight(), h);
+        sbVert.setValues(0, foldersList.getHeight(), foldersList.getItemHeight(), h);
 
         int sbV_width = (sbVert.isVisible()) ? 11 : 0;
 
@@ -134,36 +136,30 @@ public class FoldersPanel extends JComponent implements FolderListener {
 
         sbVert.setSize(sbV_width, h);
         viewport.setSize(w - sbV_width, h);
-        folderlist.setSize(viewport.getWidth(), h);
+        foldersList.setSize(viewport.getWidth(), h);
 
         repaint();
     }
 
+    private void updateComponents() {
+        updateComponents(getWidth(), getHeight());
+    }
+
     public int getItemHeight() {
-        return folderlist.getItemHeight();
+        return foldersList.getItemHeight();
     }
 
     public void chooseFolder(FileItem item) {
-        if (osPan != null) {
-            current.setFolder(item.getFile());
-            osPan.showFoldersPanel(false);
-        }
-    }
-
-    public FileItem getCurrentItem() {
-        return folderlist.getCurrentItem();
-    }
-
-    public void setCurrentItem(FileItem folder) {
-        folderlist.setCurrentItem(folder);
+        osPan.showFoldersPanel(false);
+        current.setFolder(item.getFile());
     }
 
     @Override
     public void setVisible(boolean b) {
         if (b) {
-            folderlist.setCurrentItem(folderlist.findFolder(current.getFolder()));
+            foldersList.setCurrentItem(foldersList.findFolder(current.getFolder()));
             if (sbVert.isVisible()) {
-                sbVert.setPosition(folderlist.getCurrentItem().getY());
+                sbVert.setPosition(foldersList.getCurrentItem().getY());
             }
         }
         super.setVisible(b);
@@ -177,8 +173,12 @@ public class FoldersPanel extends JComponent implements FolderListener {
 
     @Override
     public void updateFolder(File folder) {
-        folderlist.setFolder(folder);
-        sbVert.setValues(0, folderlist.getHeight(), folderlist.getItemHeight(), viewport.getHeight());
+        boolean b = sbVert.isVisible();
+        foldersList.setFolder(folder);
+        sbVert.setValues(0, foldersList.getHeight(), foldersList.getItemHeight(), viewport.getHeight());
         sbVert.onChangePosition();
+        if (sbVert.isVisible() != b)
+            updateComponents();
+
     }
 }

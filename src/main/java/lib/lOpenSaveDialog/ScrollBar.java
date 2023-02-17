@@ -45,9 +45,9 @@ public class ScrollBar extends JComponent {
     private final Color clrDefaultTrackBar = Color.GRAY;
     private final Color clrDefaultScrollBar = Color.DARK_GRAY;
 
-    public ScrollBar(int sbtype) {
+    public ScrollBar(int sbType) {
         this();
-        setScrollBarType(sbtype);
+        setScrollBarType(sbType);
     }
 
     public ScrollBar() {
@@ -62,9 +62,9 @@ public class ScrollBar extends JComponent {
                     if (e.getButton() == MouseEvent.BUTTON1) {
                         int mousePos = (scrollBarType == VERTICAL) ? e.getY() : e.getX();
                         if (mousePos < trackBarStart) {
-                            doPageUp();
+                            scrollPageUp();
                         } else if (mousePos > trackBarStart + trackBarLength) {
-                            doPageDown();
+                            scrollPageDown();
                         }
                     }
                 } else {
@@ -121,15 +121,15 @@ public class ScrollBar extends JComponent {
             public void mouseDragged(MouseEvent e) {
                 if (trackDragged) {
                     int mousePos = (scrollBarType == VERTICAL) ? e.getY() : e.getX();
-                    setPosition((int) ((mousePos - dragStartPos) / trackScale), true);
+                    setPosition((int) ((mousePos - dragStartPos) / trackScale));
                 }
             }
         }); // MouseMotionListener
     }
 
-    public void setScrollBarType(int sbtype) {
-        if (scrollBarType != sbtype) {
-            scrollBarType = sbtype;
+    public void setScrollBarType(int sbType) {
+        if (scrollBarType != sbType) {
+            scrollBarType = sbType;
             repaint();
         }
     }
@@ -193,8 +193,8 @@ public class ScrollBar extends JComponent {
             setVisible(false);
         } else {
             trackBarLength = scrollBarXSize * viewScale;
-            setPosition(position, false);
             setVisible(true);
+            setPosition(position);
         }
     }
 
@@ -203,42 +203,36 @@ public class ScrollBar extends JComponent {
     }
 
     public void setPosition(int pos) {
-        setPosition(pos, true);
-    }
-
-    public void setPosition(int pos, boolean doRepaint) {
-        if (pos < minValue) { 
+        if (pos < minValue) {
             position = minValue;
         } else if (isVisible() && pos >= maxValue - viewValue) {
             position = maxValue - viewValue;  
         } else {                              
             position = pos;                   
         }
-        trackBarStart = trackScale * (position - minValue); 
-        if (doRepaint && isVisible()) {                 
+        trackBarStart = trackScale * (position - minValue);
+        if (isVisible()) {
             repaint();
         }
         onChangePosition();
     }
 
-    public void onChangePosition() {
+    public void onChangePosition() {}
 
+    public void scrollToFirst() {
+        setPosition(minValue);
     }
 
-    public void setFirstPosition(boolean doRepaint) {
-        setPosition(minValue, doRepaint);
+    public void scrollToLast() {
+        setPosition(maxValue - (int) (trackBarLength / trackScale));
     }
 
-    public void setLastPosition(boolean doRepaint) {
-        setPosition(maxValue - (int) (trackBarLength / trackScale), doRepaint);
+    public void scrollPageUp() {
+        setPosition(position - viewValue);
     }
 
-    public void doPageUp() {
-        setPosition(position - viewValue, true);
-    }
-
-    public void doPageDown() {
-        setPosition(position + viewValue, true);
+    public void scrollPageDown() {
+        setPosition(position + viewValue);
     }
 
     public boolean isAreaVisible(int minPos, int maxPos) {
@@ -250,36 +244,31 @@ public class ScrollBar extends JComponent {
         return !(minPos < position || maxPos > position + viewValue);
     }
 
-    public void scrollToArea(int minPos, int maxPos, boolean doRepaint) {
+    public void scrollToArea(int minPos, int maxPos) {
         if (minPos > maxPos) {
             int temp = maxPos;
             maxPos = minPos;
             minPos = temp;
         }
         if (minPos < position) {
-            setPosition(minPos, doRepaint);
+            setPosition(minPos);
         } else if (maxPos > position + viewValue) {
-            setPosition(maxPos - viewValue, doRepaint);
+            setPosition(maxPos - viewValue);
         }
-    }
-
-    public void scrollToArea(int minPos, int maxPos) {
-        scrollToArea(minPos, maxPos, true);
     }
 
     public void scrollToComponent(Component c) {
         if (c != null) {
             if (scrollBarType == VERTICAL) {
-                scrollToArea(c.getY(), c.getY() + c.getHeight(), true);
+                scrollToArea(c.getY(), c.getY() + c.getHeight());
             } else {
-                scrollToArea(c.getX(), c.getX() + c.getWidth(), true);
+                scrollToArea(c.getX(), c.getX() + c.getWidth());
             }
         }
     }
 
     public boolean isActive() {
-        return !((getParent() instanceof FilesPanel)
-                && osPan.isFoldersVisible());
+        return true;
     }
      
     @Override

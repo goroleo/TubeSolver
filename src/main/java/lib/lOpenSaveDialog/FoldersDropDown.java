@@ -23,9 +23,9 @@ import java.io.File;
 import javax.swing.JComponent;
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 
-public class FolderDropDown extends JComponent implements FolderListener {
+public class FoldersDropDown extends JComponent implements FolderListener {
 
-    private FileItem folderInfo;
+    private final FileItem folderInfo;
     private final BufferedImage imgFrame;
 
     private boolean rollover = false;
@@ -35,7 +35,7 @@ public class FolderDropDown extends JComponent implements FolderListener {
     private final Color selectedBackground = new Color(0xb8cfe5);
     private final Color selectedForeground = Color.BLACK;
 
-    public FolderDropDown() {
+    public FoldersDropDown() {
 
         this.setFocusable(true);
 
@@ -47,7 +47,7 @@ public class FolderDropDown extends JComponent implements FolderListener {
         }
         add(folderInfo);
 
-        setSize(400, 27);
+//        setSize(400, 27);
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -56,14 +56,14 @@ public class FolderDropDown extends JComponent implements FolderListener {
                     case KeyEvent.VK_UP:
                     case KeyEvent.VK_KP_UP:
                     case KeyEvent.VK_PAGE_UP:
-                        if (osPan.isFoldersVisible()) {
+                        if (osPan.isFoldersPanelVisible()) {
                             doClick();
                         }
                         break;
                     case KeyEvent.VK_PAGE_DOWN:
                     case KeyEvent.VK_DOWN:
                     case KeyEvent.VK_KP_DOWN:
-                        if (!osPan.isFoldersVisible()) {
+                        if (!osPan.isFoldersPanelVisible()) {
                             doClick();
                         }
                         break;
@@ -122,12 +122,6 @@ public class FolderDropDown extends JComponent implements FolderListener {
         super.setSize(w, h);
     }
 
-    public void setSelected(boolean b) {
-        folderInfo.setSelected(b);
-        selected = b;
-        repaint();
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         updateBtn();
@@ -167,7 +161,7 @@ public class FolderDropDown extends JComponent implements FolderListener {
             clr = Color.LIGHT_GRAY.getRGB();
         }
 
-        if (osPan.isFoldersVisible()) {
+        if (osPan.isFoldersPanelVisible()) {
             imgSource = OpenSavePanel.imgBtnUp;
         } else {
             imgSource = OpenSavePanel.imgBtnDown;
@@ -183,7 +177,7 @@ public class FolderDropDown extends JComponent implements FolderListener {
 
     public void doClick() {
         if (osPan != null) {
-            osPan.showFoldersPanel(!osPan.isFoldersVisible());
+            osPan.showFoldersPanel(!osPan.isFoldersPanelVisible());
         }
         repaint();
     }

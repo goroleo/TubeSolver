@@ -22,12 +22,12 @@ public class ListView extends JComponent {
     private int sortNumber = 1;
     private boolean sortAscending = true;
     private FileItem currentItem;
-    private FileItem rolloverItem;
+    private FileItem mouseOverItem;
 
     public ListView() {
         setBackground(gui.Palette.dialogColor);
         setForeground(Color.WHITE);
-        setSize(300, 100);
+//        setSize(300, 100);
     }
 
     public ArrayList<FileItem> getFileList() {
@@ -113,7 +113,7 @@ public class ListView extends JComponent {
     public void setColumnWidths(int name, int size, int date) {
         for (Component item : getComponents()) {
             if (item instanceof FileItem) {
-                ((FileItem) item).setWidths(name, size, date);
+                ((FileItem) item).setLabelWidths(name, size, date);
             }
         }
     }
@@ -148,21 +148,21 @@ public class ListView extends JComponent {
 
     public void doSort() {
         switch (sortNumber) {
-            case 1:
+            case 1: // sort by name
                 if (sortAscending) {
                     fileList.sort(FileItem.NameComparatorAsc);
                 } else {
                     fileList.sort(FileItem.NameComparatorDesc);
                 }
                 break;
-            case 2:
+            case 2: // sort by size
                 if (sortAscending) {
                     fileList.sort(FileItem.SizeComparatorAsc);
                 } else {
                     fileList.sort(FileItem.SizeComparatorDesc);
                 }
                 break;
-            case 3:
+            case 3: // sort by date-time
                 if (sortAscending) {
                     fileList.sort(FileItem.TimeComparatorAsc);
                 } else {
@@ -272,20 +272,20 @@ public class ListView extends JComponent {
         }
     }
 
-    public FileItem getRolloverItem() {
-        return rolloverItem;
+    public FileItem getMouseOverItem() {
+        return mouseOverItem;
     }
 
-    public void setRolloverItem(FileItem item) {
-        if (rolloverItem != null) {
-            rolloverItem.setRollover(false);
+    public void setMouseOverItem(FileItem item) {
+        if (mouseOverItem != null) {
+            mouseOverItem.setMouseOver(false);
         }
 
         if (getItemIndex(item) >= 0) {
-            item.setRollover(true);
-            rolloverItem = item;
+            item.setMouseOver(true);
+            mouseOverItem = item;
         } else {
-            rolloverItem = null;
+            mouseOverItem = null;
         }
     }
 

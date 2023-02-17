@@ -54,7 +54,7 @@ public class FilesPanel extends JComponent implements FolderListener {
         viewport.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (osPan.isFoldersVisible()) {
+                if (osPan.isFoldersPanelVisible()) {
                     osPan.showFoldersPanel(false);
                 }
             }
@@ -75,28 +75,33 @@ public class FilesPanel extends JComponent implements FolderListener {
             public void onChangePosition() {
                 fileList.setLocation(0, -sbVert.getPosition());
             }
+
+            @Override
+            public boolean isActive() {
+                return !osPan.isFoldersPanelVisible();
+            }
         };
-        sbVert.setSize(11, 200);
+//        sbVert.setSize(11, 200);
         add(sbVert);
 
         header = new FileListHeader(this);
         add(header);
 
-        setSize(200, 200);
+//        setSize(200, 200);
 
         addMouseWheelListener((MouseWheelEvent e) -> {
-            if (isEnabled() && sbVert.isVisible()) {
+            if (isEnabled() && sbVert.isVisible() && sbVert.isActive()) {
                 if (!e.isAltDown()) {
                     if (e.getWheelRotation() > 0) {
-                        sbVert.setPosition(sbVert.getPosition() + fileList.getItemHeight(), true);
+                        sbVert.setPosition(sbVert.getPosition() + fileList.getItemHeight());
                     } else {
-                        sbVert.setPosition(sbVert.getPosition() - fileList.getItemHeight(), true);
+                        sbVert.setPosition(sbVert.getPosition() - fileList.getItemHeight());
                     }
                 } else {
                     if (e.getWheelRotation() > 0) {
-                        sbVert.setPosition(sbVert.getPosition() + fileList.getItemHeight() * 5, true);
+                        sbVert.setPosition(sbVert.getPosition() + fileList.getItemHeight() * 5);
                     } else {
-                        sbVert.setPosition(sbVert.getPosition() - fileList.getItemHeight() * 5, true);
+                        sbVert.setPosition(sbVert.getPosition() - fileList.getItemHeight() * 5);
                     }
                 }
             }
@@ -134,7 +139,7 @@ public class FilesPanel extends JComponent implements FolderListener {
                         }
                         break;
                     case KeyEvent.VK_F5:
-                        folderRefresh();
+                        refreshFolder();
                         break;
                     case KeyEvent.VK_BACK_SPACE:
                         osPan.upFolder();
@@ -206,7 +211,7 @@ public class FilesPanel extends JComponent implements FolderListener {
         }
     }
 
-    public void folderRefresh() {
+    public void refreshFolder() {
         updateFolder(current.getFolder());
     }
 
@@ -253,9 +258,12 @@ public class FilesPanel extends JComponent implements FolderListener {
 
     @Override
     public void updateFolder(File folder) {
+        boolean b = sbVert.isVisible();
         fileList.setFolder(folder);
         sbVert.setValues(0, fileList.getHeight(), fileList.getItemHeight(), getHeight() - header.getHeight() - 5);
-        sbVert.setPosition(0, true);
+        sbVert.setPosition(0);
         fileList.setLocation(0, 0);
+        if (sbVert.isVisible() != b)
+            updateComponents();
     }
 }

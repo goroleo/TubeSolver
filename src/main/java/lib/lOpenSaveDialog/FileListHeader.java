@@ -17,7 +17,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 import static lib.lOpenSaveDialog.OpenSavePanel.imgBtnDown;
 import static lib.lOpenSaveDialog.OpenSavePanel.imgBtnUp;
 
@@ -91,7 +90,7 @@ public class FileListHeader extends JComponent {
         add(sizeLabel);
         add(dateLabel);
 
-        setSize(300, 24);
+        setSize(headerWidth, 24);
 
         addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -100,7 +99,7 @@ public class FileListHeader extends JComponent {
                     if (getLabelAtMousePos(e.getX()) < 10) {
                         setCursor(Cursor.getDefaultCursor());
                     } else {
-                        setCursor(osPan.cursorResize);
+                        setCursor(OpenSavePanel.cursorResize);
                     }
                 }
             }
@@ -277,10 +276,6 @@ public class FileListHeader extends JComponent {
 
     public int getSizeWidth() {
         return sizeWidth;
-    }
-
-    public void updateCursor(int newCursor) {
-        setCursor(Cursor.getPredefinedCursor(newCursor));
     }
 
     public int getLabelAtMousePos(int pos) {

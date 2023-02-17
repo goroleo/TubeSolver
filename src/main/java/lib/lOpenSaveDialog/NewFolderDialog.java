@@ -9,32 +9,21 @@
  */
 package lib.lOpenSaveDialog;
 
-import gui.Palette;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Rectangle;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import core.ResStrings;
+import gui.Palette;
 import lib.lButtons.LPictureButton;
-import static lib.lOpenSaveDialog.OpenSavePanel.fsv;
 import lib.lTextFields.LTextField;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+
+import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 public class NewFolderDialog extends JDialog {
 
     private final Window owner;
-    private File currentFolder = fsv.getDefaultDirectory();
-
     private final JPanel panel;
     private final JLabel lbError;
     private final LPictureButton btnOk;
@@ -44,23 +33,9 @@ public class NewFolderDialog extends JDialog {
     private final int w = 350;
     private final int h = 135;
 
-    public NewFolderDialog() {
-        this(null, null);
-    }
-
-    public NewFolderDialog(File curFolder) {
-        this(null, curFolder);
-    }
-
     public NewFolderDialog(Window owner) {
-        this(owner, null);
-    }
-
-    public NewFolderDialog(Window owner, File curFolder) {
         super(owner, ResStrings.getString("strNewFolder"), ModalityType.APPLICATION_MODAL);
         this.owner = owner;
-
-        setFolder(curFolder);
 
         setDefaultCloseOperation(0); // DO_NOTHING_ON_CLOSE
         setIconImage(null);
@@ -187,27 +162,17 @@ public class NewFolderDialog extends JDialog {
                 2); // WHEN_IN_FOCUSED_WINDOW
     }
 
-    public void setFolder(File folder) {
-        if (folder != null && folder.exists() && folder.isDirectory()) {
-            currentFolder = folder;
-        }
-    }
-
-    public File getFolder() {
-        return currentFolder;
-    }
-
     public void refuseAndClose() {
-        EventQueue.invokeLater(() -> dispose());
+        EventQueue.invokeLater(this::dispose);
     }
 
     public void confirmAndClose() {
         if (!nameField.getValue().equals("")) {
-            String newFolderName = currentFolder.getAbsolutePath() + File.separator + nameField.getValue();
+            String newFolderName = current.getFolder().getAbsolutePath() + File.separator + nameField.getValue();
             File f = new File(newFolderName);
             if (f.mkdir()) {
-                setFolder(f);
-                EventQueue.invokeLater(() -> dispose());
+                current.setFolder(f);
+                EventQueue.invokeLater(this::dispose);
             } else {
                 lbError.setText(ResStrings.getString("strError"));
                 lbError.setVisible(true);

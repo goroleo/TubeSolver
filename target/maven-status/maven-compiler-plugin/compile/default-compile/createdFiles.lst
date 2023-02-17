@@ -1,12 +1,12 @@
 core\TubeModel.class
 dlg\CreateNewDlg.class
 lib\lOpenSaveDialog\FoldersList.class
+lib\lOpenSaveDialog\FolderChanger.class
 lib\lOpenSaveDialog\FolderListener.class
 gui\MainFrame.class
 lib\lOpenSaveDialog\NewFolderDialog$3.class
 lib\lColorDialog\ColorCurrent.class
 lib\lOpenSaveDialog\FilesPanel$3.class
-lib\lOpenSaveDialog\FolderDropDown$2.class
 dlg\CreateNewDlg$jctSizeEdit$1.class
 lib\lOpenSaveDialog\FileListHeader$1.class
 lib\lOpenSaveDialog\FileEditPanel$2.class
@@ -21,7 +21,6 @@ dlg\PaletteDlg$1.class
 gui\MainFrame$5.class
 lib\lButtons\LToolButton.class
 lib\lOpenSaveDialog\FoldersPanel$1.class
-lib\lOpenSaveDialog\FileChanger.class
 ani\SlideLayer.class
 lib\lOpenSaveDialog\FileEditPanel.class
 lib\lOpenSaveDialog\FoldersPanel.class
@@ -35,6 +34,7 @@ lib\lTextFields\LDecTextField.class
 lib\lColorDialog\ColorListener.class
 lib\lMenus\LPopupMenu.class
 run\Main.class
+lib\lOpenSaveDialog\ToolButtonsPanel$1.class
 gui\CongratsPanel$2.class
 lib\lOpenSaveDialog\FileEditPanel$1.class
 ani\ColorLayer.class
@@ -45,16 +45,13 @@ lib\lTextFields\LTextField$2.class
 lib\lOpenSaveDialog\NewFolderDialog$2.class
 gui\MainFrame$4.class
 lib\lOpenSaveDialog\LOpenSaveDialog$1.class
-lib\lOpenSaveDialog\FolderDropDown.class
 lib\lTextFields\LHexTextField$2.class
-lib\lOpenSaveDialog\FolderDropDown$3.class
 gui\ColorButton$1.class
 ani\ImageLayer.class
 core\Options.class
 lib\lColorDialog\ColorLabels$lnHexField.class
 gui\MainFrame$1.class
 lib\lTextFields\LTextField$1.class
-lib\lOpenSaveDialog\FileEditPanel$3.class
 lib\lColorDialog\ColorCurrent$lnPrevColorMouseLayer.class
 core\ColorMoveItem.class
 lib\lTextFields\LTextField.class
@@ -68,7 +65,7 @@ lib\lOpenSaveDialog\NewFolderDialog$1.class
 lib\lOpenSaveDialog\LOpenSaveDialog.class
 lib\lOpenSaveDialog\LOpenSaveDialog$2.class
 dlg\StartDlg.class
-lib\lOpenSaveDialog\FolderDropDown$1.class
+lib\lOpenSaveDialog\FoldersDropDown.class
 lib\lColorDialog\ColorLine.class
 dlg\SolveDlg$1.class
 lib\lTextFields\LHexTextField.class
@@ -87,6 +84,7 @@ core\Solver.class
 lib\lOpenSaveDialog\FileItem$1.class
 lib\lColorDialog\ColorLabels$lnTextField.class
 lib\lColorDialog\ColorPanel.class
+lib\lOpenSaveDialog\FoldersDropDown$2.class
 lib\lButtons\LPictureButton.class
 ani\PatternLayer.class
 lib\lColorDialog\ColorLine$LineCursorLayer.class
@@ -95,6 +93,7 @@ lib\lOpenSaveDialog\NewFolderDialog.class
 ani\WaveLayer.class
 ani\FlowerLayer.class
 core\TubesIO$myBAIS.class
+lib\lOpenSaveDialog\FoldersDropDown$1.class
 gui\PalettePanel$1.class
 lib\lOpenSaveDialog\FilesPanel$1.class
 lib\lOpenSaveDialog\FoldersPanel$2.class
@@ -135,6 +134,7 @@ lib\lOpenSaveDialog\FileListHeader$3.class
 lib\lOpenSaveDialog\ListView$1.class
 dlg\StartDlg$1.class
 dlg\SolveDlg$2.class
+lib\lOpenSaveDialog\FoldersDropDown$3.class
 lib\lOpenSaveDialog\OpenSavePanel$1.class
 ani\ShadeLayer.class
 lib\lOpenSaveDialog\FilesPanel$5.class

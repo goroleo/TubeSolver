@@ -32,59 +32,205 @@ import java.util.Objects;
 
 import static lib.lOpenSaveDialog.OpenSavePanel.DEFAULT_EXT;
 
+/**
+ * This class is all about file/folder item for any controls of the dialog.
+ */
 public class FileItem extends JComponent {
 
+// -----------------------------------------------------
+//     Locale formatters for date, time and numbers
+//
+    /**
+     * Formatting date using the user locale.
+     */
     private static final DateTimeFormatter dateFormatter
             = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+
+    /**
+     * Formatting time using the user locale.
+     */
     private static final DateTimeFormatter timeFormatter
             = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+
+    /**
+     * Formatting numbers using the user locale.
+     */
     private static final DecimalFormatSymbols symbols
             = new DecimalFormatSymbols(Locale.getDefault());
 
-    public static boolean foldersFirst = true;
+// -----------------------------------------------------
+//     Fields of the FileItem
+//
 
+    /**
+     * File field
+     */
     private File fFile;
+
+    /**
+     * Icon of this file
+     */
     private Icon fIcon;
-    private Boolean fDir;
+
+    /**
+     * True if this file item is a folder/directory
+     */
+    private Boolean fFolder;
+
+    /**
+     * True if this file item is a drive
+     */
     private Boolean fDrive;
+
+    /**
+     * True if this file item is a link to another file/folder
+     */
     private Boolean fLink;
+
+    /**
+     * True if this item is a parent folder for the current file list.<br><i>Not used in this implementation</i>
+     */
     private Boolean fParentDir;
+
+    /**
+     * File / folder name without a path.
+     */
     private String fName;
+
+    /**
+     * File extension.
+     */
     private String fExt;
-    private long fSize;
-    private String fSizeStr;
+
+    /**
+     * File size in bytes
+     */
+    private long fLength;
+
+    /**
+     * The date/time stamp of the file
+     */
     private LocalDateTime fTime;
-    private String fTimeStr;
-    private int viewMode = 0; // 0 - detail (file name, size, date), 1 - list (file name only);
-    public static int DETAIL_MODE = 0; // file name, size, date,
-    public static int LIST_MODE = 1; //  file name only;
 
-    private int fLevel = 0;
+// -----------------------------------------------------
+//     Components for visualisation a File item
+//
 
+    /**
+     * Label to display the file name.
+     */
     private final JLabel nameLabel = new JLabel();
+
+    /**
+     * Label to display the file size. Not visible in the list mode.
+     */
     private final JLabel sizeLabel = new JLabel();
+
+    /**
+     * Label to display the file date-time. Not visible in the list mode.
+     */
     private final JLabel dateLabel = new JLabel();
 
+    /**
+     * Width of the Name Label
+     */
     private int nameWidth;
+
+    /**
+     * Width of the Size Label
+     */
     private int sizeWidth = 80;
+
+    /**
+     * Width of the Date Label
+     */
     private int dateWidth = 110;
 
-    //    private final JLabel[] labels = new JLabel[3];
-//    private final int[] widths = new int[3]; 
+    /**
+     * Level of the folder from the root folders. Used in the LIST_MODE, ignored in the DETAIL_MODE.
+     * This is an indentation level for designating child folders relative to the root.
+     */
+    private int fLevel;
+
+    /**
+     * True if this item is a selected item.
+     */
     private boolean selected = false;
-    private boolean rollover = false;
 
+    /**
+     * True if the mouse cursor is over this item.
+     */
+    private boolean mouseOver = false;
+
+// -----------------------------------------------------
+//     Settings for visualisation
+//
+
+    /**
+     * True if all folders must be placed before files while sorting the list.
+     */
+    public static boolean foldersFirst = true;
+
+    /**
+     * Visualisation mode of the file item: <ul>
+     * <li><b>0 - details view</b>. File name, File Size and File Date are displayed.
+     * <li><b>1 - list view</b> (compact view). The File name only is displayed.</ul>
+     * Folders list is always displayed in the compact mode.
+     */
+    private final int viewMode; // 0 - detail (file name, size, date), 1 - list (file name only);
+
+    /**
+     * Visualisation mode of the file item. <i>DETAIL_MODE</i> is a details vew: File
+     * name, File Size and File Date are displayed.
+     */
+    public static int DETAIL_MODE = 0; // file name, size, date,
+
+    /**
+     * Visualisation mode of the file item. <i>LIST_MODE</i> is a compact vew: the file
+     * name only is displayed.
+     */
+    public static int LIST_MODE = 1; //  file name only;
+
+    /**
+     * Background color when item is selected
+     */
     private final Color selectedBackground = new Color(0xb8cfe5);
+
+    /**
+     * Foreground color when item is selected
+     */
     private final Color selectedForeground = Color.BLACK;
-    private final Color rolloverFrame = Color.GRAY;
 
+    /**
+     * Color for the item frame when the mouse cursor is over this item.
+     */
+    private final Color overFrameColor = Color.GRAY;
 
+// -----------------------------------------------------
+//     Main routines
+//
+
+    /**
+     * FilItem class constructor with default parameters.
+     *
+     * @param f file to be precessed and displayed.
+     */
     public FileItem(File f) {
         this(f, true, 0);
     }
 
+    /**
+     * An extended FilItem class constructor.
+     *
+     * @param f           file to be precessed and displayed.
+     * @param detailsMode True if this file has to be displayed in the details' mode.
+     *                    False if it has to be in the compact mode.
+     * @param level       The level of this folder from the root folder. Used in the List/compact mode.
+     *                    It will be ignored in the details' mode.
+     * @see #viewMode
+     */
     public FileItem(File f, boolean detailsMode, int level) {
-//        parent = owner;
+
         viewMode = (detailsMode) ? DETAIL_MODE : LIST_MODE;
         fLevel = level;
         if (f != null) setFile(f);
@@ -97,11 +243,9 @@ public class FileItem extends JComponent {
             add(dateLabel);
         }
 
-        setSize(450, 25);
         setSelected(false);
 
         addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 FileItem.this.mouseClicked(e);
@@ -124,9 +268,23 @@ public class FileItem extends JComponent {
         });
     }
 
+    /**
+     * This routine fills all FileItem class' fields.
+     *
+     * @param f file
+     */
     public void setFile(File f) {
         fParentDir = false;
-        fExt = getFileExt(f);
+        fFile = f;
+        fFolder = fFile.isDirectory();
+
+        if (fFolder) {
+            fLength = 0;
+            fExt = "";
+        } else {
+            fLength = fFile.length();
+            fExt = extractFileExt(f.getName());
+        }
 
         if (OpenSavePanel.fsv != null) {
             fName = OpenSavePanel.fsv.getSystemDisplayName(f);
@@ -141,20 +299,14 @@ public class FileItem extends JComponent {
             fName = f.getName();
             fDrive = false;
         }
-        fFile = f;
-        fDir = fFile.isDirectory();
-        if (fDir) {
-            fSize = 0;
-            fSizeStr = "";
-        } else {
-            fSize = fFile.length();
-            fSizeStr = getFileSizeAsString(fSize);
-        }
         fTime = getFileTime(fFile);
-        fTimeStr = getFileTimeAsString(fTime);
+
         setLabels();
     }
 
+    /**
+     * This routine sets all labels options and fills labels from the class' fields.
+     */
     public void setLabels() {
         nameLabel.setText(getFName());
         nameLabel.setBackground(null);
@@ -183,75 +335,90 @@ public class FileItem extends JComponent {
         }
     }
 
+    /**
+     * This is a getter for the File field.
+     */
+    public File getFile() {
+        return fFile;
+    }
+
+    /**
+     * This is a getter for the FileName field.
+     */
     public String getFName() {
         if (viewMode == DETAIL_MODE) {
             if (fParentDir) {
                 return "[..]";
-            } else if (fDir) {
+            } else if (fFolder) {
                 return "[" + fName + "]";
             }
         }
         return fName;
     }
 
-    public File getFile() {
-        return fFile;
-    }
-
+    /**
+     * @return file extension.
+     */
     public String getExt() {
         return fExt;
     }
 
+    /**
+     * @return file icon.
+     */
     public Icon getIcon() {
         return fIcon;
     }
 
-    public String getTimeStr() {
-        return fTimeStr;
-    }
-
-    public String getLengthStr() {
-        return fSizeStr;
-    }
-
+    /**
+     * @return file length (size) of the file.
+     */
     public long getLength() {
-        return fSize;
+        return fLength;
     }
 
+    /**
+     * @return current user locale formatted string with the length (size) of the file.
+     */
+    public String getLengthStr() {
+        return getFileLengthAsString(fLength);
+    }
+
+    /**
+     * @return file date/time stamp.
+     */
     public LocalDateTime getTime() {
         return fTime;
     }
 
-    public boolean isFolder() {
-        return fDir;
+    /**
+     * @return current user locale formatted string with the date-time stamp of the file.
+     */
+    public String getTimeStr() {
+        return getFileTimeAsString(fTime);
     }
 
+    /**
+     * @return true if this file is a folder
+     */
+    public boolean isFolder() {
+        return fFolder;
+    }
+
+    /**
+     * @return true if this file is a link to another file/folder.
+     */
     public boolean isLink() {
         return fLink;
     }
 
-    public static String getFileExt(File f) {
-        if (f.isDirectory()) {
-            return "";
-        }
-        return getFileExt(f.getName());
-    }
-
-    public static String getFileExt(String fName) {
-        if (fName == null || "".equals(fName)) return "";
-        String[] ss = fName.split("\\.");
-        if (ss.length > 1) {
-            return "." + ss[ss.length - 1];
-        } else {
-            return "";
-        }
-    }
-
-    public String getFileSizeAsString(File f) {
-        return getFileSizeAsString(f.length());
-    }
-
-    public String getFileSizeAsString(long size) {
+    /**
+     * Gets formatted string to display the file size at the list.
+     *
+     * @param size size of the file in bytes.
+     * @return Length of the file as the string.
+     */
+    private String getFileLengthAsString(long size) {
         double fs = (double) size;
         int level = 0;
         while (fs > 1024 && level < 4) {
@@ -279,7 +446,13 @@ public class FileItem extends JComponent {
         return res;
     }
 
-    public LocalDateTime getFileTime(File f) {
+    /**
+     * Gets date-time stamp of the file.
+     *
+     * @param f file
+     * @return DateTime stamp
+     */
+    private LocalDateTime getFileTime(File f) {
         if (f.isDirectory()) {
             return null;
         }
@@ -297,12 +470,13 @@ public class FileItem extends JComponent {
         }
     }
 
-    public String getFileTimeAsString(File f) {
-        LocalDateTime dt = getFileTime(f);
-        return getFileTimeAsString(dt);
-    }
-
-    public String getFileTimeAsString(LocalDateTime dt) {
+    /**
+     * Gets formatted string to display the file's date-time stamp  at the list.
+     *
+     * @param dt date-time stamp
+     * @return DateTime of the file as the string.
+     */
+    private String getFileTimeAsString(LocalDateTime dt) {
         if (dt != null) {
             return dt.format(dateFormatter) + " " + dt.format(timeFormatter);
         } else {
@@ -310,13 +484,108 @@ public class FileItem extends JComponent {
         }
     }
 
+    /**
+     * A service routine to extract file extension.
+     *
+     * @param f file to extract an extension.
+     * @return extension or an empty string.
+     */
+    public static String extractFileExt(File f) {
+        if (f.isDirectory()) {
+            return "";
+        }
+        return extractFileExt(f.getName());
+    }
+
+    /**
+     * A service routine to extract file extension.
+     *
+     * @param fName file name to extract an extension.
+     * @return extension or an empty string.
+     */
+    public static String extractFileExt(String fName) {
+        if (fName == null || "".equals(fName))
+            return "";
+        int idx = fName.lastIndexOf(".");
+        if (idx > 0) {
+            return fName.substring(idx);
+        } else {
+            return "";
+        }
+    }
+
+// -----------------------------------------------------
+//     Visualisation routines
+//
+
+    /**
+     * @return Level of the folder from the root folders.
+     */
+    public int getLevel() {
+        return fLevel;
+    }
+
+    /**
+     * Sets an indentation level for designating child folders relative to the root.
+     * @param newLevel as is
+     */
+    public void setLevel(int newLevel) {
+        if (viewMode == LIST_MODE) {
+            fLevel = newLevel;
+            nameLabel.setSize(getWidth() - 10 * fLevel, getHeight());
+            nameLabel.setLocation(10 * fLevel, 0);
+        }
+    }
+
+    /**
+     * @return true if this item is a selected item.
+     */
+    public boolean isSelected() {
+        return selected;
+    }
+
+    /**
+     * Sets this file item as selected or not selected.
+     * @param b true if selected false otherwise.
+     */
+    public void setSelected(boolean b) {
+        if (selected != b) {
+            if (b) {
+                setForeground(selectedForeground);
+            } else {
+                setForeground(null);
+            }
+            selected = b;
+            repaint();
+        }
+    }
+
+    public boolean isMouseOver() {
+        return mouseOver;
+    }
+
+    public void setMouseOver(boolean b) {
+        if (mouseOver != b) {
+            mouseOver = b;
+            repaint();
+        }
+    }
+
     @Override
     public void setSize(int w, int h) {
         super.setSize(w, h);
-        updateWidth();
+        updateLabelWidths();
     }
 
-    public void updateWidth() {
+    public void setNameWidth(int width) {
+        if (viewMode == DETAIL_MODE) {
+            setSize(width + dateWidth + sizeWidth, getHeight());
+        } else {
+            setSize(width, getHeight());
+        }
+    }
+
+    public void updateLabelWidths() {
         int h = getHeight();
         if (viewMode == DETAIL_MODE) {
             nameWidth = getWidth() - sizeWidth - dateWidth;
@@ -335,29 +604,13 @@ public class FileItem extends JComponent {
         }
     }
 
-    public void setFileName(String name) {
-        nameLabel.setText(name);
-    }
-
-    public void setFileDate(String date) {
-        if (viewMode == DETAIL_MODE) {
-            dateLabel.setText(date);
-        }
-    }
-
-    public void setFileSize(String date) {
-        if (viewMode == DETAIL_MODE) {
-            sizeLabel.setText(date);
-        }
-    }
-
-    public void setWidths(int name, int size, int date) {
+    public void setLabelWidths(int name, int size, int date) {
         sizeWidth = size;
         dateWidth = date;
         setSize(name + dateWidth + sizeWidth, getHeight());
     }
 
-    public void setWidths(int size, int date) {
+    public void setLabelWidths(int size, int date) {
         if (viewMode == DETAIL_MODE) {
             int oldDW = dateWidth;
             int oldSW = sizeWidth;
@@ -368,82 +621,9 @@ public class FileItem extends JComponent {
                 sizeWidth = size;
             }
             if (oldDW != dateWidth || oldSW != sizeWidth) {
-                updateWidth();
+                updateLabelWidths();
             }
         }
-    }
-
-    public void setNameWidth(int width) {
-        if (viewMode == DETAIL_MODE) {
-            setSize(width + dateWidth + sizeWidth, getHeight());
-        } else {
-            setSize(width, getHeight());
-        }
-    }
-
-    public void setDateWidth(int width) {
-        if (viewMode == DETAIL_MODE) {
-            dateWidth = width;
-            updateWidth();
-        }
-    }
-
-    public void setSizeWidth(int width) {
-        if (viewMode == DETAIL_MODE) {
-            sizeWidth = width;
-            updateWidth();
-        }
-    }
-
-    public int getLevel() {
-        return fLevel;
-    }
-
-    public void setLevel(int newLevel) {
-        if (viewMode == LIST_MODE) {
-            fLevel = newLevel;
-            nameLabel.setSize(getWidth() - 10 * fLevel, getHeight());
-            nameLabel.setLocation(10 * fLevel, 0);
-        }
-    }
-
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    public void mousePressed() {
-    }
-
-    public void mouseEntered() {
-    }
-
-    public void mouseExited() {
-    }
-
-    public void setSelected(boolean b) {
-        if (selected != b) {
-            if (b) {
-                setForeground(selectedForeground);
-            } else {
-                setForeground(null);
-            }
-            selected = b;
-            repaint();
-        }
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setRollover(boolean b) {
-        if (rollover != b) {
-            rollover = b;
-            repaint();
-        }
-    }
-
-    public boolean isRollover() {
-        return rollover;
     }
 
     @Override
@@ -452,12 +632,28 @@ public class FileItem extends JComponent {
             g.setColor(selectedBackground);
             g.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
         }
-        if (rollover) {
-            g.setColor(rolloverFrame);
+        if (mouseOver) {
+            g.setColor(overFrameColor);
             g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
         }
     }
 
+    public void mouseClicked(MouseEvent e) {  }
+
+    public void mousePressed() { }
+
+    public void mouseEntered() { }
+
+    public void mouseExited() { }
+
+
+// -----------------------------------------------------
+//     Sorting comparators
+//
+
+    /**
+     * Comparator by file name ascending.
+     */
     public static Comparator<FileItem> NameComparatorAsc = (o1, o2) -> {
         int res = 0;
         if (o2.fParentDir || o1.fParentDir) {
@@ -466,13 +662,13 @@ public class FileItem extends JComponent {
         if (res == 0 && (o2.fDrive || o1.fDrive)) {
             res = (o2.fDrive ? 1 : 0) - (o1.fDrive ? 1 : 0);
             if (res == 0) {
-                String s1 = o1.fFile.getAbsolutePath();
-                String s2 = o2.fFile.getAbsolutePath();
-                res = (s1).compareToIgnoreCase(s2);
+                res = o1.fFile.getAbsolutePath()
+                        .compareToIgnoreCase(
+                                o2.fFile.getAbsolutePath());
             }
         }
-        if (res == 0 && (o2.fDir || o1.fDir)) {
-            res = (o2.fDir ? 1 : 0) - (o1.fDir ? 1 : 0);
+        if (res == 0 && (o2.fFolder || o1.fFolder)) {
+            res = (o2.fFolder ? 1 : 0) - (o1.fFolder ? 1 : 0);
         }
         if (res == 0) {
             res = o1.fName.compareToIgnoreCase(o2.fName);
@@ -480,6 +676,9 @@ public class FileItem extends JComponent {
         return res;
     };
 
+    /**
+     * Comparator by file name descending.
+     */
     public static Comparator<FileItem> NameComparatorDesc = (o1, o2) -> {
         int res = 0;
         if (o2.fParentDir || o1.fParentDir) {
@@ -488,16 +687,13 @@ public class FileItem extends JComponent {
         if (res == 0 && (o2.fDrive || o1.fDrive)) {
             res = (o2.fDrive ? 1 : 0) - (o1.fDrive ? 1 : 0);
             if (res == 0) {
-                String s1 = o1.fFile.getAbsolutePath();
-                String s2 = o2.fFile.getAbsolutePath();
-                res = (s1).compareToIgnoreCase(s2);
+                res = o1.fFile.getAbsolutePath()
+                        .compareToIgnoreCase(
+                                o2.fFile.getAbsolutePath());
             }
         }
-        if (res == 0 && (o2.fDir || o1.fDir)) {
-            res = (o2.fDir ? 1 : 0) - (o1.fDir ? 1 : 0);
-        }
-        if (res == 0 && (o2.fDir && o1.fDir)) {
-            res = o1.fName.compareToIgnoreCase(o2.fName);
+        if (res == 0 && (o2.fFolder || o1.fFolder)) {
+            res = (o2.fFolder ? 1 : 0) - (o1.fFolder ? 1 : 0);
         }
         if (res == 0) {
             res = o2.fName.compareToIgnoreCase(o1.fName);
@@ -505,30 +701,39 @@ public class FileItem extends JComponent {
         return res;
     };
 
+    /**
+     * Comparator by file size ascending.
+     */
     public static Comparator<FileItem> SizeComparatorAsc = (o1, o2) -> {
-        if (foldersFirst && !Objects.equals(o2.fDir, o1.fDir)) {
-            return (o2.fDir ? 1 : 0) - (o1.fDir ? 1 : 0);
+        if (foldersFirst && !Objects.equals(o2.fFolder, o1.fFolder)) {
+            return (o2.fFolder ? 1 : 0) - (o1.fFolder ? 1 : 0);
         } else {
-            if (o1.fSize != o2.fSize) {
-                return (o1.fSize > o2.fSize) ? 1 : -1;
+            if (o1.fLength != o2.fLength) {
+                return (o1.fLength > o2.fLength) ? 1 : -1;
             } else {
                 return NameComparatorAsc.compare(o1, o2);
             }
         }
     };
 
+    /**
+     * Comparator by file size descending.
+     */
     public static Comparator<FileItem> SizeComparatorDesc = (o1, o2) -> {
-        if (foldersFirst && !Objects.equals(o2.fDir, o1.fDir)) {
-            return (o2.fDir ? 1 : 0) - (o1.fDir ? 1 : 0);
+        if (foldersFirst && !Objects.equals(o2.fFolder, o1.fFolder)) {
+            return (o2.fFolder ? 1 : 0) - (o1.fFolder ? 1 : 0);
         } else {
-            if (o1.fSize != o2.fSize) {
-                return (o2.fSize > o1.fSize) ? 1 : -1;
+            if (o1.fLength != o2.fLength) {
+                return (o2.fLength > o1.fLength) ? 1 : -1;
             } else {
                 return NameComparatorAsc.compare(o1, o2);
             }
         }
     };
 
+    /**
+     * Comparator by file time ascending.
+     */
     public static Comparator<FileItem> TimeComparatorAsc = (o1, o2) -> {
         if (o1.fTime == null) {
             o1.fTime = LocalDateTime.MIN;
@@ -537,8 +742,8 @@ public class FileItem extends JComponent {
             o2.fTime = LocalDateTime.MIN;
         }
 
-        if (foldersFirst && !Objects.equals(o2.fDir, o1.fDir)) {
-            return (o2.fDir ? 1 : 0) - (o1.fDir ? 1 : 0);
+        if (foldersFirst && !Objects.equals(o2.fFolder, o1.fFolder)) {
+            return (o2.fFolder ? 1 : 0) - (o1.fFolder ? 1 : 0);
         } else {
             if (!o1.fTime.equals(o2.fTime)) {
                 return o1.fTime.compareTo(o2.fTime);
@@ -548,6 +753,9 @@ public class FileItem extends JComponent {
         }
     };
 
+    /**
+     * Comparator by file time descending.
+     */
     public static Comparator<FileItem> TimeComparatorDesc = (o1, o2) -> {
         if (o1.fTime == null) {
             o1.fTime = LocalDateTime.MIN;
@@ -556,8 +764,8 @@ public class FileItem extends JComponent {
             o2.fTime = LocalDateTime.MIN;
         }
 
-        if (foldersFirst && !Objects.equals(o2.fDir, o1.fDir)) {
-            return (o2.fDir ? 1 : 0) - (o1.fDir ? 1 : 0);
+        if (foldersFirst && !Objects.equals(o2.fFolder, o1.fFolder)) {
+            return (o2.fFolder ? 1 : 0) - (o1.fFolder ? 1 : 0);
         } else {
             if (!o1.fTime.equals(o2.fTime)) {
                 return o2.fTime.compareTo(o1.fTime);

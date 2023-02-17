@@ -9,10 +9,11 @@
  */
 package lib.lOpenSaveDialog;
 
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
+
 import static lib.lOpenSaveDialog.OpenSavePanel.fsv;
 
 public class FoldersList extends ListView {
@@ -128,16 +129,9 @@ public class FoldersList extends ListView {
         return null;
     }
 
-    public void chooseFolder(FileItem folder) {
-        setCurrentItem(folder);
-        if (fPanel != null) {
-            fPanel.chooseFolder(folder);
-        }
-    }
-
     @Override
     public void itemClicked(FileItem item, MouseEvent e) {
-        chooseFolder(item);
+        fPanel.chooseFolder(item);
     }
 
     @Override

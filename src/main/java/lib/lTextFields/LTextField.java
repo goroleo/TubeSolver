@@ -134,11 +134,9 @@ public class LTextField extends JTextField {
         return Value;
     }
     
-    // Change the value due to in-field edit
     public void focusChanged() {
         
     }
-    
 
     // Change the value due to in-field edit
     public void valueChanged() {

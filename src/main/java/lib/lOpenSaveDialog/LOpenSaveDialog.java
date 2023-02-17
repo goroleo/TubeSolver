@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
+import static lib.lOpenSaveDialog.OpenSavePanel.*;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
@@ -79,7 +80,7 @@ public class LOpenSaveDialog extends JDialog {
 
     private void initFrame() {
         setDefaultCloseOperation(0); // DO_NOTHING_ON_CLOSE
-        setIconImage(OpenSavePanel.lnFrameIcon);
+        setIconImage(lnFrameIcon);
         calculateSize();
         setMinimumSize(new Dimension(350, 300));
 
@@ -100,7 +101,7 @@ public class LOpenSaveDialog extends JDialog {
         setForeground(Color.white);
         getContentPane().add(osPan);
 
-        osPan.setCurrentFolder(new File(getStoredFolder()));
+        osPan.setFolder(new File(getStoredFolder()));
 
     }
 
@@ -146,7 +147,7 @@ public class LOpenSaveDialog extends JDialog {
         // ESCAPE pressed
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> {
-                    if (!osPan.isFoldersVisible()) {
+                    if (!osPan.isFoldersPanelVisible()) {
                         osPan.refuseAndClose();
                     } else {
                         osPan.showFoldersPanel(false);
@@ -171,10 +172,6 @@ public class LOpenSaveDialog extends JDialog {
 
     }
 
-    public int getDialogMode() {
-        return dialogMode;
-    }
-
     public void setDialogMode(int mode) {
         dialogMode = (mode == SAVE_MODE) ? SAVE_MODE : OPEN_MODE;
         setTitle((dialogMode == SAVE_MODE)
@@ -190,15 +187,6 @@ public class LOpenSaveDialog extends JDialog {
     @Override
     public void setForeground(Color fg) {
         getContentPane().setForeground(fg);
-    }
-
-    public final void setFileName(File f) {
-        osPan.setFileName(f);
-    }
-
-    public String chooseFile() {
-        setVisible(true);
-        return current.getFilePath();
     }
 
     public String showOpenDialog() {

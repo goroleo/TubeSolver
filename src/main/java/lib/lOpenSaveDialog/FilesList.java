@@ -40,7 +40,7 @@ public class FilesList extends ListView {
             for (File f : files) {
                 if (f.isDirectory()
                         || OpenSavePanel.DEFAULT_EXT.equalsIgnoreCase(
-                        FileItem.getFileExt(f))) {
+                        FileItem.extractFileExt(f))) {
                     addNewItem(f);
                 }
             }
@@ -50,7 +50,7 @@ public class FilesList extends ListView {
     }
 
     public void itemClicked(FileItem item, int button, int clickCount) {
-        if (osPan.isFoldersVisible()) {
+        if (osPan.isFoldersPanelVisible()) {
             osPan.showFoldersPanel(false);
             return;
         }
@@ -61,13 +61,13 @@ public class FilesList extends ListView {
                         try {
                             File f1 = fsv.getLinkLocation(item.getFile());
                             if (f1 != null && f1.isDirectory()) {
-                                osPan.setCurrentFolder(f1);
+                                osPan.setFolder(f1);
                             }
                         } catch (FileNotFoundException ex) {
                             // do nothing
                         }
                     } else {
-                        osPan.setCurrentFolder(item.getFile());
+                        osPan.setFolder(item.getFile());
                     }
                 } else { // not folder and clickCount = 2
                     osPan.confirmAndClose();
@@ -85,14 +85,14 @@ public class FilesList extends ListView {
 
     @Override
     public void itemEntered(FileItem item) {
-        if (!osPan.isFoldersVisible()) {
-            setRolloverItem(item);
+        if (!osPan.isFoldersPanelVisible()) {
+            setMouseOverItem(item);
         }
     }
 
     @Override
     public void itemExited(FileItem item) {
-        setRolloverItem(null);
+        setMouseOverItem(null);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class FilesList extends ListView {
 
     @Override
     public void addItemToView(FileItem item) {
-        item.setWidths(fPanel.getColumnWidth(2), fPanel.getColumnWidth(3));
+        item.setLabelWidths(fPanel.getColumnWidth(2), fPanel.getColumnWidth(3));
         add(item);
     }
 

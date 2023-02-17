@@ -18,7 +18,6 @@ D:\JavaProjects\TubeSolver\src\main\java\lib\lTextFields\LDecTextField.java
 D:\JavaProjects\TubeSolver\src\main\java\gui\ToolPanel.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FilesList.java
 D:\JavaProjects\TubeSolver\src\main\java\run\Main.java
-D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FileChanger.java
 D:\JavaProjects\TubeSolver\src\main\java\ani\WheelLayer.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lColorDialog\ColorBox.java
 D:\JavaProjects\TubeSolver\src\main\java\ani\WaveLayer.java
@@ -31,9 +30,11 @@ D:\JavaProjects\TubeSolver\src\main\java\lib\lMenus\LPopupMenu.java
 D:\JavaProjects\TubeSolver\src\main\java\dlg\SolveDlg.java
 D:\JavaProjects\TubeSolver\src\main\java\gui\ColorTube.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lColorDialog\ColorCurrent.java
+D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FolderChanger.java
 D:\JavaProjects\TubeSolver\src\main\java\ani\ShapeLayer.java
 D:\JavaProjects\TubeSolver\src\main\java\core\ResStrings.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FoldersList.java
+D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FoldersDropDown.java
 D:\JavaProjects\TubeSolver\src\main\java\gui\CongratsPanel.java
 D:\JavaProjects\TubeSolver\src\main\java\dlg\PaletteDlg.java
 D:\JavaProjects\TubeSolver\src\main\java\core\ColorMoveItem.java
@@ -54,7 +55,6 @@ D:\JavaProjects\TubeSolver\src\main\java\dlg\OptionsDlg.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FilesPanel.java
 D:\JavaProjects\TubeSolver\src\main\java\ani\ShadeLayer.java
 D:\JavaProjects\TubeSolver\src\main\java\core\BoardModel.java
-D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FolderDropDown.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lButtons\LPictureButton.java
 D:\JavaProjects\TubeSolver\src\main\java\gui\PalettePanel.java
 D:\JavaProjects\TubeSolver\src\main\java\lib\lOpenSaveDialog\FileListHeader.java
