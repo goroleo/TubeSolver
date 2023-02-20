@@ -27,7 +27,6 @@ public class ListView extends JComponent {
     public ListView() {
         setBackground(gui.Palette.dialogColor);
         setForeground(Color.WHITE);
-//        setSize(300, 100);
     }
 
     public ArrayList<FileItem> getFileList() {
@@ -82,7 +81,7 @@ public class ListView extends JComponent {
     }
 
     @Override
-    public final void setSize(int w, int h) {
+    public void setSize(int w, int h) {
         super.setSize(w, fileList.size() * itemHeight);
         updateItemsPos();
     }
@@ -110,10 +109,10 @@ public class ListView extends JComponent {
         }
     }
 
-    public void setColumnWidths(int name, int size, int date) {
+    public void setColumnWidths(int size, int date) {
         for (Component item : getComponents()) {
             if (item instanceof FileItem) {
-                ((FileItem) item).setLabelWidths(name, size, date);
+                ((FileItem) item).setLabelWidths(size, date);
             }
         }
     }
@@ -218,6 +217,8 @@ public class ListView extends JComponent {
             if (fileList.size() > idx) {
                 setCurrentItem(fileList.get(idx));
             }
+        } else {
+            setFirstItem();
         }
     }
 
@@ -231,38 +232,34 @@ public class ListView extends JComponent {
             if (fileList.size() > idx) {
                 setCurrentItem(fileList.get(idx));
             }
+        } else {
+            setFirstItem();
         }
     }
 
     public void setNextItem() {
-        int idx;
         if (currentItem != null) {
-            idx = getItemIndex(currentItem);
+            int idx = getItemIndex(currentItem);
             idx++;
             if (idx >= fileList.size()) {
                 idx = fileList.size() - 1;
             }
-        } else {
-            idx = 0;
-        }
-        if (idx >= 0 && idx < fileList.size()) {
             setCurrentItem(fileList.get(idx));
+        } else {
+            setFirstItem();
         }
     }
 
     public void setNextPageItem(int pageSize) {
-        int idx;
         if (currentItem != null) {
-            idx = getItemIndex(currentItem);
+            int idx = getItemIndex(currentItem);
             idx += getItemsAtPage(pageSize);
-            if (idx >= getComponentCount()) {
-                idx = getComponentCount() - 1;
+            if (idx >= fileList.size()) {
+                idx = fileList.size() - 1;
             }
-        } else {
-            idx = 0;
-        }
-        if (idx >= 0 && idx < fileList.size()) {
             setCurrentItem(fileList.get(idx));
+        } else {
+            setFirstItem();
         }
     }
 
@@ -289,19 +286,13 @@ public class ListView extends JComponent {
         }
     }
 
-    public void itemClicked(FileItem item, MouseEvent e) {
-    }
+    public void itemClicked(FileItem item, MouseEvent e) { }
 
-    public void itemPressed(FileItem item) {
-        if (getParent() != null)
-            getParent().requestFocus();
-    }
+    public void itemPressed(FileItem item) {  }
 
-    public void itemEntered(FileItem item) {
-    }
+    public void itemEntered(FileItem item) { }
 
-    public void itemExited(FileItem item) {
-    }
+    public void itemExited(FileItem item) { }
 
     private int getNearestItemIndex(String fileName) {
         int len = fileName.length();

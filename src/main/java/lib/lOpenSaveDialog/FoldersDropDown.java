@@ -177,7 +177,7 @@ public class FoldersDropDown extends JComponent implements FolderListener {
 
     public void doClick() {
         if (osPan != null) {
-            osPan.showFoldersPanel(!osPan.isFoldersPanelVisible());
+            osPan.showFoldersPanel(this, !osPan.isFoldersPanelVisible());
         }
         repaint();
     }

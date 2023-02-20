@@ -307,8 +307,8 @@ public class FileItem extends JComponent {
     /**
      * This routine sets all labels options and fills labels from the class' fields.
      */
-    public void setLabels() {
-        nameLabel.setText(getFName());
+    private void setLabels() {
+        nameLabel.setText(getFileName());
         nameLabel.setBackground(null);
         nameLabel.setForeground(null);
         nameLabel.setHorizontalAlignment(2); // left
@@ -345,7 +345,7 @@ public class FileItem extends JComponent {
     /**
      * This is a getter for the FileName field.
      */
-    public String getFName() {
+    public String getFileName() {
         if (viewMode == DETAIL_MODE) {
             if (fParentDir) {
                 return "[..]";
@@ -381,7 +381,9 @@ public class FileItem extends JComponent {
      * @return current user locale formatted string with the length (size) of the file.
      */
     public String getLengthStr() {
-        return getFileLengthAsString(fLength);
+        if (!fFolder)
+            return getFileLengthAsString(fLength);
+        else return "";
     }
 
     /**
@@ -395,7 +397,9 @@ public class FileItem extends JComponent {
      * @return current user locale formatted string with the date-time stamp of the file.
      */
     public String getTimeStr() {
-        return getFileTimeAsString(fTime);
+        if (!fFolder)
+            return getFileTimeAsString(fTime);
+        else return "";
     }
 
     /**
@@ -527,6 +531,7 @@ public class FileItem extends JComponent {
 
     /**
      * Sets an indentation level for designating child folders relative to the root.
+     *
      * @param newLevel as is
      */
     public void setLevel(int newLevel) {
@@ -546,6 +551,7 @@ public class FileItem extends JComponent {
 
     /**
      * Sets this file item as selected or not selected.
+     *
      * @param b true if selected false otherwise.
      */
     public void setSelected(boolean b) {
@@ -560,10 +566,19 @@ public class FileItem extends JComponent {
         }
     }
 
+    /**
+     * @return true if the mouse cursor is above this item.
+     */
     public boolean isMouseOver() {
         return mouseOver;
     }
 
+    /**
+     * A setter for the mouseOver field.
+     *
+     * @param b true or false
+     * @see #mouseOver
+     */
     public void setMouseOver(boolean b) {
         if (mouseOver != b) {
             mouseOver = b;
@@ -577,14 +592,28 @@ public class FileItem extends JComponent {
         updateLabelWidths();
     }
 
-    public void setNameWidth(int width) {
+    /**
+     * Sets widths of Size and Date labels for the DETAIL_MODE
+     *
+     * @param size width of the size label
+     * @param date width of the date label
+     */
+    public void setLabelWidths(int size, int date) {
         if (viewMode == DETAIL_MODE) {
-            setSize(width + dateWidth + sizeWidth, getHeight());
-        } else {
-            setSize(width, getHeight());
+            int oldDW = dateWidth;
+            dateWidth = date;
+            int oldSW = sizeWidth;
+            sizeWidth = size;
+            if (oldDW != dateWidth || oldSW != sizeWidth
+                    || nameWidth != getWidth() - (sizeWidth + dateWidth)) {
+                updateLabelWidths();
+            }
         }
     }
 
+    /**
+     * Update labels widths
+     */
     public void updateLabelWidths() {
         int h = getHeight();
         if (viewMode == DETAIL_MODE) {
@@ -604,28 +633,6 @@ public class FileItem extends JComponent {
         }
     }
 
-    public void setLabelWidths(int name, int size, int date) {
-        sizeWidth = size;
-        dateWidth = date;
-        setSize(name + dateWidth + sizeWidth, getHeight());
-    }
-
-    public void setLabelWidths(int size, int date) {
-        if (viewMode == DETAIL_MODE) {
-            int oldDW = dateWidth;
-            int oldSW = sizeWidth;
-            if (date >= 50) {
-                dateWidth = date;
-            }
-            if (size >= 50) {
-                sizeWidth = size;
-            }
-            if (oldDW != dateWidth || oldSW != sizeWidth) {
-                updateLabelWidths();
-            }
-        }
-    }
-
     @Override
     public void paintComponent(Graphics g) {
         if (selected) {
@@ -638,13 +645,33 @@ public class FileItem extends JComponent {
         }
     }
 
-    public void mouseClicked(MouseEvent e) {  }
+    /**
+     * Invoked when the mouse button has been clicked (pressed and released) on a component.
+     * The routine to override it.
+     *
+     * @param e the event to be processed.
+     * @see MouseEvent
+     */
+    public void mouseClicked(MouseEvent e) {
+    }
 
-    public void mousePressed() { }
+    /**
+     * Invoked when a mouse button has been pressed on a component. The routine to override it.
+     */
+    public void mousePressed() {
+    }
 
-    public void mouseEntered() { }
+    /**
+     * Invoked when the mouse enters a component. The routine to override it.
+     */
+    public void mouseEntered() {
+    }
 
-    public void mouseExited() { }
+    /**
+     * Invoked when the mouse exits a component. The routine to override it.
+     */
+    public void mouseExited() {
+    }
 
 
 // -----------------------------------------------------

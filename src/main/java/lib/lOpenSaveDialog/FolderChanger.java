@@ -142,10 +142,12 @@ public class FolderChanger {
                 && folder.exists()
                 && folder.isDirectory()
                 && !currentFolder.getAbsolutePath().equals(folder.getAbsolutePath())) {
-            osPan.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            if (osPan != null)
+                osPan.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             currentFolder = folder;
             updateFolder(folder);
-            osPan.setCursor(Cursor.getDefaultCursor());
+            if (osPan != null)
+                osPan.setCursor(Cursor.getDefaultCursor());
         }
     }
 

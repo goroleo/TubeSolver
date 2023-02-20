@@ -54,7 +54,12 @@ public class FileEditPanel extends JComponent implements FolderListener, FileLis
         setForeground(null);
 
         // creating and configuring nameField
-        nameField = new LTextField();
+        nameField = new LTextField() {
+            @Override
+            public void valueChanged() {
+
+            }
+        };
         nameField.setForbiddenSigns("?*");
         nameField.setSize(200, 26);
         nameField.setFont(nameField.getFont().deriveFont(13.0f));
@@ -62,7 +67,7 @@ public class FileEditPanel extends JComponent implements FolderListener, FileLis
             @Override
             public void mousePressed(MouseEvent e) {
                 if (osPan.isFoldersPanelVisible()) {
-                    osPan.showFoldersPanel(false);
+                    osPan.showFoldersPanel(nameField, false);
                 }
             }
         });

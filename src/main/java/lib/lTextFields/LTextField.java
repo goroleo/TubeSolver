@@ -57,7 +57,7 @@ public class LTextField extends JTextField {
                 Value = checkValue(newValue);
                 valueChanged();
 
-            } // insertSring
+            } // insertString
 
             @Override
             public void replace(int offset, int length, String text,
@@ -134,14 +134,10 @@ public class LTextField extends JTextField {
         return Value;
     }
     
-    public void focusChanged() {
-        
-    }
+    public void focusChanged() { }
 
     // Change the value due to in-field edit
-    public void valueChanged() {
-
-    }
+    public void valueChanged() {  }
 
 } // lnTextField class
 

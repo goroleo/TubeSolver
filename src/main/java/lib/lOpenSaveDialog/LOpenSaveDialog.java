@@ -70,6 +70,9 @@ public class LOpenSaveDialog extends JDialog {
             this.setTitle(ResStrings.getString("strSaveFile"));
         }
 
+        if (!"".equals(getStoredFolder()))
+            current.setFolder(new File(getStoredFolder()));
+
         osPan = new OpenSavePanel(this, true);
         addListeners();
         this.owner = owner;
@@ -101,7 +104,7 @@ public class LOpenSaveDialog extends JDialog {
         setForeground(Color.white);
         getContentPane().add(osPan);
 
-        osPan.setFolder(new File(getStoredFolder()));
+//        osPan.setFolder(new File(getStoredFolder()));
 
     }
 

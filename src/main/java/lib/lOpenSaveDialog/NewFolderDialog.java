@@ -24,7 +24,6 @@ import static lib.lOpenSaveDialog.OpenSavePanel.current;
 public class NewFolderDialog extends JDialog {
 
     private final Window owner;
-    private final JPanel panel;
     private final JLabel lbError;
     private final LPictureButton btnOk;
     private final LPictureButton btnCancel;
@@ -43,11 +42,7 @@ public class NewFolderDialog extends JDialog {
 
         getContentPane().setBackground(Palette.dialogColor);
         getContentPane().setForeground(Color.white);
-
-        panel = new JPanel();
-        panel.setBackground(null);
-        panel.setForeground(null);
-        panel.setLayout(null);
+        getContentPane().setLayout(null);
 
         JLabel nameLabel = new JLabel(ResStrings.getString("strCreateFolder"));
         nameLabel.setBackground(null);
@@ -55,7 +50,7 @@ public class NewFolderDialog extends JDialog {
         nameLabel.setLocation(10, 10);
         nameLabel.setSize(w - 20, 22);
         nameLabel.setFont(nameLabel.getFont().deriveFont(0));
-        panel.add(nameLabel);
+        getContentPane().add(nameLabel);
 
         nameField = new LTextField() {
             @Override
@@ -77,7 +72,7 @@ public class NewFolderDialog extends JDialog {
                 }
             }
         });
-        panel.add(nameField);
+        getContentPane().add(nameField);
 
         btnOk = new LPictureButton(this);
         btnOk.setText(ResStrings.getString("strOk"));
@@ -86,7 +81,7 @@ public class NewFolderDialog extends JDialog {
         btnOk.setFocusable(true);
         btnOk.setLocation(w - 215, h - 45);
         btnOk.addActionListener((ActionEvent e) -> confirmAndClose());
-        panel.add(btnOk);
+        getContentPane().add(btnOk);
 
         btnCancel = new LPictureButton(this);
         btnCancel.setText(ResStrings.getString("strCancel"));
@@ -95,7 +90,7 @@ public class NewFolderDialog extends JDialog {
         btnCancel.setFocusable(true);
         btnCancel.setLocation(w - 105, h - 45);
         btnCancel.addActionListener((ActionEvent e) -> refuseAndClose());
-        panel.add(btnCancel);
+        getContentPane().add(btnCancel);
 
         lbError = new JLabel(ResStrings.getString("strError"));
         lbError.setBackground(null);
@@ -103,10 +98,10 @@ public class NewFolderDialog extends JDialog {
         lbError.setLocation(10, 10 + 10 + 22 + 26 + 10);
         lbError.setSize(w - 235, 22);
         lbError.setVisible(false);
-        panel.add(lbError);
+        getContentPane().add(lbError);
 
-        add(panel);
-        panel.setSize(w, h);
+//        add(panel);
+//        panel.setSize(w, h);
 
         calculateSize();
         calculatePos();
@@ -115,8 +110,8 @@ public class NewFolderDialog extends JDialog {
 
     private void calculateSize() {
         Dimension dim = new Dimension();
-        dim.width = panel.getWidth();
-        dim.height = panel.getHeight();
+        dim.width = w;
+        dim.height = h;
         setPreferredSize(dim);
         pack();
         int realW = getContentPane().getWidth();

@@ -140,14 +140,9 @@ public class FoldersList extends ListView {
     }
 
     @Override
-    public void itemExited(FileItem item) {
-//        setCurrentItem(null);
+    public void itemPressed(FileItem item) {
+        if (!fPanel.isFocusOwner()) fPanel.requestFocus();
     }
 
-    @Override
-    public void addItemToView(FileItem item) {
-        item.setNameWidth(fPanel.getWidth());
-        add(item);
-    }
 
 }

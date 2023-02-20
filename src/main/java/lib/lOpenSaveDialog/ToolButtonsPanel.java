@@ -1,100 +1,130 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package lib.lOpenSaveDialog;
 
+import core.ResStrings;
 import gui.Palette;
+import lib.lButtons.LToolButton;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.*;
 
-import core.ResStrings;
-import lib.lButtons.LToolButton;
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 
+/**
+ * A small panel with Tool Buttons: FolderUP, FolderRefresh, CreateNewFolder.
+ */
 public class ToolButtonsPanel extends JComponent {
 
-    private final LToolButton btnUp;
-    private final LToolButton btnRefresh;
-    private final LToolButton btnFolder;
+    /**
+     * An array of tool buttons. Change it's size if necessary.
+     */
+    private final LToolButton[] buttons = new LToolButton[3];
+
+    /**
+     * The count of tool buttons.
+     */
+    private int buttonsCount;
+
+    /**
+     * A separator space between buttons (in pixels).
+     */
     private final int sep = 7;
+
+    /**
+     * A number of currently focused button.
+     */
     private int curBtnFocus = 0;
 
+    /**
+     * A tool panel constructor. It creates tool buttons, adds them to the panel and
+     * sets the panel size.
+     */
     public ToolButtonsPanel() {
-        btnUp = addButton(0, "up", ResStrings.getString("strFolderUp"));
-        btnUp.addActionListener((ActionEvent e) -> buttonClick(1));
-        addKeyListener(btnUp);
+        // add button Up Folder
+        addButton("up", ResStrings.getString("strFolderUp"));
+        // add button Refresh Folder
+        addButton("refresh", ResStrings.getString("strRefresh"));
+        // add button Create New Folder
+        addButton("newfolder", ResStrings.getString("strNewFolder"));
 
-        btnRefresh = addButton(1, "refresh", ResStrings.getString("strRefresh"));
-        btnRefresh.addActionListener((ActionEvent e) -> buttonClick(2));
-        addKeyListener(btnRefresh);
-
-        btnFolder = addButton(2, "newfolder", ResStrings.getString("strNewFolder"));
-        btnFolder.addActionListener((ActionEvent e) -> buttonClick(3));
-        addKeyListener(btnFolder);
-
-        setSize(btnUp.getWidth() * 3 + sep * 4, btnUp.getHeight());
-        addKeyListener(this);
-
+        setFocusable(true);
+        // update panel's size
+        setSize(buttonsCount * (sep + buttons[0].getWidth()) + sep, buttons[0].getHeight());
     }
 
-    public LToolButton addButton(int number, String imgFName, String hintText) {
+    /**
+     * This routine creates and adds the next ToolButton.
+     */
+    public void addButton(String imgFName, String hintText) {
+        int buttonNumber = buttonsCount;
+
+        // create button & load icon image
         LToolButton btn = new LToolButton(this, "btnTool22", imgFName);
+        btn.setLocation(buttonNumber * (sep + btn.getWidth()) + sep, 0);
+
+        // setColors
         btn.setColorEnabled(new Color(184, 207, 229));
         btn.setColorHover(Color.WHITE);
         btn.setColorPressed(new Color(0xaaaaaa));
-        btn.setFocusable(true);
-        btn.setLocation(number * (sep + btn.getWidth()) + sep, 0);
 
+        // setToolTip
         btn.setToolTipBackground(Palette.dialogColor);
         btn.setToolTipForeground(Color.WHITE);
         btn.setToolTipBorder(new Color(0xb8cfe5));
-
         btn.setToolTipText(hintText);
 
+        // add listeners
+        btn.addActionListener((ActionEvent e) -> buttonClick(buttonNumber));
+        addKeyListener(btn);
+
+        // add button to panel & to array
         add(btn);
-        return btn;
+        buttons[buttonNumber] = btn;
+        buttonsCount++;
     }
 
-    @Override
-    public void setFocusable(boolean b) {
-        if (b) {
-            drawFocus();
-        } else {
-            btnUp.setFocusable(false);
-            btnRefresh.setFocusable(false);
-            btnFolder.setFocusable(false);
-        }
-    }
-
+    /**
+     * This routine catches the click of tool button and does the necessary.
+     *
+     * @param btnNumber number of clicked button
+     */
     public void buttonClick(int btnNumber) {
         if (osPan.isFoldersPanelVisible()) {
+            curBtnFocus = btnNumber;
             osPan.showFoldersPanel(false);
+            drawFocus();
         } else {
             switch (btnNumber) {
-                case 1:
+                case 0:
                     osPan.upFolder();
                     break;
-                case 2:
+                case 1:
                     osPan.refreshFolder();
                     break;
-                case 3:
+                case 2:
                     osPan.createNewFolder();
             }
         }
     }
 
-    private void addKeyListener(Component c) {
-        c.addKeyListener(new KeyAdapter() {
+    /**
+     * This routine adds a keyboard listener to the button
+     *
+     * @param btn specified button
+     */
+    private void addKeyListener(LToolButton btn) {
+        btn.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
@@ -111,49 +141,52 @@ public class ToolButtonsPanel extends JComponent {
                         focusNext();
                         break;
                     case KeyEvent.VK_ENTER:
-                        if (c instanceof JButton)
-                            ((JButton) c).doClick();
+                        btn.doClick();
                         break;
                 }
             }
         });
-
     }
 
+    @Override
+    public void setFocusable(boolean b) {
+        if (b) {
+            drawFocus();
+        } else {
+            for (int i = 0; i < buttonsCount; i++) {
+                buttons[i].setFocusable(false);
+            }
+        }
+        // the panel is not focusable anyway
+        super.setFocusable(false);
+    }
+
+    /** Changes the focus to the next button.  */
     private void focusNext() {
-        if (curBtnFocus == 2) {
+        curBtnFocus++;
+        if (curBtnFocus == buttonsCount)
             curBtnFocus = 0;
-        } else curBtnFocus ++;
         drawFocus();
     }
 
+    /** Changes the focus to the previous button.  */
     private void focusPrev() {
-        if (curBtnFocus == 0) {
-            curBtnFocus = 2;
-        } else curBtnFocus --;
+        curBtnFocus--;
+        if (curBtnFocus < 0)
+            curBtnFocus = buttonsCount - 1;
         drawFocus();
     }
 
+    /** Sets the focus to the current button  */
     private void drawFocus() {
-        switch (curBtnFocus) {
-            case 0:
-                btnUp.setFocusable(true);
-                btnUp.requestFocus();
-                btnRefresh.setFocusable(false);
-                btnFolder.setFocusable(false);
-                break;
-            case 1:
-                btnRefresh.setFocusable(true);
-                btnRefresh.requestFocus();
-                btnFolder.setFocusable(false);
-                btnUp.setFocusable(false);
-                break;
-            case 2:
-                btnFolder.setFocusable(true);
-                btnFolder.requestFocus();
-                btnUp.setFocusable(false);
-                btnRefresh.setFocusable(false);
-                break;
+        LToolButton focusedButton = buttons[curBtnFocus];
+        if (focusedButton != null) {
+            focusedButton.setFocusable(true);
+            focusedButton.requestFocus();
+        }
+        for (int i = 0; i < buttonsCount; i++) {
+            if (buttons[i] != focusedButton)
+                buttons[i].setFocusable(false);
         }
     }
 

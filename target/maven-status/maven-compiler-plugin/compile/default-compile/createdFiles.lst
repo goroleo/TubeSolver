@@ -52,6 +52,7 @@ core\Options.class
 lib\lColorDialog\ColorLabels$lnHexField.class
 gui\MainFrame$1.class
 lib\lTextFields\LTextField$1.class
+lib\lOpenSaveDialog\FileEditPanel$3.class
 lib\lColorDialog\ColorCurrent$lnPrevColorMouseLayer.class
 core\ColorMoveItem.class
 lib\lTextFields\LTextField.class

@@ -207,7 +207,7 @@ public class FilesPanel extends JComponent implements FolderListener {
 
     public void updateColumnWidths(int name, int size, int date) {
         if (fileList != null) {
-            fileList.setColumnWidths(name, size, date);
+            fileList.setColumnWidths(size, date);
         }
     }
 
@@ -217,12 +217,12 @@ public class FilesPanel extends JComponent implements FolderListener {
 
     public void sortFileList(int sortNumber) {
         fileList.sort(sortNumber);
-        fileList.repaint();
+        sbVert.scrollToComponent(fileList.getCurrentItem());
     }
 
     public void sortFileList(int sortNumber, boolean ascending) {
         fileList.sort(sortNumber, ascending);
-        fileList.repaint();
+        sbVert.scrollToComponent(fileList.getCurrentItem());
     }
 
     public void setSorting(int number, boolean ascending) {

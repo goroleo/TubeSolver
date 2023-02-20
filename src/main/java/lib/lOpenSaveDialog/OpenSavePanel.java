@@ -125,14 +125,12 @@ public class OpenSavePanel extends JComponent {
             }
         });
 
-        showFoldersPanel(false);
         if (Options.osdSortCol > 0 && Options.osdSortCol < 4
                 && Options.osdSortOrder >= 0 && Options.osdSortOrder <= 1) {
             setFileSorting(Options.osdSortCol, Options.osdSortOrder == 1);
         }
 
         showFoldersPanel(false);
-        filesPanel.requestFocus();
     }
 
     public void updateButtonCaption() {
@@ -257,6 +255,10 @@ public class OpenSavePanel extends JComponent {
     }
 
     public void showFoldersPanel(boolean b) {
+        showFoldersPanel(null, b);
+    }
+
+    public void showFoldersPanel(JComponent invoker, boolean b) {
         foldersPanel.setVisible(b);
         foldersPanel.setFocusable(b);
         toolsPanel.setFocusable(!b);
@@ -268,6 +270,10 @@ public class OpenSavePanel extends JComponent {
         }
         if (b) {
             foldersPanel.requestFocus();
+        } else {
+            if (invoker != null)
+                invoker.requestFocus();
+            else filesPanel.requestFocus();
         }
     }
 

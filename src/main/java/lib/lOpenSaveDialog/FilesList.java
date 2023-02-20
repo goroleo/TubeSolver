@@ -84,6 +84,11 @@ public class FilesList extends ListView {
     }
 
     @Override
+    public void itemPressed(FileItem item) {
+        if (!fPanel.isFocusOwner()) fPanel.requestFocus();
+    }
+
+    @Override
     public void itemEntered(FileItem item) {
         if (!osPan.isFoldersPanelVisible()) {
             setMouseOverItem(item);
