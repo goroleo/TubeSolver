@@ -10,7 +10,7 @@ import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 import static lib.lOpenSaveDialog.OpenSavePanel.DEFAULT_EXT;
 
 /**
- * This is a class stored the value of the current folder and current file, navigates through
+ * This class stores the value of the current folder and current file, navigates through
  * folders, and notifies another controls when the current folder and current file have changed.
  * All listeners must implement FolderListener and FileListener interfaces to take change
  * events from this class.

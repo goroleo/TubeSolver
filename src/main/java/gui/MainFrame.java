@@ -335,9 +335,8 @@ public class MainFrame extends JFrame {
         // preparing tubes for the play mode
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             ColorTube tube = tubesPan.getTube(i);
-            tube.updateState();
+            tube.setClosed(tube.getModel().state == 3);
             tube.setActive(!tube.isClosed());
-//            tube.setFrame((tube.isClosed()) ? 4 : 0);
         }
         setTubeFrom(null);
 

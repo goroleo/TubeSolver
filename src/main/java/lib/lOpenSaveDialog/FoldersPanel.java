@@ -26,10 +26,9 @@ import static lib.lOpenSaveDialog.OpenSavePanel.current;
 public class FoldersPanel extends JComponent implements FolderListener {
 
     private final FoldersList foldersList;
-    private final ScrollBar sbVert;
+    private final ScrollBar scrollbar;
 
-    private final JComponent viewport = new JComponent() {
-    };
+    private final JComponent viewport = new JComponent() { };
 
     private final Border border = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.gray),
@@ -48,23 +47,20 @@ public class FoldersPanel extends JComponent implements FolderListener {
         viewport.add(foldersList);
         add(viewport);
 
-        sbVert = new ScrollBar(ScrollBar.VERTICAL) {
+        scrollbar = new ScrollBar(ScrollBar.VERTICAL) {
             @Override
             public void onChangePosition() {
-                foldersList.setLocation(0, -sbVert.getPosition());
+                foldersList.setLocation(0, -scrollbar.getPosition());
             }
         };
-//        sbVert.setSize(11, 200);
-        add(sbVert);
-
-//        setSize(200, 200);
+        add(scrollbar);
 
         addMouseWheelListener((MouseWheelEvent e) -> {
-            if (sbVert.isVisible() && sbVert.isActive()) {
+            if (scrollbar.isVisible() && scrollbar.isActive()) {
                 if (e.getWheelRotation() > 0) {
-                    sbVert.setPosition(sbVert.getPosition() + foldersList.getItemHeight());
+                    scrollbar.setPosition(scrollbar.getPosition() + foldersList.getItemHeight());
                 } else {
-                    sbVert.setPosition(sbVert.getPosition() - foldersList.getItemHeight());
+                    scrollbar.setPosition(scrollbar.getPosition() - foldersList.getItemHeight());
                 }
             }
         });
@@ -99,7 +95,7 @@ public class FoldersPanel extends JComponent implements FolderListener {
                         chooseFolder(foldersList.getCurrentItem());
                         break;
                 }
-                sbVert.scrollToComponent(foldersList.getCurrentItem());
+                scrollbar.scrollToComponent(foldersList.getCurrentItem());
             }
         });
 
@@ -127,14 +123,14 @@ public class FoldersPanel extends JComponent implements FolderListener {
         w = w - 4;
         h = h - 4;
 
-        sbVert.setValues(0, foldersList.getHeight(), foldersList.getItemHeight(), h);
+        scrollbar.setValues(0, foldersList.getHeight(), foldersList.getItemHeight(), h);
 
-        int sbV_width = (sbVert.isVisible()) ? 11 : 0;
+        int sbV_width = (scrollbar.isVisible()) ? 11 : 0;
 
-        sbVert.setLocation(w - sbV_width + 2, 2);
+        scrollbar.setLocation(w - sbV_width + 2, 2);
         viewport.setLocation(2, 2);
 
-        sbVert.setSize(sbV_width, h);
+        scrollbar.setSize(sbV_width, h);
         viewport.setSize(w - sbV_width, h);
         foldersList.setSize(viewport.getWidth(), h);
 
@@ -158,8 +154,8 @@ public class FoldersPanel extends JComponent implements FolderListener {
     public void setVisible(boolean b) {
         if (b) {
             foldersList.setCurrentItem(foldersList.findFolder(current.getFolder()));
-            if (sbVert.isVisible()) {
-                sbVert.setPosition(foldersList.getCurrentItem().getY());
+            if (scrollbar.isVisible()) {
+                scrollbar.setPosition(foldersList.getCurrentItem().getY());
             }
         }
         super.setVisible(b);
@@ -173,11 +169,11 @@ public class FoldersPanel extends JComponent implements FolderListener {
 
     @Override
     public void updateFolder(File folder) {
-        boolean b = sbVert.isVisible();
+        boolean b = scrollbar.isVisible();
         foldersList.setFolder(folder);
-        sbVert.setValues(0, foldersList.getHeight(), foldersList.getItemHeight(), viewport.getHeight());
-        sbVert.onChangePosition();
-        if (sbVert.isVisible() != b)
+        scrollbar.setValues(0, foldersList.getHeight(), foldersList.getItemHeight(), viewport.getHeight());
+        scrollbar.onChangePosition();
+        if (scrollbar.isVisible() != b)
             updateComponents();
 
     }

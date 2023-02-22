@@ -20,6 +20,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
  * A small panel with Tool Buttons: FolderUP, FolderRefresh, CreateNewFolder.
@@ -107,7 +108,7 @@ public class ToolButtonsPanel extends JComponent {
         } else {
             switch (btnNumber) {
                 case 0:
-                    osPan.upFolder();
+                    current.upFolder();
                     break;
                 case 1:
                     osPan.refreshFolder();

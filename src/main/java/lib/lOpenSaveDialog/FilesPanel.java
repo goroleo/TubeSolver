@@ -22,9 +22,10 @@ public class FilesPanel extends JComponent implements FolderListener {
 
     private final FilesList fileList;
     private final FileListHeader header;
-    private final ScrollBar sbVert;
+    private final ScrollBar scrollbar;
 
-    private final JComponent viewport;
+    private final JComponent viewport = new JComponent() {};
+
 
     private final Border border = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.gray),
@@ -43,14 +44,6 @@ public class FilesPanel extends JComponent implements FolderListener {
 
         fileList = new FilesList(this);
 
-        viewport = new JComponent() {
-            @Override
-            public void paintComponent(Graphics g) {
-                g.setColor(getBackground());
-                g.fillRect(0, 0, getWidth() - 1, getHeight() - 1);
-            }
-        };
-
         viewport.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -66,14 +59,13 @@ public class FilesPanel extends JComponent implements FolderListener {
         });
 
         viewport.setBackground(null);
-
         viewport.add(fileList);
         add(viewport);
 
-        sbVert = new ScrollBar(ScrollBar.VERTICAL) {
+        scrollbar = new ScrollBar(ScrollBar.VERTICAL) {
             @Override
             public void onChangePosition() {
-                fileList.setLocation(0, -sbVert.getPosition());
+                fileList.setLocation(0, -scrollbar.getPosition());
             }
 
             @Override
@@ -81,27 +73,24 @@ public class FilesPanel extends JComponent implements FolderListener {
                 return !osPan.isFoldersPanelVisible();
             }
         };
-//        sbVert.setSize(11, 200);
-        add(sbVert);
+        add(scrollbar);
 
         header = new FileListHeader(this);
         add(header);
 
-//        setSize(200, 200);
-
         addMouseWheelListener((MouseWheelEvent e) -> {
-            if (isEnabled() && sbVert.isVisible() && sbVert.isActive()) {
+            if (isEnabled() && scrollbar.isVisible() && scrollbar.isActive()) {
                 if (!e.isAltDown()) {
                     if (e.getWheelRotation() > 0) {
-                        sbVert.setPosition(sbVert.getPosition() + fileList.getItemHeight());
+                        scrollbar.setPosition(scrollbar.getPosition() + fileList.getItemHeight());
                     } else {
-                        sbVert.setPosition(sbVert.getPosition() - fileList.getItemHeight());
+                        scrollbar.setPosition(scrollbar.getPosition() - fileList.getItemHeight());
                     }
                 } else {
                     if (e.getWheelRotation() > 0) {
-                        sbVert.setPosition(sbVert.getPosition() + fileList.getItemHeight() * 5);
+                        scrollbar.setPosition(scrollbar.getPosition() + fileList.getItemHeight() * 5);
                     } else {
-                        sbVert.setPosition(sbVert.getPosition() - fileList.getItemHeight() * 5);
+                        scrollbar.setPosition(scrollbar.getPosition() - fileList.getItemHeight() * 5);
                     }
                 }
             }
@@ -142,10 +131,10 @@ public class FilesPanel extends JComponent implements FolderListener {
                         refreshFolder();
                         break;
                     case KeyEvent.VK_BACK_SPACE:
-                        osPan.upFolder();
+                        current.upFolder();
                         break;
                 }
-                sbVert.scrollToComponent(fileList.getCurrentItem());
+                scrollbar.scrollToComponent(fileList.getCurrentItem());
             }
         });
 
@@ -163,34 +152,46 @@ public class FilesPanel extends JComponent implements FolderListener {
 
     }
 
+    /** Updates components size and location due to panel resized. */
     public void updateComponents() {
+        // client area width and height
         int w = getWidth() - 4;
         int h = getHeight() - 4;
 
-        sbVert.setValues(0, fileList.getHeight(), fileList.getItemHeight(), h - header.getHeight() - 1);
+        // First we need to determine if the scroll bar will be visible.
+        // This depends on the height of the FileList and height of the visible area.
+        // Just set range values to the scroll bar and check its visibility.
+        scrollbar.setValues(0, fileList.getHeight(), fileList.getItemHeight(), h - header.getHeight() - 1);
 
-        int sbV_width = (sbVert.isVisible()) ? 11 : 0;
+        // sbWidth is the width of the scroll bar
+        int sbWidth = (scrollbar.isVisible()) ? 11 : 0;
 
+        // And now visible/client area width is:
+        w -= sbWidth;
+
+        // set locations of components
         header.setLocation(2, 2);
-        sbVert.setLocation(w - sbV_width + 2, 2);
         viewport.setLocation(2, 2 + header.getHeight());
+        scrollbar.setLocation(w + 2, 2);
 
-        header.setSize(w - sbV_width, header.getHeight());
-
-        sbVert.setSize(sbV_width, h);
-        viewport.setSize(w - sbV_width, h - header.getHeight() - 1);
-        fileList.setSize(viewport.getWidth(), fileList.getHeight());
-        viewport.repaint();
+        // set sizes of components
+        header.setSize(w, header.getHeight()); // set new width only
+        scrollbar.setSize(sbWidth, h);
+        viewport.setSize(w, h - header.getHeight() - 1);
+        fileList.setSize(w, fileList.getHeight()); // set new width only
     }
 
     @Override
     public void setSize(int w, int h) {
         super.setSize(w, h);
-        if (header != null) {
-            updateComponents();
-        }
+        updateComponents();
     }
 
+    /**
+     * Gets widths of file list columns.
+     * @param colNumber column number
+     * @return width of this column in pixels
+     */
     public int getColumnWidth(int colNumber) {
         if (header != null) {
             switch (colNumber) {
@@ -217,12 +218,12 @@ public class FilesPanel extends JComponent implements FolderListener {
 
     public void sortFileList(int sortNumber) {
         fileList.sort(sortNumber);
-        sbVert.scrollToComponent(fileList.getCurrentItem());
+        scrollbar.scrollToComponent(fileList.getCurrentItem());
     }
 
     public void sortFileList(int sortNumber, boolean ascending) {
         fileList.sort(sortNumber, ascending);
-        sbVert.scrollToComponent(fileList.getCurrentItem());
+        scrollbar.scrollToComponent(fileList.getCurrentItem());
     }
 
     public void setSorting(int number, boolean ascending) {
@@ -252,18 +253,18 @@ public class FilesPanel extends JComponent implements FolderListener {
     public void scrollToFile(String s) {
         FileItem item = fileList.getNearestItem(s);
         if (item != null) {
-            sbVert.scrollToComponent(item);
+            scrollbar.scrollToComponent(item);
         }
     }
 
     @Override
     public void updateFolder(File folder) {
-        boolean b = sbVert.isVisible();
+        boolean b = scrollbar.isVisible();
         fileList.setFolder(folder);
-        sbVert.setValues(0, fileList.getHeight(), fileList.getItemHeight(), getHeight() - header.getHeight() - 5);
-        sbVert.setPosition(0);
+        scrollbar.setValues(0, fileList.getHeight(), fileList.getItemHeight(), getHeight() - header.getHeight() - 5);
+        scrollbar.setPosition(0);
         fileList.setLocation(0, 0);
-        if (sbVert.isVisible() != b)
+        if (scrollbar.isVisible() != b)
             updateComponents();
     }
 }

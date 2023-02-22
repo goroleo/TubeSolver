@@ -539,7 +539,7 @@ public class FileItem extends JComponent {
             fLevel = newLevel;
             nameLabel.setSize(getWidth() - 10 * fLevel, getHeight());
             nameLabel.setLocation(10 * fLevel, 0);
-        }
+        } else fLevel = 0;
     }
 
     /**

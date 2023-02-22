@@ -14,15 +14,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.OpenSavePanel.current;
 import static lib.lOpenSaveDialog.OpenSavePanel.fsv;
 
 public class FilesList extends ListView {
 
     private final FilesPanel fPanel;
-
-    public FilesList() {
-        this(null);
-    }
 
     public FilesList(FilesPanel owner) {
         super();
@@ -61,13 +58,13 @@ public class FilesList extends ListView {
                         try {
                             File f1 = fsv.getLinkLocation(item.getFile());
                             if (f1 != null && f1.isDirectory()) {
-                                osPan.setFolder(f1);
+                                current.setFolder(f1);
                             }
                         } catch (FileNotFoundException ex) {
                             // do nothing
                         }
                     } else {
-                        osPan.setFolder(item.getFile());
+                        current.setFolder(item.getFile());
                     }
                 } else { // not folder and clickCount = 2
                     osPan.confirmAndClose();

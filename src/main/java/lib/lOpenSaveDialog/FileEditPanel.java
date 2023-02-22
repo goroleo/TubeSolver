@@ -41,10 +41,10 @@ public class FileEditPanel extends JComponent implements FolderListener, FileLis
     /** File extension label */
     private final JLabel lbExt;
 
-    /** A width of the file name wield (depends on the FoldersDropDown width)
+    /** The X-coordinate stores end pixel of the file name field (depends on the FoldersDropDown width).
      * @see FoldersDropDown
      */
-    public int fieldWidth = 120;
+    public int fieldEnd = 120;
 
     /**
      * FileEditPanel constructor
@@ -57,7 +57,7 @@ public class FileEditPanel extends JComponent implements FolderListener, FileLis
         nameField = new LTextField() {
             @Override
             public void valueChanged() {
-
+                osPan.scrollToFileName(getValue());
             }
         };
         nameField.setForbiddenSigns("?*");
@@ -109,10 +109,10 @@ public class FileEditPanel extends JComponent implements FolderListener, FileLis
 
         fm = lbExt.getFontMetrics(lbExt.getFont());
         lbExt.setSize(fm.stringWidth(lbExt.getText()), fm.getHeight());
-        lbExt.setLocation(fieldWidth + 20, (h - fm.getHeight()) / 2);
+        lbExt.setLocation(fieldEnd + 20, (h - fm.getHeight()) / 2);
 
         nameField.setLocation(10 + lbFile.getWidth(), 0);
-        nameField.setSize(fieldWidth - nameField.getX() - 10, h);
+        nameField.setSize(fieldEnd - nameField.getX() - 10, h);
         super.setSize(w, h);
     }
 

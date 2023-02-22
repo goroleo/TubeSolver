@@ -17,7 +17,17 @@ import java.io.*;
 import java.net.URL;
 import java.util.Properties;
 
+/**
+ * All load and save routines for the application. And description
+ */
 public class TubesIO {
+
+///////////////////////////////////////////////////////////////////////////
+//
+//             * JCTL file format fields *
+//         for saving and loading the game data
+//
+///////////////////////////////////////////////////////////////////////////
 
     /**
      * Identifier of the file with the saved game. id = <b>JCTL</b>
@@ -99,12 +109,6 @@ public class TubesIO {
      */
     private static int fileCRC;
 
-    /**
-     * Temporary file name.
-     */
-    public static String tempFileName
-            = getAppDirFile(".$notsolved.jctl");
-
 ///////////////////////////////////////////////////////////////////////////
 //
 //             * Files and Folders routines * 
@@ -169,7 +173,14 @@ public class TubesIO {
         return result;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    /**
+     * Temporary file name.
+     */
+    public static String tempFileName
+            = getAppDirFile(".$notsolved.jctl");
+
+
+///////////////////////////////////////////////////////////////////////////
 //
 //             * Byte Array Stream's extension * 
 //   writing and reading Integer (4 bytes) and Word (2 bytes) values
@@ -321,11 +332,12 @@ public class TubesIO {
         return crc;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 //
 //               * Store and restore game routines * 
 //
 ///////////////////////////////////////////////////////////////////////////
+
     public static void storeGameMode(int gm) {
         gMode = gm;
     }
@@ -372,7 +384,6 @@ public class TubesIO {
             if (hideFillAnimation)
                 tube.setColorsAnimation(false);
             tube.restoreColors(storedTubes[i]);
-//            tube.updateState();
             if (gMode != MainFrame.FILL_MODE)
                 tube.setActive(!tube.isClosed());
             tube.setColorsAnimation(true);
@@ -712,7 +723,7 @@ public class TubesIO {
 
 ///////////////////////////////////////////////////////////////////////////
 //
-//                    * Load and save options * 
+//          * Load and save the application options *
 //
 ///////////////////////////////////////////////////////////////////////////
 

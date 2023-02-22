@@ -33,8 +33,6 @@ import lib.lTextFields.LDecTextField;
 public class CreateNewDlg extends JDialog {
 
     private final JFrame parent;
-
-//    private final int startX = 200;
     private final int maxLabelWidth;
     private final int startY = 30;
     private final int dimY = 40;

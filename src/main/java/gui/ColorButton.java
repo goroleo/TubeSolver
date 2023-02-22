@@ -13,9 +13,9 @@ import ani.ImageLayer;
 import ani.ShadeLayer;
 import ani.ShapeLayer;
 import ani.SlideLayer;
-import core.Options;
-import lib.lColorDialog.LColorDialog;
 import run.Main;
+
+import lib.lColorDialog.LColorDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -243,8 +243,8 @@ public class ColorButton extends JButton {
         lcd.setBackground(Palette.dialogColor);
         lcd.addColorListener(colorLayer::setColor);
 
-        if (Options.ccdPositionX != -1 && Options.ccdPositionY != -1) {
-            lcd.setLocation(Options.ccdPositionX, Options.ccdPositionY);
+        if (core.Options.ccdPositionX != -1 && core.Options.ccdPositionY != -1) {
+            lcd.setLocation(core.Options.ccdPositionX, core.Options.ccdPositionY);
         }
         Color newColor = lcd.chooseColor();
         lcd.saveOptions();

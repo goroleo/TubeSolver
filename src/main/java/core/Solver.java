@@ -204,7 +204,7 @@ public class Solver implements Runnable {
 
             } while (!solved && !externalBreak && move != null);
 
-        } // else we have no moves available
+        }
 
         workingTime = (double) System.currentTimeMillis() - startTime + workingTime;
 

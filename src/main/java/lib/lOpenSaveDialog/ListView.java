@@ -15,6 +15,9 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * This the parent class of the list of files. It
+ */
 public class ListView extends JComponent {
 
     private final ArrayList<FileItem> fileList = new ArrayList<>();

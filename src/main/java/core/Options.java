@@ -19,6 +19,10 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Properties;
 
+/**
+ * This class loads, stores and saves all application options and settings. Also, it is
+ * the set of additional & auxiliary routines of the application.
+ */
 public class Options {
 
     // --------- language -------------
@@ -78,6 +82,8 @@ public class Options {
     public static int odPositionY = -1;
 
 
+    // --------- options routines  -------------
+    /** Saves application settings. */
     public static void saveOptions() {
         Properties sProps = new Properties();
         // --------- language -------------
@@ -130,6 +136,7 @@ public class Options {
         sProps.clear();
     }
 
+    /** Loads application settings. */
     public static void loadOptions() {
         Properties sProps = new Properties();
         if (TubesIO.loadOptions(sProps)) {
@@ -191,17 +198,23 @@ public class Options {
         }
     }
 
+    /** An icon showing the selected state for any CheckBoxes and Menus at all parts of the application. */
     public static ImageIcon cbIconSelected
             = createImageIcon("checkbutton_icon_selected.png");     // Icon_Selected for menus 
+
+    /** An icon showing the non_selected state for any CheckBoxes and Menus at all parts of the application. */
     public static ImageIcon cbIconStandard
             = createImageIcon("checkbutton_icon_standard.png");     // Icon_Selected for menus 
 
+    /** Enumeration of possible operating systems. */
     public enum OS {
         WINDOWS, LINUX, MAC, SOLARIS
     } // Operating systems.
 
+    /** Stores the current operating system. */
     private static OS os = null;
 
+    /** Gets the current operating system. */
     public static OS getOS() {
         if (os == null) {
             String operSys = System.getProperty("os.name").toLowerCase();
@@ -219,10 +232,20 @@ public class Options {
         return os;
     }
 
+    /**
+     * Loads Icon from the resources.
+     * @param fName file name at /resources/img/ folder. fName is usually a PNG picture.
+     * @return Icon or null if resource has not found.
+     */
     public static ImageIcon createImageIcon(String fName) {
         return createImageIcon(TubesIO.getImageResourceURL(fName));
     }
 
+    /**
+     * Loads Icon from the resources.
+     * @param imgURL the link to the file at /resources/img/ folder.
+     * @return Icon or null if resource has not found.
+     */
     public static ImageIcon createImageIcon(java.net.URL imgURL) {
         if (imgURL != null) {
             return new ImageIcon(imgURL);
@@ -232,18 +255,38 @@ public class Options {
         }
     }
 
+    /**
+     * Loads Image from the resources.
+     * @param fName file name at /resources/img/ folder. fName is usually a PNG picture.
+     * @return Image or null if resource has not found.
+     */
     public static Image createImage(String fName) {
         return createImage(TubesIO.getImageResourceURL(fName));
     }
 
+    /**
+     * Loads Image from the resources.
+     * @param imgURL the link to the file at /resources/img/ folder.
+     * @return Image or null if resource has not found.
+     */
     public static Image createImage(java.net.URL imgURL) {
         return createBufImage(imgURL);
     }
 
+    /**
+     * Loads BufferedImage from the resources.
+     * @param fName file name at /resources/img/ folder. fName is usually a PNG picture.
+     * @return BufferedImage or null if resource has not found.
+     */
     public static BufferedImage createBufImage(String fName) {
         return createBufImage(TubesIO.getImageResourceURL(fName));
     }
 
+    /**
+     * Loads BufferedImage from the resources.
+     * @param imgURL the link to the file at /resources/img/ folder.
+     * @return BufferedImage or null if resource has not found.
+     */
     public static BufferedImage createBufImage(java.net.URL imgURL) {
         BufferedImage img = null;
         if (imgURL != null) {
@@ -258,12 +301,17 @@ public class Options {
         return img;
     }
 
+    /**
+     * Converts a color from a hexadecimal color notation to the color used by the application.
+     * The hexadecimal string of color notation usually looks like 0xRRGGBB or 0xAARRGGBB
+     * (where A - Alpha, R - Red, G - Green, B - Blue). Also, the string can start with the '#' sign.
+     * @param Hex the hexadecimal string of color notation.
+     * @return Color
+     */
     public static Color colorFromHex(String Hex) {
-//        int Value = Integer.decode(Hex);
         int index = 0;
         int radix = 0;
         int result;
-
         if (Hex.startsWith("0x", index) || Hex.startsWith("0X", index)) {
             index += 2;
             radix = 16;
@@ -271,25 +319,32 @@ public class Options {
             index++;
             radix = 16;
         }
-
         Hex = Hex.substring(index);
         if (Hex.length() > 6) {
             Hex = Hex.substring(Hex.length() - 6);
         }
-
         result = Integer.parseInt(Hex, radix);
-
         return new Color(result, false);
     }
 
-    public static String leadZero(String str, int digits) {
+    /**
+     * Adds leading '0' signs to the string if it is less than the required length.
+     * @param str the original string
+     * @param requiredLength as is
+     * @return new string with leading '0' signs
+     */
+    public static String leadZero(String str, int requiredLength) {
         StringBuilder result = new StringBuilder(str);
-        for (int i = result.length(); i < digits; i++) {
+        for (int i = result.length(); i < requiredLength; i++) {
             result.insert(0, "0");
         }
         return result.toString();
     }
 
+    /**
+     * Makes the string with the current date and time: YYYY-MM-DD HH-MM-SS.
+     * @return new string with the date-time stamp.
+     */
     public static String getDateTimeStr() {
         LocalDateTime dt = LocalDateTime.now();
         return dt.getYear() + "-"

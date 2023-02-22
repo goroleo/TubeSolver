@@ -9,24 +9,23 @@
  */
 package dlg;
 
+import core.ResStrings;
 import core.TubesIO;
 import gui.MainFrame;
 import gui.Palette;
+import run.Main;
+
+import lib.lButtons.LPictureButton;
+import lib.lOpenSaveDialog.LOpenSaveDialog;
 
 import java.awt.*;
-
-import core.ResStrings;
-
 import java.awt.event.ActionEvent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import lib.lButtons.LPictureButton;
-import run.Main;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import lib.lOpenSaveDialog.LOpenSaveDialog;
 
 public class StartDlg extends JDialog {
 

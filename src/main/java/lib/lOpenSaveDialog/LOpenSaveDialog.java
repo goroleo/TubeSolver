@@ -165,6 +165,7 @@ public class LOpenSaveDialog extends JDialog {
                 KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
                 2); // WHEN_IN_FOCUSED_WINDOW
 
+        // Frame resize
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {

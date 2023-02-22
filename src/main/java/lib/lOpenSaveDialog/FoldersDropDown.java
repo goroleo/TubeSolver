@@ -25,7 +25,7 @@ import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 
 public class FoldersDropDown extends JComponent implements FolderListener {
 
-    private final FileItem folderInfo;
+    private final FileItem folderItem;
     private final BufferedImage imgFrame;
 
     private boolean rollover = false;
@@ -41,11 +41,11 @@ public class FoldersDropDown extends JComponent implements FolderListener {
 
         imgFrame = new BufferedImage(OpenSavePanel.imgBtnDown.getWidth(), OpenSavePanel.imgBtnDown.getHeight(), 2);
 
-        folderInfo = new FileItem(null, false, 0);
-        for (MouseListener ml : folderInfo.getMouseListeners()) {
-            folderInfo.removeMouseListener(ml);
+        folderItem = new FileItem(null, false, 0);
+        for (MouseListener ml : folderItem.getMouseListeners()) {
+            folderItem.removeMouseListener(ml);
         }
-        add(folderInfo);
+        add(folderItem);
 
 //        setSize(400, 27);
 
@@ -117,8 +117,8 @@ public class FoldersDropDown extends JComponent implements FolderListener {
 
     @Override
     public void setSize(int w, int h) {
-        folderInfo.setLocation(2, 2);
-        folderInfo.setSize(w - imgFrame.getWidth(), h - 4);
+        folderItem.setLocation(2, 2);
+        folderItem.setSize(w - imgFrame.getWidth(), h - 4);
         super.setSize(w, h);
     }
 
@@ -184,6 +184,6 @@ public class FoldersDropDown extends JComponent implements FolderListener {
 
     @Override
     public void updateFolder(File folder) {
-        folderInfo.setFile(folder);
+        folderItem.setFile(folder);
     }
 }

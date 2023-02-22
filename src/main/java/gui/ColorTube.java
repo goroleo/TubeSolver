@@ -177,12 +177,6 @@ public class ColorTube extends JComponent {
         return model.isEmpty();
     }
 
-    public void updateState() {
-//        model.updateState();
-//        setClosed(model.isClosed());
-        setClosed(model.state == 3);
-    }
-
     public int getFrame() {
         return frameNum;
     }
@@ -296,7 +290,6 @@ public class ColorTube extends JComponent {
         if (model.putColor((byte) colorNum)) {
             colors.addColor(colorNum);
             setClosed(model.state == 3);
-            // updateState();
         }
     }
 
@@ -304,7 +297,6 @@ public class ColorTube extends JComponent {
         if (model.extractColor() != 0) {
             colors.removeColor();
             setClosed(model.state == 3);
-//            updateState();
         }
     }
 

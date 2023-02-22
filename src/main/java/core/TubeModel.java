@@ -275,14 +275,12 @@ public class TubeModel {
      * @return true if both the tubes are consists of the same colors.
      */
     public boolean equalsTo(TubeModel tm) {
-        boolean result = true;
         for (int i = 0; i < 4; i++) {
             if (this.colors[i] != tm.colors[i]) {
-                result = false;
-                break;
+                return false;
             }
         }
-        return result;
+        return true;
     }
 
 }
