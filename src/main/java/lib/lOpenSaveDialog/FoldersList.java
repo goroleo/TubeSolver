@@ -1,32 +1,59 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package lib.lOpenSaveDialog;
 
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
 import static lib.lOpenSaveDialog.OpenSavePanel.fsv;
 
+/**
+ * FolderList is the list for a FoldersPanel. Practically FolderList consists of two lists: system roots list
+ * and folders path list to the nearest system root.
+ * This class is an inheritor of the ListView class. All it does is fill these two list and compose them into one.
+ */
 public class FoldersList extends ListView {
 
-    private static final ArrayList<FileItem> rootList = new ArrayList<>();
-    private final ArrayList<FileItem> folderList = new ArrayList<>();
-    private int insertFoldersAfter;
+    /**
+     * The list of system roots.
+     */
+    private static final ArrayList<FileItem> rootsList = new ArrayList<>();
+
+    /**
+     * The list of path folders to the nearest system root.
+     */
+    private final ArrayList<FileItem> foldersList = new ArrayList<>();
+
+    /**
+     * The item of the roots list that is a parent for the path list items.
+     */
+    private FileItem currentRoot;
+
+    /**
+     * The parent panel for access its possibilities.
+     */
     private final FoldersPanel fPanel;
 
+    /**
+     * Creates the Folder List with no parent.
+     */
     public FoldersList() {
         this(null);
     }
 
+    /**
+     * Creates the Folder List.
+     *
+     * @param owner is a Folders Panel
+     */
     public FoldersList(FoldersPanel owner) {
         super();
         fPanel = owner;
@@ -34,10 +61,14 @@ public class FoldersList extends ListView {
         fillRoots();
     }
 
+    /**
+     * Fills the list with system root folders. Any root folder can be child of a previously listed
+     * root folder, so this routine also checks them.
+     */
     private void fillRoots() {
         FileItem fi;
-        if (!rootList.isEmpty()) {
-            rootList.clear();
+        if (!rootsList.isEmpty()) {
+            rootsList.clear();
         }
         File[] roots = fsv.getChooserComboBoxFiles();
         File parentFolder;
@@ -47,102 +78,114 @@ public class FoldersList extends ListView {
             level = 0;
             parentFolder = fsv.getParentDirectory(root);
             if (parentFolder != null) {
-                for (FileItem item : rootList) {
+                for (FileItem item : rootsList) {
                     if (parentFolder.compareTo(item.getFile()) == 0) {
                         level = item.getLevel() + 1;
                     }
                 }
             }
             fi = this.createNewItem(root, false, level);
-            rootList.add(fi);
+            rootsList.add(fi);
         }
     }
 
-    public void setFolder(File folder) {
-        FileItem fi;
-        setCurrentItem(null);
+    /**
+     * Fills the paths list. It scans the current folder path and finds the correct
+     * root for the folder.
+     *
+     * @param folder - current folder
+     */
+    private void fillPaths(File folder) {
 
-        int foldersLevel = 0;
-        insertFoldersAfter = rootList.size() - 1;
+        int startLevel = 0;
+        currentRoot = null;
         boolean done = false;
-        folderList.clear();
+        foldersList.clear();
+
         while (!done && folder != null) {
-            for (int i = 0; i < rootList.size(); i++) {
-                if (folder.compareTo(rootList.get(i).getFile()) == 0) {
-                    foldersLevel = rootList.get(i).getLevel() + 1;
-                    insertFoldersAfter = i;
+
+            // check if this folder is in the roots list
+            int i = 0;
+            while (!done && i < rootsList.size()) {
+                if (folder.compareTo(rootsList.get(i).getFile()) == 0) {
+                    currentRoot = rootsList.get(i);
+                    startLevel = currentRoot.getLevel() + 1;
                     done = true;
+                } else {
+                    i++;
                 }
             }
+
             if (!done) {
-                fi = createNewItem(folder, false, 0);
-                folderList.add(0, fi);
+                // this folder is not in the root list, add this folder to the paths list
+                foldersList.add(0, createNewItem(folder, false, 0));
+                // and try again with the parent of this folder
                 folder = fsv.getParentDirectory(folder);
             }
         }
 
-        if (!folderList.isEmpty()) {
-            fillFoldersLevel(foldersLevel);
-        }
-        fillFileList();
-        setCurrentItem(findFolder(folder));
-    }
-
-    private void fillFoldersLevel(int startLevel) {
-        for (FileItem folder : folderList) {
-            folder.setLevel(startLevel);
-            startLevel++;
+        // update paths list items levels
+        if (!foldersList.isEmpty()) {
+            for (FileItem fi : foldersList) {
+                fi.setLevel(startLevel);
+                startLevel++;
+            }
         }
     }
 
+    /**
+     * Fills the ListView's FileList as a composition of two lists (roots and paths).
+     */
     private void fillFileList() {
         getFileList().clear();
-        if (!rootList.isEmpty()) {
-            for (int i = 0; i < rootList.size(); i++) {
-                getFileList().add(rootList.get(i));
-                if (i == insertFoldersAfter && !folderList.isEmpty()) {
-                    for (FileItem fileItem : folderList) {
-                        getFileList().add(fileItem);
+
+        if (!rootsList.isEmpty()) {
+
+            for (FileItem rootItem : rootsList) {
+                getFileList().add(rootItem);
+                if (rootItem == currentRoot && !foldersList.isEmpty()) {
+                    for (FileItem pathItem : foldersList) {
+                        getFileList().add(pathItem);
                     }
                 }
             }
-        } else {
-            for (FileItem fileItem : folderList) {
-                getFileList().add(fileItem);
+
+        } else { // root list is empty, just add items from paths list
+            for (FileItem pathItem : foldersList) {
+                getFileList().add(pathItem);
             }
         }
         updateView();
     }
 
-    public FileItem findFolder(File folder) {
-        if (folder != null) {
-            Component c;
-            for (int i = 0; i < getComponentCount(); i++) {
-                c = getComponent(i);
-                if (c instanceof FileItem) {
-                    if (((FileItem) c).getFile().compareTo(folder) == 0) {
-                        return (FileItem) c;
-                    }
-                }
-            }
-        }
-        return null;
+    /**
+     * Sets the current folder. It fills the Paths list,  It scans the current folder path, finds the correct
+     * root for the folder, and inserts the list of paths into the right place.
+     *
+     * @param folder - current folder
+     */
+    public void setFolder(File folder) {
+        setCurrentItem(null);
+        fillPaths(folder);
+        fillFileList();
+        setCurrentItem(getItemByFile(folder));
     }
 
     @Override
-    public void itemClicked(FileItem item, MouseEvent e) {
+    public void onItemClicked(FileItem item, MouseEvent e) {
         fPanel.chooseFolder(item);
     }
 
     @Override
-    public void itemEntered(FileItem item) {
+    public void onItemEntered(FileItem item) {
         setCurrentItem(item);
     }
 
     @Override
-    public void itemPressed(FileItem item) {
-        if (!fPanel.isFocusOwner()) fPanel.requestFocus();
+    public void onItemPressed(FileItem item) {
+        if (!fPanel.isFocusOwner()) {
+            fPanel.requestFocus();
+        }
     }
-
 
 }

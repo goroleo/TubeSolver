@@ -16,10 +16,13 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * This the parent class of the list of files. It
+ * This is the parent class of the list of files/folders. It provides all common methods and routines.
  */
 public class ListView extends JComponent {
 
+    /**
+     *
+     */
     private final ArrayList<FileItem> fileList = new ArrayList<>();
     private int itemHeight = 25;
     private int sortNumber = 1;
@@ -54,22 +57,22 @@ public class ListView extends JComponent {
         return new FileItem(f, detailsMode, level) {
             @Override
             public void mouseClicked(MouseEvent e) {
-                ListView.this.itemClicked(this, e);
+                ListView.this.onItemClicked(this, e);
             }
 
             @Override
             public void mousePressed() {
-                ListView.this.itemPressed(this);
+                ListView.this.onItemPressed(this);
             }
 
             @Override
             public void mouseEntered() {
-                ListView.this.itemEntered(this);
+                ListView.this.onItemEntered(this);
             }
 
             @Override
             public void mouseExited() {
-                ListView.this.itemExited(this);
+                ListView.this.onItemExited(this);
             }
         };
     }
@@ -113,10 +116,8 @@ public class ListView extends JComponent {
     }
 
     public void setColumnWidths(int size, int date) {
-        for (Component item : getComponents()) {
-            if (item instanceof FileItem) {
-                ((FileItem) item).setLabelWidths(size, date);
-            }
+        for (FileItem item : fileList) {
+            item.setLabelWidths(size, date);
         }
     }
 
@@ -126,11 +127,6 @@ public class ListView extends JComponent {
 
     public boolean getSortAscending() {
         return sortAscending;
-    }
-
-    public void setSorting(int number, boolean ascending) {
-        sortNumber = number;
-        sortAscending = ascending;
     }
 
     public void sort(int number, boolean ascending) {
@@ -289,13 +285,17 @@ public class ListView extends JComponent {
         }
     }
 
-    public void itemClicked(FileItem item, MouseEvent e) { }
+    public void onItemClicked(FileItem item, MouseEvent e) {
+    }
 
-    public void itemPressed(FileItem item) {  }
+    public void onItemPressed(FileItem item) {
+    }
 
-    public void itemEntered(FileItem item) { }
+    public void onItemEntered(FileItem item) {
+    }
 
-    public void itemExited(FileItem item) { }
+    public void onItemExited(FileItem item) {
+    }
 
     private int getNearestItemIndex(String fileName) {
         int len = fileName.length();
@@ -321,6 +321,26 @@ public class ListView extends JComponent {
         if (idx >= 0) {
             return fileList.get(idx);
         }
+        return null;
+    }
+
+    public FileItem getItemByFile(File f) {
+        if (f != null)
+            for (FileItem item : fileList) {
+                if (item.getFile().compareTo(f) == 0) {
+                    return item;
+                }
+            }
+        return null;
+    }
+
+    public FileItem getItemByFileName(String fileName) {
+        if (fileName != null && !"".equals(fileName))
+            for (FileItem item : fileList) {
+                if (item.getFile().getName().compareToIgnoreCase(fileName) == 0) {
+                    return item;
+                }
+            }
         return null;
     }
 

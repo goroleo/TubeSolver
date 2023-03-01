@@ -198,7 +198,7 @@ public class FileListHeader extends JComponent {
                             sizeWidth = headerWidth - nameWidth - dateWidth;
                         }
                     }
-                    updateWidths();
+                    updateColumnWidths();
                 }
             }
         });
@@ -219,15 +219,15 @@ public class FileListHeader extends JComponent {
                             case 1: // name label
                                 sizeWidth = 75;
                                 dateWidth = 110;
-                                updateWidths();
+                                updateColumnWidths();
                                 break;
                             case 2: // size label
                                 sizeWidth = 75;
-                                updateWidths();
+                                updateColumnWidths();
                                 break;
                             case 3: // date label
                                 dateWidth = 110;
-                                updateWidths();
+                                updateColumnWidths();
                                 break;
                             default:
                                 break;
@@ -275,7 +275,7 @@ public class FileListHeader extends JComponent {
         height = 24;
         super.setSize(width, height);
         stateLayer.setSize(width, height);
-        updateWidths();
+        updateColumnWidths();
     }
 
     /**
@@ -283,7 +283,7 @@ public class FileListHeader extends JComponent {
      * Date & Size columns will save them widths if it is possible.
      * Finally, it makes FileList to resize its components as well.
      */
-    public void updateWidths() {
+    public void updateColumnWidths() {
         headerWidth = getWidth();
         nameWidth = headerWidth - sizeWidth - dateWidth;
 
@@ -324,7 +324,7 @@ public class FileListHeader extends JComponent {
      * @param size width of the Size column
      * @param date width of the Date column
      */
-    public void setWidths(int name, int size, int date) {
+    public void setColumnWidths(int name, int size, int date) {
         dateWidth = date;
         sizeWidth = size;
         setSize(name + dateWidth + sizeWidth, getHeight());

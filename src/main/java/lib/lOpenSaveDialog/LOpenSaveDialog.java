@@ -22,10 +22,7 @@ import static lib.lOpenSaveDialog.OpenSavePanel.*;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
- * @author leogoro
- * <p>
- * Color dialog Window. it creates the window and place CoorPanel into the
- * window.
+ * OpenSave file chooser dialog.
  */
 public class LOpenSaveDialog extends JDialog {
 
@@ -92,7 +89,7 @@ public class LOpenSaveDialog extends JDialog {
                 && Options.osdSizeX <= r.width
                 && Options.osdSizeY <= r.height) {
             setSize(Options.osdSizeX, Options.osdSizeY);
-            osPan.restoreHeader(Options.osdSizeX - 37, Options.osdSizeColS, Options.osdSizeColD);
+            osPan.setColumnWidths(Options.osdSizeX - 37, Options.osdSizeColS, Options.osdSizeColD);
         } else {
             setSize(defaultWidth, defaultHeight);
         }

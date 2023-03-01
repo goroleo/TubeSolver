@@ -24,7 +24,8 @@ public class FilesPanel extends JComponent implements FolderListener {
     private final FileListHeader header;
     private final ScrollBar scrollbar;
 
-    private final JComponent viewport = new JComponent() {};
+    private final JComponent viewport = new JComponent() {
+    };
 
 
     private final Border border = BorderFactory.createCompoundBorder(
@@ -62,7 +63,7 @@ public class FilesPanel extends JComponent implements FolderListener {
         viewport.add(fileList);
         add(viewport);
 
-        scrollbar = new ScrollBar(ScrollBar.VERTICAL) {
+        scrollbar = new ScrollBar() {
             @Override
             public void onChangePosition() {
                 fileList.setLocation(0, -scrollbar.getPosition());
@@ -71,6 +72,15 @@ public class FilesPanel extends JComponent implements FolderListener {
             @Override
             public boolean isActive() {
                 return !osPan.isFoldersPanelVisible();
+            }
+
+            @Override
+            public void mouseClicked(int mousePos) {
+                if (!osPan.isFoldersPanelVisible()) {
+                    super.mouseClicked(mousePos);
+                } else {
+                    osPan.showFoldersPanel(false);
+                }
             }
         };
         add(scrollbar);
@@ -124,7 +134,7 @@ public class FilesPanel extends JComponent implements FolderListener {
                         break;
                     case KeyEvent.VK_ENTER:
                         if (getCurrentItem() != null) {
-                            fileList.itemClicked(getCurrentItem(), 1, 2);
+                            fileList.clickItem(getCurrentItem(), 1, 2);
                         }
                         break;
                     case KeyEvent.VK_F5:
@@ -152,7 +162,9 @@ public class FilesPanel extends JComponent implements FolderListener {
 
     }
 
-    /** Updates components size and location due to panel resized. */
+    /**
+     * Updates components size and location due to panel resized.
+     */
     public void updateComponents() {
         // client area width and height
         int w = getWidth() - 4;
@@ -161,7 +173,7 @@ public class FilesPanel extends JComponent implements FolderListener {
         // First we need to determine if the scroll bar will be visible.
         // This depends on the height of the FileList and height of the visible area.
         // Just set range values to the scroll bar and check its visibility.
-        scrollbar.setValues(0, fileList.getHeight(), fileList.getItemHeight(), h - header.getHeight() - 1);
+        scrollbar.setValues(0, fileList.getHeight(), h - header.getHeight() - 1);
 
         // sbWidth is the width of the scroll bar
         int sbWidth = (scrollbar.isVisible()) ? 11 : 0;
@@ -189,6 +201,7 @@ public class FilesPanel extends JComponent implements FolderListener {
 
     /**
      * Gets widths of file list columns.
+     *
      * @param colNumber column number
      * @return width of this column in pixels
      */
@@ -212,6 +225,11 @@ public class FilesPanel extends JComponent implements FolderListener {
         }
     }
 
+    public void setColumnWidths(int name, int size, int date) {
+        header.setColumnWidths(name, size, date);
+    }
+
+
     public void refreshFolder() {
         updateFolder(current.getFolder());
     }
@@ -224,10 +242,6 @@ public class FilesPanel extends JComponent implements FolderListener {
     public void sortFileList(int sortNumber, boolean ascending) {
         fileList.sort(sortNumber, ascending);
         scrollbar.scrollToComponent(fileList.getCurrentItem());
-    }
-
-    public void setSorting(int number, boolean ascending) {
-        fileList.setSorting(number, ascending);
     }
 
     public int getSortNumber() {
@@ -246,10 +260,6 @@ public class FilesPanel extends JComponent implements FolderListener {
         osPan.setFileName(file);
     }
 
-    public void restoreHeader(int name, int size, int date) {
-        header.setWidths(name, size, date);
-    }
-
     public void scrollToFile(String s) {
         FileItem item = fileList.getNearestItem(s);
         if (item != null) {
@@ -261,7 +271,7 @@ public class FilesPanel extends JComponent implements FolderListener {
     public void updateFolder(File folder) {
         boolean b = scrollbar.isVisible();
         fileList.setFolder(folder);
-        scrollbar.setValues(0, fileList.getHeight(), fileList.getItemHeight(), getHeight() - header.getHeight() - 5);
+        scrollbar.setValues(0, fileList.getHeight(), getHeight() - header.getHeight() - 5);
         scrollbar.setPosition(0);
         fileList.setLocation(0, 0);
         if (scrollbar.isVisible() != b)

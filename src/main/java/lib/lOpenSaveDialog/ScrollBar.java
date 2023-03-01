@@ -1,74 +1,130 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package lib.lOpenSaveDialog;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import javax.swing.JComponent;
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 
+/**
+ * A scroll bar component with my exterior.
+ */
 public class ScrollBar extends JComponent {
 
-    private int scrollBarType = ScrollBar.VERTICAL;
+    /**
+     * Type of the ScrollBar. Can be VERTICAL or HORIZONTAL.
+     */
+    private int scrollBarType;
+
+    /**
+     * A constant for the Vertical type of the ScrollBar.
+     */
     public static final int VERTICAL = 1;
+
+    /**
+     * A constant for the Horizontal type of the ScrollBar.
+     */
     public static final int HORIZONTAL = 2;
 
-    private int scrollBarXSize = 100;
-    private int scrollBarYSize = 10;
-    private float viewScale;
+    /**
+     * Scale of the track bar.
+     */
     private float trackScale;
-    private float trackBarStart;
-    private float trackBarLength;
-    private boolean trackDragged;
-    private double dragStartPos;
-    private boolean hovered = false;
 
+    /**
+     * The start point of the track bar based on the current position of the ScrollBar.
+     */
+    private float trackBarStart;
+
+    /**
+     * The length of the track bar based on the current scale.
+     */
+    private float trackBarLength;
+
+    /**
+     * This will be <i>true</i> if the track bar is being dragged with the mouse.
+     */
+    private boolean trackDragged;
+
+    /**
+     * The starting position of the track bar when it begins to be dragged.
+     */
+    private double dragStartPos;
+
+    /**
+     * Indicates whether the mouse cursor is over the ScrollBar.
+     */
+    private boolean mouseOver = false;
+
+    /**
+     * Maximal value of the ScrollBar.
+     */
     private int maxValue = 100;
+
+    /**
+     * Minimal value of the ScrollBar.
+     */
     private int minValue = 0;
-    private int incValue = 1;
+
+    /**
+     * The single-screen (or single-page) value. The size of the "viewable" area.
+     */
     private int viewValue = 10;
+
+    /**
+     * The current position of the ScrollBar.
+     */
     private int position = 0;
 
-    private final Color clrHoveredTrackBar = new Color(0xb8cfe5);
-    private final Color clrHoveredScrollBar = Color.GRAY;
+    /**
+     * The color of the TrackBar when the mouse is over the component.
+     */
+    private final Color clrMouseOverTrackBar = new Color(0xb8cfe5);
+
+    /**
+     * The color of the ScrollBar when the mouse is over the component.
+     */
+    private final Color clrMouseOverScrollBar = Color.GRAY;
+
+    /**
+     * Default TrackBar color.
+     */
     private final Color clrDefaultTrackBar = Color.GRAY;
+
+    /**
+     * Default ScrollBar color.
+     */
     private final Color clrDefaultScrollBar = Color.DARK_GRAY;
 
-    public ScrollBar(int sbType) {
-        this();
-        setScrollBarType(sbType);
+    /**
+     * Creates the ScrollBar with the VERTICAL type as default.
+     */
+    public ScrollBar() {
+        this(VERTICAL);
     }
 
-    public ScrollBar() {
-
+    /**
+     * Creates the ScrollBar.
+     *
+     * @param sbType the type of the ScrollBar: VERTICAL or HORIZONTAL.
+     */
+    public ScrollBar(int sbType) {
+        setScrollBarType(sbType);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (isActive()) {
-                    if (getParent() != null) {
-                        getParent().requestFocus();
-                    }
-                    if (e.getButton() == MouseEvent.BUTTON1) {
-                        int mousePos = (scrollBarType == VERTICAL) ? e.getY() : e.getX();
-                        if (mousePos < trackBarStart) {
-                            scrollPageUp();
-                        } else if (mousePos > trackBarStart + trackBarLength) {
-                            scrollPageDown();
-                        }
-                    }
-                } else {
-                    osPan.showFoldersPanel(false);
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    int mousePos = (scrollBarType == VERTICAL) ? e.getY() : e.getX();
+                    ScrollBar.this.mouseClicked(mousePos);
                 }
             }
 
@@ -94,7 +150,7 @@ public class ScrollBar extends JComponent {
                 trackDragged = false;
                 if (e.getX() < 0 || e.getX() >= ScrollBar.this.getWidth()
                         || e.getY() < 0 || e.getY() >= ScrollBar.this.getHeight()) {
-                    hovered = false;
+                    mouseOver = false;
                     repaint();
                 }
             }
@@ -102,7 +158,7 @@ public class ScrollBar extends JComponent {
             @Override
             public void mouseEntered(MouseEvent e) {
                 if (isActive()) {
-                    hovered = true;
+                    mouseOver = true;
                     repaint();
                 }
             }
@@ -110,7 +166,7 @@ public class ScrollBar extends JComponent {
             @Override
             public void mouseExited(MouseEvent e) {
                 if (!trackDragged) {
-                    hovered = false;
+                    mouseOver = false;
                     repaint();
                 }
             }
@@ -124,10 +180,24 @@ public class ScrollBar extends JComponent {
                     setPosition((int) ((mousePos - dragStartPos) / trackScale));
                 }
             }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (isActive()) {
+                    mouseOver = true;
+                    repaint();
+                }
+            }
         }); // MouseMotionListener
     }
 
+    /**
+     * Sets the type of the scrollbar: vertical or horizontal.
+     *
+     * @param sbType new type of the scrollbar.
+     */
     public void setScrollBarType(int sbType) {
+        sbType = (sbType == HORIZONTAL) ? HORIZONTAL : VERTICAL;
         if (scrollBarType != sbType) {
             scrollBarType = sbType;
             repaint();
@@ -137,13 +207,6 @@ public class ScrollBar extends JComponent {
     @Override
     public void setSize(int w, int h) {
         super.setSize(w, h);
-        if (scrollBarType == VERTICAL) {
-            scrollBarXSize = h;
-            scrollBarYSize = w;
-        } else {
-            scrollBarXSize = w;
-            scrollBarYSize = h;
-        }
         updateScale();
         if (isVisible()) {
             repaint();
@@ -168,12 +231,18 @@ public class ScrollBar extends JComponent {
         }
     }
 
-    public void setValues(int min, int max, int incSize, int viewSize) {
+    /**
+     * Sets three properties of the scroll bar values.
+     *
+     * @param min  minimal value.
+     * @param max  maximal value.
+     * @param view size of the "viewable" area.
+     */
+    public void setValues(int min, int max, int view) {
 
         minValue = min;
         maxValue = max;
-        incValue = incSize;
-        viewValue = viewSize;
+        viewValue = view;
 
         updateScale();
 
@@ -182,33 +251,46 @@ public class ScrollBar extends JComponent {
         }
     }
 
+    /**
+     * Updates scrollbar scales, trackbar length and other values.
+     */
     private void updateScale() {
-        viewScale = (float) viewValue / (maxValue - minValue);
-        trackScale = (float) scrollBarXSize / (maxValue - minValue);
+        int length = (scrollBarType == VERTICAL) ? getHeight() : getWidth();
+        float viewScale = (float) viewValue / (maxValue - minValue);
+        trackScale = (float) length / (maxValue - minValue);
 
         if (viewScale >= 1.0f) {
-            viewScale = 1.0f;
-            trackBarLength = scrollBarXSize;
+            trackBarLength = length;
             trackBarStart = 0;
             setVisible(false);
         } else {
-            trackBarLength = scrollBarXSize * viewScale;
+            trackBarLength = length * viewScale;
             setVisible(true);
             setPosition(position);
         }
     }
 
+    /**
+     * Gets the current scrollbar position.
+     *
+     * @return the position.
+     */
     public int getPosition() {
         return position;
     }
 
+    /**
+     * Sets the current scrollbar position.
+     *
+     * @param pos new position of the scrollbar.
+     */
     public void setPosition(int pos) {
         if (pos < minValue) {
             position = minValue;
         } else if (isVisible() && pos >= maxValue - viewValue) {
-            position = maxValue - viewValue;  
-        } else {                              
-            position = pos;                   
+            position = maxValue - viewValue;
+        } else {
+            position = pos;
         }
         trackBarStart = trackScale * (position - minValue);
         if (isVisible()) {
@@ -217,24 +299,47 @@ public class ScrollBar extends JComponent {
         onChangePosition();
     }
 
-    public void onChangePosition() {}
+    /**
+     * Catches position change events. Used to override and to respond to position changes.
+     */
+    public void onChangePosition() {
+    }
 
+    /**
+     * Scrolls to the very first position.
+     */
     public void scrollToFirst() {
         setPosition(minValue);
     }
 
+    /**
+     * Scrolls to the very last position.
+     */
     public void scrollToLast() {
         setPosition(maxValue - (int) (trackBarLength / trackScale));
     }
 
+    /**
+     * Scrolls to the previous page/view.
+     */
     public void scrollPageUp() {
         setPosition(position - viewValue);
     }
 
+    /**
+     * Scrolls to the next page/view.
+     */
     public void scrollPageDown() {
         setPosition(position + viewValue);
     }
 
+    /**
+     * Checks if the specific area is visible.
+     *
+     * @param minPos start position of the area.
+     * @param maxPos end position of the area.
+     * @return true if the area is visible, false otherwise.
+     */
     public boolean isAreaVisible(int minPos, int maxPos) {
         if (minPos > maxPos) {
             int temp = maxPos;
@@ -244,6 +349,12 @@ public class ScrollBar extends JComponent {
         return !(minPos < position || maxPos > position + viewValue);
     }
 
+    /**
+     * Scrolls so that a specific area is visible.
+     *
+     * @param minPos start position of the area.
+     * @param maxPos end position of the area.
+     */
     public void scrollToArea(int minPos, int maxPos) {
         if (minPos > maxPos) {
             int temp = maxPos;
@@ -257,6 +368,11 @@ public class ScrollBar extends JComponent {
         }
     }
 
+    /**
+     * Scrolls so that a specific component is visible.
+     *
+     * @param c a component to be visible.
+     */
     public void scrollToComponent(Component c) {
         if (c != null) {
             if (scrollBarType == VERTICAL) {
@@ -267,20 +383,42 @@ public class ScrollBar extends JComponent {
         }
     }
 
+    /**
+     * Returns the current state of the ScrollBar activity. You can override it to
+     * add more reasons to be inactive.
+     *
+     * @return true if the scrollbar is active, false otherwise.
+     */
     public boolean isActive() {
         return true;
     }
-     
+
+    /**
+     * Catches the mouse click event.
+     *
+     * @param mousePos mouse cursor position
+     */
+    public void mouseClicked(int mousePos) {
+        if (getParent() != null) {
+            getParent().requestFocus();
+        }
+        if (mousePos < trackBarStart) {
+            scrollPageUp();
+        } else if (mousePos > trackBarStart + trackBarLength) {
+            scrollPageDown();
+        }
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         int start = Math.round(trackBarStart);
         int end = Math.round(trackBarStart + trackBarLength);
         if (end == start) end++;
         if (scrollBarType == VERTICAL) {
-            if (hovered) {
-                g.setColor(clrHoveredScrollBar);
+            if (mouseOver) {
+                g.setColor(clrMouseOverScrollBar);
                 g.fillRect(0, 0, getWidth(), getHeight());
-                g.setColor(clrHoveredTrackBar);
+                g.setColor(clrMouseOverTrackBar);
                 g.fillRect(0, start, getWidth(), end - start);
             } else {
                 int size = getWidth() / 2;
@@ -290,10 +428,10 @@ public class ScrollBar extends JComponent {
                 g.fillRect(getWidth() - size, start, size, end - start);
             }
         } else { // scrollBarType == HORIZONTAL
-            if (hovered) {
-                g.setColor(clrHoveredScrollBar);
+            if (mouseOver) {
+                g.setColor(clrMouseOverScrollBar);
                 g.fillRect(0, 0, getWidth(), getHeight());
-                g.setColor(clrHoveredTrackBar);
+                g.setColor(clrMouseOverTrackBar);
                 g.fillRect(start, 0, end - start, getHeight());
             } else {
                 int size = getHeight() / 2;

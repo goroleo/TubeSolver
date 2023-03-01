@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import static lib.lOpenSaveDialog.LOpenSaveDialog.dialogMode;
 
@@ -38,7 +39,9 @@ public class OpenSavePanel extends JComponent {
      */
     public static final String DEFAULT_EXT = ".jctl";
 
-    /** Access to the current file system.
+    /**
+     * Access to the current file system.
+     *
      * @see FileSystemView
      */
     public static final FileSystemView fsv = FileSystemView.getFileSystemView();
@@ -49,33 +52,78 @@ public class OpenSavePanel extends JComponent {
      * and current file have changed.
      */
     public static FolderChanger current = new FolderChanger();
-    private final JLabel folderLabel = new JLabel(ResStrings.getString("strFolder"));
-    private final FilesPanel filesPanel;
-    private final ToolButtonsPanel toolsPanel;
-    private final FoldersPanel foldersPanel;
-    private final FoldersDropDown foldersDropDown;
-    private final FileEditPanel fileEditPanel;
 
-    private final boolean showButtons;
+    /**
+     * Dialog controls: A Folder label. Displays the word "Folder".
+     */
+    private final JLabel folderLabel = new JLabel(ResStrings.getString("strFolder"));
+
+    /**
+     * Dialog controls: A Tools Panel. Displays a small panel with tool buttons.
+     */
+    private final ToolsPanel toolsPanel;
+
+    /**
+     * Dialog controls: A Folder Drop Down control. Displays the current folder in a combo box.
+     */
+    private final FoldersDropDown foldersDropDown;
+
+    /**
+     * Dialog controls: A Folders Panel. Displays the drop-down list of folders below the current folders name.
+     */
+    private final FoldersPanel foldersPanel;
+
+    /**
+     * Dialog controls: A Files Panel. Displays the current folder's list of files.
+     */
+    private final FilesPanel filesPanel;
+
+    /**
+     * Dialog controls: A File Edit Panel. Displays and edits a name of the current file.
+     */
+    private final FileEditPanel fileEditPanel;
 
     /**
      * Dialog controls: OK button. The dialog panel has an option to hide
-     * buttons, using <b>showButtons</b> parameter on the constructor.
+     * buttons, using <b>showButtons</b> parameter at the constructor.
      */
     private LPictureButton btnOk;
 
     /**
      * Dialog controls: CANCEL button. The dialog panel has an option to hide
-     * buttons, using <b>showButtons</b> parameter on the constructor.
+     * buttons, using <b>showButtons</b> parameter at the constructor.
      */
     private LPictureButton btnCancel;
 
-    public  JDialog dlgFrame;
-    public static BufferedImage lnFrameIcon;   // Dialog icon
-    public static BufferedImage imgBtnDown;    // ButtonDown image for foldersDropDown
-    public static BufferedImage imgBtnUp;      // ButtonUp image for foldersDropDown  ))
-    public static ImageIcon jctlIcon;          // Icon for JCTL files
-    public static Cursor cursorResize;         // Cursor for FileListHeader
+    /**
+     * Parent dialog frame used to access it from other controls (i.e. from buttons).
+     */
+    public JDialog dlgFrame;
+
+    /**
+     * An icon of this dialog frame
+     */
+    public static BufferedImage lnFrameIcon;
+
+    /**
+     * An ButtonDown image for foldersDropDown and FileList sort indicator
+     */
+    public static BufferedImage imgBtnDown;
+
+    /**
+     * An ButtonUp image for foldersDropDown and FileList sort indicator
+     */
+    public static BufferedImage imgBtnUp;
+
+    /**
+     * JCTL files icon image
+     */
+    public static ImageIcon jctlIcon;
+
+    /**
+     * A special cursor image for FileListHeader
+     */
+    public static Cursor cursorResize;
 
     /**
      * Constructor. <br>
@@ -90,7 +138,6 @@ public class OpenSavePanel extends JComponent {
         setForeground(null);
         loadResources();
 
-        this.showButtons = showButtons;
         folderLabel.setBackground(null);
         folderLabel.setForeground(null);
         folderLabel.setFont(folderLabel.getFont().deriveFont(0, 12.0f));
@@ -105,31 +152,36 @@ public class OpenSavePanel extends JComponent {
         foldersDropDown = new FoldersDropDown();
         add(foldersDropDown);
 
-        toolsPanel = new ToolButtonsPanel();
+        toolsPanel = new ToolsPanel();
         add(toolsPanel);
 
         fileEditPanel = new FileEditPanel();
         add(fileEditPanel);
 
         if (showButtons) {
-            btnOk = addButton((dialogMode == LOpenSaveDialog.SAVE_MODE)
-                    ? ResStrings.getString("strSave") : ResStrings.getString("strOpen"));
+            btnOk = new LPictureButton(this);
+            btnOk.setBackground(null);
+            btnOk.setForeground(null);
+            updateButtonCaption();
             btnOk.addActionListener((ActionEvent e) -> confirmAndClose());
             add(btnOk);
 
-            btnCancel = addButton(ResStrings.getString("strCancel"));
+            btnCancel = new LPictureButton(this);
+            btnCancel.setText(ResStrings.getString("strCancel"));
+            btnCancel.setBackground(null);
+            btnCancel.setForeground(null);
             btnCancel.addActionListener((ActionEvent e) -> refuseAndClose());
             add(btnCancel);
         }
 
         if (Options.osdSortCol > 0 && Options.osdSortCol < 4
                 && Options.osdSortOrder >= 0 && Options.osdSortOrder <= 1) {
-            setFileSorting(Options.osdSortCol, Options.osdSortOrder == 1);
+            sortFileList(Options.osdSortCol, Options.osdSortOrder == 1);
         }
 
         showFoldersPanel(false);
 
-        // add listeners
+        // add listeners after all components are created
         current.addFolderListener(foldersPanel);
         current.addFolderListener(filesPanel);
         current.addFolderListener(foldersDropDown);
@@ -144,16 +196,12 @@ public class OpenSavePanel extends JComponent {
                 }
             }
         });
-
-
     }
 
-    public void updateButtonCaption() {
-        if (showButtons) {
-            btnOk.setText((dialogMode == LOpenSaveDialog.SAVE_MODE)
-                    ? ResStrings.getString("strSave")
-                    : ResStrings.getString("strOpen"));
-        }
+    @Override
+    public void setSize(int w, int h) {
+        super.setSize(w, h);
+        updateComponents();
     }
 
     public void updateComponents() {
@@ -162,13 +210,11 @@ public class OpenSavePanel extends JComponent {
         FontMetrics fm;
 
         // buttons Ok & Cancel
-        if (showButtons) {
-            if (btnOk != null) {
-                btnOk.setLocation(w - 215, h - 45);
-            }
-            if (btnCancel != null) {
-                btnCancel.setLocation(w - 105, h - 45);
-            }
+        if (btnOk != null) {
+            btnOk.setLocation(w - 215, h - 45);
+        }
+        if (btnCancel != null) {
+            btnCancel.setLocation(w - 105, h - 45);
         }
 
         // ToolButtons panel
@@ -191,7 +237,7 @@ public class OpenSavePanel extends JComponent {
                 }
 
                 if (fileEditPanel != null) {
-                    fileEditPanel.setLocation(10, getHeight() - ((showButtons) ? 45 : 0) - 20 - fileEditPanel.getHeight());
+                    fileEditPanel.setLocation(10, getHeight() - ((btnOk != null) ? 45 : 0) - 20 - fileEditPanel.getHeight());
                     fileEditPanel.fieldEnd = foldersDropDown.getX() + foldersDropDown.getWidth();
                     fileEditPanel.setSize(w - 20, fileEditPanel.getHeight());
 
@@ -204,27 +250,95 @@ public class OpenSavePanel extends JComponent {
         }
     }
 
-    @Override
-    public void setSize(int w, int h) {
-        super.setSize(w, h);
-        updateComponents();
+    /**
+     * @return a state of the FoldersPanel visibility, true or false
+     */
+    public boolean isFoldersPanelVisible() {
+        return foldersPanel.isVisible();
     }
 
-    public void restoreHeader(int name, int size, int date) {
-        if (size >= 50 && date >= 50 && name >= 50) {
-            filesPanel.restoreHeader(name, size, date);
+    /**
+     * Shows or hides Folders Panel.
+     *
+     * @param b <i>true</i> to show the folders panel, <i>false</i> to hide it.
+     */
+    public void showFoldersPanel(boolean b) {
+        showFoldersPanel(null, b);
+    }
+
+    /**
+     * Shows and hides Folders Panel.
+     *
+     * @param invoker a component that will be focused after the folder panel will hide.
+     *                If Invoker is null, the <i>FilesList</i> will be focused.
+     *                This parameter used if FoldersPanel goes to hide only.
+     * @param b       <i>true</i> to show the folders panel, <i>false</i> to hide it.
+     */
+    public void showFoldersPanel(JComponent invoker, boolean b) {
+        if (foldersPanel.isVisible() != b) {
+            foldersPanel.setVisible(b);
+            foldersPanel.setFocusable(b);
+            toolsPanel.setFocusable(!b);
+            filesPanel.setFocusable(!b);
+            fileEditPanel.setFocusable(!b);
+            if (btnOk != null) {
+                btnOk.setFocusable(!b);
+                btnCancel.setFocusable(!b);
+            }
+            if (b) {
+                foldersPanel.requestFocus();
+            } else {
+                Objects.requireNonNullElse(invoker, filesPanel).requestFocus();
+            }
         }
     }
 
+    /**
+     * Gets a width of the one of FileList columns:<ul>
+     * <li>1 - File Name column
+     * <li>2 - File Size column
+     * <li>3 - File Date column</ul>
+     *
+     * @param colNumber the number of the column as described
+     * @return a specified column's width
+     */
+    public int getColumnWidth(int colNumber) {
+        return filesPanel.getColumnWidth(colNumber);
+    }
+
+    /**
+     * Sets the column widths of FileList.
+     *
+     * @param name FileName column width
+     * @param size FileSize column width
+     * @param date FileDate column width
+     */
+    public void setColumnWidths(int name, int size, int date) {
+        if (size >= 50 && date >= 50 && name >= 50) {
+            filesPanel.setColumnWidths(name, size, date);
+        }
+    }
+
+    /**
+     * Updates and refresh the current folder, reload the FilesList contents.
+     */
     public void refreshFolder() {
         filesPanel.refreshFolder();
     }
 
+    /**
+     * Displays the CreateNewFolder dialog.
+     */
     public void createNewFolder() {
         NewFolderDialog newFolderDlg = new NewFolderDialog(dlgFrame);
         newFolderDlg.setVisible(true);
     }
 
+    /**
+     * Sets a new text at the FileEditPanel field when some FilesList item is selected.
+     *
+     * @param f a file selected at the FileList
+     */
     public void setFileName(File f) {
         if (f != null) {
             if (f.isDirectory()) {
@@ -237,60 +351,52 @@ public class OpenSavePanel extends JComponent {
         }
     }
 
+    /**
+     * Scrolls the FilesList to the specified file name.
+     *
+     * @param fn a file name
+     */
     public void scrollToFileName(String fn) {
         filesPanel.scrollToFile(fn);
     }
 
-    public int getColumnWidth(int colNumber) {
-        return filesPanel.getColumnWidth(colNumber);
-    }
-
-    public boolean isFoldersPanelVisible() {
-        return foldersPanel.isVisible();
-    }
-
-    public void setFileSorting(int number, boolean ascending) {
+    /**
+     * Sorts the FilesList.
+     *
+     * @param number    column number to sort the FileList
+     * @param ascending true for ascending order, false for descending.
+     */
+    public void sortFileList(int number, boolean ascending) {
         filesPanel.sortFileList(number, ascending);
     }
 
+    /**
+     * Returns the column number of the File List with the current sort.
+     *
+     * @return the column number
+     */
     public int getFileSortNumber() {
         return filesPanel.getSortNumber();
     }
 
+    /**
+     * Returns the current sort order of the FileList.
+     *
+     * @return true for ascending order, false to descending
+     */
     public boolean getFileSortAscending() {
         return filesPanel.getSortAscending();
     }
 
-    public void showFoldersPanel(boolean b) {
-        showFoldersPanel(null, b);
-    }
-
-    public void showFoldersPanel(JComponent invoker, boolean b) {
-        foldersPanel.setVisible(b);
-        foldersPanel.setFocusable(b);
-        toolsPanel.setFocusable(!b);
-        filesPanel.setFocusable(!b);
-        fileEditPanel.setFocusable(!b);
-        if (showButtons) {
-            btnOk.setFocusable(!b);
-            btnCancel.setFocusable(!b);
+    /**
+     * Updates OK button caption due to change a dialog mode
+     */
+    public void updateButtonCaption() {
+        if (btnOk != null) {
+            btnOk.setText((dialogMode == LOpenSaveDialog.SAVE_MODE)
+                    ? ResStrings.getString("strSave")
+                    : ResStrings.getString("strOpen"));
         }
-        if (b) {
-            foldersPanel.requestFocus();
-        } else {
-            if (invoker != null)
-                invoker.requestFocus();
-            else filesPanel.requestFocus();
-        }
-    }
-
-    private LPictureButton addButton(String txt) {
-        LPictureButton btn = new LPictureButton(this);
-        btn.setText(txt);
-        btn.setBackground(null);
-        btn.setForeground(null);
-        btn.setFocusable(true);
-        return btn;
     }
 
     /**
@@ -312,7 +418,9 @@ public class OpenSavePanel extends JComponent {
 
         // reading the current file/path name value from fileEditPanel
         fName = fileEditPanel.getInputFieldValue().trim();
-        if ("".equals(fName)) return;
+        if ("".equals(fName)) {
+            return;
+        }
 
         try {
             // first we'll check if the folder is in the path string
@@ -357,7 +465,7 @@ public class OpenSavePanel extends JComponent {
                 f = current.findExistingFile();
 
                 if (f != null) { // the file is already exists!
-                    // we have to ask the user for permission to rewrite it.
+                    // we have to ask the user for permission to overwrite it.
                     if (outQuestionMsg(current.getFileName() + "\n\n"
                             + ResStrings.getString("strFileExists"))) {
                         doClose = true;
@@ -375,6 +483,9 @@ public class OpenSavePanel extends JComponent {
         }
     }
 
+    /**
+     * This routine calls when Cancel button clicked.
+     */
     public void refuseAndClose() {
         if (isFoldersPanelVisible()) {
             showFoldersPanel(false);
@@ -385,6 +496,11 @@ public class OpenSavePanel extends JComponent {
         }
     }
 
+    /**
+     * Shows a frame with an error message.
+     *
+     * @param msg message to show.
+     */
     private void outErrorMsg(String msg) {
         MessageDlg msgDlg = new MessageDlg(null,
                 msg,
@@ -395,6 +511,12 @@ public class OpenSavePanel extends JComponent {
         msgDlg.setVisible(true);
     }
 
+    /**
+     * Shows a frame with a question message with YES/NO buttons.
+     *
+     * @param msg a question for the user.
+     * @return true if user has answered YES, false otherwise.
+     */
     private boolean outQuestionMsg(String msg) {
         MessageDlg msgDlg = new MessageDlg(null,
                 msg,
@@ -407,11 +529,10 @@ public class OpenSavePanel extends JComponent {
         return msgDlg.modalResult > 0;
     }
 
-    /////////////////////////////////////////////////////////
-//         
-//         Resources loader     
-//         
-/////////////////////////////////////////////////////////
+// -----------------------------------------------------
+//         Resources loaders
+//
+
     private void loadResources() {
         imgBtnDown = createBufImage("btnTool22_down.png");
         imgBtnUp = createBufImage("btnTool22_up.png");

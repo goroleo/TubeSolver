@@ -124,10 +124,10 @@ public class NewFolderDialog extends JDialog {
     }
 
     private void calculatePos() {
-        Rectangle r = getGraphicsConfiguration().getBounds();
         if (owner != null) {
             setLocationRelativeTo(owner);
         } else {
+            Rectangle r = getGraphicsConfiguration().getBounds();
             r.x = r.x + (r.width - getWidth()) / 2;
             r.y = r.y + (r.height - getHeight()) / 2;
             setLocation(r.x, r.y);

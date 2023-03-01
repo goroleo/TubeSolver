@@ -46,7 +46,7 @@ public class FilesList extends ListView {
         }
     }
 
-    public void itemClicked(FileItem item, int button, int clickCount) {
+    public void clickItem(FileItem item, int button, int clickCount) {
         if (osPan.isFoldersPanelVisible()) {
             osPan.showFoldersPanel(false);
             return;
@@ -63,7 +63,7 @@ public class FilesList extends ListView {
                         } catch (FileNotFoundException ex) {
                             // do nothing
                         }
-                    } else {
+                    } else { // not link
                         current.setFolder(item.getFile());
                     }
                 } else { // not folder and clickCount = 2
@@ -76,24 +76,24 @@ public class FilesList extends ListView {
     }
 
     @Override
-    public void itemClicked(FileItem item, MouseEvent e) {
-        itemClicked(item, e.getButton(), e.getClickCount());
+    public void onItemClicked(FileItem item, MouseEvent e) {
+        clickItem(item, e.getButton(), e.getClickCount());
     }
 
     @Override
-    public void itemPressed(FileItem item) {
+    public void onItemPressed(FileItem item) {
         if (!fPanel.isFocusOwner()) fPanel.requestFocus();
     }
 
     @Override
-    public void itemEntered(FileItem item) {
+    public void onItemEntered(FileItem item) {
         if (!osPan.isFoldersPanelVisible()) {
             setMouseOverItem(item);
         }
     }
 
     @Override
-    public void itemExited(FileItem item) {
+    public void onItemExited(FileItem item) {
         setMouseOverItem(null);
     }
 

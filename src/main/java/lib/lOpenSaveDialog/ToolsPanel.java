@@ -25,7 +25,7 @@ import static lib.lOpenSaveDialog.OpenSavePanel.current;
 /**
  * A small panel with Tool Buttons: FolderUP, FolderRefresh, CreateNewFolder.
  */
-public class ToolButtonsPanel extends JComponent {
+public class ToolsPanel extends JComponent {
 
     /**
      * An array of tool buttons. Change it's size if necessary.
@@ -51,7 +51,7 @@ public class ToolButtonsPanel extends JComponent {
      * A tool panel constructor. It creates tool buttons, adds them to the panel and
      * sets the panel size.
      */
-    public ToolButtonsPanel() {
+    public ToolsPanel() {
         // add button Up Folder
         addButton("up", ResStrings.getString("strFolderUp"));
         // add button Refresh Folder

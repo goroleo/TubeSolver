@@ -47,7 +47,7 @@ public class FoldersPanel extends JComponent implements FolderListener {
         viewport.add(foldersList);
         add(viewport);
 
-        scrollbar = new ScrollBar(ScrollBar.VERTICAL) {
+        scrollbar = new ScrollBar() {
             @Override
             public void onChangePosition() {
                 foldersList.setLocation(0, -scrollbar.getPosition());
@@ -116,14 +116,14 @@ public class FoldersPanel extends JComponent implements FolderListener {
     @Override
     public void setSize(int w, int h) {
         super.setSize(w, h);
-        updateComponents(w, h);
+        updateComponents();
     }
 
-    private void updateComponents(int w, int h) {
-        w = w - 4;
-        h = h - 4;
+    private void updateComponents() {
+        int w = getWidth() - 4;
+        int h = getHeight() - 4;
 
-        scrollbar.setValues(0, foldersList.getHeight(), foldersList.getItemHeight(), h);
+        scrollbar.setValues(0, foldersList.getHeight(), h);
 
         int sbV_width = (scrollbar.isVisible()) ? 11 : 0;
 
@@ -133,12 +133,8 @@ public class FoldersPanel extends JComponent implements FolderListener {
         scrollbar.setSize(sbV_width, h);
         viewport.setSize(w - sbV_width, h);
         foldersList.setSize(viewport.getWidth(), h);
-
+        scrollbar.scrollToComponent(foldersList.getCurrentItem());
         repaint();
-    }
-
-    private void updateComponents() {
-        updateComponents(getWidth(), getHeight());
     }
 
     public int getItemHeight() {
@@ -153,10 +149,9 @@ public class FoldersPanel extends JComponent implements FolderListener {
     @Override
     public void setVisible(boolean b) {
         if (b) {
-            foldersList.setCurrentItem(foldersList.findFolder(current.getFolder()));
-            if (scrollbar.isVisible()) {
-                scrollbar.setPosition(foldersList.getCurrentItem().getY());
-            }
+            // restore current folder selection
+            foldersList.setCurrentItem(foldersList.getItemByFile(current.getFolder()));
+            scrollbar.scrollToComponent(foldersList.getCurrentItem());
         }
         super.setVisible(b);
     }
@@ -169,12 +164,7 @@ public class FoldersPanel extends JComponent implements FolderListener {
 
     @Override
     public void updateFolder(File folder) {
-        boolean b = scrollbar.isVisible();
         foldersList.setFolder(folder);
-        scrollbar.setValues(0, foldersList.getHeight(), foldersList.getItemHeight(), viewport.getHeight());
-        scrollbar.onChangePosition();
-        if (scrollbar.isVisible() != b)
-            updateComponents();
-
+        updateComponents();
     }
 }

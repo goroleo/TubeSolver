@@ -29,7 +29,8 @@ public class FoldersDropDown extends JComponent implements FolderListener {
     private final BufferedImage imgFrame;
 
     private boolean rollover = false;
-    private boolean selected = false;
+
+//    private boolean selected = false; // not used now
     private boolean focused = false;
 
     private final Color selectedBackground = new Color(0xb8cfe5);
@@ -126,11 +127,15 @@ public class FoldersDropDown extends JComponent implements FolderListener {
     public void paintComponent(Graphics g) {
         updateBtn();
 
+   /*
+        // deprecated
         if (selected) {
             g.setColor(selectedBackground);
         } else {
             g.setColor(getBackground());
         }
+    */
+        g.setColor(getBackground());
         g.fillRect(2, 2, getWidth() - 4, getHeight() - 4);
 
         if (rollover) {
@@ -155,11 +160,15 @@ public class FoldersDropDown extends JComponent implements FolderListener {
         int alpha, clr;
         BufferedImage imgSource;
 
+   /*
+        // deprecated
         if (selected) {
             clr = selectedForeground.getRGB();
         } else {
             clr = Color.LIGHT_GRAY.getRGB();
         }
+    */
+        clr = Color.LIGHT_GRAY.getRGB();
 
         if (osPan.isFoldersPanelVisible()) {
             imgSource = OpenSavePanel.imgBtnUp;
