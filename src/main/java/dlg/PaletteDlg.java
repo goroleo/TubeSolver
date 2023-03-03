@@ -10,29 +10,22 @@
 package dlg;
 
 import core.Options;
+import core.ResStrings;
 import gui.ColorButton;
 import gui.MainFrame;
-import static gui.MainFrame.pal;
 import gui.Palette;
 import gui.PalettePanel;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import core.ResStrings;
 import lib.lButtons.LPictureButton;
 import lib.lColorDialog.LColorDialog;
 import run.Main;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import static gui.MainFrame.pal;
 
 /**
  * Dialog to change palette colors.
@@ -58,7 +51,7 @@ public class PaletteDlg extends JDialog {
     public int modalResult = 3;
 
     /** Old palette colors, to restore the palette if the Cancel button will be pressed/clicked.  */
-    private static Color[] oldPalette = new Color[pal.size()-1];
+    private static final Color[] oldPalette = new Color[pal.size()-1];
 
     /** The constructor. Creating a frame of Dialog and adding its components. */
     public PaletteDlg(JFrame owner) {

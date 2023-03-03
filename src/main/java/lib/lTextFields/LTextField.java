@@ -48,7 +48,7 @@ public class LTextField extends JTextField {
                 StringBuilder temp = new StringBuilder();
                 for (int i = 0; i < str.length(); i++) {
                     if (!forbidden.contains(str.substring(i, i + 1))) {
-                        temp.append(str.substring(i, i + 1));
+                        temp.append(str.charAt(i));
                     }
                 }
 

@@ -143,6 +143,7 @@ public class ColorTube extends JComponent {
         active = b;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted") // closed tube is a pretty good tube!
     public boolean isClosed() {
         return closed;
     }

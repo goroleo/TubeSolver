@@ -314,6 +314,7 @@ public class WheelLayer extends JComponent implements Runnable {
         g.drawImage(imgFrame, 0, 0, null);
     }
 
+    @SuppressWarnings("BusyWait")
     @Override
     public void run() {
         while (!doStop) {

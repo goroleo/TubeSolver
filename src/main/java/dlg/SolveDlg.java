@@ -161,7 +161,7 @@ public class SolveDlg extends JDialog {
         contPan.setLayout(null);
 
         wl = new WheelLayer();
-        btn = addButton(0, ResStrings.getString("strCancel"));
+        btn = addButton(ResStrings.getString("strCancel"));
         
         contPan.add(wl);
         contPan.add(btn);
@@ -173,13 +173,13 @@ public class SolveDlg extends JDialog {
         getContentPane().add(contPan);
     }
 
-    private LPictureButton addButton(int number, String aCaption) {
+    private LPictureButton addButton(String aCaption) {
         LPictureButton pb = new LPictureButton(this, "btnDialog");
         pb.setText(aCaption);
         pb.setBackground(null);
         pb.setForeground(null);
         pb.setFocusable(true);
-        pb.addActionListener((ActionEvent e) -> btnClick(number));
+        pb.addActionListener((ActionEvent e) -> btnClick(0));
         return pb;
     }
 

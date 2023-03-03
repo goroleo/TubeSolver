@@ -117,6 +117,7 @@ public class ShadeLayer extends JComponent implements Runnable {
         g.drawImage(imgFrame, 0, 0, null);
     }
 
+    @SuppressWarnings("BusyWait")
     @Override
     public void run() {
         while (!(limited && alpha == alphaLimit)) {
