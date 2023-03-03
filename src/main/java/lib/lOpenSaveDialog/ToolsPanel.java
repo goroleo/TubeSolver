@@ -51,6 +51,7 @@ public class ToolsPanel extends JComponent {
      * A tool panel constructor. It creates tool buttons, adds them to the panel and
      * sets the panel size.
      */
+    @SuppressWarnings("SpellCheckingInspection")
     public ToolsPanel() {
         // add button Up Folder
         addButton("up", ResStrings.getString("strFolderUp"));
@@ -66,6 +67,8 @@ public class ToolsPanel extends JComponent {
 
     /**
      * This routine creates and adds the next ToolButton.
+     * @param imgFName file suffix to get the image from resources
+     * @param hintText hint text to show when the mouse is over this button
      */
     public void addButton(String imgFName, String hintText) {
         int buttonNumber = buttonsCount;

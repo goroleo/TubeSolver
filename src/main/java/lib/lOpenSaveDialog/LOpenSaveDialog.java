@@ -19,7 +19,6 @@ import java.awt.event.*;
 import java.io.File;
 
 import static lib.lOpenSaveDialog.OpenSavePanel.*;
-import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
  * OpenSave file chooser dialog.
@@ -27,14 +26,13 @@ import static lib.lOpenSaveDialog.OpenSavePanel.current;
 public class LOpenSaveDialog extends JDialog {
 
     private final JFrame owner;
-    private final int defaultWidth = 480; // width
-    private final int defaultHeight = 400; // height
     public static int dialogMode;
     public final static int SAVE_MODE = 101;
     public final static int OPEN_MODE = 202;
 
     public static OpenSavePanel osPan;
 
+    @SuppressWarnings("unused")
     public LOpenSaveDialog() {
         this(null, 202, "");
     }
@@ -43,10 +41,12 @@ public class LOpenSaveDialog extends JDialog {
         this(owner, 202, "");
     }
 
+    @SuppressWarnings("unused")
     public LOpenSaveDialog(String fName) {
         this(null, 202, fName);
     }
 
+    @SuppressWarnings("unused")
     public LOpenSaveDialog(int mode) {
         this(null, mode, "");
     }
@@ -55,6 +55,7 @@ public class LOpenSaveDialog extends JDialog {
         this(owner, mode, "");
     }
 
+    @SuppressWarnings("unused")
     public LOpenSaveDialog(int mode, String fName) {
         this(null, mode, fName);
     }
@@ -91,7 +92,8 @@ public class LOpenSaveDialog extends JDialog {
             setSize(Options.osdSizeX, Options.osdSizeY);
             osPan.setColumnWidths(Options.osdSizeX - 37, Options.osdSizeColS, Options.osdSizeColD);
         } else {
-            setSize(defaultWidth, defaultHeight);
+            // sets the default size
+            setSize(480, 400);
         }
 
         calculatePos();
@@ -134,6 +136,7 @@ public class LOpenSaveDialog extends JDialog {
         }
     }
 
+    @SuppressWarnings("MagicConstant")
     private void addListeners() {
 
         // CLOSE WINDOW click

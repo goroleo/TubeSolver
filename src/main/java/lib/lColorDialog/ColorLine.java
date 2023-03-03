@@ -38,7 +38,7 @@ public class ColorLine extends JComponent implements ColorListener {
     private final LineCursorLayer cursorLayer; // for access this layer from another classes
 
     /**
-     * This is an buffered image redrawed when the current color will change.
+     * This is a buffered image redraws when the current color will change.
      */
     private final BufferedImage LineImg = new BufferedImage(W, 256, BufferedImage.TYPE_INT_ARGB);
 
@@ -47,6 +47,7 @@ public class ColorLine extends JComponent implements ColorListener {
      * indicates position of the current color in the Box. <br>
      * <b>curX = 9 always!</b>
      */
+    @SuppressWarnings({"CanBeFinal"})
     private static int curX = 9, curY = 0; // circle cursor position     X=9 always!
 
     /**
@@ -120,18 +121,17 @@ public class ColorLine extends JComponent implements ColorListener {
      * This is a listener for an external color change made by any other
      * control.
      *
-     * @param rgb is the color value that specifies color components
      * @see ColorChanger
      * @see ColorListener
      */
     @Override
-    public void updateColor(int rgb) {
+    public void updateColor() {
         drawLine();
         updateCursorPos();
     }
 
     /**
-     * This sets a color from the current cursor position and than broadcast it
+     * This sets a color from the current cursor position and then broadcast it
      * to all other components.
      *
      * @see ColorChanger
@@ -229,7 +229,8 @@ public class ColorLine extends JComponent implements ColorListener {
         switch (dialogMode) {
 
             case 0: // Hue
-                if (colorScheme == 0) {
+                if (colorScheme == 0)
+                {
                     s = 1.0f;                             // This is the Photoshop's style -  
                     b = 1.0f;                             // HUE line is never change due to current color.
 
@@ -345,7 +346,7 @@ public class ColorLine extends JComponent implements ColorListener {
     /**
      * Graphics layer of the "circle" cursor.
      */
-    private class LineCursorLayer extends JComponent {
+    private static class LineCursorLayer extends JComponent {
 
         public LineCursorLayer() {
             setSize(W + 20, 276);
@@ -393,9 +394,9 @@ public class ColorLine extends JComponent implements ColorListener {
                         curY = 255;
                     }
                     cursorLayer.repaint();
-                    EventQueue.invokeLater(() -> {       // We have to wait until textfields will give us their focus, 
-                        setCurrentColor();               // and then we'll update all other components
-                    });
+                    // We have to wait until textfields will give us their focus,
+                    // and then we'll update all other components
+                    EventQueue.invokeLater(ColorLine.this::setCurrentColor);
                 }
             });
 

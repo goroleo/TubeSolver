@@ -29,8 +29,8 @@ import java.util.Objects;
 import static lib.lOpenSaveDialog.LOpenSaveDialog.dialogMode;
 
 /**
- * This is the main panel to place all other color change controls inside. All
- * controls interact each other through this panel.
+ * This is the main panel to place all other controls inside. All controls interact
+ * each other through this panel.
  */
 public class OpenSavePanel extends JComponent {
 
@@ -51,7 +51,7 @@ public class OpenSavePanel extends JComponent {
      * navigates folders, and notifies all dialog controls when the current folder
      * and current file have changed.
      */
-    public static FolderChanger current = new FolderChanger();
+    public static final FolderChanger current = new FolderChanger();
 
     /**
      * Dialog controls: A Folder label. Displays the word "Folder".
@@ -98,7 +98,7 @@ public class OpenSavePanel extends JComponent {
     /**
      * Parent dialog frame used to access it from other controls (i.e. from buttons).
      */
-    public JDialog dlgFrame;
+    public final JDialog dlgFrame;
 
     /**
      * An icon of this dialog frame
@@ -132,6 +132,7 @@ public class OpenSavePanel extends JComponent {
      *                    controls (i.e. from buttons).
      * @param showButtons true or false
      */
+    @SuppressWarnings("MagicConstant")
     public OpenSavePanel(JDialog ownerFrame, boolean showButtons) {
         dlgFrame = ownerFrame;
         setBackground(null);
@@ -201,13 +202,10 @@ public class OpenSavePanel extends JComponent {
     @Override
     public void setSize(int w, int h) {
         super.setSize(w, h);
-        updateComponents();
-    }
 
-    public void updateComponents() {
-        int w = getWidth();
-        int h = getHeight();
-        FontMetrics fm;
+        // Then we have to update the size and location of components.
+        // The layout of the components mostly depends on the other components,
+        // so we'll check if they are created already.
 
         // buttons Ok & Cancel
         if (btnOk != null) {
@@ -222,7 +220,7 @@ public class OpenSavePanel extends JComponent {
 
         // Folder Label
         if (folderLabel != null) {
-            fm = folderLabel.getFontMetrics(folderLabel.getFont());
+            FontMetrics fm = folderLabel.getFontMetrics(folderLabel.getFont());
             folderLabel.setSize(fm.stringWidth(folderLabel.getText()), fm.getHeight());
             folderLabel.setLocation(10, 10 + (26 - fm.getHeight()) / 2);
 
@@ -231,16 +229,19 @@ public class OpenSavePanel extends JComponent {
                 foldersDropDown.setLocation(20 + folderLabel.getWidth(), 10);
                 foldersDropDown.setSize(w - 40 - toolsPanel.getWidth() - folderLabel.getWidth(), 26);
 
+                // Folders Panel
                 if (foldersPanel != null) {
                     foldersPanel.setLocation(foldersDropDown.getX(), foldersDropDown.getY() + foldersDropDown.getHeight() + 2);
                     foldersPanel.setSize(foldersDropDown.getWidth(), foldersPanel.getItemHeight() * 8 + 4);
                 }
 
+                // File Edit Panel
                 if (fileEditPanel != null) {
                     fileEditPanel.setLocation(10, getHeight() - ((btnOk != null) ? 45 : 0) - 20 - fileEditPanel.getHeight());
                     fileEditPanel.fieldEnd = foldersDropDown.getX() + foldersDropDown.getWidth();
                     fileEditPanel.setSize(w - 20, fileEditPanel.getHeight());
 
+                    // File List Panel
                     if (filesPanel != null) {
                         filesPanel.setLocation(10, foldersDropDown.getY() + foldersDropDown.getHeight() + 10);
                         filesPanel.setSize(w - 20, fileEditPanel.getY() - 10 - filesPanel.getY());
@@ -478,7 +479,7 @@ public class OpenSavePanel extends JComponent {
         }
 
         if (doClose) {
-            EventQueue.invokeLater(() -> dlgFrame.dispose());
+            EventQueue.invokeLater(dlgFrame::dispose);
             ((LOpenSaveDialog) dlgFrame).saveOptions();
         }
     }
@@ -491,7 +492,7 @@ public class OpenSavePanel extends JComponent {
             showFoldersPanel(false);
         } else {
             current.setFile("");
-            EventQueue.invokeLater(() -> dlgFrame.dispose());
+            EventQueue.invokeLater(dlgFrame::dispose);
             ((LOpenSaveDialog) dlgFrame).saveOptions();
         }
     }
@@ -533,6 +534,7 @@ public class OpenSavePanel extends JComponent {
 //         Resources loaders
 //
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void loadResources() {
         imgBtnDown = createBufImage("btnTool22_down.png");
         imgBtnUp = createBufImage("btnTool22_up.png");
@@ -555,6 +557,7 @@ public class OpenSavePanel extends JComponent {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private ImageIcon createIconImage(String FName) {
         java.net.URL url = this.getClass().getResource("/img/" + FName);
         if (url != null) {

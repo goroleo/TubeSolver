@@ -15,6 +15,6 @@ package lib.lColorDialog;
  * Nothing to discribe... ))
  */
 public interface ColorListener {
-    void updateColor(int rgb);
+    void updateColor();
 }
 

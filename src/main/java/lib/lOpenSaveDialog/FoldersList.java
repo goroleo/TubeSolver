@@ -40,14 +40,7 @@ public class FoldersList extends ListView {
     /**
      * The parent panel for access its possibilities.
      */
-    private final FoldersPanel fPanel;
-
-    /**
-     * Creates the Folder List with no parent.
-     */
-    public FoldersList() {
-        this(null);
-    }
+    private final FoldersPanel foldersPanel;
 
     /**
      * Creates the Folder List.
@@ -56,7 +49,7 @@ public class FoldersList extends ListView {
      */
     public FoldersList(FoldersPanel owner) {
         super();
-        fPanel = owner;
+        foldersPanel = owner;
         setItemHeight(22);
         fillRoots();
     }
@@ -137,29 +130,29 @@ public class FoldersList extends ListView {
      * Fills the ListView's FileList as a composition of two lists (roots and paths).
      */
     private void fillFileList() {
-        getFileList().clear();
+        getList().clear();
 
         if (!rootsList.isEmpty()) {
 
             for (FileItem rootItem : rootsList) {
-                getFileList().add(rootItem);
+                getList().add(rootItem);
                 if (rootItem == currentRoot && !foldersList.isEmpty()) {
                     for (FileItem pathItem : foldersList) {
-                        getFileList().add(pathItem);
+                        getList().add(pathItem);
                     }
                 }
             }
 
         } else { // root list is empty, just add items from paths list
             for (FileItem pathItem : foldersList) {
-                getFileList().add(pathItem);
+                getList().add(pathItem);
             }
         }
         updateView();
     }
 
     /**
-     * Sets the current folder. It fills the Paths list,  It scans the current folder path, finds the correct
+     * Sets the current folder. It fills the Paths list, scans the current folder path, finds the correct
      * root for the folder, and inserts the list of paths into the right place.
      *
      * @param folder - current folder
@@ -173,7 +166,7 @@ public class FoldersList extends ListView {
 
     @Override
     public void onItemClicked(FileItem item, MouseEvent e) {
-        fPanel.chooseFolder(item);
+        foldersPanel.chooseFolder(item);
     }
 
     @Override
@@ -183,8 +176,8 @@ public class FoldersList extends ListView {
 
     @Override
     public void onItemPressed(FileItem item) {
-        if (!fPanel.isFocusOwner()) {
-            fPanel.requestFocus();
+        if (!foldersPanel.isFocusOwner()) {
+            foldersPanel.requestFocus();
         }
     }
 

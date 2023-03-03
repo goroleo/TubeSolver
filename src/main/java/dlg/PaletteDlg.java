@@ -278,9 +278,9 @@ public class PaletteDlg extends JDialog {
 
         LColorDialog lcd = new LColorDialog(Main.frame, pal.getColor(cb.getColorNumber()));
         lcd.setBackground(Palette.dialogColor);
-        lcd.addColorListener((int rgb) -> {
+        lcd.addColorListener(() -> {
 
-            pal.set(cb.getColorNumber(), new Color(rgb));
+            pal.set(cb.getColorNumber(), lcd.getColor());
             cb.repaintColor();
             if (cbShowChanges.isSelected()) {
                 updateColor(cb.getColorNumber());

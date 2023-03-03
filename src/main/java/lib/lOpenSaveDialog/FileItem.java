@@ -169,6 +169,7 @@ public class FileItem extends JComponent {
     /**
      * True if all folders must be placed before files while sorting the list.
      */
+    @SuppressWarnings("CanBeFinal")
     public static boolean foldersFirst = true;
 
     /**
@@ -183,13 +184,13 @@ public class FileItem extends JComponent {
      * Visualisation mode of the file item. <i>DETAIL_MODE</i> is a details vew: File
      * name, File Size and File Date are displayed.
      */
-    public static int DETAIL_MODE = 0; // file name, size, date,
+    public static final int DETAIL_MODE = 0; // file name, size, date,
 
     /**
      * Visualisation mode of the file item. <i>LIST_MODE</i> is a compact vew: the file
      * name only is displayed.
      */
-    public static int LIST_MODE = 1; //  file name only;
+    public static final int LIST_MODE = 1; //  file name only;
 
     /**
      * Background color when item is selected
@@ -215,6 +216,7 @@ public class FileItem extends JComponent {
      *
      * @param f file to be precessed and displayed.
      */
+    @SuppressWarnings("unused")
     public FileItem(File f) {
         this(f, true, 0);
     }
@@ -307,6 +309,7 @@ public class FileItem extends JComponent {
     /**
      * This routine sets all labels options and fills labels from the class' fields.
      */
+    @SuppressWarnings("MagicConstant")
     private void setLabels() {
         nameLabel.setText(getFileName());
         nameLabel.setBackground(null);
@@ -337,13 +340,16 @@ public class FileItem extends JComponent {
 
     /**
      * This is a getter for the File field.
+     * @return a File of this item
      */
     public File getFile() {
         return fFile;
     }
 
     /**
-     * This is a getter for the FileName field.
+     * This is a getter for the FileName field. Please note this routine returns a displayed
+     * file name. You can use <i>getFile().getName()</i> to get a real file name.
+     * @return a displayed file name.
      */
     public String getFileName() {
         if (viewMode == DETAIL_MODE) {
@@ -359,6 +365,7 @@ public class FileItem extends JComponent {
     /**
      * @return file extension.
      */
+    @SuppressWarnings("unused")
     public String getExt() {
         return fExt;
     }
@@ -373,6 +380,7 @@ public class FileItem extends JComponent {
     /**
      * @return file length (size) of the file.
      */
+    @SuppressWarnings("unused")
     public long getLength() {
         return fLength;
     }
@@ -389,6 +397,7 @@ public class FileItem extends JComponent {
     /**
      * @return file date/time stamp.
      */
+    @SuppressWarnings("unused")
     public LocalDateTime getTime() {
         return fTime;
     }
@@ -545,6 +554,7 @@ public class FileItem extends JComponent {
     /**
      * @return true if this item is a selected item.
      */
+    @SuppressWarnings("unused")
     public boolean isSelected() {
         return selected;
     }
@@ -569,6 +579,7 @@ public class FileItem extends JComponent {
     /**
      * @return true if the mouse cursor is above this item.
      */
+    @SuppressWarnings("unused")
     public boolean isMouseOver() {
         return mouseOver;
     }
@@ -681,7 +692,7 @@ public class FileItem extends JComponent {
     /**
      * Comparator by file name ascending.
      */
-    public static Comparator<FileItem> NameComparatorAsc = (o1, o2) -> {
+    public static final Comparator<FileItem> NameComparatorAsc = (o1, o2) -> {
         int res = 0;
         if (o2.fParentDir || o1.fParentDir) {
             res = (o2.fParentDir ? 1 : 0) - (o1.fParentDir ? 1 : 0);
@@ -706,7 +717,7 @@ public class FileItem extends JComponent {
     /**
      * Comparator by file name descending.
      */
-    public static Comparator<FileItem> NameComparatorDesc = (o1, o2) -> {
+    public static final Comparator<FileItem> NameComparatorDesc = (o1, o2) -> {
         int res = 0;
         if (o2.fParentDir || o1.fParentDir) {
             res = (o2.fParentDir ? 1 : 0) - (o1.fParentDir ? 1 : 0);
@@ -731,7 +742,7 @@ public class FileItem extends JComponent {
     /**
      * Comparator by file size ascending.
      */
-    public static Comparator<FileItem> SizeComparatorAsc = (o1, o2) -> {
+    public static final Comparator<FileItem> SizeComparatorAsc = (o1, o2) -> {
         if (foldersFirst && !Objects.equals(o2.fFolder, o1.fFolder)) {
             return (o2.fFolder ? 1 : 0) - (o1.fFolder ? 1 : 0);
         } else {
@@ -746,7 +757,7 @@ public class FileItem extends JComponent {
     /**
      * Comparator by file size descending.
      */
-    public static Comparator<FileItem> SizeComparatorDesc = (o1, o2) -> {
+    public static final Comparator<FileItem> SizeComparatorDesc = (o1, o2) -> {
         if (foldersFirst && !Objects.equals(o2.fFolder, o1.fFolder)) {
             return (o2.fFolder ? 1 : 0) - (o1.fFolder ? 1 : 0);
         } else {
@@ -761,7 +772,7 @@ public class FileItem extends JComponent {
     /**
      * Comparator by file time ascending.
      */
-    public static Comparator<FileItem> TimeComparatorAsc = (o1, o2) -> {
+    public static final Comparator<FileItem> TimeComparatorAsc = (o1, o2) -> {
         if (o1.fTime == null) {
             o1.fTime = LocalDateTime.MIN;
         }
@@ -783,7 +794,7 @@ public class FileItem extends JComponent {
     /**
      * Comparator by file time descending.
      */
-    public static Comparator<FileItem> TimeComparatorDesc = (o1, o2) -> {
+    public static final Comparator<FileItem> TimeComparatorDesc = (o1, o2) -> {
         if (o1.fTime == null) {
             o1.fTime = LocalDateTime.MIN;
         }

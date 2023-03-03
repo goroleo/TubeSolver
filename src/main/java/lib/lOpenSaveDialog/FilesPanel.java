@@ -18,15 +18,23 @@ import java.io.File;
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
+/**
+ * The panel with list of files in the current folder. It consists of three visible components: FileList, ScrollBar and Header.
+ */
 public class FilesPanel extends JComponent implements FolderListener {
 
+    /** The list of files in the current folder. */
     private final FilesList fileList;
+
+    /** The header component of the file list */
     private final FileListHeader header;
+
+    /** The scrollbar component to scroll the file list.  */
     private final ScrollBar scrollbar;
 
+    /** A viewable area of the FileList.  */
     private final JComponent viewport = new JComponent() {
     };
-
 
     private final Border border = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.gray),
@@ -35,6 +43,9 @@ public class FilesPanel extends JComponent implements FolderListener {
             BorderFactory.createLineBorder(new Color(0xb8cfe5)),
             BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
+    /**
+     * Creates the file panel and all components inside it.
+     */
     public FilesPanel() {
 
         setBackground(null);
@@ -219,47 +230,101 @@ public class FilesPanel extends JComponent implements FolderListener {
         return -1;
     }
 
+    /**
+     * Updates widths of FileList columns due to the FileListHeader columns resize.
+     *
+     * @param name width of the FileName column.
+     * @param size width of the FileSize column.
+     * @param date width of the FileDate column.
+     */
+    @SuppressWarnings("unused")
     public void updateColumnWidths(int name, int size, int date) {
         if (fileList != null) {
             fileList.setColumnWidths(size, date);
         }
     }
 
+    /**
+     * Sets widths of the FileListHeader columns.
+     *
+     * @param name width of the FileName column.
+     * @param size width of the FileSize column.
+     * @param date width of the FileDate column.
+     */
     public void setColumnWidths(int name, int size, int date) {
         header.setColumnWidths(name, size, date);
     }
 
 
+    /**
+     * Updates and refresh the current folder, reload the FilesList contents.
+     */
     public void refreshFolder() {
         updateFolder(current.getFolder());
     }
 
+    /**
+     * Sorts the FilesList.
+     *
+     * @param sortNumber column number to sort the FileList
+     */
     public void sortFileList(int sortNumber) {
         fileList.sort(sortNumber);
         scrollbar.scrollToComponent(fileList.getCurrentItem());
     }
 
+    /**
+     * Sorts the FilesList.
+     *
+     * @param sortNumber column number to sort the FileList
+     * @param ascending  true for ascending order, false for descending.
+     */
     public void sortFileList(int sortNumber, boolean ascending) {
         fileList.sort(sortNumber, ascending);
         scrollbar.scrollToComponent(fileList.getCurrentItem());
     }
 
+    /**
+     * Gets the number of column currently sorted.
+     *
+     * @return column number.
+     */
     public int getSortNumber() {
         return fileList.getSortNumber();
     }
 
+    /**
+     * Gets the current order of fileList sort.
+     *
+     * @return true for ascending order, false for descending
+     */
     public boolean getSortAscending() {
         return fileList.getSortAscending();
     }
 
+    /**
+     * Gets the current item from the fileList.
+     *
+     * @return as is.
+     */
     public FileItem getCurrentItem() {
         return fileList.getCurrentItem();
     }
 
+    /**
+     * This routine is called when any file is selected in the file list.
+     *
+     * @param file File selected.
+     */
     public void chooseFile(File file) {
         osPan.setFileName(file);
     }
 
+    /**
+     * Scrolls the file list to the item whose file name begins with the specified string.
+     *
+     * @param s string with the file name
+     */
     public void scrollToFile(String s) {
         FileItem item = fileList.getNearestItem(s);
         if (item != null) {
@@ -269,12 +334,9 @@ public class FilesPanel extends JComponent implements FolderListener {
 
     @Override
     public void updateFolder(File folder) {
-        boolean b = scrollbar.isVisible();
         fileList.setFolder(folder);
-        scrollbar.setValues(0, fileList.getHeight(), getHeight() - header.getHeight() - 5);
         scrollbar.setPosition(0);
-        fileList.setLocation(0, 0);
-        if (scrollbar.isVisible() != b)
-            updateComponents();
+        updateComponents();
     }
+
 }

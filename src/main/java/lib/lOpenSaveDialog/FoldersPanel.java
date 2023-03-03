@@ -23,11 +23,24 @@ import javax.swing.border.Border;
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
+/**
+ * The drop-down panel with the list of folders.
+ */
 public class FoldersPanel extends JComponent implements FolderListener {
 
+    /**
+     * The Folder List component.
+     */
     private final FoldersList foldersList;
+
+    /**
+     * The scroll bar of the Folders List.
+     */
     private final ScrollBar scrollbar;
 
+    /**
+     * A viewable area of the Folders List.
+     */
     private final JComponent viewport = new JComponent() { };
 
     private final Border border = BorderFactory.createCompoundBorder(
@@ -37,6 +50,9 @@ public class FoldersPanel extends JComponent implements FolderListener {
             BorderFactory.createLineBorder(new Color(0xb8cfe5)),
             BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
+    /**
+     * Creates the folders panel and all components inside it.
+     */
     public FoldersPanel() {
 
         setForeground(null);
@@ -110,7 +126,7 @@ public class FoldersPanel extends JComponent implements FolderListener {
                 setBorder(border);
             }
         }); // addFocusListener
-        repaint();
+//        repaint();
     }
 
     @Override
@@ -119,6 +135,9 @@ public class FoldersPanel extends JComponent implements FolderListener {
         updateComponents();
     }
 
+    /**
+     * Updates components size and location when the panel resized.
+     */
     private void updateComponents() {
         int w = getWidth() - 4;
         int h = getHeight() - 4;
@@ -137,10 +156,19 @@ public class FoldersPanel extends JComponent implements FolderListener {
         repaint();
     }
 
+    /**
+     * Gets the height of the every single item of the Folders List. Used to calculate the panel size.
+     * @return height of the folder list item.
+     */
     public int getItemHeight() {
         return foldersList.getItemHeight();
     }
 
+    /**
+     * This routine is called when some folder is selected in the list.
+     *
+     * @param item folder selected.
+     */
     public void chooseFolder(FileItem item) {
         osPan.showFoldersPanel(false);
         current.setFolder(item.getFile());

@@ -634,6 +634,7 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * Override this routine if you want to get to know when the cycle has done.
      */
+    @SuppressWarnings("EmptyMethod")
     public void onThreadFinished() {
         // routine to override 
     }

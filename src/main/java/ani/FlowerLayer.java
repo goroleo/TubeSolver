@@ -176,10 +176,9 @@ public class FlowerLayer extends JComponent implements Runnable {
                 }
 
                 // transparency depends on radius
-                if (r < (maxRad - shRad)) {
-                    // main body, pixel color is calculated above, do nothing 
-
-                } else if (r < maxRad) {
+                if (r >= (maxRad - shRad)
+                        // main body, pixel color is calculated above, do nothing
+                        && r < maxRad) {
                     // transparency from (maxRad - shRad) to (maxRad)
                     int alpha = (int) (((maxRad - r) / shRad) // current shade coordinate
                             * ((clr >> 24) & 0xff));              // alpha channel from the pix

@@ -38,7 +38,7 @@ public class ColorCurrent extends JComponent implements ColorListener {
     }
 
     @Override
-    public void updateColor(int rgb) {
+    public void updateColor() {
         repaint();
     }
 

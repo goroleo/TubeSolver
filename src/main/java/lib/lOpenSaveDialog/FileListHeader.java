@@ -108,6 +108,7 @@ public class FileListHeader extends JComponent {
     /**
      * This creates the Header without a parent.
      */
+    @SuppressWarnings("unused")
     public FileListHeader() {
         this(null);
     }
@@ -117,6 +118,7 @@ public class FileListHeader extends JComponent {
      *
      * @param owner a FilesPanel object that owns this header.
      */
+    @SuppressWarnings("MagicConstant")
     public FileListHeader(FilesPanel owner) {
 
         fPanel = owner;
@@ -363,7 +365,7 @@ public class FileListHeader extends JComponent {
      * </ul>
      *
      * @param pos mouse position (X-coordinate)
-     * @return label number as specified.
+     * @return label number, the description is above.
      */
     private int getLabelAtMousePos(int pos) {
         if (pos < nameWidth - 3) {

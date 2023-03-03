@@ -49,6 +49,7 @@ public class FileEditPanel extends JComponent implements FolderListener, FileLis
     /**
      * FileEditPanel constructor
      */
+    @SuppressWarnings("MagicConstant")
     public FileEditPanel() {
         setBackground(null);
         setForeground(null);
@@ -152,10 +153,9 @@ public class FileEditPanel extends JComponent implements FolderListener, FileLis
 
     /**
      * This catches the current file change events
-     * @param fileName name of the current file
      */
     @Override
-    public void updateFile(String fileName) {
+    public void updateFile() {
         nameField.setValue(current.getDisplayedFileName(), true);
     }
 

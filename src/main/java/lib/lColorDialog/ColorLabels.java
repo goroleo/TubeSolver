@@ -35,8 +35,8 @@ public class ColorLabels extends JComponent {
 
     /**
      * Text fields for color components: Hue, Saturation, Brightness.<br>
-     * The field are listen the change of current color and indicates its
-     * component's value. Also the field allows to change component's value
+     * The field is listen the change of current color and indicates its
+     * component's value. Also, the field allows to change component's value
      * directly. In this case the field initiates color change.
      */
     private final lnTextField lnTextHue, lnTextSat, lnTextBri;
@@ -50,8 +50,8 @@ public class ColorLabels extends JComponent {
 
     /**
      * Text fields for color components: Red, Green, Blue.<br>
-     * The field are listen the change of current color and indicates its
-     * component's value. Also the field allows to change component's value
+     * The field is listen the change of current color and indicates its
+     * component's value. Also, the field allows to change component's value
      * directly. In this case the field initiates color change.
      */
     private final lnTextField lnTextR, lnTextG, lnTextB;
@@ -61,6 +61,7 @@ public class ColorLabels extends JComponent {
      * The field are listen the change of current color and allows to change
      * color value directly.
      */
+    @SuppressWarnings({"unused", "FieldCanBeLocal"})
     private final lnHexField lnHex;
 
     /**
@@ -113,9 +114,9 @@ public class ColorLabels extends JComponent {
             } else {
                 lnRadioBri.setText("L");
             }
-            lnTextHue.updateColor(0);
-            lnTextSat.updateColor(0);
-            lnTextBri.updateColor(0);
+            lnTextHue.updateColor();
+            lnTextSat.updateColor();
+            lnTextBri.updateColor();
         }
     }
 
@@ -180,6 +181,7 @@ public class ColorLabels extends JComponent {
         return tf;
     }
 
+    @SuppressWarnings("SameParameterValue")
     private lnHexField addHexField(int x, int y) {
         lnHexField hf = new lnHexField(x, y);
         currentColor.addListener(hf);
@@ -187,14 +189,13 @@ public class ColorLabels extends JComponent {
         return hf;
     }
 
-    private JLabel addLabel(String txt, int x, int y, int aligment) {
+    private void addLabel(String txt, int x, int y, int aligment) {
         JLabel l = new JLabel(txt);
         l.setBounds(x, y, 15, 22);
         l.setBackground(null);
         l.setForeground(null);
         l.setHorizontalAlignment(aligment);
         this.add(l);
-        return l;
     }
 
     // lnTextField class is extension of JTextFeild
@@ -210,7 +211,7 @@ public class ColorLabels extends JComponent {
         
         // Listener of external changes of the color
         @Override
-        public void updateColor(int rgb) {
+        public void updateColor() {
 
             int newValue = 0;
 
@@ -276,7 +277,7 @@ public class ColorLabels extends JComponent {
         } // setColor
     }
     
-    private class lnHexField extends LHexTextField implements ColorListener {
+    private static class lnHexField extends LHexTextField implements ColorListener {
 
         public lnHexField(int x, int y) {
             super(6);
@@ -285,7 +286,7 @@ public class ColorLabels extends JComponent {
         }
 
         @Override
-        public void updateColor(int rgb) {
+        public void updateColor() {
             setText(currentColor.getHexColor());
         }
 

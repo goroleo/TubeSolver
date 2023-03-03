@@ -147,6 +147,7 @@ public class ShadeLayer extends JComponent implements Runnable {
         onThreadFinished();
     }
 
+    @SuppressWarnings("EmptyMethod")
     public void onThreadFinished() {
     }
 }

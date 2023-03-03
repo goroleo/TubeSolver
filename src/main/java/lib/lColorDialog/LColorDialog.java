@@ -22,6 +22,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
+import static lib.lColorDialog.ColorPanel.currentColor;
+
 /**
  *
  * Color dialog Window. it creates the window and place CoorPanel into the
@@ -32,16 +34,14 @@ public class LColorDialog extends JDialog {
 
     private final JFrame owner;
     
-    private final ColorPanel cPan = new ColorPanel(this, true);        
+    private final ColorPanel cPan = new ColorPanel(this, true);
 
-    public LColorDialog() {
-        this(null, Color.white);
-    }
-
+    @SuppressWarnings("unused")
     public LColorDialog(JFrame owner) {
         this(owner, Color.white);
     }
 
+    @SuppressWarnings("unused")
     public LColorDialog(Color clr) {
         this(null, clr);
     }
@@ -96,6 +96,7 @@ public class LColorDialog extends JDialog {
         }
     }
     
+    @SuppressWarnings("MagicConstant")
     private void addListeners() {
         
         // CLOSE WINDOW click
@@ -129,34 +130,42 @@ public class LColorDialog extends JDialog {
         getContentPane().setForeground(fg);
     }
 
+    @SuppressWarnings("unused")
     public void setColorScheme(int scheme) {
         cPan.setColorScheme(scheme);
     }
 
+    @SuppressWarnings("unused")
     public int getColorValue() {
         return cPan.getColor().getRGB();
     }
 
+    @SuppressWarnings("unused")
     public Color getColor() {
         return cPan.getColor();
     }
-    
+
+    @SuppressWarnings("unused")
     public void setColor(int rgb) {
         cPan.setColor(new Color(rgb));
     }
-    
+
+    @SuppressWarnings("unused")
     public void setColor(Color clr) {
         cPan.setColor(clr);
     }
 
+    @SuppressWarnings("unused")
     public void setPrevColor(int rgb) {
         cPan.setPrevColor(new Color(rgb));
     }
 
+    @SuppressWarnings("unused")
     public void setPrevColor(Color clr) {
         cPan.setPrevColor(clr);
     }
 
+    @SuppressWarnings("unused")
     public void setColors(int rgb) {
         setColors(new Color(rgb));
     }
@@ -167,16 +176,17 @@ public class LColorDialog extends JDialog {
     }
 
     public void addColorListener(ColorListener toAdd) {
-        cPan.addColorListener(toAdd);
+        currentColor.addListener(toAdd);
     }
 
+    @SuppressWarnings("unused")
     public void removeColorListener(ColorListener toRemove) {
-        cPan.removeColorListener(toRemove);
+        currentColor.removeListener(toRemove);
     }
 
     public Color chooseColor() {
         setVisible(true);
-        return cPan.getColor();
+        return currentColor.getColor();
     }
 
     public void saveOptions() {

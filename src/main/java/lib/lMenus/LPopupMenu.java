@@ -31,6 +31,7 @@ public class LPopupMenu extends JPopupMenu {
      * @param text this menu item's caption
      * @return menu instance
      */
+    @SuppressWarnings("MagicConstant")
     public JMenu addMenu(JMenu parent, String text) {
         JMenu menu = new JMenu(text);
         menu.setBackground(Palette.dialogColor);

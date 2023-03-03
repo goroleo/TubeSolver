@@ -417,6 +417,7 @@ public class SlideLayer extends JComponent implements Runnable {
     /**
      * Calling this routine when the thread was finish its work. This is a routine to override if you need it.
      */
+    @SuppressWarnings("EmptyMethod")
     public void onThreadFinished() {
         // routine to override it
     }

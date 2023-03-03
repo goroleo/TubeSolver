@@ -21,17 +21,35 @@ import java.io.File;
 
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
+/**
+ * A simple dialog frame to create a new folder in the current folder.
+ */
 public class NewFolderDialog extends JDialog {
 
+    /**
+     * An owner/parent frame to center this dialog.
+     */
     private final Window owner;
+
+    /**
+     * The label to show any errors.
+     */
     private final JLabel lbError;
-    private final LPictureButton btnOk;
-    private final LPictureButton btnCancel;
+
+    /**
+     * The TextField to type the name of a new folder.
+     */
     private final LTextField nameField;
 
     private final int w = 350;
     private final int h = 135;
 
+    /**
+     * Creates a dialog frame to make a new folder in the current folder.
+     * @param owner parent frame/window to center this dialog. If <i>null</i>
+     *              than this dialog will be placed in the center of the screen.
+     */
+    @SuppressWarnings("MagicConstant")
     public NewFolderDialog(Window owner) {
         super(owner, ResStrings.getString("strNewFolder"), ModalityType.APPLICATION_MODAL);
         this.owner = owner;
@@ -55,9 +73,11 @@ public class NewFolderDialog extends JDialog {
         nameField = new LTextField() {
             @Override
             public void valueChanged() {
+                // hide error label if any input in a text field
                 lbError.setVisible(false);
             }
         };
+
         nameField.setForbiddenSigns("/?*&\\$");
         nameField.setLocation(10, 10 + 10 + 22);
         nameField.setSize(w - 20, 26);
@@ -65,7 +85,7 @@ public class NewFolderDialog extends JDialog {
         nameField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == '\n' && !e.isControlDown()) {
+                if (e.getKeyCode() == '\n' && !e.isControlDown()) {  // CTRL + Enter pressed
                     if (!nameField.getValue().equals("")) {
                         confirmAndClose();
                     }
@@ -74,7 +94,7 @@ public class NewFolderDialog extends JDialog {
         });
         getContentPane().add(nameField);
 
-        btnOk = new LPictureButton(this);
+        LPictureButton btnOk = new LPictureButton(this);
         btnOk.setText(ResStrings.getString("strOk"));
         btnOk.setBackground(null);
         btnOk.setForeground(null);
@@ -83,7 +103,7 @@ public class NewFolderDialog extends JDialog {
         btnOk.addActionListener((ActionEvent e) -> confirmAndClose());
         getContentPane().add(btnOk);
 
-        btnCancel = new LPictureButton(this);
+        LPictureButton btnCancel = new LPictureButton(this);
         btnCancel.setText(ResStrings.getString("strCancel"));
         btnCancel.setBackground(null);
         btnCancel.setForeground(null);
@@ -95,17 +115,14 @@ public class NewFolderDialog extends JDialog {
         lbError = new JLabel(ResStrings.getString("strError"));
         lbError.setBackground(null);
         lbError.setForeground(new Color(0xff4c6e));
-        lbError.setLocation(10, 10 + 10 + 22 + 26 + 10);
+        lbError.setLocation(10, 78);
         lbError.setSize(w - 235, 22);
         lbError.setVisible(false);
         getContentPane().add(lbError);
 
-//        add(panel);
-//        panel.setSize(w, h);
-
+        addListeners();
         calculateSize();
         calculatePos();
-        addListeners();
     }
 
     private void calculateSize() {
@@ -134,6 +151,7 @@ public class NewFolderDialog extends JDialog {
         }
     }
 
+    @SuppressWarnings("MagicConstant")
     private void addListeners() {
 
         // CLOSE WINDOW click
@@ -157,10 +175,20 @@ public class NewFolderDialog extends JDialog {
                 2); // WHEN_IN_FOCUSED_WINDOW
     }
 
+    /**
+     * This routine calls when CANCEL button pressed.
+     * It just closes the frame without doing anything.
+     */
     public void refuseAndClose() {
         EventQueue.invokeLater(this::dispose);
     }
 
+    /**
+     * This routine calls when OK button pressed.
+     * It tries to create a new folder with the given name in the current folder. If successful,
+     * the newly created folder becomes the current folder and the frame closes. Otherwise,
+     * an error is shown.
+     */
     public void confirmAndClose() {
         if (!nameField.getValue().equals("")) {
             String newFolderName = current.getFolder().getAbsolutePath() + File.separator + nameField.getValue();

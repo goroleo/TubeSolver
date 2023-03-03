@@ -34,7 +34,6 @@ lib\lTextFields\LDecTextField.class
 lib\lColorDialog\ColorListener.class
 lib\lMenus\LPopupMenu.class
 run\Main.class
-lib\lOpenSaveDialog\ToolButtonsPanel$1.class
 gui\CongratsPanel$2.class
 lib\lOpenSaveDialog\FileEditPanel$1.class
 ani\ColorLayer.class
@@ -80,13 +79,13 @@ lib\lColorDialog\ColorBox$BoxMouseLayer$1.class
 lib\lColorDialog\ColorChanger.class
 dlg\CreateNewDlg$1.class
 lib\lOpenSaveDialog\FileListener.class
-lib\lOpenSaveDialog\ToolButtonsPanel.class
 core\Solver.class
 lib\lOpenSaveDialog\FileItem$1.class
 lib\lColorDialog\ColorLabels$lnTextField.class
 lib\lColorDialog\ColorPanel.class
 lib\lOpenSaveDialog\FoldersDropDown$2.class
 lib\lButtons\LPictureButton.class
+lib\lOpenSaveDialog\ToolsPanel.class
 ani\PatternLayer.class
 lib\lColorDialog\ColorLine$LineCursorLayer.class
 lib\lOpenSaveDialog\FileItem.class
@@ -131,6 +130,7 @@ core\Options$OS.class
 core\TubesIO$myBAOS.class
 gui\PalettePanel.class
 lib\lOpenSaveDialog\ScrollBar.class
+lib\lOpenSaveDialog\ToolsPanel$1.class
 lib\lOpenSaveDialog\FileListHeader$3.class
 lib\lOpenSaveDialog\ListView$1.class
 dlg\StartDlg$1.class

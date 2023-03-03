@@ -23,7 +23,7 @@ public class ListView extends JComponent {
     /**
      *
      */
-    private final ArrayList<FileItem> fileList = new ArrayList<>();
+    private final ArrayList<FileItem> list = new ArrayList<>();
     private int itemHeight = 25;
     private int sortNumber = 1;
     private boolean sortAscending = true;
@@ -35,20 +35,22 @@ public class ListView extends JComponent {
         setForeground(Color.WHITE);
     }
 
-    public ArrayList<FileItem> getFileList() {
-        return fileList;
+    public ArrayList<FileItem> getList() {
+        return list;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public FileItem addNewItem(File f) {
         return addNewItem(f, true, 0);
     }
 
     public FileItem addNewItem(File f, boolean detailsMode, int level) {
         FileItem fi = createNewItem(f, detailsMode, level);
-        fileList.add(fi);
+        list.add(fi);
         return fi;
     }
 
+    @SuppressWarnings("unused")
     public FileItem createNewItem(File f) {
         return createNewItem(f, true, 0);
     }
@@ -83,23 +85,23 @@ public class ListView extends JComponent {
 
     public void setItemHeight(int value) {
         itemHeight = value;
-        setSize(getWidth(), fileList.size() * itemHeight);
+        setSize(getWidth(), list.size() * itemHeight);
     }
 
     @Override
     public void setSize(int w, int h) {
-        super.setSize(w, fileList.size() * itemHeight);
+        super.setSize(w, list.size() * itemHeight);
         updateItemsPos();
     }
 
     public void updateView() {
         this.removeAll();
-        if (!fileList.isEmpty()) {
-            for (FileItem item : fileList) {
+        if (!list.isEmpty()) {
+            for (FileItem item : list) {
                 addItemToView(item);
             }
         }
-        setSize(getWidth(), fileList.size() * itemHeight);
+        setSize(getWidth(), list.size() * itemHeight);
         repaint();
     }
 
@@ -109,14 +111,14 @@ public class ListView extends JComponent {
 
     public void updateItemsPos() {
         int w = getWidth();
-        for (FileItem item : fileList) {
+        for (FileItem item : list) {
             item.setSize(w, itemHeight);
-            item.setLocation(0, fileList.indexOf(item) * itemHeight);
+            item.setLocation(0, list.indexOf(item) * itemHeight);
         }
     }
 
     public void setColumnWidths(int size, int date) {
-        for (FileItem item : fileList) {
+        for (FileItem item : list) {
             item.setLabelWidths(size, date);
         }
     }
@@ -148,23 +150,23 @@ public class ListView extends JComponent {
         switch (sortNumber) {
             case 1: // sort by name
                 if (sortAscending) {
-                    fileList.sort(FileItem.NameComparatorAsc);
+                    list.sort(FileItem.NameComparatorAsc);
                 } else {
-                    fileList.sort(FileItem.NameComparatorDesc);
+                    list.sort(FileItem.NameComparatorDesc);
                 }
                 break;
             case 2: // sort by size
                 if (sortAscending) {
-                    fileList.sort(FileItem.SizeComparatorAsc);
+                    list.sort(FileItem.SizeComparatorAsc);
                 } else {
-                    fileList.sort(FileItem.SizeComparatorDesc);
+                    list.sort(FileItem.SizeComparatorDesc);
                 }
                 break;
             case 3: // sort by date-time
                 if (sortAscending) {
-                    fileList.sort(FileItem.TimeComparatorAsc);
+                    list.sort(FileItem.TimeComparatorAsc);
                 } else {
-                    fileList.sort(FileItem.TimeComparatorDesc);
+                    list.sort(FileItem.TimeComparatorDesc);
                 }
                 break;
         }
@@ -189,11 +191,12 @@ public class ListView extends JComponent {
     }
 
     public int getItemIndex(FileItem item) {
-        return fileList.indexOf(item);
+        return list.indexOf(item);
     }
 
+    @SuppressWarnings("unused")
     public FileItem getItemOf(int index) {
-        return fileList.get(index);
+        return list.get(index);
     }
 
     public int getItemsAtPage(int pageSize) {
@@ -201,8 +204,8 @@ public class ListView extends JComponent {
     }
 
     public void setFirstItem() {
-        if (!fileList.isEmpty()) {
-            setCurrentItem(fileList.get(0));
+        if (!list.isEmpty()) {
+            setCurrentItem(list.get(0));
         }
     }
 
@@ -213,8 +216,8 @@ public class ListView extends JComponent {
             if (idx < 0) {
                 idx = 0;
             }
-            if (fileList.size() > idx) {
-                setCurrentItem(fileList.get(idx));
+            if (list.size() > idx) {
+                setCurrentItem(list.get(idx));
             }
         } else {
             setFirstItem();
@@ -228,8 +231,8 @@ public class ListView extends JComponent {
             if (idx < 0) {
                 idx = 0;
             }
-            if (fileList.size() > idx) {
-                setCurrentItem(fileList.get(idx));
+            if (list.size() > idx) {
+                setCurrentItem(list.get(idx));
             }
         } else {
             setFirstItem();
@@ -240,10 +243,10 @@ public class ListView extends JComponent {
         if (currentItem != null) {
             int idx = getItemIndex(currentItem);
             idx++;
-            if (idx >= fileList.size()) {
-                idx = fileList.size() - 1;
+            if (idx >= list.size()) {
+                idx = list.size() - 1;
             }
-            setCurrentItem(fileList.get(idx));
+            setCurrentItem(list.get(idx));
         } else {
             setFirstItem();
         }
@@ -253,21 +256,22 @@ public class ListView extends JComponent {
         if (currentItem != null) {
             int idx = getItemIndex(currentItem);
             idx += getItemsAtPage(pageSize);
-            if (idx >= fileList.size()) {
-                idx = fileList.size() - 1;
+            if (idx >= list.size()) {
+                idx = list.size() - 1;
             }
-            setCurrentItem(fileList.get(idx));
+            setCurrentItem(list.get(idx));
         } else {
             setFirstItem();
         }
     }
 
     public void setLastItem() {
-        if (!fileList.isEmpty()) {
-            setCurrentItem(fileList.get(fileList.size() - 1));
+        if (!list.isEmpty()) {
+            setCurrentItem(list.get(list.size() - 1));
         }
     }
 
+    @SuppressWarnings("unused")
     public FileItem getMouseOverItem() {
         return mouseOverItem;
     }
@@ -288,21 +292,21 @@ public class ListView extends JComponent {
     public void onItemClicked(FileItem item, MouseEvent e) {
     }
 
-    public void onItemPressed(FileItem item) {
+    public void onItemPressed(@SuppressWarnings("unused") FileItem item) {
     }
 
     public void onItemEntered(FileItem item) {
     }
 
-    public void onItemExited(FileItem item) {
+    public void onItemExited(@SuppressWarnings("unused") FileItem item) {
     }
 
     private int getNearestItemIndex(String fileName) {
         int len = fileName.length();
         String temp;
         if (len > 0) {
-            for (int i = 0; i < fileList.size(); i++) {
-                temp = fileList.get(i).getFile().getName();
+            for (int i = 0; i < list.size(); i++) {
+                temp = list.get(i).getFile().getName();
                 if (temp.length() > len) {
                     temp = temp.substring(0, len);
                 }
@@ -319,14 +323,14 @@ public class ListView extends JComponent {
     public FileItem getNearestItem(String fileName) {
         int idx = getNearestItemIndex(fileName);
         if (idx >= 0) {
-            return fileList.get(idx);
+            return list.get(idx);
         }
         return null;
     }
 
     public FileItem getItemByFile(File f) {
         if (f != null)
-            for (FileItem item : fileList) {
+            for (FileItem item : list) {
                 if (item.getFile().compareTo(f) == 0) {
                     return item;
                 }
@@ -334,9 +338,10 @@ public class ListView extends JComponent {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public FileItem getItemByFileName(String fileName) {
         if (fileName != null && !"".equals(fileName))
-            for (FileItem item : fileList) {
+            for (FileItem item : list) {
                 if (item.getFile().getName().compareToIgnoreCase(fileName) == 0) {
                     return item;
                 }

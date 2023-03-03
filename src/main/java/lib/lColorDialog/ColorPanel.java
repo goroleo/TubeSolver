@@ -56,23 +56,9 @@ public class ColorPanel extends JComponent {
     private static ColorCurrent cCur;
 
     /**
-     * Dialog controls: OK button.
-     * The color panel has an option to hide buttons, using <b>showButtons</b> 
-     * parameter on the constructor.
-     */
-    private static LPictureButton btnOk;
-
-    /**
-     * Dialog controls: CANCEL button.
-     * The color panel has an option to hide buttons, using <b>showButtons</b> 
-     * parameter on the constructor.
-     */
-    private static LPictureButton btnCancel;
-
-    /**
      * Dialog colors: current color.
-     * All of the color controls can change this color, and all other controls 
-     * are listen these cnanges.
+     * All the color controls can change this color, and all other controls
+     * are listen these changes.
      * @see ColorChanger
      * @see ColorCurrent
      */
@@ -89,7 +75,7 @@ public class ColorPanel extends JComponent {
      * Parent dialog frame used to access it from other controls (i.e. from 
      * buttons).
      */
-    public JDialog dlgFrame;
+    public final JDialog dlgFrame;
 
     /**
      * Shared images: Dialog frame icon. <br>
@@ -171,12 +157,12 @@ public class ColorPanel extends JComponent {
 
         if (showButtons) {
 
-            btnOk = addButton(ResStrings.getString("strOk"), 236, 300);
+            LPictureButton btnOk = addButton(ResStrings.getString("strOk"), 236, 300);
             btnOk.addActionListener((ActionEvent e) -> confirmAndClose());
             btnOk.setDefaultCapable(true);
             add(btnOk);
 
-            btnCancel = addButton(ResStrings.getString("strCancel"), 346, 300);
+            LPictureButton btnCancel = addButton(ResStrings.getString("strCancel"), 346, 300);
             btnCancel.addActionListener((ActionEvent e) -> refuseAndClose());
             btnCancel.setDefaultCapable(false);
             add(btnCancel);
@@ -196,14 +182,6 @@ public class ColorPanel extends JComponent {
         cLabels.updateColorScheme(scheme);
     }
 
-    public void addColorListener(ColorListener toAdd) {
-        currentColor.addListener(toAdd);
-    }
-
-    public void removeColorListener(ColorListener toRemove) {
-        currentColor.removeListener(toRemove);
-    }
-
     public Color getColor() {
         return currentColor.getColor();
     }
@@ -212,6 +190,7 @@ public class ColorPanel extends JComponent {
         currentColor.setRGB(this, clr.getRGB());
     }
 
+    @SuppressWarnings("unused")
     public Color getPrevColor() {
         return new Color(lnPrevColor);
     }
@@ -221,6 +200,7 @@ public class ColorPanel extends JComponent {
         cCur.repaint();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private LPictureButton addButton(String txt, int x, int y) {
         LPictureButton btn = new LPictureButton(this);
         btn.setText(txt);
@@ -237,7 +217,7 @@ public class ColorPanel extends JComponent {
     * @see #dlgFrame
     */
     public void confirmAndClose() {
-        EventQueue.invokeLater(() -> dlgFrame.dispose());
+        EventQueue.invokeLater(dlgFrame::dispose);
         ((LColorDialog) dlgFrame).saveOptions();
     }
 
@@ -248,7 +228,7 @@ public class ColorPanel extends JComponent {
     */
     public void refuseAndClose() {
         currentColor.setRGB(this, lnPrevColor);
-        EventQueue.invokeLater(() -> dlgFrame.dispose());
+        EventQueue.invokeLater(dlgFrame::dispose);
         ((LColorDialog) dlgFrame).saveOptions();
     }
     

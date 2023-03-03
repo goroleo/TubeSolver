@@ -15,8 +15,7 @@ package lib.lOpenSaveDialog;
 public interface FileListener {
     /**
      * The listener that catches a current file change event.
-     * @param fileName name of the current file
      */
-    void updateFile(String fileName);
+    void updateFile();
 }
 

@@ -1,54 +1,44 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package lib.lOpenSaveDialog;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import javax.swing.JComponent;
+
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 
 public class FoldersDropDown extends JComponent implements FolderListener {
 
     private final FileItem folderItem;
-    private final BufferedImage imgFrame;
+    private final BufferedImage imgUpDown;
 
     private boolean rollover = false;
 
-//    private boolean selected = false; // not used now
     private boolean focused = false;
 
     private final Color selectedBackground = new Color(0xb8cfe5);
-    private final Color selectedForeground = Color.BLACK;
 
     public FoldersDropDown() {
 
         this.setFocusable(true);
 
-        imgFrame = new BufferedImage(OpenSavePanel.imgBtnDown.getWidth(), OpenSavePanel.imgBtnDown.getHeight(), 2);
+        imgUpDown = new BufferedImage(OpenSavePanel.imgBtnDown.getWidth(), OpenSavePanel.imgBtnDown.getHeight(), 2);
 
         folderItem = new FileItem(null, false, 0);
         for (MouseListener ml : folderItem.getMouseListeners()) {
             folderItem.removeMouseListener(ml);
         }
         add(folderItem);
-
-//        setSize(400, 27);
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -119,7 +109,7 @@ public class FoldersDropDown extends JComponent implements FolderListener {
     @Override
     public void setSize(int w, int h) {
         folderItem.setLocation(2, 2);
-        folderItem.setSize(w - imgFrame.getWidth(), h - 4);
+        folderItem.setSize(w - imgUpDown.getWidth(), h - 4);
         super.setSize(w, h);
     }
 
@@ -127,14 +117,6 @@ public class FoldersDropDown extends JComponent implements FolderListener {
     public void paintComponent(Graphics g) {
         updateBtn();
 
-   /*
-        // deprecated
-        if (selected) {
-            g.setColor(selectedBackground);
-        } else {
-            g.setColor(getBackground());
-        }
-    */
         g.setColor(getBackground());
         g.fillRect(2, 2, getWidth() - 4, getHeight() - 4);
 
@@ -150,36 +132,28 @@ public class FoldersDropDown extends JComponent implements FolderListener {
         }
         g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 
-        g.drawImage(imgFrame,
-                getWidth() - imgFrame.getWidth(),
-                (getHeight() - imgFrame.getHeight()) / 2,
+        g.drawImage(imgUpDown,
+                getWidth() - imgUpDown.getWidth(),
+                (getHeight() - imgUpDown.getHeight()) / 2,
                 null);
     }
 
     public void updateBtn() {
-        int alpha, clr;
+
         BufferedImage imgSource;
-
-   /*
-        // deprecated
-        if (selected) {
-            clr = selectedForeground.getRGB();
-        } else {
-            clr = Color.LIGHT_GRAY.getRGB();
-        }
-    */
-        clr = Color.LIGHT_GRAY.getRGB();
-
         if (osPan.isFoldersPanelVisible()) {
             imgSource = OpenSavePanel.imgBtnUp;
         } else {
             imgSource = OpenSavePanel.imgBtnDown;
         }
 
+        int clr = Color.LIGHT_GRAY.getRGB() & 0xffffff;
+        int alpha;
+
         for (int i = 0; i < imgSource.getWidth(); i++) {
             for (int j = 0; j < imgSource.getHeight(); j++) {
                 alpha = (imgSource.getRGB(i, j) >> 24) & 0xff;
-                imgFrame.setRGB(i, j, (clr & 0xffffff) | (alpha << 24));
+                imgUpDown.setRGB(i, j, (clr | (alpha << 24)));
             }
         }
     }

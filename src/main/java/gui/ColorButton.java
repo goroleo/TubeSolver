@@ -241,8 +241,7 @@ public class ColorButton extends JButton {
 
         LColorDialog lcd = new LColorDialog(Main.frame, oldColor);
         lcd.setBackground(Palette.dialogColor);
-        lcd.addColorListener(colorLayer::setColor);
-
+        lcd.addColorListener(() -> colorLayer.setColor(lcd.getColor()));
         if (core.Options.ccdPositionX != -1 && core.Options.ccdPositionY != -1) {
             lcd.setLocation(core.Options.ccdPositionX, core.Options.ccdPositionY);
         }

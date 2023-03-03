@@ -121,7 +121,7 @@ public class ColorChanger {
 //          calculateLABfromRGB(); // reserved for the future use
             clr = 0xff000000 | ((rgbR & 0xff) << 16) | ((rgbG & 0xff) << 8) | (rgbB & 0xff);
             initiator = obj;
-            updateColor(clr);
+            updateColor();
             initiator = null;
         }
     }
@@ -146,7 +146,7 @@ public class ColorChanger {
 //          calculateLABfromRGB(); // reserved for the future use
             clr = 0xff000000 | ((rgbR & 0xff) << 16) | ((rgbG & 0xff) << 8) | (rgbB & 0xff);
             initiator = obj;
-            updateColor(clr);
+            updateColor();
             initiator = null;
         }
     }
@@ -173,7 +173,7 @@ public class ColorChanger {
             clr = 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
 
             initiator = obj;
-            updateColor(clr);
+            updateColor();
             initiator = null;
         }
     }
@@ -229,11 +229,11 @@ public class ColorChanger {
     }
 
     public String getHexColor() {
-        String s = Integer.toHexString(clr & 0xffffff);
+        StringBuilder s = new StringBuilder(Integer.toHexString(clr & 0xffffff));
         while (s.length() < 6) {
-            s = "0" + s;
+            s.insert(0, "0");
         }
-        return s;
+        return s.toString();
     }
 
 /////////////////////////////////////////////////////////
@@ -247,16 +247,17 @@ public class ColorChanger {
         changeListeners.remove(toRemove);
     }
 
+    @SuppressWarnings("unused")
     public void removeAllListeners() {
         for (ColorListener cl : changeListeners) {
             changeListeners.remove(cl);
         }
     }
 
-    public void updateColor(int clr) {
+    public void updateColor() {
         for (ColorListener cl : changeListeners) {
             if (cl != initiator) {
-                cl.updateColor(clr);
+                cl.updateColor();
             }
         }
     }
@@ -265,14 +266,11 @@ public class ColorChanger {
 //  Calculating routunes
 //
     private void calculateHSBfromRGB() {
-        int cmax = (rgbR > rgbG) ? rgbR : rgbG;
-        if (rgbB > cmax) {
-            cmax = rgbB;
-        }
-        int cmin = (rgbR < rgbG) ? rgbR : rgbG;
-        if (rgbB < cmin) {
-            cmin = rgbB;
-        }
+        int cmax = Math.max(rgbR, rgbG);
+        cmax = Math.max(cmax, rgbB);
+
+        int cmin = Math.min(rgbR, rgbG);
+        cmin = Math.min(cmin, rgbB);
 
         hsbB = ((float) cmax) / 255.0f;
         hsbS = (cmax != 0) ? ((float) (cmax - cmin) / cmax) : 0.0f;
@@ -342,29 +340,25 @@ public class ColorChanger {
     }
 
     private void calculateHSLfromRGB() {
-        int cmax = (rgbR > rgbG) ? rgbR : rgbG;
-        if (rgbB > cmax) {
-            cmax = rgbB;
-        }
-        int cmin = (rgbR < rgbG) ? rgbR : rgbG;
-        if (rgbB < cmin) {
-            cmin = rgbB;
-        }
+        int cMax = Math.max(rgbR, rgbG);
+        cMax = Math.max(cMax, rgbB);
+        int cMin = Math.min(rgbR, rgbG);
+        cMin = Math.min(cMin, rgbB);
 
-        hslL = (float) (cmax + cmin) / (255 * 2);
-        hslS = (float) (cmax - cmin) / (255 - Math.abs(255 - (cmax + cmin)));
+        hslL = (float) (cMax + cMin) / (255 * 2);
+        hslS = (float) (cMax - cMin) / (255 - Math.abs(255 - (cMax + cMin)));
 
-        if (cmax == cmin) {
+        if (cMax == cMin) {
             hslH = 0.0f;
-        } else if (cmax == rgbR) {
-            hslH = (float) (rgbG - rgbB) / (6 * (cmax - cmin));
+        } else if (cMax == rgbR) {
+            hslH = (float) (rgbG - rgbB) / (6 * (cMax - cMin));
             if (rgbG < rgbB) {
                 hslH = hslH + 1.0f;
             }
-        } else if (cmax == rgbG) {
-            hslH = ((float) (rgbB - rgbR) / (6 * (cmax - cmin))) + 1.0f / 3.0f;
+        } else if (cMax == rgbG) {
+            hslH = ((float) (rgbB - rgbR) / (6 * (cMax - cMin))) + 1.0f / 3.0f;
         } else {
-            hslH = ((float) (rgbR - rgbG) / (6 * (cmax - cmin))) + 2.0f / 3.0f;
+            hslH = ((float) (rgbR - rgbG) / (6 * (cMax - cMin))) + 2.0f / 3.0f;
         }
     }
 

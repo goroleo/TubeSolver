@@ -38,7 +38,7 @@ public class ColorBox extends JComponent implements ColorListener {
     private final BoxCursorLayer cursorLayer;
 
     /**
-     * This is an buffered image redrawed when the current color will change.
+     * This is a buffered image redraws when the current color will change.
      */
     private final BufferedImage boxImg = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
 
@@ -115,18 +115,17 @@ public class ColorBox extends JComponent implements ColorListener {
      * This is a listener for an external color change made by any other
      * control.
      *
-     * @param rgb is the color value that specifies color components
      * @see ColorChanger
      * @see ColorListener
      */
     @Override
-    public void updateColor(int rgb) {
+    public void updateColor() {
         drawBox();
         updateCursorPos();
     }
 
     /**
-     * This sets a color from the current cursor position and than broadcast it
+     * This sets a color from the current cursor position and then broadcast it.
      * to all other components.
      *
      * @see ColorChanger
@@ -348,7 +347,7 @@ public class ColorBox extends JComponent implements ColorListener {
     /**
      * Graphics layer of the "circle" cursor.
      */
-    private class BoxCursorLayer extends JComponent {
+    private static class BoxCursorLayer extends JComponent {
 
         public BoxCursorLayer() {
             setSize(276, 276);
