@@ -18,13 +18,23 @@ import javax.swing.JComponent;
 
 public class FlowerLayer extends JComponent implements Runnable {
 
-    private final BufferedImage imgOrig = new BufferedImage(400, 400, 2);
+    private final BufferedImage imgOrig
+            = new BufferedImage(400, 400, 2);
 
+    /**
+     * The image displayed every single frame of animation.
+     */
     private BufferedImage imgFrame;
 
-    private double curAngle = 0;
-    private final double dAngle = 1d / 180d * Math.PI;
-    private final double endAngle = 20d / 180d * Math.PI;
+    /**
+     * the current rotation angle.
+     */
+    private double angleCurrent = 0;
+    /**
+     *
+     */
+    private final double angleIncrement = 1d / 180d * Math.PI;
+    private final double angleEnd = 20d / 180d * Math.PI;
 
     private final long delay = 30;
 
@@ -34,7 +44,7 @@ public class FlowerLayer extends JComponent implements Runnable {
     private double rotationX = 250;
     private double rotationY = 250;
     private double masterAlpha;
-    private final double deltaAlpha = 0.05d;
+    private final double alphaIncrement = 0.05d;
     boolean working = false;
 
     public FlowerLayer() {
@@ -250,7 +260,7 @@ public class FlowerLayer extends JComponent implements Runnable {
                 a = Math.atan2(dy, dx);
 
                 // doing rotate 
-                a += curAngle;
+                a += angleCurrent;
 
                 // calculate new coordinates after rotate
                 ox = r * Math.cos(a) + origCenterX;
@@ -289,15 +299,15 @@ public class FlowerLayer extends JComponent implements Runnable {
         while (working) {
 
             if (masterAlpha < 1) {
-                masterAlpha += deltaAlpha;
+                masterAlpha += alphaIncrement;
                 if (masterAlpha > 1) {
                     masterAlpha = 1.0d;
                 }
             }
 
-            curAngle += dAngle;
-            if (curAngle > endAngle) {
-                curAngle -= endAngle;
+            angleCurrent += angleIncrement;
+            if (angleCurrent > angleEnd) {
+                angleCurrent -= angleEnd;
             }
 
             drawCurrentFrame();

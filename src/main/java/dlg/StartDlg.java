@@ -34,8 +34,10 @@ public class StartDlg extends JDialog {
     private LPictureButton btnResume;
     private final JPanel pan = new JPanel();
 
-    int startX = 40, sizeX = 90, spaceX = 20;
-    int btnY = 40;
+    final int startX = 40;
+    final int sizeX = 90;
+    final int spaceX = 20;
+    final int btnY = 40;
 
     public StartDlg(JFrame owner) {
         super(owner, ResStrings.getString("strStartGame"), true);

@@ -24,6 +24,7 @@ import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.JToolTip;
 
+@SuppressWarnings("unused")
 public class LPictureButton extends JButton {
 
 // Button name 

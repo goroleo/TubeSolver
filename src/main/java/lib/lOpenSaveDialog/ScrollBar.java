@@ -308,7 +308,6 @@ public class ScrollBar extends JComponent {
     /**
      * Scrolls to the very first position.
      */
-    @SuppressWarnings("unused")
     public void scrollToFirst() {
         setPosition(minValue);
     }
@@ -316,7 +315,6 @@ public class ScrollBar extends JComponent {
     /**
      * Scrolls to the very last position.
      */
-    @SuppressWarnings("unused")
     public void scrollToLast() {
         setPosition(maxValue - (int) (trackBarLength / trackScale));
     }
@@ -342,7 +340,6 @@ public class ScrollBar extends JComponent {
      * @param maxPos end position of the area.
      * @return true if the area is visible, false otherwise.
      */
-    @SuppressWarnings("unused")
     public boolean isAreaVisible(int minPos, int maxPos) {
         if (minPos > maxPos) {
             int temp = maxPos;

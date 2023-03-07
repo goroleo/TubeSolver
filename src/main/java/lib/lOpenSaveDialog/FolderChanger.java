@@ -70,7 +70,6 @@ public class FolderChanger {
      *
      * @return absolute path of the current folder.
      */
-    @SuppressWarnings("unused")
     public String getFolderPath() {
         return currentFolder.getAbsolutePath();
     }
@@ -78,7 +77,6 @@ public class FolderChanger {
     /**
      * @return the current file if it exists or null otherwise.
      */
-    @SuppressWarnings("unused")
     public File getFile() {
         if (!"".equals(currentFileName)) {
             return OpenSavePanel.fsv.getChild(currentFolder, currentFileName);
@@ -289,7 +287,6 @@ public class FolderChanger {
      * Removes the folder listener from the listeners list.
      * @param toRemove an object that implements FolderListener interface
      */
-    @SuppressWarnings("unused")
     public void removeFolderListener(FolderListener toRemove) {
         folderListeners.remove(toRemove);
     }
@@ -298,7 +295,6 @@ public class FolderChanger {
      * Removes the file listener from the listeners list.
      * @param toRemove an object that implements FileListener interface
      */
-    @SuppressWarnings("unused")
     public void removeFileListener(FileListener toRemove) {
         fileListeners.remove(toRemove);
     }
@@ -306,7 +302,6 @@ public class FolderChanger {
     /**
      * Removes all the listeners.
      */
-    @SuppressWarnings("unused")
     public void removeAllListeners() {
         for (FolderListener fl : folderListeners) {
             folderListeners.remove(fl);

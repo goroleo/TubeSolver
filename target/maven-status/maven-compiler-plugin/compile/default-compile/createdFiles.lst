@@ -13,12 +13,12 @@ lib\lOpenSaveDialog\FileEditPanel$2.class
 lib\lColorDialog\ColorLine$LineMouseLayer$1.class
 lib\lTextFields\LDecTextField$2.class
 core\ResStrings.class
+core\Options$1.class
 core\UsedColors.class
 dlg\PaletteDlg.class
 gui\Palette.class
 lib\lOpenSaveDialog\OpenSavePanel.class
 dlg\PaletteDlg$1.class
-gui\MainFrame$5.class
 lib\lButtons\LToolButton.class
 lib\lOpenSaveDialog\FoldersPanel$1.class
 ani\SlideLayer.class

@@ -53,6 +53,7 @@ public class CreateNewDlg extends JDialog {
         this(null);
     }
 
+    @SuppressWarnings("MagicConstant")
     public CreateNewDlg(JFrame owner) {
 
         super(owner, ResStrings.getString("strCreateNew"), true);
@@ -209,6 +210,7 @@ public class CreateNewDlg extends JDialog {
         }
     }
 
+    @SuppressWarnings("MagicConstant")
     private JLabel addLabel(int number, String text) {
         JLabel lb = new JLabel(text);
         int y;

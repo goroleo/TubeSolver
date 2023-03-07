@@ -69,6 +69,7 @@ public class ToolMenu extends LPopupMenu {
     /**
      * The constructor. Creates the Tool menu and adds menu items.
      */
+    @SuppressWarnings("MagicConstant")
     public ToolMenu() {
         super();
 

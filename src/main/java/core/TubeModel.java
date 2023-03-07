@@ -29,7 +29,7 @@ public class TubeModel {
      * Color cells. Array of color numbers which are in this tube now. Note 
      * color number 0 is an empty cell.
      */
-    public byte[] colors = new byte[4];
+    public final byte[] colors = new byte[4];
 
     /**
      * The state of the tube. The states can be as follows: <ul>
@@ -274,6 +274,7 @@ public class TubeModel {
      * @param tm another tube to compare.
      * @return true if both the tubes are consists of the same colors.
      */
+    @SuppressWarnings("unused")
     public boolean equalsTo(TubeModel tm) {
         for (int i = 0; i < 4; i++) {
             if (this.colors[i] != tm.colors[i]) {

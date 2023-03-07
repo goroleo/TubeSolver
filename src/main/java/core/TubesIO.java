@@ -20,6 +20,7 @@ import java.util.Properties;
 /**
  * All load and save routines for the application. And description
  */
+@SuppressWarnings("unused")
 public class TubesIO {
 
 ///////////////////////////////////////////////////////////////////////////
@@ -123,6 +124,7 @@ public class TubesIO {
     public static String getAppDir() {
         String appDir = System.getProperty("user.home") + File.separator + ".tubesolver" + File.separator;
         File F = new File(appDir);
+        //noinspection ResultOfMethodCallIgnored
         F.mkdirs();
         return appDir;
     }
@@ -176,7 +178,7 @@ public class TubesIO {
     /**
      * Temporary file name.
      */
-    public static String tempFileName
+    public static final String tempFileName
             = getAppDirFile(".$notsolved.jctl");
 
 
@@ -346,28 +348,12 @@ public class TubesIO {
         return gMode;
     }
 
-    public static void storeTubes(BoardModel bm) {
-        storeTubes(bm, 0);
-    }
-
     public static void storeTubes(BoardModel bm, int emptyTubes) {
         tubesCount = bm.size();
         emptyCount = emptyTubes;
         storedTubes = new int[tubesCount];
         for (int i = 0; i < tubesCount; i++) {
             storedTubes[i] = bm.get(i).storeColors();
-        }
-    }
-
-    public static void restoreTubes(BoardModel bm) {
-        if (!bm.isEmpty()) {
-            bm.moves.clear();
-            bm.clear();
-        }
-        for (int i = 0; i < tubesCount; i++) {
-            TubeModel tube = new TubeModel();
-            tube.assignColors(storedTubes[i]);
-            bm.addNewTube(tube);
         }
     }
 

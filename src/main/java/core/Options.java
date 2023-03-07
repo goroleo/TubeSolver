@@ -60,6 +60,8 @@ public class Options {
     public static int ccdPositionX = -1;
     public static int ccdPositionY = -1;
 
+    public static int ccdDialogMode = 0;
+
     // --------- open/save dialog position & options -------------
     public static int osdPositionX = -1;
     public static int osdPositionY = -1;
@@ -113,6 +115,7 @@ public class Options {
         // --------- color picker dialog -------------
         sProps.setProperty("ColorDialogPosX", Integer.toString(ccdPositionX));
         sProps.setProperty("ColorDialogPosY", Integer.toString(ccdPositionY));
+        sProps.setProperty("ColorDialogMode", Integer.toString(ccdDialogMode));
         // --------- open/save dialog -------------
         sProps.setProperty("OpenSaveDialogPosX", Integer.toString(osdPositionX));
         sProps.setProperty("OpenSaveDialogPosY", Integer.toString(osdPositionY));
@@ -176,6 +179,7 @@ public class Options {
             // --------- color picker dialog -------------
             ccdPositionX = Integer.parseInt(sProps.getProperty("ColorDialogPosX", "-1"));
             ccdPositionY = Integer.parseInt(sProps.getProperty("ColorDialogPosY", "-1"));
+            ccdDialogMode = Integer.parseInt(sProps.getProperty("ColorDialogMode", "0"));
             // --------- open/save dialog -------------
             osdPositionX = Integer.parseInt(sProps.getProperty("OpenSaveDialogPosX", "-1"));
             osdPositionY = Integer.parseInt(sProps.getProperty("OpenSaveDialogPosY", "-1"));
@@ -199,11 +203,11 @@ public class Options {
     }
 
     /** An icon showing the selected state for any CheckBoxes and Menus at all parts of the application. */
-    public static ImageIcon cbIconSelected
+    public static final ImageIcon cbIconSelected
             = createImageIcon("checkbutton_icon_selected.png");     // Icon_Selected for menus 
 
     /** An icon showing the non_selected state for any CheckBoxes and Menus at all parts of the application. */
-    public static ImageIcon cbIconStandard
+    public static final ImageIcon cbIconStandard
             = createImageIcon("checkbutton_icon_standard.png");     // Icon_Selected for menus 
 
     /** Enumeration of possible operating systems. */
@@ -231,6 +235,21 @@ public class Options {
         }
         return os;
     }
+
+    /**
+     * Gets the frame icon depends on the current OS;
+     * @return application icon image
+     */
+    public static Image getAppIcon() {
+        switch (getOS()) {
+            case MAC:
+            case LINUX:
+                return Options.createImage("appicon_48.png");
+            default:
+                return Options.createImage("appicon_32.png");
+        }
+    }
+
 
     /**
      * Loads Icon from the resources.

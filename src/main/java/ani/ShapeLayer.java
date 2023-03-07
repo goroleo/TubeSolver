@@ -47,6 +47,7 @@ public class ShapeLayer extends JComponent {
      * @param img shape image to fill it
      * @param clr color to fill the shape
      */
+    @SuppressWarnings("unused")
     public ShapeLayer(BufferedImage img, Color clr) {
         this(img);
         setColor(clr);

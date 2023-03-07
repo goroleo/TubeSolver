@@ -94,6 +94,7 @@ import java.awt.event.ActionEvent;
 ///////////////////////////////////////////////////////////////////////////
 
     /** The constructor of the Board menu. Creates the menu and adds items.  */
+    @SuppressWarnings("MagicConstant")
     public BoardMenu() {
 
         super();

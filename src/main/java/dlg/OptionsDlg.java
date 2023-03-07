@@ -32,9 +32,10 @@ public class OptionsDlg extends JDialog {
     private final JCheckBox cbSaveAfterSolve = newCheckBox();
     private final JCheckBox cbSaveBeforeClose = newCheckBox();
 
-    LPictureButton btnOk;
-    LPictureButton btnCancel;
+    final LPictureButton btnOk;
+    final LPictureButton btnCancel;
 
+    @SuppressWarnings("MagicConstant")
     public OptionsDlg(JFrame owner) {
         super(owner, ResStrings.getString("strOptions"), true);
         this.parent = owner;
@@ -147,6 +148,7 @@ public class OptionsDlg extends JDialog {
         super.setVisible(b);
     }
 
+    @SuppressWarnings("MagicConstant")
     private JCheckBox newCheckBox() {
         JCheckBox cb = new JCheckBox();
         cb.setBackground(null);

@@ -216,7 +216,6 @@ public class FileItem extends JComponent {
      *
      * @param f file to be precessed and displayed.
      */
-    @SuppressWarnings("unused")
     public FileItem(File f) {
         this(f, true, 0);
     }
@@ -365,7 +364,6 @@ public class FileItem extends JComponent {
     /**
      * @return file extension.
      */
-    @SuppressWarnings("unused")
     public String getExt() {
         return fExt;
     }
@@ -380,7 +378,6 @@ public class FileItem extends JComponent {
     /**
      * @return file length (size) of the file.
      */
-    @SuppressWarnings("unused")
     public long getLength() {
         return fLength;
     }
@@ -397,7 +394,6 @@ public class FileItem extends JComponent {
     /**
      * @return file date/time stamp.
      */
-    @SuppressWarnings("unused")
     public LocalDateTime getTime() {
         return fTime;
     }
@@ -554,7 +550,6 @@ public class FileItem extends JComponent {
     /**
      * @return true if this item is a selected item.
      */
-    @SuppressWarnings("unused")
     public boolean isSelected() {
         return selected;
     }
@@ -579,7 +574,6 @@ public class FileItem extends JComponent {
     /**
      * @return true if the mouse cursor is above this item.
      */
-    @SuppressWarnings("unused")
     public boolean isMouseOver() {
         return mouseOver;
     }

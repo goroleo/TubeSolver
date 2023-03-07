@@ -108,6 +108,7 @@ public class LTextField extends JTextField {
         return newValue.trim();
     }
 
+    @SuppressWarnings("unused")
     public String getForbiddenSigns() {
         return forbidden;
     }

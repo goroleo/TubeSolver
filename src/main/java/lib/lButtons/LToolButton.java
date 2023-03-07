@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+@SuppressWarnings("unused")
 public class LToolButton extends LPictureButton {
 
     private BufferedImage iconImg;

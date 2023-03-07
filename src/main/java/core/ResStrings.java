@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
  *  Where <i>[lang_id]</i> is a three-letters lowercase language identifier, corresponding ISO 639-2.
  *  All language files must have EVERY string resource to avoid crashing the application.
  */
+@SuppressWarnings("unused")
 public class ResStrings {
 
     /** A current locale bundle  */
@@ -42,7 +43,9 @@ public class ResStrings {
         this("eng");
     }
 
-    /** Creates resource bundle with the specified language. */
+    /** Creates resource bundle with the specified language.
+     * @param langCode language ID, the three-letters ISO 639-2 language code
+     */
     public ResStrings(String langCode) {
         fillLangsArray();
         setBundle(langCode);
@@ -62,7 +65,7 @@ public class ResStrings {
             fillLangsArray();
     }
 
-    /** Get count of available languages.  */
+    /** @return count of available languages.  */
     public static int getLangsCount() {
         return languages.length;
     }
@@ -70,6 +73,7 @@ public class ResStrings {
     /**
      * Get language ID (3-letters) by the language number.
      * @param number - language number in the array
+     * @return language ID, the three-letters ISO 639-2 language code.
      */
     public static String getLangCode(int number) {
         if (number >= 0 && number <= languages.length) {

@@ -44,6 +44,7 @@ public class SolveDlg extends JDialog {
     Solver ts;
     boolean solved = false;
 
+    @SuppressWarnings("MagicConstant")
     public SolveDlg(JFrame owner, BoardModel startBoard) {
 
         super(owner, ResStrings.getString("strSolving"), true);
@@ -187,17 +188,15 @@ public class SolveDlg extends JDialog {
     public void setVisible(boolean b) {
         if (b) {
             wl.start();
-            //          fl.start();
         } else {
             wl.stop();
         }
         super.setVisible(b);
     }
 
-    public boolean solve() {
+    public void solve() {
         solved = false;
         ts.startSolve();
         setVisible(true);
-        return solved;
     }
 }

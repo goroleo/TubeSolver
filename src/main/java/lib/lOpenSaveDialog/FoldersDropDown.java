@@ -17,17 +17,39 @@ import java.io.File;
 
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 
+/**
+ * A Folder Drop Down component. Displays the current folder in a combo box.
+ */
 public class FoldersDropDown extends JComponent implements FolderListener {
 
+    /**
+     * A FileItem displayed the current folder.
+     */
     private final FileItem folderItem;
+
+    /**
+     * An image that displays arrow Up and arrow Down in depends on FoldersPanel visibility.
+     */
     private final BufferedImage imgUpDown;
 
-    private boolean rollover = false;
+    /**
+     * True if the mouse cursor is over this component.
+     */
+    private boolean mouseOver = false;
 
+    /**
+     * True if this component is focused.
+     */
     private boolean focused = false;
 
+    /**
+     * A color for selected background item.
+     */
     private final Color selectedBackground = new Color(0xb8cfe5);
 
+    /**
+     * Creates a Folder Drop Down component.
+     */
     public FoldersDropDown() {
 
         this.setFocusable(true);
@@ -79,13 +101,13 @@ public class FoldersDropDown extends JComponent implements FolderListener {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                rollover = true;
+                mouseOver = true;
                 repaint();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                rollover = false;
+                mouseOver = false;
                 repaint();
             }
         });
@@ -120,7 +142,7 @@ public class FoldersDropDown extends JComponent implements FolderListener {
         g.setColor(getBackground());
         g.fillRect(2, 2, getWidth() - 4, getHeight() - 4);
 
-        if (rollover) {
+        if (mouseOver) {
             g.setColor(Color.LIGHT_GRAY);
             g.drawRect(2, 2, getWidth() - 5, getHeight() - 5);
         }
@@ -138,6 +160,9 @@ public class FoldersDropDown extends JComponent implements FolderListener {
                 null);
     }
 
+    /**
+     * Updates UpDown image in depends on FoldersPanel visibility.
+     */
     public void updateBtn() {
 
         BufferedImage imgSource;
@@ -158,6 +183,9 @@ public class FoldersDropDown extends JComponent implements FolderListener {
         }
     }
 
+    /**
+     * Handles the mouse click event.
+     */
     public void doClick() {
         if (osPan != null) {
             osPan.showFoldersPanel(this, !osPan.isFoldersPanelVisible());

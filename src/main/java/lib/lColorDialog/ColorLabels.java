@@ -15,7 +15,9 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
-import static lib.lColorDialog.ColorPanel.currentColor;
+import static lib.lColorDialog.ColorPanel.current;
+import static lib.lColorDialog.LColorDialog.cPanel;
+
 import lib.lTextFields.LDecTextField;
 import lib.lTextFields.LHexTextField;
 
@@ -61,13 +63,7 @@ public class ColorLabels extends JComponent {
      * The field are listen the change of current color and allows to change
      * color value directly.
      */
-    @SuppressWarnings({"unused", "FieldCanBeLocal"})
     private final lnHexField lnHex;
-
-    /**
-     * <b>colorScheme</b> is an integer value. 0 means HSB/HSV, 1 means HSL:
-     */
-    private int colorScheme = 0;
 
     
     public ColorLabels() {
@@ -101,15 +97,13 @@ public class ColorLabels extends JComponent {
         addLabel("#", 5, 170, 4);              // params: Text, X-pos, Y-pos, Alignment mode constant
         lnHex = addHexField(30, 170);          // params: X-position, Y-position
 
-        lnRadioHue.setSelected(true);
+//        lnRadioHue.setSelected(true);
         setForeground(null);
         setBounds(0, 0, 118, 192);
     }
 
-    public void updateColorScheme(int scheme) {
-        if (colorScheme != scheme) {
-            colorScheme = scheme;
-            if (colorScheme == 0) {
+    public void updateColorScheme() {
+            if (cPanel.getColorScheme() == 0) {
                 lnRadioBri.setText("B");
             } else {
                 lnRadioBri.setText("L");
@@ -117,11 +111,10 @@ public class ColorLabels extends JComponent {
             lnTextHue.updateColor();
             lnTextSat.updateColor();
             lnTextBri.updateColor();
-        }
     }
 
-    public void updateDialogMode(int newMode) {
-        switch (newMode) {
+    public void updateDialogMode() {
+        switch (cPanel.getDialogMode()) {
             case 0: // hue
                 lnRadioHue.setSelected(true);
                 break;
@@ -166,7 +159,7 @@ public class ColorLabels extends JComponent {
             } else if (rBut == lnRadioB) {
                 newMode = 5;
             }
-            ColorPanel.setDialogMode(newMode);
+            cPanel.setDialogMode(newMode);
         });
 
         bg.add(rb);
@@ -176,7 +169,7 @@ public class ColorLabels extends JComponent {
 
     private lnTextField addTextField(int maxValue, int y) {
         lnTextField tf = new lnTextField(y, 0, maxValue);
-        currentColor.addListener(tf);
+        current.addListener(tf);
         this.add(tf);
         return tf;
     }
@@ -184,7 +177,7 @@ public class ColorLabels extends JComponent {
     @SuppressWarnings("SameParameterValue")
     private lnHexField addHexField(int x, int y) {
         lnHexField hf = new lnHexField(x, y);
-        currentColor.addListener(hf);
+        current.addListener(hf);
         this.add(hf);
         return hf;
     }
@@ -216,29 +209,29 @@ public class ColorLabels extends JComponent {
             int newValue = 0;
 
             if (this == lnTextHue) {
-                if (colorScheme == 0) {
-                    newValue = Math.round(currentColor.getHSBhue() * getMaxValue());
+                if (cPanel.getColorScheme() == 0) {
+                    newValue = Math.round(current.getHSBhue() * getMaxValue());
                 } else {
-                    newValue = Math.round(currentColor.getHSLhue() * getMaxValue());
+                    newValue = Math.round(current.getHSLhue() * getMaxValue());
                 }
             } else if (this == lnTextSat) {
-                if (colorScheme == 0) {
-                    newValue = Math.round(currentColor.getHSBsat() * getMaxValue());
+                if (cPanel.getColorScheme() == 0) {
+                    newValue = Math.round(current.getHSBsat() * getMaxValue());
                 } else {
-                    newValue = Math.round(currentColor.getHSLsat() * getMaxValue());
+                    newValue = Math.round(current.getHSLsat() * getMaxValue());
                 }
             } else if (this == lnTextBri) {
-                if (colorScheme == 0) {
-                    newValue = Math.round(currentColor.getHSBbri() * getMaxValue());
+                if (cPanel.getColorScheme() == 0) {
+                    newValue = Math.round(current.getHSBbri() * getMaxValue());
                 } else {
-                    newValue = Math.round(currentColor.getHSLlight() * getMaxValue());
+                    newValue = Math.round(current.getHSLlight() * getMaxValue());
                 }
             } else if (this == lnTextR) {
-                newValue = currentColor.getRed();
+                newValue = current.getRed();
             } else if (this == lnTextG) {
-                newValue = currentColor.getGreen();
+                newValue = current.getGreen();
             } else if (this == lnTextB) {
-                newValue = currentColor.getBlue();
+                newValue = current.getBlue();
             }
 
             if (newValue != getValue()) {
@@ -250,29 +243,29 @@ public class ColorLabels extends JComponent {
         @Override
         public void valueChanged() {
             if (this == lnTextHue) {
-                if (colorScheme == 0) {
-                    currentColor.setHSBhue(this, (float) getValue() / (float) getMaxValue());
+                if (cPanel.getColorScheme() == 0) {
+                    current.setHSBhue(this, (float) getValue() / (float) getMaxValue());
                 } else {
-                    currentColor.setHSLhue(this, (float) getValue() / (float) getMaxValue());
+                    current.setHSLhue(this, (float) getValue() / (float) getMaxValue());
                 }
             } else if (this == lnTextBri) {
-                if (colorScheme == 0) {
-                    currentColor.setHSBbri(this, (float) getValue() / (float) getMaxValue());
+                if (cPanel.getColorScheme() == 0) {
+                    current.setHSBbri(this, (float) getValue() / (float) getMaxValue());
                 } else {
-                    currentColor.setHSLlight(this, (float) getValue() / (float) getMaxValue());
+                    current.setHSLlight(this, (float) getValue() / (float) getMaxValue());
                 }
             } else if (this == lnTextSat) {
-                if (colorScheme == 0) {
-                    currentColor.setHSBsat(this, (float) getValue() / (float) getMaxValue());
+                if (cPanel.getColorScheme() == 0) {
+                    current.setHSBsat(this, (float) getValue() / (float) getMaxValue());
                 } else {
-                    currentColor.setHSLsat(this, (float) getValue() / (float) getMaxValue());
+                    current.setHSLsat(this, (float) getValue() / (float) getMaxValue());
                 }
             } else if (this == lnTextR) {
-                currentColor.setRed(this, getValue());
+                current.setRed(this, getValue());
             } else if (this == lnTextG) {
-                currentColor.setGreen(this, getValue());
+                current.setGreen(this, getValue());
             } else if (this == lnTextB) {
-                currentColor.setBlue(this, getValue());
+                current.setBlue(this, getValue());
             }
         } // setColor
     }
@@ -282,17 +275,17 @@ public class ColorLabels extends JComponent {
         public lnHexField(int x, int y) {
             super(6);
             setBounds(x, y, 70, 22);
-            setText(currentColor.getHexColor());
+            setText(current.getHexColor());
         }
 
         @Override
         public void updateColor() {
-            setText(currentColor.getHexColor());
+            setText(current.getHexColor());
         }
 
         @Override
         public void valueChanged() {
-            currentColor.setRGB(this, getValue());
+            current.setRGB(this, getValue());
         }
 
     } // lnHexField

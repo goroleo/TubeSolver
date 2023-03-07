@@ -22,7 +22,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
-import static lib.lColorDialog.ColorPanel.currentColor;
+import static lib.lColorDialog.ColorPanel.current;
 
 /**
  *
@@ -30,18 +30,17 @@ import static lib.lColorDialog.ColorPanel.currentColor;
  * window.
  *
  */
+@SuppressWarnings("unused")
 public class LColorDialog extends JDialog {
 
     private final JFrame owner;
     
-    private final ColorPanel cPan = new ColorPanel(this, true);
+    public static ColorPanel cPanel;
 
-    @SuppressWarnings("unused")
     public LColorDialog(JFrame owner) {
         this(owner, Color.white);
     }
 
-    @SuppressWarnings("unused")
     public LColorDialog(Color clr) {
         this(null, clr);
     }
@@ -57,19 +56,26 @@ public class LColorDialog extends JDialog {
     private void initFrame() {
         setDefaultCloseOperation(0); // DO_NOTHING_ON_CLOSE
         setIconImage(ColorPanel.lnFrameIcon);
+
+        cPanel = new ColorPanel(this, true);
+
         calculateSize();
         calculatePos();
         setLayout(null);
         setBackground(new Color(0x28, 0x28, 0x28));
         setForeground(Color.white);
-        getContentPane().add(cPan);
+        getContentPane().add(cPanel);
+
+        if (Options.ccdDialogMode < 0 && Options.ccdDialogMode > 5)
+            Options.ccdDialogMode = 0;
+        setDialogMode(Options.ccdDialogMode);
     }
     
     private void calculateSize() {
         setResizable(true);
         Dimension dim = new Dimension();
-        dim.width = cPan.getWidth();
-        dim.height = cPan.getHeight();
+        dim.width = cPanel.getWidth();
+        dim.height = cPanel.getHeight();
         setPreferredSize(dim);
         pack();
         int realW = getContentPane().getWidth();
@@ -103,19 +109,19 @@ public class LColorDialog extends JDialog {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                cPan.refuseAndClose();
+                cPanel.refuseAndClose();
             }
         });
 
         // ESCAPE pressed
         getRootPane().registerKeyboardAction(
-                (ActionEvent e) -> cPan.refuseAndClose(),
+                (ActionEvent e) -> cPanel.refuseAndClose(),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
                 2); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
-                (ActionEvent e) -> cPan.confirmAndClose(),
+                (ActionEvent e) -> cPanel.confirmAndClose(),
                 KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
                 2); // WHEN_IN_FOCUSED_WINDOW
     }
@@ -130,68 +136,79 @@ public class LColorDialog extends JDialog {
         getContentPane().setForeground(fg);
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * @return dialog mode
+     * @see ColorPanel#getDialogMode
+     */
+    public int getDialogMode() {
+        return cPanel.getDialogMode();
+    }
+
+    /**
+     * @param newMode dialog mode
+     * @see ColorPanel#getDialogMode
+     */
+    public void setDialogMode(int newMode) {
+        cPanel.setDialogMode(newMode);
+    }
+
+    public int getColorScheme() {
+        return cPanel.getColorScheme();
+    }
     public void setColorScheme(int scheme) {
-        cPan.setColorScheme(scheme);
+        cPanel.setColorScheme(scheme);
     }
 
-    @SuppressWarnings("unused")
     public int getColorValue() {
-        return cPan.getColor().getRGB();
+        return cPanel.getColor().getRGB();
     }
 
-    @SuppressWarnings("unused")
     public Color getColor() {
-        return cPan.getColor();
+        return cPanel.getColor();
     }
 
-    @SuppressWarnings("unused")
     public void setColor(int rgb) {
-        cPan.setColor(new Color(rgb));
+        cPanel.setColor(new Color(rgb));
     }
 
-    @SuppressWarnings("unused")
     public void setColor(Color clr) {
-        cPan.setColor(clr);
+        cPanel.setColor(clr);
     }
 
-    @SuppressWarnings("unused")
     public void setPrevColor(int rgb) {
-        cPan.setPrevColor(new Color(rgb));
+        cPanel.setPrevColor(new Color(rgb));
     }
 
-    @SuppressWarnings("unused")
     public void setPrevColor(Color clr) {
-        cPan.setPrevColor(clr);
+        cPanel.setPrevColor(clr);
     }
 
-    @SuppressWarnings("unused")
     public void setColors(int rgb) {
         setColors(new Color(rgb));
     }
 
     public void setColors(Color clr) {
-        cPan.setPrevColor(clr);
-        cPan.setColor(clr);
+        cPanel.setPrevColor(clr);
+        cPanel.setColor(clr);
     }
 
     public void addColorListener(ColorListener toAdd) {
-        currentColor.addListener(toAdd);
+        current.addListener(toAdd);
     }
 
-    @SuppressWarnings("unused")
     public void removeColorListener(ColorListener toRemove) {
-        currentColor.removeListener(toRemove);
+        current.removeListener(toRemove);
     }
 
     public Color chooseColor() {
         setVisible(true);
-        return currentColor.getColor();
+        return current.getColor();
     }
 
     public void saveOptions() {
         Options.ccdPositionX = getX();
         Options.ccdPositionY = getY();
+        Options.ccdDialogMode = getDialogMode();
     }
 
 }

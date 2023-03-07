@@ -22,6 +22,7 @@ import java.util.ArrayList;
  *     <li> <b>color</b> - color number (from the palette) of moved cell(s).
  * </ul>
  */
+@SuppressWarnings("unused")
 public class GameMoves extends ArrayList<Integer> {
 
     /*

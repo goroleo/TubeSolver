@@ -123,6 +123,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * The routine to add Palette Popup to the specified component.
+     * @param comp a component to add the popup menu.
      */
     public void addPopupMenu(JComponent comp) {
         comp.addMouseListener(new MouseAdapter() {
@@ -146,14 +147,14 @@ public class PalettePanel extends JComponent {
     }
 
     /**
-     * Get number of rows of the palette buttons.
+     * @return number of rows of the palette buttons.
      */
     public int getRows() {
         return rows;
     }
 
     /**
-     * Get number of columns of the palette buttons.
+     * @return number of columns of the palette buttons.
      */
     public int getCols() {
         return cols;
@@ -347,7 +348,7 @@ public class PalettePanel extends JComponent {
     }
 
     /**
-     * Gets the count of color buttons.
+     * @return the count of color buttons.
      */
     public int getColorsCount() {
         return colors.size();

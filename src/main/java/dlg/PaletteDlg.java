@@ -48,12 +48,16 @@ public class PaletteDlg extends JDialog {
     private int btnHeight;
 
     /** Modal result of the dialog, a number of the button causes it to close. */
+    @SuppressWarnings("unused")
     public int modalResult = 3;
 
     /** Old palette colors, to restore the palette if the Cancel button will be pressed/clicked.  */
     private static final Color[] oldPalette = new Color[pal.size()-1];
 
-    /** The constructor. Creating a frame of Dialog and adding its components. */
+    /** The constructor. Creating a frame of Dialog and adding its components.
+     * @param owner the parent frame to center the dialog.
+     */
+    @SuppressWarnings("MagicConstant")
     public PaletteDlg(JFrame owner) {
         super(owner, ResStrings.getString("strPalette"), true);
 

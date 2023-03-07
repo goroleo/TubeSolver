@@ -87,6 +87,7 @@ public class PaletteMenu extends LPopupMenu {
     /**
      * The constructor. Creates the Palette menu and adds menu items.
      */
+    @SuppressWarnings("MagicConstant")
     public PaletteMenu() {
         super();
 

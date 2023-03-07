@@ -1,29 +1,24 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 
 package lib.lColorDialog;
 
 import core.ResStrings;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.EventQueue;
-import java.awt.Point;
-import java.awt.Toolkit;
+import lib.lButtons.LPictureButton;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import lib.lButtons.LPictureButton;
 
 /**
  * This is the main panel to place all other color change controls inside. All
@@ -33,61 +28,84 @@ public class ColorPanel extends JComponent {
 
     /**
      * Dialog controls: color box.
+     *
      * @see ColorBox
      */
-    private static ColorBox cBox;
-    
+    private final ColorBox cBox;
+
     /**
      * Dialog controls: color line.
+     *
      * @see ColorLine
      */
-    private static ColorLine cLine;
-    
+    private final ColorLine cLine;
+
     /**
      * Dialog controls: color labels.
+     *
      * @see ColorLabels
      */
-    private static ColorLabels cLabels;
+    private final ColorLabels cLabels;
 
     /**
      * Dialog controls: Current color and previous color.
+     *
      * @see ColorCurrent
      */
-    private static ColorCurrent cCur;
+    private final ColorCurrent cCur;
 
     /**
      * Dialog colors: current color.
      * All the color controls can change this color, and all other controls
      * are listen these changes.
-     * @see ColorChanger
-     * @see ColorCurrent
      */
-    public static ColorChanger currentColor;
-    
+    public static ColorChanger current;
+
     /**
      * Dialog colors: previous color.
      * This color draws into lnColorCurrent panel.
+     *
      * @see ColorCurrent
      */
-    public static int lnPrevColor = 0xffffffff;
+    public static int previousColor = 0xffffffff;
 
     /**
-     * Parent dialog frame used to access it from other controls (i.e. from 
+     * <b>dialogMode</b> is an integer value from 0 to 5<br>
+     * <i>HSB/HSV (or HSL) color model:</i><ul>
+     * <li>0. <b>Hue</b>
+     * <li>1. <b>Saturation</b>
+     * <li>2. <b>Brightness</b> (Lightness when HSL)</ul>
+     * <i>RGB color model:</i><ul>
+     * <li>3. <b>Red</b>
+     * <li>4. <b>Green</b>
+     * <li>5. <b>Blue</b></ul>
+     */
+    private int dialogMode = 0; // 0-5 means Hue, Sat, Bri, R, G, B
+
+    /**
+     * colorScheme is an integer value. 0 means HSB/HSV, 1 means HSL
+     */
+    private int colorScheme = 0;
+
+
+    /**
+     * Parent dialog frame used to access it from other controls (i.e. from
      * buttons).
      */
     public final JDialog dlgFrame;
 
     /**
      * Shared images: Dialog frame icon. <br>
-     * All shared images are load from this panel, and all other controls no 
+     * All shared images are load from this panel, and all other controls no
      * need to have their own instances (and their own loader) of shared images.
      */
     public static BufferedImage lnFrameIcon;    // Dialog icon )) 
 
     /**
      * Shared images: Cross cursor for ColorBox and ColorLine. <br>
-     * All shared images are load from this panel, and all other controls no 
+     * All shared images are load from this panel, and all other controls no
      * need to have their own instances (and their own loader) of shared images.
+     *
      * @see ColorBox
      * @see ColorLine
      */
@@ -95,8 +113,9 @@ public class ColorPanel extends JComponent {
 
     /**
      * Shared images: Circle cursor for lnColorBox and lnColorLine. <br>
-     * All shared images are load from this panel, and all other controls no 
+     * All shared images are load from this panel, and all other controls no
      * need to have their own instances (and their own loader) of shared images.
+     *
      * @see ColorBox
      * @see ColorLine
      */
@@ -104,24 +123,27 @@ public class ColorPanel extends JComponent {
 
     /**
      * Shared images: normal state Icon for RadioButtons. Used in lnColorLabels.<br>
-     * All shared images are load from this panel, and all other controls no 
+     * All shared images are load from this panel, and all other controls no
      * need to have their own instances (and their own loader) of shared images.
+     *
      * @see ColorLabels
      */
     public static ImageIcon rbIcon;             // Icon for RadioButtons
 
     /**
      * Shared images: Selected Icon for RadioButtons. Used in lnColorLabels.<br>
-     * All shared images are load from this panel, and all other controls no 
+     * All shared images are load from this panel, and all other controls no
      * need to have their own instances (and their own loader) of shared images.
+     *
      * @see ColorLabels
      */
     public static ImageIcon rbIconSelected;     // Icon_Selected for RadioButtons  
 
     /**
      * Constructor. <br>
-     * @param ownerFrame the parent dialog frame used to access it from other 
-     * controls (i.e. from buttons). 
+     *
+     * @param ownerFrame  the parent dialog frame used to access it from other
+     *                    controls (i.e. from buttons).
      * @param showButtons true or false
      */
     public ColorPanel(JDialog ownerFrame, boolean showButtons) {
@@ -131,23 +153,23 @@ public class ColorPanel extends JComponent {
 
         setSize(470, showButtons ? 345 : 300);
 
-        currentColor = new ColorChanger();
+        current = new ColorChanger();
 
         loadResources();
 
         cBox = new ColorBox();
         cBox.setLocation(15, 10);
-        currentColor.addListener(cBox);
+        current.addListener(cBox);
         add(cBox);
 
         cLine = new ColorLine();
         cLine.setLocation(295, 10);
-        currentColor.addListener(cLine);
+        current.addListener(cLine);
         add(cLine);
 
         cCur = new ColorCurrent();
         cCur.setLocation(338, 10);
-        currentColor.addListener(cCur);
+        current.addListener(cCur);
         add(cCur);
 
         cLabels = new ColorLabels();
@@ -167,36 +189,46 @@ public class ColorPanel extends JComponent {
             btnCancel.setDefaultCapable(false);
             add(btnCancel);
         }
-//        dlgFrame.getRootPane().setDefaultButton(btnOk);
     }
 
-    public static void setDialogMode(int newMode) {
-        cBox.updateDialogMode(newMode);
-        cLine.updateDialogMode(newMode);
-        cLabels.updateDialogMode(newMode);
+    /**
+     * @return dialog mdoe
+     * @see ColorPanel#dialogMode
+     */
+    public int getDialogMode() {
+        return dialogMode;
+    }
+
+    public void setDialogMode(int newMode) {
+        dialogMode = newMode;
+        cBox.updateColor();
+        cLine.updateColor();
+        cLabels.updateDialogMode();
+    }
+
+    public int getColorScheme() {
+        return colorScheme;
     }
 
     public void setColorScheme(int scheme) {
-        cBox.updateColorScheme(scheme);
-        cLine.updateColorScheme(scheme);
-        cLabels.updateColorScheme(scheme);
+        if (scheme == 0 || scheme == 1) {
+            colorScheme = scheme;
+            cBox.updateColor();
+            cLine.updateColor();
+            cLabels.updateColorScheme();
+        }
     }
 
     public Color getColor() {
-        return currentColor.getColor();
+        return current.getColor();
     }
 
     public void setColor(Color clr) {
-        currentColor.setRGB(this, clr.getRGB());
-    }
-
-    @SuppressWarnings("unused")
-    public Color getPrevColor() {
-        return new Color(lnPrevColor);
+        current.setRGB(this, clr.getRGB());
     }
 
     public void setPrevColor(Color clr) {
-        lnPrevColor = clr.getRGB();
+        previousColor = clr.getRGB();
         cCur.repaint();
     }
 
@@ -210,28 +242,30 @@ public class ColorPanel extends JComponent {
         btn.setFocusable(true);
         return btn;
     }
-    
-    /** 
-    * The routine will close the frame. Current color is the chosen color already.
-    * Call this routine when Ok button click.
-    * @see #dlgFrame
-    */
+
+    /**
+     * The routine will close the frame. Current color is the chosen color already.
+     * Call this routine when Ok button click.
+     *
+     * @see #dlgFrame
+     */
     public void confirmAndClose() {
         EventQueue.invokeLater(dlgFrame::dispose);
         ((LColorDialog) dlgFrame).saveOptions();
     }
 
-    /** 
-    * All color changes will be cancelled, so the previous color will be set as 
-    * a current. Call this routine when Cancel button click.
-    * @see #dlgFrame
-    */
+    /**
+     * All color changes will be cancelled, so the previous color will be set as
+     * a current. Call this routine when Cancel button click.
+     *
+     * @see #dlgFrame
+     */
     public void refuseAndClose() {
-        currentColor.setRGB(this, lnPrevColor);
+        current.setRGB(this, previousColor);
         EventQueue.invokeLater(dlgFrame::dispose);
         ((LColorDialog) dlgFrame).saveOptions();
     }
-    
+
 
 /////////////////////////////////////////////////////////
 //         

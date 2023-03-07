@@ -17,7 +17,7 @@ import java.util.Comparator;
  * Every move knows the board configuration before the move and after it. Every move knows a parent
  * (previous) move. Every move has a rank.
  */
-public class ColorMoveItem implements Comparator<ColorMoveItem> {
+public class ColorMoveItem {
 
     /**
      * This move's number in moves array.
@@ -70,13 +70,8 @@ public class ColorMoveItem implements Comparator<ColorMoveItem> {
     /**
      * Compare moves by rank
      */
-    public static Comparator<ColorMoveItem> RankComparator
+    public static final Comparator<ColorMoveItem> RankComparator
             = Comparator.comparingInt((ColorMoveItem cm) -> cm.rank);
-
-    @Override
-    public int compare(ColorMoveItem cm1, ColorMoveItem cm2) {
-        return cm1.rank - cm2.rank;
-    }
 
     /**
      * Doing move and check what we'll get after it. <br>

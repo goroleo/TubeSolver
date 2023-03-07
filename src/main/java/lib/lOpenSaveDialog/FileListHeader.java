@@ -106,14 +106,6 @@ public class FileListHeader extends JComponent {
     private final FilesPanel fPanel;
 
     /**
-     * This creates the Header without a parent.
-     */
-    @SuppressWarnings("unused")
-    public FileListHeader() {
-        this(null);
-    }
-
-    /**
      * This creates the Header.
      *
      * @param owner a FilesPanel object that owns this header.

@@ -29,6 +29,7 @@ import core.ResStrings;
 import core.Options;
 import lib.lButtons.LPictureButton;
 
+@SuppressWarnings("unused")
 public class MessageDlg extends JDialog {
 
     private final JFrame parent;
@@ -72,6 +73,7 @@ public class MessageDlg extends JDialog {
         this(null, msg, btnSet);
     }
 
+    @SuppressWarnings("MagicConstant")
     public MessageDlg(JFrame owner, String msg, int btnSet) {
 
         super(owner, "Message", true);

@@ -26,6 +26,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
+@SuppressWarnings("unused")
 public class MainFrame extends JFrame {
 
     private int width = 1000;
@@ -33,9 +34,7 @@ public class MainFrame extends JFrame {
     public static Palette pal;
 
     public static PalettePanel palPan;
-    public static boolean colorsVisible;
     public static BoardPanel tubesPan;
-    public static boolean tubesVisible;
 
     /**
      * The toolbar with action buttons.
@@ -45,7 +44,7 @@ public class MainFrame extends JFrame {
     /** The background layer of the Main frame. */
     private static PatternLayer pattern;
 
-    private final CongratsPanel congPan = new CongratsPanel();
+    private final static CongratsPanel congPan = new CongratsPanel();
 
     public static GameMoves gameMoves = new GameMoves();
     public static int movesDone;
@@ -119,16 +118,7 @@ public class MainFrame extends JFrame {
         }
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        Image img;
-        switch (core.Options.getOS()) {
-            case MAC:
-            case LINUX:
-                img = Options.createImage("appicon_48.png");
-                break;
-            default:
-                img = Options.createImage("appicon_32.png");
-                break;
-        }
+        Image img = Options.getAppIcon();
         setIconImage(img);
 
         addWindowListener(new WindowAdapter() {
@@ -164,7 +154,7 @@ public class MainFrame extends JFrame {
             saveTempGame();
         }
         if (Options.saveGameBeforeClose) {
-            saveGameAs(ResStrings.getString("strSaveIDBeforeClose"));
+            saveGameAs(ResStrings.getString("strSaveIDClosed"));
         }
         System.exit(0);
     }
@@ -327,7 +317,6 @@ public class MainFrame extends JFrame {
         // hiding palette
         if (palPan != null) {
             palPan.setVisible(false);
-            colorsVisible = false;
             redockTubes();
         }
 
@@ -409,14 +398,12 @@ public class MainFrame extends JFrame {
         congPan.setVisible(false);
         if (tubesPan != null) {
             tubesPan.saveOptions();
-            tubesVisible = false;
             remove(tubesPan);
             tubesPan.clear();
             tubesPan = null;
         }
         if (palPan != null) {
             palPan.saveOptions();
-            colorsVisible = false;
             remove(palPan);
             palPan.removeAll();
             palPan = null;
@@ -425,7 +412,7 @@ public class MainFrame extends JFrame {
         movesDone = 0;
         TubesIO.clearMoves();
         TubesIO.clearTubes();
-        Palette.usedColors.clearAllColorCounts();
+        Palette.usedColors.clearColorCounts();
         toolPan.updateButtons();
         repaint();
     }
@@ -475,7 +462,6 @@ public class MainFrame extends JFrame {
         palPan.addPopups();
         palPan.reDock();
         palPan.setVisible(true);
-        colorsVisible = true;
         getContentPane().add(palPan);
 
         if (getContentPane().getComponentZOrder(palPan) > getContentPane().getComponentZOrder(pattern)) {
@@ -706,7 +692,7 @@ public class MainFrame extends JFrame {
             palPan.getButton(i).setCount(4);
         }
 
-        Palette.usedColors.clearAllColorCounts();
+        Palette.usedColors.clearColorCounts();
         toolPan.updateButtons();
         nextTubeTo(0);
     }
@@ -957,7 +943,7 @@ public class MainFrame extends JFrame {
 
     public Rectangle getTubesArea() {
         Rectangle area = getColorsArea();
-        if (palPan != null && colorsVisible) {
+        if (palPan != null && palPan.isVisible()) {
             switch (palPan.getDockedTo()) {
                 case 0: // top
                     area.y += palPan.getHeight();
@@ -985,7 +971,7 @@ public class MainFrame extends JFrame {
     }
 
     public void updatePanelsPos() {
-        if (palPan != null && colorsVisible) {
+        if (palPan != null) {
             palPan.reDock();
         }
         redockTubes();
@@ -999,7 +985,7 @@ public class MainFrame extends JFrame {
             dim.width = tubesPan.getWidth();
             dim.height = tubesPan.getHeight();
 
-            if (palPan != null && colorsVisible) {
+            if (palPan != null) {
                 if (palPan.getDockedTo() > 1) { // left, right
                     dim.width = dim.width + palPan.getWidth();
                     dim.height = Math.max(dim.height, palPan.getHeight());
@@ -1023,7 +1009,6 @@ public class MainFrame extends JFrame {
         }
 
         setMinimumSize(dim);
-//        return dim;
     }
 
 }

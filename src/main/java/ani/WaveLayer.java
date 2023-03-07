@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
  * @see #axis
  * @see #forward
  */
+@SuppressWarnings("unused")
 public class WaveLayer extends JComponent implements Runnable {
 
 // -----------------------------------------------------
@@ -226,12 +227,20 @@ public class WaveLayer extends JComponent implements Runnable {
 //     Routines
 //
 
+    /**
+     * Creates a WaveLayer
+     * @param bi image that has a wave animation.
+     */
     public WaveLayer(BufferedImage bi) {
         super();
         setImage(bi);
         calculateShapeSize();
     }
 
+    /**
+     * Sets an image to animate.
+     * @param bi image
+     */
     public void setImage(BufferedImage bi) {
         imgOrig = bi;
         if (imgFrame == null || w != bi.getWidth() || h != bi.getHeight()) {
@@ -242,7 +251,7 @@ public class WaveLayer extends JComponent implements Runnable {
             imgFrame = new BufferedImage(w, h, 2);
             setBounds(0, 0, w, h);
         }
-        updateCurrentFrame();
+        drawCurrentFrame();
     }
 
     /**
@@ -502,7 +511,7 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * Draws the every single frame.
      */
-    private void updateCurrentFrame() {
+    private void drawCurrentFrame() {
 
         // A pixel from the original image
         int pix;
@@ -608,7 +617,7 @@ public class WaveLayer extends JComponent implements Runnable {
                 curPos = curPos - 1.0f;
             }
 
-            updateCurrentFrame();
+            drawCurrentFrame();
             repaint();
 
             try {

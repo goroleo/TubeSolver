@@ -270,7 +270,7 @@ public class ColorButton extends JButton {
         setCount(count + 1);
     }
 
-    /** Gets the counter value. */
+    /** @return the counter value. */
     public int getCount() {
         return count;
     }

@@ -44,11 +44,6 @@ public class BoardModel extends ArrayList<TubeModel> {
     public ColorMoveItem parentMove;
 
     /**
-     * True if the list of possible moves had already been calculated.
-     */
-    public boolean calculated = false;
-
-    /**
      * Create the new tube object and add it to the list
      */
     public void addNewTube() {
@@ -77,21 +72,6 @@ public class BoardModel extends ArrayList<TubeModel> {
         currentMove = null;
         parentMove = null;
         super.clear();
-    }
-
-    /**
-     * Has the board any empty tubes?
-     *
-     * @return number of empty tubes
-     */
-    public int hasEmptyTubes() {
-        int result = 0;
-        for (TubeModel tubeModel : this) {
-            if (tubeModel.state == 0) { // STATE_EMPTY
-                result++;
-            }
-        }
-        return result;
     }
 
     /**
@@ -194,7 +174,7 @@ public class BoardModel extends ArrayList<TubeModel> {
             currentMove = moves.get(idx - 1);
         } else {
             currentMove = null;
-            calculated = false;
+//            calculated = false;
         }
     }
 
@@ -251,7 +231,7 @@ public class BoardModel extends ArrayList<TubeModel> {
      * @see TubeModel#state
      */
     public void fillAvailableColors() {
-        usedColors.clearAllColorCounts();
+        usedColors.clearColorCounts();
         for (TubeModel ct : this) {
             if (ct.state == 1 // STATE_REGULAR
                     || ct.state == 2) {      // STATE_FILLED
@@ -364,7 +344,7 @@ public class BoardModel extends ArrayList<TubeModel> {
         }
 
         if (result > 0) {
-            calculated = true;
+//            calculated = true;
             moves.sort(ColorMoveItem.RankComparator); // sort moves by rank! 
             currentMove = moves.get(moves.size() - 1);
         } else {
@@ -434,20 +414,6 @@ public class BoardModel extends ArrayList<TubeModel> {
             str.append("\n");
         }
         return str.toString();
-    }
-
-    /**
-     * Stores current board to save it
-     */
-    public void store() {
-        TubesIO.storeTubes(this);
-    }
-
-    /**
-     * Restores from saved file into this board
-     */
-    public void restore() {
-        TubesIO.restoreTubes(this);
     }
 
 }

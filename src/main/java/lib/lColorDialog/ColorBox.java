@@ -1,33 +1,32 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 
 package lib.lColorDialog;
 
-import java.awt.EventQueue;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
-import static lib.lColorDialog.ColorPanel.currentColor;
+
+import static lib.lColorDialog.ColorPanel.current;
+import static lib.lColorDialog.LColorDialog.cPanel;
 
 /**
- *
  * This class draws a color box.<br>
  * It has 3 layers: Ground layer with color box, Cursor layer where the "circle"
  * cursor which moved, Mouse layer with a mouse "cross" cursor and mouse
  * listeners.
  *
  * @see ColorLine
- *
  */
 public class ColorBox extends JComponent implements ColorListener {
 
@@ -40,25 +39,13 @@ public class ColorBox extends JComponent implements ColorListener {
     /**
      * This is a buffered image redraws when the current color will change.
      */
-    private final BufferedImage boxImg = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+    private final BufferedImage buffer = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
 
     /**
      * <b>curX</b> and <b>curY</b> are coordinates of the circle cursor that
      * indicates position of the current color in the Box.
      */
     private static int curX = 0, curY = 0; // current position of the "circle" cursor
-
-    /**
-     * <b>dialogMode</b> is an integer value from 0 to 5 that means:
-     * <b>Hue</b>(0), <b>Saturation</b>(1), <b>Brightness</b>(2), <b>Red</b>(3),
-     * <b>Green</b>(4), <b>Blue</b>(5).<br><br>
-     */
-    private int dialogMode = 0; // 0-5 means Hue, Sat, Bri, R, G, B
-
-    /**
-     * <bcolorScheme</b> is an integer value. 0 means HSB/HSV, 1 means HSL:
-     */
-    private int colorScheme = 0; // 0-HSV/HSV, 1-HSL
 
     /**
      * <b>Creates the class which draws ColorBox.</b> <br>
@@ -84,31 +71,7 @@ public class ColorBox extends JComponent implements ColorListener {
      */
     @Override
     public void paintComponent(Graphics g) {
-        g.drawImage(boxImg, 10, 10, null);
-    }
-
-    /**
-     * If the user choose another dialog mode than we need to redraw the
-     * buffered image and update the circle cursor position. The mode is changed
-     * by RadioButtons in class lnColorLabels.
-     *
-     * @param aMode is the new dialog mode
-     * @see ColorLabels
-     */
-    public void updateDialogMode(int aMode) {
-        if (dialogMode != aMode) {
-            dialogMode = aMode;
-            drawBox();
-            updateCursorPos();
-        }
-    }
-
-    public void updateColorScheme(int scheme) {
-        if (colorScheme != scheme) {
-            colorScheme = scheme;
-            drawBox();
-            updateCursorPos();
-        }
+        g.drawImage(buffer, 10, 10, null);
     }
 
     /**
@@ -134,57 +97,57 @@ public class ColorBox extends JComponent implements ColorListener {
         int r, g, b1;
         float h, s, b;
 
-        switch (dialogMode) {
+        switch (cPanel.getDialogMode()) {
             case 0: // Hue
                 s = curX / 255.0f;
                 b = 1.0f - (curY / 255.0f);
-                if (colorScheme == 0) {
-                    h = currentColor.getHSBhue();
-                    currentColor.setHSB(this, h, s, b);
+                if (cPanel.getColorScheme() == 0) {
+                    h = current.getHSBhue();
+                    current.setHSB(this, h, s, b);
                 } else {
-                    h = currentColor.getHSLhue();
-                    currentColor.setHSL(this, h, s, b);
+                    h = current.getHSLhue();
+                    current.setHSL(this, h, s, b);
                 }
                 break;
             case 1: // Saturation
                 h = curX / 255.0f;
                 b = 1.0f - (curY / 255.0f);
-                if (colorScheme == 0) {
-                    s = currentColor.getHSBsat();
-                    currentColor.setHSB(this, h, s, b);
+                if (cPanel.getColorScheme() == 0) {
+                    s = current.getHSBsat();
+                    current.setHSB(this, h, s, b);
                 } else {
-                    s = currentColor.getHSLsat();
-                    currentColor.setHSL(this, h, s, b);
+                    s = current.getHSLsat();
+                    current.setHSL(this, h, s, b);
                 }
                 break;
             case 2: // Brightness
                 h = curX / 255.0f;
                 s = 1.0f - (curY / 255.0f);
-                if (colorScheme == 0) {
-                    b = currentColor.getHSBbri();
-                    currentColor.setHSB(this, h, s, b);
+                if (cPanel.getColorScheme() == 0) {
+                    b = current.getHSBbri();
+                    current.setHSB(this, h, s, b);
                 } else {
-                    b = currentColor.getHSLlight();
-                    currentColor.setHSL(this, h, s, b);
+                    b = current.getHSLlight();
+                    current.setHSL(this, h, s, b);
                 }
                 break;
             case 3: // Red
-                r = currentColor.getRed();
+                r = current.getRed();
                 b1 = curX;
                 g = 255 - curY;
-                currentColor.setRGB(this, r, g, b1);
+                current.setRGB(this, r, g, b1);
                 break;
             case 4: // Green
-                g = currentColor.getGreen();
+                g = current.getGreen();
                 b1 = curX;
                 r = 255 - curY;
-                currentColor.setRGB(this, r, g, b1);
+                current.setRGB(this, r, g, b1);
                 break;
             case 5: // Blue
-                b1 = currentColor.getBlue();
+                b1 = current.getBlue();
                 r = curX;
                 g = 255 - curY;
-                currentColor.setRGB(this, r, g, b1);
+                current.setRGB(this, r, g, b1);
         }
     }
 
@@ -192,45 +155,45 @@ public class ColorBox extends JComponent implements ColorListener {
      * This calculates position of the circle cursor and draw it.
      */
     public void updateCursorPos() {
-        switch (dialogMode) {
+        switch (cPanel.getDialogMode()) {
             case 0: // Hue
-                if (colorScheme == 0) {
-                    curX = Math.round(currentColor.getHSBsat() * 255.0f);  //s 
-                    curY = Math.round((1.0f - currentColor.getHSBbri()) * 255.0f);
+                if (cPanel.getColorScheme() == 0) {
+                    curX = Math.round(current.getHSBsat() * 255.0f);  //s
+                    curY = Math.round((1.0f - current.getHSBbri()) * 255.0f);
                 } else {
-                    curX = Math.round(currentColor.getHSLsat() * 255.0f);  //s 
-                    curY = Math.round((1.0f - currentColor.getHSLlight()) * 255.0f);
+                    curX = Math.round(current.getHSLsat() * 255.0f);  //s
+                    curY = Math.round((1.0f - current.getHSLlight()) * 255.0f);
                 }
                 break;
             case 1: // Saturation
-                if (colorScheme == 0) {
-                    curX = Math.round(currentColor.getHSBhue() * 255.0f);
-                    curY = Math.round((1.0f - currentColor.getHSBbri()) * 255.0f);
+                if (cPanel.getColorScheme() == 0) {
+                    curX = Math.round(current.getHSBhue() * 255.0f);
+                    curY = Math.round((1.0f - current.getHSBbri()) * 255.0f);
                 } else {
-                    curX = Math.round(currentColor.getHSLhue() * 255.0f);
-                    curY = Math.round((1.0f - currentColor.getHSLlight()) * 255.0f);
+                    curX = Math.round(current.getHSLhue() * 255.0f);
+                    curY = Math.round((1.0f - current.getHSLlight()) * 255.0f);
                 }
                 break;
             case 2: // Brightness
-                if (colorScheme == 0) {
-                    curX = Math.round(currentColor.getHSBhue() * 255.0f);
-                    curY = Math.round((1.0f - currentColor.getHSBsat()) * 255.0f);
+                if (cPanel.getColorScheme() == 0) {
+                    curX = Math.round(current.getHSBhue() * 255.0f);
+                    curY = Math.round((1.0f - current.getHSBsat()) * 255.0f);
                 } else {
-                    curX = Math.round(currentColor.getHSLhue() * 255.0f);
-                    curY = Math.round((1.0f - currentColor.getHSLsat()) * 255.0f);
+                    curX = Math.round(current.getHSLhue() * 255.0f);
+                    curY = Math.round((1.0f - current.getHSLsat()) * 255.0f);
                 }
                 break;
             case 3: // Red
-                curX = currentColor.getBlue();
-                curY = 255 - currentColor.getGreen();
+                curX = current.getBlue();
+                curY = 255 - current.getGreen();
                 break;
             case 4: // Green
-                curX = currentColor.getBlue();
-                curY = 255 - currentColor.getRed();
+                curX = current.getBlue();
+                curY = 255 - current.getRed();
                 break;
             case 5: // Blue
-                curX = currentColor.getRed();
-                curY = 255 - currentColor.getGreen();
+                curX = current.getRed();
+                curY = 255 - current.getGreen();
         }
         cursorLayer.repaint();
     }
@@ -239,104 +202,104 @@ public class ColorBox extends JComponent implements ColorListener {
      * The main routine which draws the Box to the buffer and then repaint the
      * component. The drawing routine depends on the dialog mode.
      *
-     * @see #dialogMode
+     * @see ColorPanel#getDialogMode
      */
     private void drawBox() {
         float h, s, b;
         int r, g, b1, clr;
 
-        switch (dialogMode) {
+        switch (cPanel.getDialogMode()) {
             case 0: // Hue
-                if (colorScheme == 0) {
-                    h = currentColor.getHSBhue();
+                if (cPanel.getColorScheme() == 0) {
+                    h = current.getHSBhue();
                 } else {
-                    h = currentColor.getHSLhue();
+                    h = current.getHSLhue();
                 }
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         s = x / 255.0f;
                         b = 1.0f - y / 255.0f;
-                        if (colorScheme == 0) {
+                        if (cPanel.getColorScheme() == 0) {
                             clr = ColorChanger.HSBtoColor(h, s, b);
                         } else {
                             clr = ColorChanger.HSLtoColor(h, s, b);
                         }
-                        boxImg.setRGB(x, y, clr);
+                        buffer.setRGB(x, y, clr);
                     }
                 }
                 break;
 
             case 1: // Saturation
-                if (colorScheme == 0) {
-                    s = currentColor.getHSBsat();
+                if (cPanel.getColorScheme() == 0) {
+                    s = current.getHSBsat();
                 } else {
-                    s = currentColor.getHSLsat();
+                    s = current.getHSLsat();
                 }
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         h = x / 255.0f;
                         b = 1.0f - y / 255.0f;
-                        if (colorScheme == 0) {
+                        if (cPanel.getColorScheme() == 0) {
                             clr = ColorChanger.HSBtoColor(h, s, b);
                         } else {
                             clr = ColorChanger.HSLtoColor(h, s, b);
                         }
-                        boxImg.setRGB(x, y, clr);
+                        buffer.setRGB(x, y, clr);
                     }
                 }
                 break;
 
             case 2: // Brightness
-                if (colorScheme == 0) {
-                    b = currentColor.getHSBbri();
+                if (cPanel.getColorScheme() == 0) {
+                    b = current.getHSBbri();
                 } else {
-                    b = currentColor.getHSLlight();
+                    b = current.getHSLlight();
                 }
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         h = x / 255.0f;
                         s = 1.0f - y / 255.0f;
-                        if (colorScheme == 0) {
+                        if (cPanel.getColorScheme() == 0) {
                             clr = ColorChanger.HSBtoColor(h, s, b);
                         } else {
                             clr = ColorChanger.HSLtoColor(h, s, b);
                         }
-                        boxImg.setRGB(x, y, clr);
+                        buffer.setRGB(x, y, clr);
                     }
                 }
                 break;
 
             case 3: // Red
-                r = currentColor.getRed();
+                r = current.getRed();
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         b1 = x;
                         g = 255 - y;
-                        boxImg.setRGB(x, y,
+                        buffer.setRGB(x, y,
                                 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff));
                     }
                 }
                 break;
 
             case 4: // Green
-                g = currentColor.getGreen();
+                g = current.getGreen();
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         b1 = x;
                         r = 255 - y;
-                        boxImg.setRGB(x, y,
+                        buffer.setRGB(x, y,
                                 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff));
                     }
                 }
                 break;
 
             case 5: // Blue
-                b1 = currentColor.getBlue();
+                b1 = current.getBlue();
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         g = 255 - y;
                         r = x;
-                        boxImg.setRGB(x, y,
+                        buffer.setRGB(x, y,
                                 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff));
                     }
                 }

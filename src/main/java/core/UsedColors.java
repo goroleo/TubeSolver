@@ -85,18 +85,9 @@ public class UsedColors {
     }
 
     /**
-     * Clears the specific color's count and set it to 0.
-     *
-     * @param clr number of the palette's color
-     */
-    public void clearColorCount(byte clr) {
-        buf[clr - 1] = 0;
-    }
-
-    /**
      * Clears all colors' count.
      */
-    public void clearAllColorCounts() {
+    public void clearColorCounts() {
         Arrays.fill(buf, 0);
     }
 

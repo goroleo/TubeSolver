@@ -583,6 +583,7 @@ public class ToolPanel extends JPanel {
                     if (docked < 2) { // horizontal
                         buttons[i].setLocation(getButtonX(i) + startX, spaceY);
                     } else { // vertical
+                        //noinspection SuspiciousNameCombination
                         buttons[i].setLocation(spaceY, getButtonX(i) + startX);
                     }
                 }

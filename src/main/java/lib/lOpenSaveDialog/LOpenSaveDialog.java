@@ -23,6 +23,7 @@ import static lib.lOpenSaveDialog.OpenSavePanel.*;
 /**
  * OpenSave file chooser dialog.
  */
+@SuppressWarnings("unused")
 public class LOpenSaveDialog extends JDialog {
 
     private final JFrame owner;
@@ -32,7 +33,6 @@ public class LOpenSaveDialog extends JDialog {
 
     public static OpenSavePanel osPan;
 
-    @SuppressWarnings("unused")
     public LOpenSaveDialog() {
         this(null, 202, "");
     }
@@ -41,12 +41,10 @@ public class LOpenSaveDialog extends JDialog {
         this(owner, 202, "");
     }
 
-    @SuppressWarnings("unused")
     public LOpenSaveDialog(String fName) {
         this(null, 202, fName);
     }
 
-    @SuppressWarnings("unused")
     public LOpenSaveDialog(int mode) {
         this(null, mode, "");
     }
@@ -55,7 +53,6 @@ public class LOpenSaveDialog extends JDialog {
         this(owner, mode, "");
     }
 
-    @SuppressWarnings("unused")
     public LOpenSaveDialog(int mode, String fName) {
         this(null, mode, fName);
     }
@@ -102,9 +99,6 @@ public class LOpenSaveDialog extends JDialog {
         setBackground(Palette.dialogColor);
         setForeground(Color.white);
         getContentPane().add(osPan);
-
-//        osPan.setFolder(new File(getStoredFolder()));
-
     }
 
     private void calculateSize() {

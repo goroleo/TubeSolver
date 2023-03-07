@@ -26,6 +26,7 @@ import static gui.MainFrame.pal;
  * For example each sector size is 1.00. Spacing size is 0.08 of the sector size.<br>
  * The transparency fan will draw above the drum. It rotates in the opposite direction.
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class WheelLayer extends JComponent implements Runnable {
 
     // radian constants
@@ -113,8 +114,6 @@ public class WheelLayer extends JComponent implements Runnable {
     // -------------------------------------------------------------------
     //                Values to render a transparency fan.
     //
-    // Alpha is an Alpha channel of pixels
-    //
 
     /**
      * The number of the fan blades (sectors).
@@ -173,6 +172,10 @@ public class WheelLayer extends JComponent implements Runnable {
     // -------------------------------------------------------------------
     //                        Routines
     //
+
+    /**
+     *  Creates a WheelLayer.
+     */
     public WheelLayer() {
         super();
         setBackground(null);
@@ -188,16 +191,25 @@ public class WheelLayer extends JComponent implements Runnable {
         g2d.setBackground(new Color(255, 255, 255, 0));
     }
 
+    /**
+     * Starts a WheelLayer rotation.
+     */
     public void start() {
         doStop = false;
         Thread t = new Thread(this);
         t.start();
     }
 
+    /**
+     * Stops a WheelLayer rotation.
+     */
     public void stop() {
         doStop = true;
     }
 
+    /**
+     * Calculates and draws a current rotation frame.
+     */
     private void drawCurrentFrame() {
 
         // variables 
