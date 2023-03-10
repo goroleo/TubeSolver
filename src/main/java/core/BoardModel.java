@@ -174,7 +174,6 @@ public class BoardModel extends ArrayList<TubeModel> {
             currentMove = moves.get(idx - 1);
         } else {
             currentMove = null;
-//            calculated = false;
         }
     }
 
@@ -267,7 +266,7 @@ public class BoardModel extends ArrayList<TubeModel> {
         * moves and then calculate their consequences. Therefore, we will 
         * not calculate the second and subsequent empty tubes.
         */
-        boolean emptyTubeProcessed = false; // true if one of empty tube was processed already
+        boolean emptyTubeProcessed = false; // true if one of empty tube has processed already
 
         fillAvailableColors();
 
@@ -335,17 +334,16 @@ public class BoardModel extends ArrayList<TubeModel> {
                             result++;
                         } // canMakeMove
                     }
-                } // process the next donator 
+                } // process the next donator
 
-                if (!emptyTubeProcessed) {
-                    emptyTubeProcessed = ctRecipient.isEmpty();
+                if (ctRecipient.isEmpty() && !emptyTubeProcessed) {
+                    emptyTubeProcessed = true;
                 }
             }
         }
 
         if (result > 0) {
-//            calculated = true;
-            moves.sort(ColorMoveItem.RankComparator); // sort moves by rank! 
+            moves.sort(ColorMoveItem.RankComparator); // sort moves by rank!
             currentMove = moves.get(moves.size() - 1);
         } else {
             currentMove = null;

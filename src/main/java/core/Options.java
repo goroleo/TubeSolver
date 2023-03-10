@@ -25,10 +25,17 @@ import java.util.Properties;
  */
 public class Options {
 
+// --------- Application options -------------
+
+
+    /**
+     * A current language code, the three-letters ISO 639-2 language code
+     * @see ResStrings#getLangCode(int)
+     */
     // --------- language -------------
     public static String langCode = Locale.getDefault().getISO3Language();
 
-    // --------- save options -------------
+    // --------- auto save options -------------
     public static boolean saveGameAfterFill = true;
     public static boolean saveGameAfterSolve = false;
     public static boolean saveGameBeforeClose = false;
@@ -63,16 +70,16 @@ public class Options {
     public static int ccdDialogMode = 0;
 
     // --------- open/save dialog position & options -------------
-    public static int osdPositionX = -1;
-    public static int osdPositionY = -1;
-    public static int osdSizeX = -1;
-    public static int osdSizeY = -1;
-    public static int osdSizeColN = -1;
-    public static int osdSizeColS = -1;
-    public static int osdSizeColD = -1;
-    public static int osdSortCol = -1;
-    public static int osdSortOrder = -1;
-    public static String osdCurrentDir = "";
+    public static int osdPositionX = -1; // dialog X position
+    public static int osdPositionY = -1; // dialog Y position
+    public static int osdSizeX = -1;     // dialog Frame Width
+    public static int osdSizeY = -1;     // dialog Frame Height
+    public static int osdSizeColN = -1;   // FileName column width
+    public static int osdSizeColS = -1;   // FileSize column width
+    public static int osdSizeColD = -1;   // FileDate column width
+    public static int osdSortCol = -1;    // Column to sort the file list
+    public static int osdSortOrder = -1;  // sort order (1 - ascending, 0 - descending)
+    public static String osdCurrentDir = ""; // An absolute path to the current folder
 
     // --------- palette dialog -------------
     public static int pdPositionX = -1;

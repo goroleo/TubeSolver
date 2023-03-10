@@ -47,8 +47,6 @@ public class CreateNewDlg extends JDialog {
     private final jctSizeEdit tsf2;
     private final jctSizeEdit tsf3;
 
-    private final JPanel pan = new JPanel();
-
     public CreateNewDlg() {
         this(null);
     }
@@ -61,11 +59,7 @@ public class CreateNewDlg extends JDialog {
         setResizable(false);
         getContentPane().setBackground(Palette.dialogColor);
         getContentPane().setForeground(Color.white);
-//        setLayout(null);
-
-        pan.setBackground(null);
-        pan.setForeground(null);
-        pan.setLayout(null);
+        getContentPane().setLayout(null);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -92,7 +86,7 @@ public class CreateNewDlg extends JDialog {
         btnOk.setForeground(null);
         btnOk.setFocusable(true);
         btnOk.addActionListener((ActionEvent e) -> confirmAndClose());
-        pan.add(btnOk);
+        getContentPane().add(btnOk);
 
         LPictureButton btnCancel = new LPictureButton(this, "btnDialog");
         btnCancel.setText(ResStrings.getString("strCancel"));
@@ -100,7 +94,7 @@ public class CreateNewDlg extends JDialog {
         btnCancel.setForeground(null);
         btnCancel.setFocusable(true);
         btnCancel.addActionListener((ActionEvent e) -> refuseAndClose());
-        pan.add(btnCancel);
+        getContentPane().add(btnCancel);
 
         addLabel(0, ResStrings.getString("strWantToCreate"));
         JLabel lb1 = addLabel(1, ResStrings.getString("strNumberFilled"));
@@ -110,16 +104,14 @@ public class CreateNewDlg extends JDialog {
         maxLabelWidth = Math.max(Math.max(lb1.getWidth(), lb2.getWidth()), lb3.getWidth());
 
         tsf1 = new jctSizeEdit(1, 2, 12);
-        pan.add(tsf1);
+        getContentPane().add(tsf1);
         tsf2 = new jctSizeEdit(2, 1, 2);
-        pan.add(tsf2);
+        getContentPane().add(tsf2);
         tsf3 = new jctSizeEdit(3, 3, 14);
-        pan.add(tsf3);
+        getContentPane().add(tsf3);
 
         w = maxLabelWidth + tsf1.getWidth() + dimX * 3;
         h = startY + dimY * 5 + btnOk.getHeight();
-        pan.setSize(w, h);
-        getContentPane().add(pan);
 
         calculateSize();
         calculatePos();
@@ -161,7 +153,6 @@ public class CreateNewDlg extends JDialog {
         Dimension dim = new Dimension();
         dim.width = w;
         dim.height = h;
-        pan.setSize(dim);
         setPreferredSize(dim);
         pack();
 
@@ -226,7 +217,7 @@ public class CreateNewDlg extends JDialog {
         lb.setBounds(30, y, fm.stringWidth(text), fm.getHeight());
         lb.setBackground(null);
         lb.setForeground(null);
-        pan.add(lb);
+        getContentPane().add(lb);
         return lb;
     }
 

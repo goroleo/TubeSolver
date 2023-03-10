@@ -1,24 +1,22 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package lib.lTextFields;
 
-import java.awt.Color;
-import java.awt.Insets;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import javax.swing.BorderFactory;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class LHexTextField extends JTextField {
 
@@ -114,9 +112,12 @@ public class LHexTextField extends JTextField {
         if (externalEdit) {
             value = newValue;
             StringBuilder s = new StringBuilder(Integer.toHexString(value));
-            while (s.length() < digits) {
-                s.insert(0, "0");
-            }
+            if (s.length() > digits) {
+                s = new StringBuilder(s.substring(s.length() - digits));
+            } else
+                while (s.length() < digits) {
+                    s.insert(0, "0");
+                }
             setText(s.toString());
         }
     }

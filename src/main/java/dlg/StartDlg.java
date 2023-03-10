@@ -32,7 +32,6 @@ public class StartDlg extends JDialog {
     private final JFrame parent;
 
     private LPictureButton btnResume;
-    private final JPanel pan = new JPanel();
 
     final int startX = 40;
     final int sizeX = 90;
@@ -46,11 +45,6 @@ public class StartDlg extends JDialog {
         getContentPane().setBackground(Palette.dialogColor);
         getContentPane().setForeground(Color.white);
         setLayout(null);
-
-        pan.setBackground(null);
-        pan.setForeground(null);
-        pan.setLayout(null);
-        add(pan);
 
         calculateSize();
         calculatePos();
@@ -84,7 +78,6 @@ public class StartDlg extends JDialog {
         Dimension dim = new Dimension();
         dim.width = startX * 2 + sizeX * 4 + spaceX * 3;
         dim.height = btnY * 2 + sizeX + btnY / 2;
-        pan.setSize(dim);
         setPreferredSize(dim);
         pack();
 
@@ -112,7 +105,7 @@ public class StartDlg extends JDialog {
         LPictureButton lnBtn = new LPictureButton(this, name);
         lnBtn.setLocation(startX + (sizeX + spaceX) * number, btnY);
         lnBtn.addActionListener((ActionEvent e) -> buttonClick(number));
-        pan.add(lnBtn);
+        getContentPane().add(lnBtn);
         return lnBtn;
     }
 
@@ -209,7 +202,7 @@ public class StartDlg extends JDialog {
             out.setBounds(xPos, yPos, labelWidth, fm.getHeight());
             out.setBackground(null);
             out.setForeground(null);
-            pan.add(out);
+            getContentPane().add(out);
             i--;
         } while (i > 0);
     }

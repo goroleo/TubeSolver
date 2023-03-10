@@ -506,7 +506,7 @@ public class MainFrame extends JFrame {
 
         getContentPane().add(tubesPan);
         tubesPan.setDockedTo(0);
-        tubesPan.updateLocation();
+        tubesPan.restoreLocation();
 
         tubesPan.setVisible(true);
 
@@ -539,6 +539,40 @@ public class MainFrame extends JFrame {
                         && (tube != getTubeFrom()));
             default:
                 return false;
+        }
+    }
+
+    public ColorTube getTubeFrom() {
+        return tubesPan.getTubeFrom();
+    }
+
+    public void setTubeFrom(ColorTube tube) {
+        tubesPan.setTubeFrom(tube);
+
+        if (gameMode == PLAY_MODE) {
+            if (tube == null) {
+                startFindTubesFrom();
+            } else {
+                tube.hideArrow();
+                startFindTubesTo();
+            }
+
+        } else if (gameMode == ASSIST_MODE) {
+            if (tube == null) {
+                if (!tubesPan.isSolved()) {
+                    setTubeTo(null);
+                    showMove();
+                }
+            } else {
+                tube.hideArrow();
+                ColorTube tubeTo = tubesPan.getTube(gameMoves.getTubeTo(movesDone));
+                tubeTo.setArrow(ColorTube.ARROW_YELLOW);
+                tubeTo.setFrame(3);
+
+                tubeTo.showArrow();
+                tubeTo.pulseFrame();
+
+            }
         }
     }
 
@@ -599,41 +633,6 @@ public class MainFrame extends JFrame {
                         showMove();
                     }
                 }
-            }
-        }
-
-    }
-
-    public ColorTube getTubeFrom() {
-        return tubesPan.getTubeFrom();
-    }
-
-    public void setTubeFrom(ColorTube tube) {
-        tubesPan.setTubeFrom(tube);
-
-        if (gameMode == PLAY_MODE) {
-            if (tube == null) {
-                startFindTubesFrom();
-            } else {
-                tube.hideArrow();
-                startFindTubesTo();
-            }
-
-        } else if (gameMode == ASSIST_MODE) {
-            if (tube == null) {
-                if (!tubesPan.isSolved()) {
-                    setTubeTo(null);
-                    showMove();
-                }
-            } else {
-                tube.hideArrow();
-                ColorTube tubeTo = tubesPan.getTube(gameMoves.getTubeTo(movesDone));
-                tubeTo.setArrow(ColorTube.ARROW_YELLOW);
-                tubeTo.setFrame(3);
-
-                tubeTo.showArrow();
-                tubeTo.pulseFrame();
-
             }
         }
     }
@@ -987,20 +986,20 @@ public class MainFrame extends JFrame {
 
             if (palPan != null) {
                 if (palPan.getDockedTo() > 1) { // left, right
-                    dim.width = dim.width + palPan.getWidth();
+                    dim.width += palPan.getWidth();
                     dim.height = Math.max(dim.height, palPan.getHeight());
                 } else { // top, bottom
                     dim.width = Math.max(dim.width, palPan.getWidth());
-                    dim.height = dim.height + palPan.getHeight();
+                    dim.height += palPan.getHeight();
                 }
             }
             if (toolPan != null) {
                 if (toolPan.getDockedTo() > 1) { // left, right
-                    dim.width = dim.width + toolPan.getToolbarY();
+                    dim.width += toolPan.getToolbarY();
                     dim.height = Math.max(dim.height, toolPan.getButtonsLength());
                 } else { // top, bottom
                     dim.width = Math.max(dim.width, toolPan.getButtonsLength());
-                    dim.height = dim.height + toolPan.getToolbarY();
+                    dim.height += toolPan.getToolbarY();
                 }
             }
 

@@ -22,6 +22,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class BoardPanel extends JComponent {
 
     private final ArrayList<ColorTube> tubes = new ArrayList<>();
@@ -43,7 +46,7 @@ public class BoardPanel extends JComponent {
         addPopup(null);
     }
 
-    public void updateLocation() {
+    public void restoreLocation() {
         if (Options.boardDockedTo >= 0
                 && Options.boardDockedTo <= 4
                 && Options.boardLines > 0
@@ -57,6 +60,10 @@ public class BoardPanel extends JComponent {
         calculateSize();
         updateTubesPos();
         reDock();
+    }
+
+    public BoardModel getModel() {
+        return model;
     }
 
     public ColorTube addNewTube() {
@@ -84,19 +91,6 @@ public class BoardPanel extends JComponent {
         addPopup(tube);
 
         return tube;
-    }
-
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        for (int i = 0; i < getTubesCount(); i++) {
-            this.getTube(i).setVisible(visible);
-            this.getTube(i).paintImmediately(getTube(i).getBounds());
-        }
-    }
-
-    public BoardModel getModel() {
-        return model;
     }
 
     public void addNewTubes(int countFilled, int countEmpty) {
@@ -139,6 +133,7 @@ public class BoardPanel extends JComponent {
 
     public void clear() {
         removeAll();
+        model.clear();
         tubes.clear();
     }
 
@@ -285,12 +280,26 @@ public class BoardPanel extends JComponent {
         tube.clear();
     }
 
-    public ColorTube getTubeTo() {
-        return tubeTo;
-    }
-
     public ColorTube getTubeFrom() {
         return tubeFrom;
+    }
+
+    public void setTubeFrom(ColorTube tube) {
+        if (tube != tubeFrom) {
+            if (tubeFrom != null) {
+                tubeFrom.setFrame(ColorTube.FRAME_NO_COLOR);
+                tubeFrom = null;
+            }
+        }
+        if (tube != null && canGetColor(tube)) {
+            tube.setFrame(ColorTube.FRAME_GREEN);
+            tube.showFrame();
+            tubeFrom = tube;
+        }
+    }
+
+    public ColorTube getTubeTo() {
+        return tubeTo;
     }
 
     public void setTubeTo(ColorTube tube) {
@@ -305,20 +314,6 @@ public class BoardPanel extends JComponent {
             tube.setFrame(ColorTube.FRAME_YELLOW);
             tube.showFrame();
             tubeTo = tube;
-        }
-    }
-
-    public void setTubeFrom(ColorTube tube) {
-        if (tube != tubeFrom) {
-            if (tubeFrom != null) {
-                tubeFrom.setFrame(ColorTube.FRAME_NO_COLOR);
-                tubeFrom = null;
-            }
-        }
-        if (tube != null && canGetColor(tube)) {
-            tube.setFrame(ColorTube.FRAME_GREEN);
-            tube.showFrame();
-            tubeFrom = tube;
         }
     }
 

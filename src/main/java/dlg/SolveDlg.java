@@ -31,18 +31,17 @@ public class SolveDlg extends JDialog {
 
     private final JFrame parent;
     public int modalResult = 0;
-    int dimY = 20;
-    int w = 350; //width & height 
+    private int dimY = 20;
+    private int w = 350, h; //width & height
 
-    private JPanel contPan;
-    private WheelLayer wl;
-    private LPictureButton btn; 
+    private WheelLayer wheelLayer;
+    private LPictureButton btn;
 
-    int breakCount = 100000;
+    private int breakCount = 100000;
 
-    BoardModel start;
-    Solver ts;
-    boolean solved = false;
+    private BoardModel start;
+    private Solver ts;
+    private boolean solved = false;
 
     @SuppressWarnings("MagicConstant")
     public SolveDlg(JFrame owner, BoardModel startBoard) {
@@ -106,9 +105,8 @@ public class SolveDlg extends JDialog {
 
     private void calculateSize() {
         Dimension dim = new Dimension();
-        dim.width = contPan.getWidth();
-        dim.height = contPan.getHeight();
-        getContentPane().setSize(dim);
+        dim.width = w;
+        dim.height = h;
         setPreferredSize(dim);
         pack();
 
@@ -156,22 +154,17 @@ public class SolveDlg extends JDialog {
     }
 
     private void initContent() {
-        contPan = new JPanel();
-        contPan.setBackground(null);
-        contPan.setForeground(null);
-        contPan.setLayout(null);
 
-        wl = new WheelLayer();
+        wheelLayer = new WheelLayer();
         btn = addButton(ResStrings.getString("strCancel"));
-        
-        contPan.add(wl);
-        contPan.add(btn);
-        
-        contPan.setSize(w, dimY * 3 + wl.getHeight() + btn.getHeight());
-        wl.setLocation((w - wl.getWidth()) / 2, dimY);
-        btn.setLocation((w - btn.getWidth()) / 2, dimY*2+wl.getHeight());
-        
-        getContentPane().add(contPan);
+
+        getContentPane().add(wheelLayer);
+        getContentPane().add(btn);
+
+        h = dimY * 3 + wheelLayer.getHeight() + btn.getHeight();
+        wheelLayer.setLocation((w - wheelLayer.getWidth()) / 2, dimY);
+        btn.setLocation((w - btn.getWidth()) / 2, dimY*2+ wheelLayer.getHeight());
+
     }
 
     private LPictureButton addButton(String aCaption) {
@@ -187,9 +180,9 @@ public class SolveDlg extends JDialog {
     @Override
     public void setVisible(boolean b) {
         if (b) {
-            wl.start();
+            wheelLayer.start();
         } else {
-            wl.stop();
+            wheelLayer.stop();
         }
         super.setVisible(b);
     }

@@ -27,7 +27,7 @@ public class Palette extends ArrayList<Color> {
         paletteProps = new Properties();
 
         if (!loadPalette()) {
-            defaultPalette();
+            setDefaultPalette();
         }
         usedColors = new UsedColors(this.size()-1);
     }
@@ -77,7 +77,7 @@ public class Palette extends ArrayList<Color> {
         TubesIO.savePalette(paletteProps);
     }
 
-    public final void defaultPalette() {
+    public final void setDefaultPalette() {
         this.clear();
 
         backgroundColor = new Color(0x282828);

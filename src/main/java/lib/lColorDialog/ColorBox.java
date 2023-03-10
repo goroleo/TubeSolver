@@ -61,7 +61,6 @@ public class ColorBox extends JComponent implements ColorListener {
         BoxMouseLayer mouseLayer = new BoxMouseLayer();
         this.add(mouseLayer);
         cursorLayer = new BoxCursorLayer();
-        drawBox();
         this.add(cursorLayer);
     }
 

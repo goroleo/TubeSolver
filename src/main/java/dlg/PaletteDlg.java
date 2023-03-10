@@ -146,9 +146,8 @@ public class PaletteDlg extends JDialog {
      * @param number number of the button that means the dialog modal result.
      * @param aCaption caption (text) on the button.
      * @param cooY the Y coordinate.
-     * @return button instance
      */
-    private LPictureButton addButton(int number, String aCaption, int cooY) {
+    private void addButton(int number, String aCaption, int cooY) {
         LPictureButton btn = new LPictureButton(this, "btnDialog");
         btn.setText(aCaption);
         btn.setBackground(null);
@@ -160,7 +159,6 @@ public class PaletteDlg extends JDialog {
         btnWidth = btn.getWidth();
 
         getContentPane().add(btn);
-        return btn;
     }
 
     /** Calculates and sets the dialog size. */
@@ -216,7 +214,7 @@ public class PaletteDlg extends JDialog {
                 EventQueue.invokeLater(this::dispose);
                 break;
             case 4: // pressed 'default palelle' button
-                pal.defaultPalette();
+                pal.setDefaultPalette();
                 for (int i = 0; i < pal.size() - 1; i++) {
                     palPan.getButton(i).repaintColor();
                 }
@@ -287,11 +285,16 @@ public class PaletteDlg extends JDialog {
         if (Options.ccdPositionX != -1 && Options.ccdPositionY != -1) {
             lcd.setLocation(Options.ccdPositionX, Options.ccdPositionY);
         }
+        if (Options.ccdDialogMode < 0 || Options.ccdDialogMode > 5) {
+            Options.ccdDialogMode = 0; }
+        lcd.setDialogMode(Options.ccdDialogMode);
+
         Color newColor = lcd.chooseColor();
 
-        Point pos = lcd.getLocation();
-        Options.ccdPositionX = pos.x;
-        Options.ccdPositionY = pos.y;
+        // save options
+        Options.ccdPositionX = lcd.getX();
+        Options.ccdPositionY = lcd.getY();
+        Options.ccdDialogMode = lcd.getDialogMode();
 
         pal.set(cb.getColorNumber(), newColor);
         cb.repaintColor();

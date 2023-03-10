@@ -34,7 +34,7 @@ public class ColorLine extends JComponent implements ColorListener {
      * This is an additional layer to draws circle cursor that indicates
      * position of the current color.
      */
-    private final LineCursorLayer cursorLayer; // for access this layer from another classes
+    private final CursorLayer cursorLayer; // for access this layer from another classes
 
     /**
      * This is a buffered image redraws when the current color will change.
@@ -42,18 +42,16 @@ public class ColorLine extends JComponent implements ColorListener {
     private final BufferedImage buffer = new BufferedImage(W, 256, BufferedImage.TYPE_INT_ARGB);
 
     /**
-     * <b>curX</b> and <b>curY</b> are coordinates of the circle cursor that
-     * indicates position of the current color in the Box. <br>
+     * <b>curY</b> is the Y coordinate of the circle cursor that
+     * indicates position of the current color in the Line. <br>
      * <b>curX = 9 always!</b>
      */
-    private static int curX = 9, curY = 0; // circle cursor position     X=9 always!
+    private int curY = 0; // circle cursor Y position     X=9 always!
 
     /**
      * The width of the color line
      */
     private static final int W = 19; // width of color line
-
-//    private ColorPanel cPanel;
 
     /**
      * Creates the class which draws ColorLine. <br>
@@ -64,10 +62,9 @@ public class ColorLine extends JComponent implements ColorListener {
      */
     public ColorLine() {
         setSize(W + 20, 276);
-        LineMouseLayer mouseLayer = new LineMouseLayer();
+        MouseLayer mouseLayer = new MouseLayer();
         this.add(mouseLayer);
-        cursorLayer = new LineCursorLayer();
-        drawLine();
+        cursorLayer = new CursorLayer();
         this.add(cursorLayer);
     }
 
@@ -188,6 +185,7 @@ public class ColorLine extends JComponent implements ColorListener {
     private void drawLine() {
         float h, s, b;
         int r, g, b1;
+        int clr;
 
         switch (cPanel.getDialogMode()) {
 
@@ -202,8 +200,9 @@ public class ColorLine extends JComponent implements ColorListener {
 
                     for (int y = 0; y < 256; y++) {
                         h = 1.0f - y / 255.0f;
+                        clr = ColorChanger.HSBtoColor(h, s, b);
                         for (int x = 0; x < W; x++) {
-                            buffer.setRGB(x, y, ColorChanger.HSBtoColor(h, s, b));
+                            buffer.setRGB(x, y, clr);
                         }
                     }
                 } else {
@@ -216,8 +215,9 @@ public class ColorLine extends JComponent implements ColorListener {
 
                     for (int y = 0; y < 256; y++) {
                         h = 1.0f - y / 255.0f;
+                        clr = ColorChanger.HSLtoColor(h, s, b);
                         for (int x = 0; x < W; x++) {
-                            buffer.setRGB(x, y, ColorChanger.HSLtoColor(h, s, b));
+                            buffer.setRGB(x, y, clr);
                         }
                     }
                 }
@@ -229,8 +229,9 @@ public class ColorLine extends JComponent implements ColorListener {
                     b = current.getHSBbri();
                     for (int y = 0; y < 256; y++) {
                         s = 1.0f - y / 255.0f;
+                        clr = ColorChanger.HSBtoColor(h, s, b);
                         for (int x = 0; x < W; x++) {
-                            buffer.setRGB(x, y, ColorChanger.HSBtoColor(h, s, b));
+                            buffer.setRGB(x, y, clr);
                         }
                     }
                 } else {
@@ -238,8 +239,9 @@ public class ColorLine extends JComponent implements ColorListener {
                     b = current.getHSLlight();
                     for (int y = 0; y < 256; y++) {
                         s = 1.0f - y / 255.0f;
+                        clr = ColorChanger.HSLtoColor(h, s, b);
                         for (int x = 0; x < W; x++) {
-                            buffer.setRGB(x, y, ColorChanger.HSLtoColor(h, s, b));
+                            buffer.setRGB(x, y, clr);
                         }
                     }
                 }
@@ -251,8 +253,9 @@ public class ColorLine extends JComponent implements ColorListener {
                     s = current.getHSBsat();
                     for (int y = 0; y < 256; y++) {
                         b = 1.0f - y / 255.0f;
+                        clr = ColorChanger.HSBtoColor(h, s, b);
                         for (int x = 0; x < W; x++) {
-                            buffer.setRGB(x, y, ColorChanger.HSBtoColor(h, s, b));
+                            buffer.setRGB(x, y, clr);
                         }
                     }
                 } else {
@@ -260,8 +263,9 @@ public class ColorLine extends JComponent implements ColorListener {
                     s = current.getHSLsat();
                     for (int y = 0; y < 256; y++) {
                         b = 1.0f - y / 255.0f;
+                        clr = ColorChanger.HSLtoColor(h, s, b);
                         for (int x = 0; x < W; x++) {
-                            buffer.setRGB(x, y, ColorChanger.HSLtoColor(h, s, b));
+                            buffer.setRGB(x, y, clr);
                         }
                     }
                 }
@@ -272,9 +276,9 @@ public class ColorLine extends JComponent implements ColorListener {
                 b1 = current.getBlue();
                 for (int y = 0; y < 256; y++) {
                     r = 255 - y;
-                    int cval = 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff);
+                    clr = 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff);
                     for (int x = 0; x < W; x++) {
-                        buffer.setRGB(x, y, cval);
+                        buffer.setRGB(x, y, clr);
                     }
                 }
                 break;
@@ -284,9 +288,9 @@ public class ColorLine extends JComponent implements ColorListener {
                 b1 = current.getBlue();
                 for (int y = 0; y < 256; y++) {
                     g = 255 - y;
-                    int cval = 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff);
+                    clr = 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff);
                     for (int x = 0; x < W; x++) {
-                        buffer.setRGB(x, y, cval);
+                        buffer.setRGB(x, y, clr);
                     }
                 }
                 break;
@@ -296,9 +300,9 @@ public class ColorLine extends JComponent implements ColorListener {
                 g = current.getGreen();
                 for (int y = 0; y < 256; y++) {
                     b1 = 255 - y;
-                    int cval = 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff);
+                    clr = 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff);
                     for (int x = 0; x < W; x++) {
-                        buffer.setRGB(x, y, cval);
+                        buffer.setRGB(x, y, clr);
                     }
                 }
         }
@@ -308,26 +312,26 @@ public class ColorLine extends JComponent implements ColorListener {
     /**
      * Graphics layer of the "circle" cursor.
      */
-    private static class LineCursorLayer extends JComponent {
+    private class CursorLayer extends JComponent {
 
-        public LineCursorLayer() {
+        public CursorLayer() {
             setSize(W + 20, 276);
         }
 
         // Draw circle cursor at current cursor position
         @Override
         public void paintComponent(Graphics g) {
-            g.drawImage(ColorPanel.cursorCircle, curX, curY, null);
+            g.drawImage(ColorPanel.cursorCircle, 9, curY, null);
         }
 
-    } // class LineCursorLayer
+    } // class CursorLayer
 
     /**
      * This is a layer of the mouse "cross" cursor and mouse listeners.
      */
-    private class LineMouseLayer extends JComponent {
+    private class MouseLayer extends JComponent {
 
-        public LineMouseLayer() {
+        public MouseLayer() {
             setBounds(10, 10, W, 256);
             this.setCursor(ColorPanel.cursorCross);
 
@@ -356,7 +360,7 @@ public class ColorLine extends JComponent implements ColorListener {
                         curY = 255;
                     }
                     cursorLayer.repaint();
-                    // We have to wait until textfields will give us their focus,
+                    // We have to wait until text fields will give us their focus,
                     // and then we'll update all other components
                     EventQueue.invokeLater(ColorLine.this::setCurrentColor);
                 }

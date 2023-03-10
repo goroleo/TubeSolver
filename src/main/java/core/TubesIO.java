@@ -208,7 +208,7 @@ public class TubesIO {
         }
     }
 
-    public static class myBAIS extends ByteArrayInputStream {
+    private static class myBAIS extends ByteArrayInputStream {
 
         public myBAIS(byte[] buf) {
             super(buf);
@@ -340,14 +340,27 @@ public class TubesIO {
 //
 ///////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Stores the current game mode.
+     * @param gm game mode.
+     */
     public static void storeGameMode(int gm) {
         gMode = gm;
     }
 
+    /**
+     * Gets stored game mode.
+     * @return game mode
+     */
     public static int getGameMode() {
         return gMode;
     }
 
+    /**
+     * Stores tubes set from Tubes Board.
+     * @param bm a logical Board model
+     * @param emptyTubes how much empty tubes are at the board (used in GAME_FILL mode).
+     */
     public static void storeTubes(BoardModel bm, int emptyTubes) {
         tubesCount = bm.size();
         emptyCount = emptyTubes;
@@ -357,10 +370,19 @@ public class TubesIO {
         }
     }
 
+    /**
+     * Fills stored tubes to the specified Board Panel
+     * @param bp Board Panel to restore tubes
+     */
     public static void restoreTubes(BoardPanel bp) {
         restoreTubes(bp, true);
     }
 
+    /**
+     * Fills stored tubes to the specified Board Panel
+     * @param bp Board Panel to restore tubes
+     * @param hideFillAnimation if true, tubes will be filled without an animation.
+     */
     public static void restoreTubes(BoardPanel bp, boolean hideFillAnimation) {
         if (bp.getTubesCount() > 0) {
             bp.clearTubes();
@@ -374,17 +396,39 @@ public class TubesIO {
                 tube.setActive(!tube.isClosed());
             tube.setColorsAnimation(true);
         }
-        bp.updateLocation();
+        bp.restoreLocation();
     }
 
+    /**
+     * Gets count of empty tubes.
+     * @return number of empty tubes
+     */
     public static int getEmptyTubes() {
         return emptyCount;
     }
 
+    /**
+     * Gets count of filled tubes.
+     * @return number of filled tubes
+     */
     public static int getFilledTubes() {
         return tubesCount - emptyCount;
     }
 
+    /**
+     * Clears the stored Tubes array
+     */
+    public static void clearTubes() {
+        emptyCount = 0;
+        tubesCount = 0;
+        storedTubes = null;
+    }
+
+    /**
+     * Stores the moves list from the current game.
+     * @param gm GameMoves array
+     * @param moves how much moves has been passed.
+     */
     public static void storeMoves(GameMoves gm, int moves) {
         if (gm.size() >= moves) {
             movesCount = gm.size();
@@ -398,6 +442,11 @@ public class TubesIO {
         }
     }
 
+    /**
+     * Restores GameMoves array / list
+     * @param gm GameMoves array to restore move items
+     * @return how much moves has been passed.
+     */
     public static int restoreMoves(GameMoves gm) {
         gm.clear();
         for (int i = 0; i < movesCount; i++) {
@@ -406,16 +455,13 @@ public class TubesIO {
         return movesDone;
     }
 
+    /**
+     * Clears the stored Moves array
+     */
     public static void clearMoves() {
         movesCount = 0;
         movesDone = 0;
         storedMoves = null;
-    }
-
-    public static void clearTubes() {
-        emptyCount = 0;
-        tubesCount = 0;
-        storedTubes = null;
     }
 
 ///////////////////////////////////////////////////////////////////////////

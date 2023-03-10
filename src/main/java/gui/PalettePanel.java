@@ -334,7 +334,7 @@ public class PalettePanel extends JComponent {
      * Sets the default palette colors to all color buttons
      */
     public void setDefaultPalette() {
-        pal.defaultPalette();
+        pal.setDefaultPalette();
         updateColors();
     }
 

@@ -251,7 +251,6 @@ public class ColorPanel extends JComponent {
      */
     public void confirmAndClose() {
         EventQueue.invokeLater(dlgFrame::dispose);
-        ((LColorDialog) dlgFrame).saveOptions();
     }
 
     /**
@@ -263,7 +262,6 @@ public class ColorPanel extends JComponent {
     public void refuseAndClose() {
         current.setRGB(this, previousColor);
         EventQueue.invokeLater(dlgFrame::dispose);
-        ((LColorDialog) dlgFrame).saveOptions();
     }
 
 

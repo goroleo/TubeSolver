@@ -10,7 +10,6 @@
 
 package lib.lColorDialog;
 
-import core.Options;
 import core.ResStrings;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -26,7 +25,7 @@ import static lib.lColorDialog.ColorPanel.current;
 
 /**
  *
- * Color dialog Window. it creates the window and place CoorPanel into the
+ * Color dialog Window. it creates the window and place ColorPanel into the
  * window.
  *
  */
@@ -65,10 +64,6 @@ public class LColorDialog extends JDialog {
         setBackground(new Color(0x28, 0x28, 0x28));
         setForeground(Color.white);
         getContentPane().add(cPanel);
-
-        if (Options.ccdDialogMode < 0 && Options.ccdDialogMode > 5)
-            Options.ccdDialogMode = 0;
-        setDialogMode(Options.ccdDialogMode);
     }
     
     private void calculateSize() {
@@ -88,14 +83,10 @@ public class LColorDialog extends JDialog {
     }
 
     private void calculatePos() {
-        Rectangle r = getGraphicsConfiguration().getBounds();
-        if (Options.ccdPositionX >= 0 && Options.ccdPositionY >= 0 
-                && Options.ccdPositionX + getWidth() <= r.width 
-                && Options.ccdPositionY + getHeight() <= r.height )  {
-            setLocation(Options.ccdPositionX, Options.ccdPositionY);
-        } else if (owner != null) {
+        if (owner != null) {
             setLocationRelativeTo(owner);
         } else {
+            Rectangle r = getGraphicsConfiguration().getBounds();
             r.x = r.x + (r.width - getWidth())/2;
             r.y = r.y + (r.height - getHeight())/2;
             setLocation(r.x, r.y);
@@ -203,12 +194,6 @@ public class LColorDialog extends JDialog {
     public Color chooseColor() {
         setVisible(true);
         return current.getColor();
-    }
-
-    public void saveOptions() {
-        Options.ccdPositionX = getX();
-        Options.ccdPositionY = getY();
-        Options.ccdDialogMode = getDialogMode();
     }
 
 }

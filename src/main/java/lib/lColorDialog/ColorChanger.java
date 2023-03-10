@@ -409,16 +409,12 @@ public class ColorChanger {
     }
 
     /**
-     * Gets the color in the hex format.
+     * Gets the color in the integer format.
      *
      * @return current color.
      */
-    public String getHexColor() {
-        StringBuilder s = new StringBuilder(Integer.toHexString(clr & 0xffffff));
-        while (s.length() < 6) {
-            s.insert(0, "0");
-        }
-        return s.toString();
+    public int getColorInt() {
+        return clr;
     }
 
 /////////////////////////////////////////////////////////

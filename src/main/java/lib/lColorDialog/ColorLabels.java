@@ -21,6 +21,10 @@ import static lib.lColorDialog.LColorDialog.cPanel;
 import lib.lTextFields.LDecTextField;
 import lib.lTextFields.LHexTextField;
 
+/**
+ * The panel with text fields that display the current values
+ * of the color components. These values can be edited.
+ */
 public class ColorLabels extends JComponent {
 
     /**
@@ -41,7 +45,7 @@ public class ColorLabels extends JComponent {
      * component's value. Also, the field allows to change component's value
      * directly. In this case the field initiates color change.
      */
-    private final lnTextField lnTextHue, lnTextSat, lnTextBri;
+    private final LTextField lnTextHue, lnTextSat, lnTextBri;
 
     /**
      * Radio buttons for color components: Red, Green, Blue. Click on these
@@ -56,29 +60,33 @@ public class ColorLabels extends JComponent {
      * component's value. Also, the field allows to change component's value
      * directly. In this case the field initiates color change.
      */
-    private final lnTextField lnTextR, lnTextG, lnTextB;
+    private final LTextField lnTextR, lnTextG, lnTextB;
 
-    /**
+    /*
      * Text fields for hex color's value (0xRRGGBB) <br>
      * The field are listen the change of current color and allows to change
      * color value directly.
      */
-    private final lnHexField lnHex;
+    //  private final LHexField lnHex; // used one time only. deprecated variable
 
-    
+
+    /**
+     *  Creates the panel with text fields that display the current values
+     *  of the color components.
+     */
     public ColorLabels() {
 
         // Initialize HSB color components
         // Hue: radio, text, dimension
-        lnRadioHue = addRadioButton("H", 0);   // params: Text and Y-position
-        lnTextHue = addTextField(360, 0);      // params: MaxValue and Y-position
-        addLabel("°", 103, 0, 2);              // params: Text, X-pos, Y-pos, Alignment mode constant
+        lnRadioHue = addRadioButton("H", 0);    // params: Text and Y-position
+        lnTextHue = addTextField(360, 0);  // params: MaxValue and Y-position
+        addLabel("°", 103, 0, 2);    // params: Text, X-pos, Y-pos, Alignment mode constant
         // Saturation: radio, text, dimension
-        lnRadioSat = addRadioButton("S", 26);  // params: Text and Y-position
-        lnTextSat = addTextField(100, 26);     // params: MaxValue and Y-position
-        addLabel("%", 103, 26, 2);             // params: Text, X-pos, Y-pos, Alignment mode constant
+        lnRadioSat = addRadioButton("S", 26);   // params: Text and Y-position
+        lnTextSat = addTextField(100, 26); // params: MaxValue and Y-position
+        addLabel("%", 103, 26, 2);   // params: Text, X-pos, Y-pos, Alignment mode constant
         // Brightness: radio, text, dimension
-        lnRadioBri = addRadioButton("B", 52);  // ... and so on
+        lnRadioBri = addRadioButton("B", 52);   // ... and so on
         lnTextBri = addTextField(100, 52);
         addLabel("%", 103, 52, 2);
 
@@ -94,14 +102,17 @@ public class ColorLabels extends JComponent {
         lnTextB = addTextField(255, 137);
 
         // Color in HEX format: label, text
-        addLabel("#", 5, 170, 4);              // params: Text, X-pos, Y-pos, Alignment mode constant
-        lnHex = addHexField(30, 170);          // params: X-position, Y-position
+        addLabel("#", 5, 170, 4);    // params: Text, X-pos, Y-pos, Alignment mode constant
+        addHexField(30, 170);                    // params: X-position, Y-position
 
-//        lnRadioHue.setSelected(true);
         setForeground(null);
         setBounds(0, 0, 118, 192);
     }
 
+    /**
+     * Updates the panel in depends on the ColorScheme.
+     * @see ColorPanel#getColorScheme()
+     */
     public void updateColorScheme() {
             if (cPanel.getColorScheme() == 0) {
                 lnRadioBri.setText("B");
@@ -113,6 +124,10 @@ public class ColorLabels extends JComponent {
             lnTextBri.updateColor();
     }
 
+    /**
+     * Updates the panel in depends on the DialogMode.
+     * @see ColorPanel#getDialogMode()
+     */
     public void updateDialogMode() {
         switch (cPanel.getDialogMode()) {
             case 0: // hue
@@ -135,6 +150,12 @@ public class ColorLabels extends JComponent {
         }
     }
 
+    /**
+     * Adds the RadioButton of the color components
+     * @param txt button caption / text
+     * @param y the Y position of the Button
+     * @return radio button instance
+     */
     private JRadioButton addRadioButton(String txt, int y) {
         JRadioButton rb = new JRadioButton();
         rb.setText(txt);
@@ -167,42 +188,63 @@ public class ColorLabels extends JComponent {
         return rb;
     }
 
-    private lnTextField addTextField(int maxValue, int y) {
-        lnTextField tf = new lnTextField(y, 0, maxValue);
+    /**
+     * Adds the TextEdit field of the color components.
+     * @param maxValue the maximum value of this component
+     * @param y the Y position of the text field
+     * @return text field instance
+     */
+    private LTextField addTextField(int maxValue, int y) {
+        LTextField tf = new LTextField(y, 0, maxValue);
         current.addListener(tf);
         this.add(tf);
         return tf;
     }
 
+    /**
+     * Adds the HexEdit field of the hex color value (0xRRGGBB).
+     * @param x the X position of the text field
+     * @param y the Y position of the text field
+     */
     @SuppressWarnings("SameParameterValue")
-    private lnHexField addHexField(int x, int y) {
-        lnHexField hf = new lnHexField(x, y);
+    private void addHexField(int x, int y) {
+        LHexField hf = new LHexField(x, y);
         current.addListener(hf);
         this.add(hf);
-        return hf;
     }
 
-    private void addLabel(String txt, int x, int y, int aligment) {
+    /**
+     * Adds the describing label to the panel.
+     * @param txt text / caption to display
+     * @param x the X position of the text field
+     * @param y the Y position of the text field
+     * @param alignment the text alignment value (left = 2, center = 0, right = 4)
+     * @see javax.swing.SwingConstants
+     */
+    private void addLabel(String txt, int x, int y, int alignment) {
         JLabel l = new JLabel(txt);
         l.setBounds(x, y, 15, 22);
         l.setBackground(null);
         l.setForeground(null);
-        l.setHorizontalAlignment(aligment);
+        l.setHorizontalAlignment(alignment);
         this.add(l);
     }
 
-    // lnTextField class is extension of JTextFeild
-    // which prints and edits components of current color
-    // i.e. Hue, Saturation, Brghtness, Red, Green, Blue.
+
+    /**
+     * LTextField class is extension of JTextField which prints and edits components of
+     * current color i.e. Hue, Saturation, Brightness, Red, Green, Blue.
+     */
+    private class LTextField extends LDecTextField implements ColorListener {
     
-    private class lnTextField extends LDecTextField implements ColorListener {
-    
-        public lnTextField(int y, int min, int max) {
+        public LTextField(int y, int min, int max) {
             super(min, max);
             setBounds(50, y, 50, 22);
         }
-        
-        // Listener of external changes of the color
+
+        /**
+         * The listener of external changes of the color
+         */
         @Override
         public void updateColor() {
 
@@ -239,7 +281,9 @@ public class ColorLabels extends JComponent {
             }
         } // updateColor
 
-        // Changes the color due to in-field edit
+        /**
+         * Changes the color due to in-field edit
+         */
         @Override
         public void valueChanged() {
             if (this == lnTextHue) {
@@ -269,20 +313,30 @@ public class ColorLabels extends JComponent {
             }
         } // setColor
     }
-    
-    private static class lnHexField extends LHexTextField implements ColorListener {
 
-        public lnHexField(int x, int y) {
+    /**
+     * LHexField class is extension of JTextField which prints and edits the current color
+     * in Hex format (0xRRGGBB)
+     */
+    private static class LHexField extends LHexTextField implements ColorListener {
+
+        public LHexField(int x, int y) {
             super(6);
             setBounds(x, y, 70, 22);
-            setText(current.getHexColor());
+            setValue(current.getColorInt());
         }
 
+        /**
+         * The listener of external changes of the color
+         */
         @Override
         public void updateColor() {
-            setText(current.getHexColor());
+            setValue(current.getColorInt());
         }
 
+        /**
+         * Changes the color due to in-field edit
+         */
         @Override
         public void valueChanged() {
             current.setRGB(this, getValue());
