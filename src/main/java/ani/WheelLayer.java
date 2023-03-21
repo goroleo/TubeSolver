@@ -26,7 +26,7 @@ import static gui.MainFrame.pal;
  * For example each sector size is 1.00. Spacing size is 0.08 of the sector size.<br>
  * The transparency fan will draw above the drum. It rotates in the opposite direction.
  */
-@SuppressWarnings("FieldCanBeLocal")
+
 public class WheelLayer extends JComponent implements Runnable {
 
     // radian constants

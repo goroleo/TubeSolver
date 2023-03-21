@@ -308,7 +308,8 @@ public class ToolPanel extends JPanel {
      * Click the New Game button
      */
     public void newGameClick() {
-        Main.frame.saveTempGame();
+        if (MainFrame.gameMode != MainFrame.END_GAME)
+            Main.frame.saveTempGame();
         StartDlg dlg = new StartDlg(Main.frame);
         dlg.setVisible(true);
     }
