@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 /**
  * A class to process languages/locales and resource strings. <br>
  *  All languages are stored in a files like
- *  <br><b>/resources/lang/</b>[lang_id]<b>.properties</b>.<br>
+ *  <b>/resources/lang/</b>[lang_id]<b>.properties</b>.<br>
  *  Where <i>[lang_id]</i> is a three-letters lowercase language identifier, corresponding ISO 639-2.
  *  All language files must have EVERY string resource to avoid crashing the application.
  */

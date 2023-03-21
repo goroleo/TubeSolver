@@ -9,6 +9,7 @@
  */
 package dlg;
 
+import core.Options;
 import core.ResStrings;
 import core.TubesIO;
 import gui.MainFrame;
@@ -23,10 +24,12 @@ import java.awt.event.ActionEvent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+/**
+ * The Start Game dialog. Chooses the game mode.
+ */
 public class StartDlg extends JDialog {
 
     private final JFrame parent;
@@ -38,6 +41,10 @@ public class StartDlg extends JDialog {
     final int spaceX = 20;
     final int btnY = 40;
 
+    /**
+     * Creates the Start Game dialog.
+     * @param owner the parent frame.
+     */
     public StartDlg(JFrame owner) {
         super(owner, ResStrings.getString("strStartGame"), true);
         this.parent = owner;
@@ -135,7 +142,7 @@ public class StartDlg extends JDialog {
                 if (newFrame.ok) {
                     dispose();
                     Main.frame.setGameMode(MainFrame.PLAY_MODE);
-                    Main.frame.startAutoFillMode(newFrame.tubesFilled, newFrame.tubesEmpty);
+                    Main.frame.startAutoFillMode(Options.cndFilledTubes, Options.cndEmptyTubes);
                 }
                 break;
             case 2: // manual
@@ -143,7 +150,7 @@ public class StartDlg extends JDialog {
                 newFrame.setVisible(true);
                 if (newFrame.ok) {
                     dispose();
-                    Main.frame.startManualFillMode(newFrame.tubesFilled, newFrame.tubesEmpty);
+                    Main.frame.startManualFillMode(Options.cndFilledTubes, Options.cndEmptyTubes);
                 }
                 break;
             case 3: // load

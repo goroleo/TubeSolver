@@ -19,6 +19,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+/**
+ * The dialog box to displaying and changing application settings.
+ */
 public class OptionsDlg extends JDialog {
 
     private final JFrame parent;
@@ -26,15 +29,19 @@ public class OptionsDlg extends JDialog {
     private final JPanel savePan = newPanel();
     private final int dimY = 40;
     private final int dimX = 40;
-    private int w = 500, h; // width and height
+    private final int w = 500, h;
     private int oldLangNum;
     private final JCheckBox cbSaveAfterFill = newCheckBox();
     private final JCheckBox cbSaveAfterSolve = newCheckBox();
     private final JCheckBox cbSaveBeforeClose = newCheckBox();
 
-    final LPictureButton btnOk;
-    final LPictureButton btnCancel;
+    private final LPictureButton btnOk;
+    private final LPictureButton btnCancel;
 
+    /**
+     * Creates the Options dialog.
+     * @param owner parent frame
+     */
     @SuppressWarnings("MagicConstant")
     public OptionsDlg(JFrame owner) {
         super(owner, ResStrings.getString("strOptions"), true);
@@ -93,12 +100,18 @@ public class OptionsDlg extends JDialog {
                 btnCancel.getLocation().y);
     }
 
+    /**
+     * Calls when Escape / Cancel pressed.
+     */
     private void refuseAndClose() {
         setLangNum(oldLangNum);
         saveOptions();
         EventQueue.invokeLater(this::dispose);
     }
 
+    /**
+     * Calls when OK button pressed.
+     */
     private void confirmAndClose() {
         Options.saveGameAfterFill = cbSaveAfterFill.isSelected();
         Options.saveGameAfterSolve = cbSaveAfterSolve.isSelected();
@@ -137,6 +150,7 @@ public class OptionsDlg extends JDialog {
         }
     }
 
+    @Override
     public void setVisible(boolean b) {
         if (b) {
             oldLangNum = ResStrings.getLangNumber(Options.langCode);
@@ -148,6 +162,10 @@ public class OptionsDlg extends JDialog {
         super.setVisible(b);
     }
 
+    /**
+     * Creates and sets up the new checkbox.
+     * @return checkbox created
+     */
     @SuppressWarnings("MagicConstant")
     private JCheckBox newCheckBox() {
         JCheckBox cb = new JCheckBox();
@@ -161,6 +179,10 @@ public class OptionsDlg extends JDialog {
         return cb;
     }
 
+    /**
+     * Creates and sets up the new panel.
+     * @return panel created
+     */
     private JPanel newPanel() {
         JPanel pan = new JPanel() {
             @Override
@@ -181,6 +203,9 @@ public class OptionsDlg extends JDialog {
         return pan;
     }
 
+    /**
+     * Adds checkboxes with available languages to the languages panel.
+     */
     private void addLanguages() {
         for (int i = 0; i < ResStrings.getLangsCount(); i++) {
             JCheckBox cb = newCheckBox();
@@ -197,6 +222,9 @@ public class OptionsDlg extends JDialog {
         langsPan.setLocation(0, 0);
     }
 
+    /**
+     * Adds checkboxes with auto-save options to the save panel.
+     */
     private void addSavingOptions() {
         savePan.setSize(w, dimY + 30 + 30 + 24 + 20);
         savePan.setLocation(0, langsPan.getHeight());
@@ -215,8 +243,11 @@ public class OptionsDlg extends JDialog {
     }
 
 
+    /**
+     * Handles the language checkbox click / change.
+     * @param num number of the checkbox.
+     */
     private void setLangNum(int num) {
-//        langNum = num;
         for (int i = 0; i < langsPan.getComponentCount(); i++) {
             if (langsPan.getComponent(i) instanceof JCheckBox) {
                 ((JCheckBox) langsPan.getComponent(i)).setSelected(i == num);
@@ -228,6 +259,9 @@ public class OptionsDlg extends JDialog {
         Main.frame.updateLanguage();
     }
 
+    /**
+     * Updates the frame components due to language changed.
+     */
     private void updateLanguage() {
         setTitle(ResStrings.getString("strOptions"));
         btnOk.setText(ResStrings.getString("strOk"));
@@ -241,7 +275,12 @@ public class OptionsDlg extends JDialog {
         cbSaveBeforeClose.setText(ResStrings.getString("strSaveBeforeClose"));
     }
 
-    public void drawPanelCaption(Graphics g, String s) {
+    /**
+     * Draws the caption of the panel.
+     * @param g panel's graphics instance to draw.
+     * @param s panel caption.
+     */
+    private void drawPanelCaption(Graphics g, String s) {
         g.setColor(Palette.dialogColor);
         g.fillRect(0, 0, getWidth(), getHeight());
 
@@ -261,6 +300,9 @@ public class OptionsDlg extends JDialog {
         g.drawLine(dimX + tw, 16 + th / 2, w - dimX, 16 + th / 2);
     }
 
+    /**
+     * Saves this dialog position.
+     */
     private void saveOptions() {
         Options.odPositionX = getX();
         Options.odPositionY = getY();

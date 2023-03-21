@@ -14,12 +14,12 @@ import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 
 /**
- * This is a simple layer to draw a specified image. The layer just sets its size and just draw that image.
+ * This is a simple layer to draw a specified image. The layer just sets its size and just draws the image.
  * Without any animation.
  */
 public class ImageLayer extends JComponent {
 
-    BufferedImage img;
+    private BufferedImage img;
 
     /**
      * @param bi image to draw

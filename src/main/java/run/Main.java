@@ -10,8 +10,8 @@
 package run;
 
 import core.Options;
-import gui.MainFrame;
 import core.ResStrings;
+import gui.MainFrame;
 import static java.awt.EventQueue.invokeLater;
 
 public class Main {

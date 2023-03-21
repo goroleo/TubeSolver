@@ -29,11 +29,14 @@ import core.ResStrings;
 import core.Options;
 import lib.lButtons.LPictureButton;
 
+/**
+ *
+ */
 @SuppressWarnings("unused")
 public class MessageDlg extends JDialog {
 
     private final JFrame parent;
-    public int modalResult = 0;
+    public int result = 0;
     int dimX = 20, dimY = 20;
 
     int w = 450;
@@ -45,12 +48,12 @@ public class MessageDlg extends JDialog {
     public final static int BTN_START_CANCEL = 11;
     public final static int BTN_YES_NO = 20;
     public final static int BTN_YES_NO_CANCEL = 30;
-    int btnCount = 1;
+    private int btnCount = 1;
 
     public final static int BTN_LAYOUT_LEFT = 1;
     public final static int BTN_LAYOUT_CENTER = 2;
     public final static int BTN_LAYOUT_RIGHT = 3;
-    int btnLayout = 2;
+    private int btnLayout = 2;
 
     private JPanel contPan;
     private JPanel btnPan;
@@ -142,7 +145,7 @@ public class MessageDlg extends JDialog {
     }
 
     private void btnClick(int number) {
-        modalResult = number;
+        result = number;
         EventQueue.invokeLater(this::dispose);
     }
 

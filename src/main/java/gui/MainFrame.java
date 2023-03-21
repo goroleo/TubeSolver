@@ -878,7 +878,7 @@ public class MainFrame extends JFrame {
                                     MessageDlg.BTN_YES_NO);
                             msgFrame.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
                             msgFrame.setVisible(true);
-                            if (msgFrame.modalResult > 0) {
+                            if (msgFrame.result > 0) {
                                 endAssistMode();
                             }
                         }
@@ -895,7 +895,7 @@ public class MainFrame extends JFrame {
                                 MessageDlg.BTN_YES_NO);
                         msgFrame.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
                         msgFrame.setVisible(true);
-                        if (msgFrame.modalResult > 0) {
+                        if (msgFrame.result > 0) {
                             endAssistMode();
                         }
                     }

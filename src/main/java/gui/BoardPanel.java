@@ -468,12 +468,12 @@ public class BoardPanel extends JComponent {
         msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
         msgDlg.setVisible(true);
 
-        if (msgDlg.modalResult > 0) {
+        if (msgDlg.result > 0) {
 
             SolveDlg solveDlg = new SolveDlg(Main.frame, model);
             solveDlg.solve();
 
-            switch (solveDlg.modalResult) {
+            switch (solveDlg.result) {
                 case -1: // window closed
                 case 0: // escape-cancel pressed
                     msgDlg = new MessageDlg(Main.frame,
@@ -495,7 +495,7 @@ public class BoardPanel extends JComponent {
                             MessageDlg.BTN_YES_NO);
                     msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
                     msgDlg.setVisible(true);
-                    result = msgDlg.modalResult > 0;
+                    result = msgDlg.result > 0;
             }
         }
 

@@ -213,7 +213,7 @@ public class PaletteDlg extends JDialog {
                 saveOptions();
                 EventQueue.invokeLater(this::dispose);
                 break;
-            case 4: // pressed 'default palelle' button
+            case 4: // pressed 'default palette' button
                 pal.setDefaultPalette();
                 for (int i = 0; i < pal.size() - 1; i++) {
                     palPan.getButton(i).repaintColor();

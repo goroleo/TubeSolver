@@ -15,27 +15,61 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 
+/**
+ * This is an animation layer when the image appears from the center. The animation
+ * shows the image resizing (from zero to normal) and its opacity changing
+ * (from zero to one).
+ */
 public class ScaleLayer extends JComponent implements Runnable {
 
+    /**
+     * An original image.
+     */
     private BufferedImage imgOrig;
-    private BufferedImage imgStretch;
 
-    private int centerX;
-    private int centerY;
+    /**
+     * An image that stretched to the proper size.
+     */
+    private BufferedImage imgStretched;
 
+    /**
+     * An image of the every single frame.
+     */
     private BufferedImage imgFrame;
 
+    /**
+     * Delay between two frames in milliseconds.
+     */
     private final long delay = 20;
 
+    /**
+     * The opacity of the image (from 0 to 1) of the current frame.
+     */
     private double masterAlpha;
-    private final double alphaIncrement = 0.06d;
-    public boolean working = false;
 
+    /**
+     * The increment of the opacity between two frames.
+     */
+    private final double alphaIncrement = 0.06d;
+
+    /**
+     * If <b>true</b> then the thread is working, and we don't need to start it again.
+     */
+    private boolean working = false;
+
+    /**
+     * Creates the Scale Layer.
+     * @param bi image to scale.
+     */
     public ScaleLayer(BufferedImage bi) {
         setImage(bi);
     }
 
-    public final void setImage(BufferedImage bi) {
+    /**
+     * Sets the image to scale.
+     * @param bi new buffered image.
+     */
+    public void setImage(BufferedImage bi) {
         imgOrig = bi;
         if (bi != null) {
             setSize(bi.getWidth(), bi.getHeight());
@@ -45,14 +79,12 @@ public class ScaleLayer extends JComponent implements Runnable {
     @Override
     public void setSize(int width, int height) {
         super.setSize(width, height);
-        centerX = width / 2;
-        centerY = height / 2;
 
         if (width > imgOrig.getWidth()) {
-            imgStretch = new BufferedImage(width, imgOrig.getHeight(), 2);
+            imgStretched = new BufferedImage(width, imgOrig.getHeight(), 2);
             stretchImage();
         } else {
-            imgStretch = imgOrig;
+            imgStretched = imgOrig;
         }
         if (imgFrame == null
                 || (imgFrame.getWidth() != width)
@@ -61,6 +93,9 @@ public class ScaleLayer extends JComponent implements Runnable {
         }
     }
 
+    /**
+     * Clears the frame before the thread starts.
+     */
     public void clearFrame() {
         if (imgFrame != null) {
             Graphics2D g = (Graphics2D) imgFrame.getGraphics();
@@ -70,26 +105,32 @@ public class ScaleLayer extends JComponent implements Runnable {
         repaint();
     }
 
+    /**
+     * Stretches the image width.
+     */
     private void stretchImage() {
-        Graphics2D g = (Graphics2D) imgStretch.getGraphics();
+        Graphics2D g = (Graphics2D) imgStretched.getGraphics();
         int dw = getWidth() - imgOrig.getWidth();
         int cx = imgOrig.getWidth() / 2;
 
         g.setBackground(new Color(0, 0, 0, 0));
-        g.clearRect(0, 0, imgStretch.getWidth(), imgStretch.getHeight());
+        g.clearRect(0, 0, imgStretched.getWidth(), imgStretched.getHeight());
 
-        g.drawImage(imgOrig, 0, 0, cx, imgStretch.getHeight(),
+        g.drawImage(imgOrig, 0, 0, cx, imgStretched.getHeight(),
                 0, 0, cx, imgOrig.getHeight(), null);
-        g.drawImage(imgOrig, cx + dw, 0, imgStretch.getWidth(), imgStretch.getHeight(),
+        g.drawImage(imgOrig, cx + dw, 0, imgStretched.getWidth(), imgStretched.getHeight(),
                 cx, 0, imgOrig.getWidth(), imgOrig.getHeight(), null);
 
         for (int x = 0; x < dw; x++) {
-            for (int y = 0; y < imgStretch.getHeight(); y++) {
-                imgStretch.setRGB(cx + x, y, imgOrig.getRGB(cx, y));
+            for (int y = 0; y < imgStretched.getHeight(); y++) {
+                imgStretched.setRGB(cx + x, y, imgOrig.getRGB(cx, y));
             }
         }
     }
 
+    /**
+     * Starts the animation.
+     */
     public void start() {
         masterAlpha = 0.0d;
         clearFrame();
@@ -98,23 +139,29 @@ public class ScaleLayer extends JComponent implements Runnable {
         t.start();
     }
 
+    /**
+     * Stops the animation.
+     */
     public void stop() {
         working = false;
     }
 
-    public void drawCurrentFrame() {
-        int w = imgStretch.getWidth();
-        int h = imgStretch.getHeight();
+    /**
+     * Draws the frame using current masterAlpha value.
+     */
+    private void drawCurrentFrame() {
+        int w = imgStretched.getWidth();
+        int h = imgStretched.getHeight();
         int dw = (int) (w * masterAlpha);
         int dh = (int) (h * masterAlpha);
 
         int alpha, pix;
 
-        int startX = centerX - dw / 2;
+        int startX = (getWidth() - dw) / 2;
         if (startX < 0) {
             startX = 0;
         }
-        int startY = centerY - dh / 2;
+        int startY = (getHeight() - dh) / 2;
         if (startY < 0) {
             startY = 0;
         }
@@ -123,7 +170,7 @@ public class ScaleLayer extends JComponent implements Runnable {
             double dx = (double) x * (w - 1) / (dw - 1);
             for (int y = 0; y < dh; y++) {
                 double dy = (double) y * (h - 1) / (dh - 1);
-                pix = imgStretch.getRGB((int) dx, (int) dy);
+                pix = imgStretched.getRGB((int) dx, (int) dy);
                 alpha = (int) (((pix >> 24) & 0xff) * masterAlpha);
                 imgFrame.setRGB(x + startX, y + startY,
                         ((alpha & 0xff) << 24) | (pix & 0xffffff));
@@ -162,8 +209,11 @@ public class ScaleLayer extends JComponent implements Runnable {
         onThreadFinished();
     }
 
+    /**
+     * This routine calls when the animation has done.
+     */
     public void onThreadFinished() {
-
+        // the routine to override it
     }
 
 }

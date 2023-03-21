@@ -527,7 +527,7 @@ public class OpenSavePanel extends JComponent {
         msgDlg.setLocationRelativeTo(this);
         msgDlg.setVisible(true);
 
-        return msgDlg.modalResult > 0;
+        return msgDlg.result > 0;
     }
 
 // -----------------------------------------------------

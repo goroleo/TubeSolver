@@ -467,11 +467,8 @@ public class ColorChanger {
      * Calculates HSB/HSV color components when RGB values are known.
      */
     private void calculateHSBfromRGB() {
-        int cMax = Math.max(rgbR, rgbG);
-        cMax = Math.max(cMax, rgbB);
-
-        int cMin = Math.min(rgbR, rgbG);
-        cMin = Math.min(cMin, rgbB);
+        int cMax = Math.max(Math.max(rgbR, rgbG), rgbB);
+        int cMin = Math.min(Math.min(rgbR, rgbG), rgbB);
 
         hsbB = ((float) cMax) / 255.0f;
         hsbS = (cMax != 0) ? ((float) (cMax - cMin) / cMax) : 0.0f;
@@ -547,10 +544,8 @@ public class ColorChanger {
      * Calculates HSL color components when RGB values are known.
      */
     private void calculateHSLfromRGB() {
-        int cMax = Math.max(rgbR, rgbG);
-        cMax = Math.max(cMax, rgbB);
-        int cMin = Math.min(rgbR, rgbG);
-        cMin = Math.min(cMin, rgbB);
+        int cMax = Math.max(Math.max(rgbR, rgbG), rgbB);
+        int cMin = Math.min(Math.min(rgbR, rgbG), rgbB);
 
         hslL = (float) (cMax + cMin) / (255 * 2);
         hslS = (float) (cMax - cMin) / (255 - Math.abs(255 - (cMax + cMin)));

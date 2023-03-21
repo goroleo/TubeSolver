@@ -193,7 +193,7 @@ public class ColorTube extends JComponent {
 
     public void pulseFrame() {
         frame.useAnimation = true;
-        frame.startUnlimited();
+        frame.doPulse();
     }
 
     public void setFrame(int newFrameNum) {

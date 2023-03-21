@@ -11,10 +11,12 @@ package dlg;
 
 import ani.WheelLayer;
 import core.BoardModel;
+import core.ResStrings;
 import core.Solver;
 import gui.Palette;
+import lib.lButtons.LPictureButton;
+
 import java.awt.Color;
-import core.ResStrings;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
@@ -23,26 +25,47 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import lib.lButtons.LPictureButton;
 
+/**
+ * The game solution search frame. While the search is in progress, the animation entertains the user.
+ */
 public class SolveDlg extends JDialog {
 
     private final JFrame parent;
-    public int modalResult = 0;
-    private int dimY = 20;
-    private int w = 350, h; //width & height
+    /**
+     * The result of the dialog. Results can be as follows: <ul>
+     *     <li> 2 - the game is solved.
+     *     <li> 1 - the game is not solved (solution is not found).
+     *     <li> 0 - escape / cancel pressed while solver is working.
+     *     <li> -1 - window 'Close' button pressed while solver is working.
+     * </ul>
+     */
+    public int result = 0;
+    /**
+     * Dialog width.
+     */
+    private final int w = 350;
+    /**
+     * Dialog height.
+     */
+    private int h; //width & height
 
     private WheelLayer wheelLayer;
-    private LPictureButton btn;
 
     private int breakCount = 100000;
 
-    private BoardModel start;
-    private Solver ts;
-    private boolean solved = false;
+    /**
+     * The start (before search) configuration of the game board.
+     */
+    private final BoardModel start;
+    private final Solver ts;
 
+    /**
+     * Creates the Solver dialog.
+     * @param owner frame owner to center this dialog
+     * @param startBoard start game board position
+     */
     @SuppressWarnings("MagicConstant")
     public SolveDlg(JFrame owner, BoardModel startBoard) {
 
@@ -56,13 +79,13 @@ public class SolveDlg extends JDialog {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                btnClick(-1);
+                closeDialog(-1);
             }
         });
 
         // ESCAPE pressed
         getRootPane().registerKeyboardAction(
-                (ActionEvent e) -> btnClick(0),
+                (ActionEvent e) -> closeDialog(0),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
                 2); // WHEN_IN_FOCUSED_WINDOW
 
@@ -71,13 +94,11 @@ public class SolveDlg extends JDialog {
         ts = new Solver(startBoard, breakCount) {
             @Override
             public void onSolved() {
-                solved = true;
-                btnClick(2);
+                closeDialog(2);
             }
 
             @Override
             public void onNotSolved() {
-                solved = false;
                 breakCount <<= 1;
                 if (breakCount > 0) {
                     System.out.println("!!! NOT SOLVED. new break " + breakCount);
@@ -87,13 +108,12 @@ public class SolveDlg extends JDialog {
                         startSolve();
                     }
                 } else {
-                    btnClick(1);
+                    closeDialog(1);
                 }
             }
 
             @Override
             public void onExternalBreak() {
-                solved = false;
                 System.err.println("External break");
             }
         };
@@ -103,6 +123,31 @@ public class SolveDlg extends JDialog {
         calculatePos();
     }
 
+    private void initContent() {
+
+        wheelLayer = new WheelLayer();
+
+        LPictureButton btn = new LPictureButton(this, "btnDialog");
+        btn.setText(ResStrings.getString("strCancel"));
+        btn.setBackground(null);
+        btn.setForeground(null);
+        btn.setFocusable(true);
+        btn.addActionListener((ActionEvent e) -> closeDialog(0));
+
+        getContentPane().add(wheelLayer);
+        getContentPane().add(btn);
+
+        int dimY = 20; // the space between components
+
+        h = dimY * 3 + wheelLayer.getHeight() + btn.getHeight();
+        wheelLayer.setLocation((w - wheelLayer.getWidth()) / 2, dimY);
+        btn.setLocation((w - btn.getWidth()) / 2, dimY * 2+ wheelLayer.getHeight());
+
+    }
+
+    /**
+     * Calculates and sets the dialog size.
+     */
     private void calculateSize() {
         Dimension dim = new Dimension();
         dim.width = w;
@@ -118,6 +163,9 @@ public class SolveDlg extends JDialog {
         pack();
     }
 
+    /**
+     * Calculates and sets the dialog position.
+     */
     private void calculatePos() {
         if (parent != null) {
             setLocationRelativeTo(parent);
@@ -129,52 +177,24 @@ public class SolveDlg extends JDialog {
         }
     }
 
-    private void btnClick(int number) {
+    /**
+     * Closes the dialog and sets the dialog result.
+     * @param reason result of the dialog described at <i>result</i> field.
+     * @see #result
+     */
+    private void closeDialog(int reason) {
 
-        solved = (number == 2);
-        modalResult = number;
-        if (ts.workingTime > 120000 // more than 2 minutes
-                && number < 1) {      // and escape|cancel pressed
-            modalResult = 1;
+        if (reason < 1) {
+            // solver is still working, we have to stop it before close.
+            ts.stopProcess();
         }
 
-        switch (number) {
-            case -1: // frame close pressed
-            case 0:  // escape | cancel pressed
-                ts.stopProcess();
-                break;
-            case 1: // not solved
-            case 2: // solved
-                // solver has terminated by itself
-                // do nothing
-                break;
+        result = reason;
+        if (ts.workingTime > 120000   // more than 2 minutes
+                && reason < 1) {      // and escape|cancel pressed
+            result = 1;
         }
-
         EventQueue.invokeLater(this::dispose);
-    }
-
-    private void initContent() {
-
-        wheelLayer = new WheelLayer();
-        btn = addButton(ResStrings.getString("strCancel"));
-
-        getContentPane().add(wheelLayer);
-        getContentPane().add(btn);
-
-        h = dimY * 3 + wheelLayer.getHeight() + btn.getHeight();
-        wheelLayer.setLocation((w - wheelLayer.getWidth()) / 2, dimY);
-        btn.setLocation((w - btn.getWidth()) / 2, dimY*2+ wheelLayer.getHeight());
-
-    }
-
-    private LPictureButton addButton(String aCaption) {
-        LPictureButton pb = new LPictureButton(this, "btnDialog");
-        pb.setText(aCaption);
-        pb.setBackground(null);
-        pb.setForeground(null);
-        pb.setFocusable(true);
-        pb.addActionListener((ActionEvent e) -> btnClick(0));
-        return pb;
     }
 
     @Override
@@ -187,8 +207,10 @@ public class SolveDlg extends JDialog {
         super.setVisible(b);
     }
 
+    /**
+     * Start solving and show color wheel.
+     */
     public void solve() {
-        solved = false;
         ts.startSolve();
         setVisible(true);
     }

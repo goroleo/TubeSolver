@@ -123,6 +123,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * The routine to add Palette Popup to the specified component.
+     *
      * @param comp a component to add the popup menu.
      */
     public void addPopupMenu(JComponent comp) {
@@ -162,6 +163,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Set palette buttons rows.
+     *
      * @param newRows new rows value
      */
     public void setRows(int newRows) {
@@ -180,6 +182,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Set palette buttons columns.
+     *
      * @param newCols new columns value
      */
     public void setColumns(int newCols) {
@@ -198,6 +201,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Set location of the specified button used current values of rows and columns.
+     *
      * @param number button's number
      */
     private void locateButton(int number) {
@@ -232,7 +236,11 @@ public class PalettePanel extends JComponent {
     }
 
     /**
-     * Gets the edge of the MainFrame the toolbar is docked to.
+     * Gets the edge of the MainFrame the panel is docked to: <ul>
+     * <li>0 - top;
+     * <li>1 - bottom;
+     * <li>2 - left;
+     * <li>3 - right.</ul>
      *
      * @return current dockedTo value
      * @see #docked
@@ -243,6 +251,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Sets the edge of the MainFrame the toolbar is docked to.
+     *
      * @param newDocked the new docked value.
      * @see #docked
      */
@@ -283,6 +292,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Sets new spaces values between color buttons.
+     *
      * @param spaceX horizontal space
      * @param spaceY vertical space
      */
@@ -296,6 +306,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Gets the button by its number.
+     *
      * @param number button number
      * @return Color button
      */
@@ -305,6 +316,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Gets the button by color number at palette.
+     *
      * @param colorNum number of color
      * @return Color button
      */
@@ -314,6 +326,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Gets the palette's color number from the specified button
+     *
      * @param number button number
      * @return number of color at the palette
      */
@@ -323,6 +336,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Gets the color of the specified button.
+     *
      * @param number button number
      * @return Color
      */
@@ -368,6 +382,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Calls the color picked dialog of the specified Color Button.
+     *
      * @param cb specified color button
      */
     public void changeColor(ColorButton cb) {
@@ -376,6 +391,7 @@ public class PalettePanel extends JComponent {
 
     /**
      * Handles the mouse click or Enter/Space press on the specified button.
+     *
      * @param cb specified color button
      */
     public void clickButton(ColorButton cb) {

@@ -27,72 +27,213 @@ public class Options {
 
 // --------- Application options -------------
 
-
+// --------- language -------------
     /**
-     * A current language code, the three-letters ISO 639-2 language code
+     * A current language code, the three-letters ISO 639-2 language code.
+     *
      * @see ResStrings#getLangCode(int)
      */
-    // --------- language -------------
     public static String langCode = Locale.getDefault().getISO3Language();
 
-    // --------- auto save options -------------
+// --------- auto save options -------------
+    /**
+     * A feature to suggest to save the game after (auto/manual) filling the board.
+     */
     public static boolean saveGameAfterFill = true;
+
+    /**
+     * A feature to suggest to save the game after finding the game solution.
+     */
     public static boolean saveGameAfterSolve = false;
+
+    /**
+     * A feature to suggest to save the game before closing the application.
+     */
     public static boolean saveGameBeforeClose = false;
 
-    // --------- main frame position -------------
+// --------- main frame position -------------
+    /**
+     * Stores the maximized state of the main frame.
+     */
     public static boolean mainMaximized = false;
+
+    /**
+     * Stores the horizontal position of the main frame.
+     */
     public static int mainPositionX = -1;
+
+    /**
+     * Stores the vertical position of the main frame.
+     */
     public static int mainPositionY = -1;
+
+    /**
+     * Stores the horizontal size (width) of the main frame.
+     */
     public static int mainSizeX = -1;
+
+    /**
+     * Stores the vertical size (height) of the main frame.
+     */
     public static int mainSizeY = -1;
 
-    // --------- main frame: palette panel -------------
+// --------- main frame: palette panel -------------
+    /**
+     * Stores the number of lines of the palette panel.
+     */
     public static int palLines = 0;
+
+    /**
+     * Stores the docked state number of the palette panel.
+     *
+     * @see gui.PalettePanel#getDockedTo()
+     */
     public static int palDockedTo = -1;
 
-    // --------- main frame: tubes panel -------------
+// --------- main frame: color tubes panel -------------
+    /**
+     * Stores the number of lines of the color tubes (game board) panel.
+     */
     public static int boardLines = 0;
+
+    /**
+     * Stores the docked state number of the board panel.
+     *
+     * @see gui.BoardPanel#getDockedTo()
+     */
     public static int boardDockedTo = -1;
 
-    // --------- main frame: tools panel -------------
-    public static int menuAlign = -1;
+// --------- main frame: tools panel -------------
+    /**
+     * Stores the alignment of the tools panel.
+     *
+     * @see gui.ToolPanel#getAlignment()
+     */
+    public static int menuAlignment = -1;
+
+    /**
+     * Stores the docked state number of the tools panel.
+     *
+     * @see gui.ToolPanel#getDockedTo()
+     */
     public static int menuDockedTo = -1;
 
-    // --------- create new dialog options -------------
+// --------- create new dialog options -------------
+    /**
+     * Stores the last used number of filled tubes.
+     */
     public static int cndFilledTubes = 0;
+
+    /**
+     * Stores the last used number of empty tubes.
+     */
     public static int cndEmptyTubes = 0;
 
-    // --------- color picker dialog position -------------
+// --------- color picker dialog options -------------
+    /**
+     * Stores the horizontal position of the color picker dialog.
+     */
     public static int ccdPositionX = -1;
+
+    /**
+     * Stores the vertical position of the color picker dialog.
+     */
     public static int ccdPositionY = -1;
 
+    /**
+     * Stores the color picker dialog mode.
+     *
+     * @see lib.lColorDialog.ColorPanel#getDialogMode()
+     */
     public static int ccdDialogMode = 0;
 
-    // --------- open/save dialog position & options -------------
+// --------- open/save dialog position & options -------------
+    /**
+     * Stores the horizontal position of the open/save dialog.
+     */
     public static int osdPositionX = -1; // dialog X position
+
+    /**
+     * Stores the vertical position of the open/save dialog.
+     */
     public static int osdPositionY = -1; // dialog Y position
+
+    /**
+     * Stores the horizontal size (width) of the open/save dialog.
+     */
     public static int osdSizeX = -1;     // dialog Frame Width
+
+    /**
+     * Stores the vertical size (height) of the open/save dialog.
+     */
     public static int osdSizeY = -1;     // dialog Frame Height
+
+    /**
+     * Stores the width of the FileName column (open/save dialog).
+     */
     public static int osdSizeColN = -1;   // FileName column width
+
+    /**
+     * Stores the width of the FileSize column (open/save dialog).
+     */
     public static int osdSizeColS = -1;   // FileSize column width
+
+    /**
+     * Stores the width of the FileDate column (open/save dialog).
+     */
     public static int osdSizeColD = -1;   // FileDate column width
+
+    /**
+     * Stores the file sorting column number (open/save dialog).
+     */
     public static int osdSortCol = -1;    // Column to sort the file list
+
+    /**
+     * Stores the file sorting order (open/save dialog).
+     * 1 - ascending order, 0 - descending.
+     *
+     * @see lib.lOpenSaveDialog.OpenSavePanel#getFileSortAscending()
+     */
     public static int osdSortOrder = -1;  // sort order (1 - ascending, 0 - descending)
+
+    /**
+     * Stores the current folder for the open/save dialog.
+     */
     public static String osdCurrentDir = ""; // An absolute path to the current folder
 
-    // --------- palette dialog -------------
+// --------- palette dialog -------------
+    /**
+     * Stores the horizontal position of the palette dialog.
+     */
     public static int pdPositionX = -1;
+
+    /**
+     * Stores the vertical position of the palette dialog.
+     */
     public static int pdPositionY = -1;
+
+    /**
+     * Stores the Show Changes checkbox state of the palette dialog.
+     */
     public static boolean pdShowChanges = true;
 
-    // --------- options dialog -------------
+// --------- options dialog -------------
+    /**
+     * Stores the horizontal position of the options' dialog.
+     */
     public static int odPositionX = -1;
+
+    /**
+     * Stores the vertical position of the options' dialog.
+     */
     public static int odPositionY = -1;
 
 
-    // --------- options routines  -------------
-    /** Saves application settings. */
+// --------- Options routines  -------------
+
+    /**
+     * Saves application settings.
+     */
     public static void saveOptions() {
         Properties sProps = new Properties();
         // --------- language -------------
@@ -114,7 +255,7 @@ public class Options {
         sProps.setProperty("BoardLines", Integer.toString(boardLines));
         sProps.setProperty("BoardDockedTo", Integer.toString(boardDockedTo));
         // --------- main frame: tools panel -------------
-        sProps.setProperty("MenuAlign", Integer.toString(menuAlign));
+        sProps.setProperty("MenuAlign", Integer.toString(menuAlignment));
         sProps.setProperty("MenuDockedTo", Integer.toString(menuDockedTo));
         // --------- create new dialog -------------
         sProps.setProperty("CreateNewFilled", Integer.toString(cndFilledTubes));
@@ -146,7 +287,9 @@ public class Options {
         sProps.clear();
     }
 
-    /** Loads application settings. */
+    /**
+     * Loads application settings.
+     */
     public static void loadOptions() {
         Properties sProps = new Properties();
         if (TubesIO.loadOptions(sProps)) {
@@ -161,7 +304,7 @@ public class Options {
                     langCode = "eng";
                 }
             }
-            // --------- save options -------------
+            // --------- auto save options -------------
             saveGameAfterFill = Integer.parseInt(sProps.getProperty("SaveGameAfterFill", "1")) == 1;
             saveGameAfterSolve = Integer.parseInt(sProps.getProperty("SaveGameAfterSolve", "0")) == 1;
             saveGameBeforeClose = Integer.parseInt(sProps.getProperty("SaveGameBeforeClose", "0")) == 1;
@@ -178,7 +321,7 @@ public class Options {
             boardLines = Integer.parseInt(sProps.getProperty("BoardLines", "0"));
             boardDockedTo = Integer.parseInt(sProps.getProperty("BoardDockedTo", "-1"));
             // --------- main frame: tools panel -------------
-            menuAlign = Integer.parseInt(sProps.getProperty("MenuAlign", "-1"));
+            menuAlignment = Integer.parseInt(sProps.getProperty("MenuAlign", "-1"));
             menuDockedTo = Integer.parseInt(sProps.getProperty("MenuDockedTo", "-1"));
             // --------- create new dialog -------------
             cndFilledTubes = Integer.parseInt(sProps.getProperty("CreateNewFilled", "12"));
@@ -209,34 +352,44 @@ public class Options {
         }
     }
 
-    /** An icon showing the selected state for any CheckBoxes and Menus at all parts of the application. */
+    /**
+     * An icon showing the selected state for any CheckBoxes and Menus at all parts of the application.
+     */
     public static final ImageIcon cbIconSelected
             = createImageIcon("checkbutton_icon_selected.png");     // Icon_Selected for menus 
 
-    /** An icon showing the non_selected state for any CheckBoxes and Menus at all parts of the application. */
+    /**
+     * An icon showing the non_selected state for any CheckBoxes and Menus at all parts of the application.
+     */
     public static final ImageIcon cbIconStandard
             = createImageIcon("checkbutton_icon_standard.png");     // Icon_Selected for menus 
 
-    /** Enumeration of possible operating systems. */
+    /**
+     * Enumeration of possible operating systems.
+     */
     public enum OS {
         WINDOWS, LINUX, MAC, SOLARIS
     } // Operating systems.
 
-    /** Stores the current operating system. */
+    /**
+     * Stores the current operating system.
+     */
     private static OS os = null;
 
-    /** Gets the current operating system. */
-    public static OS getOS() {
+    /**
+     * Gets the current operating system.
+     */
+    private static OS getOS() {
         if (os == null) {
-            String operSys = System.getProperty("os.name").toLowerCase();
-            if (operSys.contains("win")) {
+            String opSys = System.getProperty("os.name").toLowerCase();
+            if (opSys.contains("win")) {
                 os = OS.WINDOWS;
-            } else if (operSys.contains("nix") || operSys.contains("nux")
-                    || operSys.contains("aix")) {
+            } else if (opSys.contains("nix") || opSys.contains("nux")
+                    || opSys.contains("aix")) {
                 os = OS.LINUX;
-            } else if (operSys.contains("mac")) {
+            } else if (opSys.contains("mac")) {
                 os = OS.MAC;
-            } else if (operSys.contains("sunos")) {
+            } else if (opSys.contains("sunos")) {
                 os = OS.SOLARIS;
             }
         }
@@ -244,22 +397,23 @@ public class Options {
     }
 
     /**
-     * Gets the frame icon depends on the current OS;
+     * Gets the main frame icon depends on the current OS;
+     *
      * @return application icon image
      */
     public static Image getAppIcon() {
         switch (getOS()) {
             case MAC:
             case LINUX:
-                return Options.createImage("appicon_48.png");
+                return createImage("appicon_48.png");
             default:
-                return Options.createImage("appicon_32.png");
+                return createImage("appicon_32.png");
         }
     }
 
-
     /**
      * Loads Icon from the resources.
+     *
      * @param fName file name at /resources/img/ folder. fName is usually a PNG picture.
      * @return Icon or null if resource has not found.
      */
@@ -269,6 +423,7 @@ public class Options {
 
     /**
      * Loads Icon from the resources.
+     *
      * @param imgURL the link to the file at /resources/img/ folder.
      * @return Icon or null if resource has not found.
      */
@@ -283,6 +438,7 @@ public class Options {
 
     /**
      * Loads Image from the resources.
+     *
      * @param fName file name at /resources/img/ folder. fName is usually a PNG picture.
      * @return Image or null if resource has not found.
      */
@@ -292,6 +448,7 @@ public class Options {
 
     /**
      * Loads Image from the resources.
+     *
      * @param imgURL the link to the file at /resources/img/ folder.
      * @return Image or null if resource has not found.
      */
@@ -301,6 +458,7 @@ public class Options {
 
     /**
      * Loads BufferedImage from the resources.
+     *
      * @param fName file name at /resources/img/ folder. fName is usually a PNG picture.
      * @return BufferedImage or null if resource has not found.
      */
@@ -310,6 +468,7 @@ public class Options {
 
     /**
      * Loads BufferedImage from the resources.
+     *
      * @param imgURL the link to the file at /resources/img/ folder.
      * @return BufferedImage or null if resource has not found.
      */
@@ -331,6 +490,7 @@ public class Options {
      * Converts a color from a hexadecimal color notation to the color used by the application.
      * The hexadecimal string of color notation usually looks like 0xRRGGBB or 0xAARRGGBB
      * (where A - Alpha, R - Red, G - Green, B - Blue). Also, the string can start with the '#' sign.
+     *
      * @param Hex the hexadecimal string of color notation.
      * @return Color
      */
@@ -355,7 +515,8 @@ public class Options {
 
     /**
      * Adds leading '0' signs to the string if it is less than the required length.
-     * @param str the original string
+     *
+     * @param str            the original string
      * @param requiredLength as is
      * @return new string with leading '0' signs
      */
@@ -369,6 +530,7 @@ public class Options {
 
     /**
      * Makes the string with the current date and time: YYYY-MM-DD HH-MM-SS.
+     *
      * @return new string with the date-time stamp.
      */
     public static String getDateTimeStr() {

@@ -95,6 +95,9 @@ public class CongratsPanel extends JComponent {
                 (height - text.getHeight()) / 2);
     }
 
+    /**
+     * Sets new size and position in depends on the main frame size.
+     */
     public void updateSizeAndPos() {
 
         Rectangle r = Main.frame.getTubesArea();
@@ -104,6 +107,9 @@ public class CongratsPanel extends JComponent {
         setBounds(r.x + (r.width - w) / 2,r.y + (r.height - h) / 2, w, h);
     }
 
+    /**
+     * Handles the mouse click above the panel.
+     */
     public void doClick() {
 
         for (int i = 0; i < MainFrame.tubesPan.getTubesCount(); i++) {

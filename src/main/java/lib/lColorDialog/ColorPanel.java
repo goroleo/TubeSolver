@@ -72,13 +72,13 @@ public class ColorPanel extends JComponent {
     /**
      * <b>dialogMode</b> is an integer value from 0 to 5<br>
      * <i>HSB/HSV (or HSL) color model:</i><ul>
-     * <li>0. <b>Hue</b>
-     * <li>1. <b>Saturation</b>
-     * <li>2. <b>Brightness</b> (Lightness when HSL)</ul>
+     * <li>0. <b>H</b>ue
+     * <li>1. <b>S</b>aturation
+     * <li>2. <b>B</b>ightness (<b>L</b>ightness when HSL)</ul>
      * <i>RGB color model:</i><ul>
-     * <li>3. <b>Red</b>
-     * <li>4. <b>Green</b>
-     * <li>5. <b>Blue</b></ul>
+     * <li>3. <b>R</b>ed
+     * <li>4. <b>G</b>reen
+     * <li>5. <b>B</b>lue</ul>
      */
     private int dialogMode = 0; // 0-5 means Hue, Sat, Bri, R, G, B
 

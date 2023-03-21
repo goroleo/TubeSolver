@@ -21,7 +21,7 @@ public class PatternLayer extends JComponent {
     /**
      * Pattern image.
      */
-    BufferedImage img;
+    private BufferedImage img;
 
     /**
      * @param bi pattern image

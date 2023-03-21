@@ -24,12 +24,14 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import lib.lButtons.LPictureButton;
 import lib.lButtons.LToolButton;
 import lib.lTextFields.LDecTextField;
 
+/**
+ * A dialog which asks the user how many tubes will be on the new game board.
+ */
 public class CreateNewDlg extends JDialog {
 
     private final JFrame parent;
@@ -37,20 +39,21 @@ public class CreateNewDlg extends JDialog {
     private final int startY = 30;
     private final int dimY = 40;
     private final int dimX = 40;
-    private int w, h; // width and height
-    public int tubesFilled = 12;
-    public int tubesEmpty = 2;
-    public int tubesCount = tubesFilled + tubesEmpty;
+    private final int w, h; // width and height
+
+    /**
+     * Result of the dialog. True if user confirmed tubes count.
+     */
     public Boolean ok = false;
 
-    private final jctSizeEdit tsf1;
-    private final jctSizeEdit tsf2;
-    private final jctSizeEdit tsf3;
+    private final TubesCountField tcf1;
+    private final TubesCountField tcf2;
+    private final TubesCountField tcf3;
 
-    public CreateNewDlg() {
-        this(null);
-    }
-
+    /**
+     * Creates the dialog.
+     * @param owner frame owner
+     */
     @SuppressWarnings("MagicConstant")
     public CreateNewDlg(JFrame owner) {
 
@@ -103,14 +106,14 @@ public class CreateNewDlg extends JDialog {
 
         maxLabelWidth = Math.max(Math.max(lb1.getWidth(), lb2.getWidth()), lb3.getWidth());
 
-        tsf1 = new jctSizeEdit(1, 2, 12);
-        getContentPane().add(tsf1);
-        tsf2 = new jctSizeEdit(2, 1, 2);
-        getContentPane().add(tsf2);
-        tsf3 = new jctSizeEdit(3, 3, 14);
-        getContentPane().add(tsf3);
+        tcf1 = new TubesCountField(1, 2, 12);
+        getContentPane().add(tcf1);
+        tcf2 = new TubesCountField(2, 1, 2);
+        getContentPane().add(tcf2);
+        tcf3 = new TubesCountField(3, 3, 14);
+        getContentPane().add(tcf3);
 
-        w = maxLabelWidth + tsf1.getWidth() + dimX * 3;
+        w = maxLabelWidth + tcf1.getWidth() + dimX * 3;
         h = startY + dimY * 5 + btnOk.getHeight();
 
         calculateSize();
@@ -129,26 +132,38 @@ public class CreateNewDlg extends JDialog {
     public void setVisible(boolean b) {
         if (b) {
             if (Options.cndFilledTubes > 0 && Options.cndEmptyTubes > 0) {
-                tsf1.setValue(Options.cndFilledTubes);
-                tsf2.setValue(Options.cndEmptyTubes);
-                newBoardSize(tsf2);
+                tcf1.setValue(Options.cndFilledTubes);
+                tcf2.setValue(Options.cndEmptyTubes);
+            } else {
+                tcf1.setValue(12);
+                tcf2.setValue(2);
             }
+            updateTubesCount(tcf1);
         }
         super.setVisible(b);
     }
 
+    /**
+     * Handles the click/press of the Escape/Cancel button.
+     */
     private void refuseAndClose() {
         ok = false;
         EventQueue.invokeLater(this::dispose);
     }
 
+    /**
+     * Handles the click/press of the OK button. Applies the new values for tubes counts.
+     */
     private void confirmAndClose() {
         ok = true;
-        Options.cndFilledTubes = tsf1.getValue();
-        Options.cndEmptyTubes = tsf2.getValue();
+        Options.cndFilledTubes = tcf1.getValue();
+        Options.cndEmptyTubes = tcf2.getValue();
         EventQueue.invokeLater(this::dispose);
     }
 
+    /**
+     * Calculates and sets the frame size.
+     */
     private void calculateSize() {
         Dimension dim = new Dimension();
         dim.width = w;
@@ -164,6 +179,9 @@ public class CreateNewDlg extends JDialog {
         pack();
     }
 
+    /**
+     * Calculates and sets the frame position.
+     */
     private void calculatePos() {
         if (parent != null) {
             setLocationRelativeTo(parent);
@@ -175,32 +193,38 @@ public class CreateNewDlg extends JDialog {
         }
     }
 
-    private void newBoardSize(jctSizeEdit sender) {
-        if (sender != tsf3) {
-            tubesFilled = tsf1.getValue();
-            tubesEmpty = tsf2.getValue();
-            tubesCount = tubesFilled + tubesEmpty;
-            tsf3.setValue(tubesCount);
+    /**
+     * Updates tubes counts when one of the field changed.
+     * @param invoker the field that initiate changes. All other fields will be updated.
+     */
+    private void updateTubesCount(TubesCountField invoker) {
+        if (invoker != tcf3) {
+            int aFilled = tcf1.getValue();
+            int aEmpty = tcf2.getValue();
+            tcf3.setValue(aFilled + aEmpty);
         } else {
-            tubesCount = tsf3.getValue();
 
-            int aEmpty = tsf2.tf.getMaxValue();
-            int aFilled = tubesCount - aEmpty;
-            aFilled = tsf1.checkValue(aFilled);
+            int aCount = tcf3.getValue();
+            int aEmpty = tcf2.getMaxValue();
+            int aFilled = tcf1.checkValue(aCount - aEmpty);
 
-            while ((aFilled + aEmpty) != tubesCount) {
+            while ((aFilled + aEmpty) != aCount) {
                 aEmpty--;
-                aEmpty = tsf2.checkValue(aEmpty);
-                aFilled = tubesCount - aEmpty;
-                aFilled = tsf1.checkValue(aFilled);
+                aEmpty = tcf2.checkValue(aEmpty);
+                aFilled = tcf1.checkValue(aCount - aEmpty);
             }
-            tubesFilled = aFilled;
-            tubesEmpty = aEmpty;
-            tsf1.setValue(tubesFilled);
-            tsf2.setValue(tubesEmpty);
+
+            tcf1.setValue(aFilled);
+            tcf2.setValue(aEmpty);
         }
     }
 
+    /**
+     * Adds label to the frame.
+     * @param number number of the label.
+     * @param text label caption.
+     * @return label created.
+     */
     @SuppressWarnings("MagicConstant")
     private JLabel addLabel(int number, String text) {
         JLabel lb = new JLabel(text);
@@ -221,14 +245,19 @@ public class CreateNewDlg extends JDialog {
         return lb;
     }
 
-    private class jctSizeEdit extends JComponent {
+    /**
+     * A decimal number text field to display and edit tubes counts, with plus and minus buttons on the sides.
+     */
+    private class TubesCountField extends JComponent {
 
-        LDecTextField tf;
-        LToolButton btnMinus;
-        LToolButton btnPlus;
+        private final LDecTextField tf;
+        private final LToolButton btnMinus;
+        private final LToolButton btnPlus;
 
-        public jctSizeEdit(int number, int aMin, int aMax) {
-            super();
+        /**
+         * Creates the field
+         */
+        public TubesCountField(int number, int aMin, int aMax) {
             int x = 0;
             int y = 0;
 
@@ -243,7 +272,8 @@ public class CreateNewDlg extends JDialog {
             tf = new LDecTextField(aMin, aMax) {
                 @Override
                 public void valueChanged() {
-                    updateValues();
+                    updateTubesCount(TubesCountField.this);
+                    updateButtonsState();
                 }
             };
             tf.setLocation(x, y);
@@ -269,7 +299,7 @@ public class CreateNewDlg extends JDialog {
                     tf.setValue(val);
                     tf.valueChanged();
                 }
-                checkButtons();
+                updateButtonsState();
             });
             btnPlus.addActionListener((ActionEvent e) -> {
                 int oldVal = tf.getValue();
@@ -278,21 +308,18 @@ public class CreateNewDlg extends JDialog {
                     tf.setValue(val);
                     tf.valueChanged();
                 }
-                checkButtons();
+                updateButtonsState();
             });
 
-            checkButtons();
-
+            updateButtonsState();
         }
 
-        public void checkButtons() {
+        private void updateButtonsState() {
             btnMinus.setEnabled(tf.getValue() != tf.getMinValue());
             btnPlus.setEnabled(tf.getValue() != tf.getMaxValue());
         }
-
-        public void updateValues() {
-            newBoardSize(this);
-            checkButtons();
+        public int getMaxValue() {
+            return tf.getMaxValue();
         }
 
         public int getValue() {
@@ -301,7 +328,7 @@ public class CreateNewDlg extends JDialog {
 
         public void setValue(int newValue) {
             tf.setValue(newValue);
-            checkButtons();
+            updateButtonsState();
         }
 
         public int checkValue(int newValue) {

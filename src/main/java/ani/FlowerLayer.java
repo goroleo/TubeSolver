@@ -16,8 +16,14 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 
+/**
+ * This layer draws and unlimited rotates 2-colors flower.
+ */
 public class FlowerLayer extends JComponent implements Runnable {
 
+    /**
+     * An original image 400x400 pix.
+     */
     private final BufferedImage imgOrig
             = new BufferedImage(400, 400, 2);
 
@@ -27,26 +33,54 @@ public class FlowerLayer extends JComponent implements Runnable {
     private BufferedImage imgFrame;
 
     /**
-     * the current rotation angle.
+     * The current rotation angle.
      */
     private double angleCurrent = 0;
+
     /**
-     *
+     * The increments of the rotation angle for the next animation frame.
      */
     private final double angleIncrement = 1d / 180d * Math.PI;
-    private final double angleEnd = 20d / 180d * Math.PI;
 
+    /**
+     * Delay between teo frames.
+     */
     private final long delay = 30;
 
+    /**
+     * The X coordinate of the center of the original image.
+     */
     private final double origCenterX = imgOrig.getWidth() / 2.0d;
+
+    /**
+     * The Y coordinate of the center of the original image.
+     */
     private final double origCenterY = imgOrig.getHeight() / 2.0d;
 
+    /**
+     * The X coordinate of the rotation point.
+     */
     private double rotationX = 250;
+
+    /**
+     * The Y coordinate of the rotation point.
+     */
     private double rotationY = 250;
+
+    /**
+     * The current alpha-channel value to appear the image.
+     */
     private double masterAlpha;
+
+    /**
+     * The increment of the alpha-channel value for the next frame.
+     */
     private final double alphaIncrement = 0.05d;
     boolean working = false;
 
+    /**
+     * Creates the flower layer.
+     */
     public FlowerLayer() {
         prepareFlower();
 
@@ -69,6 +103,11 @@ public class FlowerLayer extends JComponent implements Runnable {
         imgFrame = new BufferedImage(width, height, 2);
     }
 
+    /**
+     * Sets the rotation point coordinates.
+     * @param x horizontal coordinate
+     * @param y vertical coordinate
+     */
     public void setRotationPoint(int x, int y) {
         rotationX = x;
         rotationY = y;
@@ -76,6 +115,9 @@ public class FlowerLayer extends JComponent implements Runnable {
         repaint();
     }
 
+    /**
+     * Starts the animation thread.
+     */
     public void start() {
         masterAlpha = 0.0d;
         clearFrame();
@@ -84,11 +126,14 @@ public class FlowerLayer extends JComponent implements Runnable {
         t.start();
     }
 
+    /**
+     * Stops the animation thread.
+     */
     public void stop() {
         working = false;
     }
 
-    public int mixColors(int clr1, int clr2, double alpha1, double alpha2) {
+    private int mixColors(int clr1, int clr2, double alpha1, double alpha2) {
         int R = (int) (alpha1 * (clr1 & 0xff)
                 + alpha2 * (clr2 & 0xff));
         int G = (int) (alpha1 * ((clr1 >> 8) & 0xff)
@@ -100,7 +145,10 @@ public class FlowerLayer extends JComponent implements Runnable {
         return (R & 0xff) | ((G & 0xff) << 8) | ((B & 0xff) << 16) | ((A & 0xff) << 24);
     }
 
-    public final void prepareFlower() {
+    /**
+     * Draws the flower at the original image.
+     */
+    private void prepareFlower() {
 
         int x0 = 200, y0 = 200; // center point
 
@@ -205,7 +253,10 @@ public class FlowerLayer extends JComponent implements Runnable {
         }
     }
 
-    public void clearFrame() {
+    /**
+     * Clears the frame before the animation start.
+     */
+    private void clearFrame() {
         if (imgFrame != null) {
             Graphics2D g = (Graphics2D) imgFrame.getGraphics();
             g.setBackground(new Color(0, 0, 0, 0));
@@ -214,7 +265,10 @@ public class FlowerLayer extends JComponent implements Runnable {
         repaint();
     }
 
-    public void drawCurrentFrame() {
+    /**
+     * Draws the frame using the current rotation angle.
+     */
+    private void drawCurrentFrame() {
         int w = imgFrame.getWidth();
         int h = imgFrame.getHeight();
         int alpha;
@@ -306,8 +360,8 @@ public class FlowerLayer extends JComponent implements Runnable {
             }
 
             angleCurrent += angleIncrement;
-            if (angleCurrent > angleEnd) {
-                angleCurrent -= angleEnd;
+            if (angleCurrent > Math.PI) {
+                angleCurrent -= Math.PI;
             }
 
             drawCurrentFrame();

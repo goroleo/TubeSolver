@@ -177,9 +177,9 @@ public class ToolPanel extends JPanel {
         addPopupMenu(this);
 
         if (Options.menuDockedTo >= 0 && Options.menuDockedTo <= 3
-                && Options.menuAlign >= 0 && Options.menuAlign <= 1) {
+                && Options.menuAlignment >= 0 && Options.menuAlignment <= 1) {
             docked = Options.menuDockedTo;
-            align = Options.menuAlign;
+            align = Options.menuAlignment;
         }
     }
 
@@ -620,7 +620,7 @@ public class ToolPanel extends JPanel {
      */
     public void saveOptions() {
         Options.menuDockedTo = docked;
-        Options.menuAlign = align;
+        Options.menuAlignment = align;
     }
 
 }
