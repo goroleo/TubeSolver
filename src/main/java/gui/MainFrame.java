@@ -237,7 +237,7 @@ public class MainFrame extends JFrame {
     public void saveGame(String fileName) {
         if (tubesPan != null) {
             TubesIO.storeGameMode(gameMode);
-            TubesIO.storeTubes(tubesPan.getModel(),
+            TubesIO.storeTubes(tubesPan,
                     (gameMode != FILL_MODE) ? 0 : emptyTubes);
             TubesIO.storeMoves(gameMoves, movesDone);
             TubesIO.saveToFile(fileName, 2);
@@ -399,7 +399,7 @@ public class MainFrame extends JFrame {
         if (tubesPan != null) {
             tubesPan.saveOptions();
             remove(tubesPan);
-            tubesPan.clear();
+            tubesPan.clearBoard();
             tubesPan = null;
         }
         if (palPan != null) {
@@ -474,7 +474,7 @@ public class MainFrame extends JFrame {
         tubesPan = new BoardPanel() {
             @Override
             public void clickTube(ColorTube tube) {
-                clickColorTube(tube);
+                MainFrame.this.clickTube(tube);
             }
 
             @Override
@@ -489,7 +489,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void clearTube(ColorTube tube) {
-                clearColorTube(tube);
+                MainFrame.this.clearTube(tube);
             }
 
             @Override
@@ -658,7 +658,7 @@ public class MainFrame extends JFrame {
 //                  *  FILL MODE routines *
 //                  
 //////////////////////////////////////////////////////////////////////////////
-    public void clearColorTube(ColorTube tube) {
+    public void clearTube(ColorTube tube) {
         if (tube != null) {
             byte clrNum;
             if (tube.isActive()) {
@@ -683,7 +683,7 @@ public class MainFrame extends JFrame {
 
     public void clearAllTubes() {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            clearColorTube(tubesPan.getTube(i));
+            clearTube(tubesPan.getTube(i));
         }
 
         // clear all buttons counts 
@@ -848,7 +848,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void clickColorTube(ColorTube tube) {
+    public void clickTube(ColorTube tube) {
         switch (gameMode) {
             case FILL_MODE:
                 if (tube != null && canShowArrow(tube)) {

@@ -23,51 +23,89 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
- *
+ * This is a set of color tubes, or the Game Board.
  */
 public class BoardPanel extends JComponent {
 
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Fields / variables *
+//
+///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Color tubes array.
+     */
     private final ArrayList<ColorTube> tubes = new ArrayList<>();
+    /**
+     * The horizontal space between two tubes.
+     */
     private int spaceX = 15;
+    /**
+     * The vertical space between two tubes.
+     */
     private int spaceY = 15;
+
+    /**
+     * The number of rows to display color tubes.
+     */
     private int rows;
+
+    /**
+     * The number of columns to display color tubes.
+     */
     private int cols;
+
+    /**
+     * Which edge of the client area the panel will be docked to: <ul>
+     * <li>0 - center;
+     * <li>1 - top;
+     * <li>2 - bottom;
+     * <li>3 - left;
+     * <li>4 - right.</ul>
+     */
     private int docked = 0;
 
+    /**
+     * The logical model of the board.
+     */
     private final BoardModel model;
+
+    /**
+     * The tube that will lose the color (Donor).
+     */
     private ColorTube tubeFrom = null;
+
+    /**
+     * The tube that will get a new color (Recipient).
+     */
     private ColorTube tubeTo = null;
 
+    /**
+     * The popup menu with Color Buttons actions.
+     */
     private static final BoardMenu menu = new BoardMenu();
 
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Routines *
+//
+///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Creates a new Board Panel.
+     */
     public BoardPanel() {
         rows = 2;
         model = new BoardModel();
-        addPopup(null);
+        addPopup(this);
     }
 
-    public void restoreLocation() {
-        if (Options.boardDockedTo >= 0
-                && Options.boardDockedTo <= 4
-                && Options.boardLines > 0
-                && Options.boardLines < 4) {
-            docked = Options.boardDockedTo;
-            setRows(Options.boardLines);
-        } else {
-            setRows(2);
-        }
-        calculateColumns();
-        calculateSize();
-        updateTubesPos();
-        reDock();
-    }
-
-    public BoardModel getModel() {
-        return model;
-    }
-
+    /**
+     * Adds a new ColorTube to the board.
+     * @return a new color tube.
+     */
     public ColorTube addNewTube() {
-
         ColorTube tube = new ColorTube() {
             @Override
             public void doClick() {
@@ -93,13 +131,18 @@ public class BoardPanel extends JComponent {
         return tube;
     }
 
-    public void addNewTubes(int countFilled, int countEmpty) {
-        for (int i = 0; i < countFilled; i++) {
+    /**
+     * Adds some number of color tubes to the board.
+     * @param filled number of filled tubes.
+     * @param empty number of empty tubes.
+     */
+    public void addNewTubes(int filled, int empty) {
+        for (int i = 0; i < filled; i++) {
             ColorTube tube = addNewTube();
             tube.setFrame(0);
             tube.setActive(true);
         }
-        for (int i = 0; i < countEmpty; i++) {
+        for (int i = 0; i < empty; i++) {
             ColorTube tube = addNewTube();
             tube.setActive(false);
             tube.setClosed(true);
@@ -107,6 +150,17 @@ public class BoardPanel extends JComponent {
         calculateColumns();
     }
 
+    public void clearBoard() {
+        removeAll();
+        model.clear();
+        tubes.clear();
+    }
+
+    /**
+     * Adds the popup menu to the board panel components.
+     * We need to add it to every color tube and to the board itself.
+     * @param comp a component to add the menu.
+     */
     public final void addPopup(JComponent comp) {
         if (comp == null) {
             comp = this;
@@ -131,36 +185,50 @@ public class BoardPanel extends JComponent {
         });
     }
 
-    public void clear() {
-        removeAll();
-        model.clear();
-        tubes.clear();
-    }
-
-    public int getTubesCount() {
-        return tubes.size();
-    }
-
-    public int getTubeNumber(ColorTube tube) {
-        return tubes.indexOf(tube);
-    }
-
     public ColorTube getTube(int number) {
-        if (number >= 0 && number < tubes.size()) {
+        if (number >= 0 && number < getTubesCount()) {
             return tubes.get(number);
         } else {
             return null;
         }
     }
 
+    public int getTubeNumber(ColorTube tube) {
+        return tubes.indexOf(tube);
+    }
+
+    public int getTubesCount() {
+        return tubes.size();
+    }
+
+    public void clearTube(ColorTube tube) {
+        tube.clear();
+    }
+
+    public void clearTubes() {
+        for (int i = 0; i < getTubesCount(); i++) {
+            clearTube(getTube(i));
+        }
+    }
+
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Size and position routines *
+//
+///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Gets number of rows to display color tubes.
+     * @return rows
+     */
     public int getRows() {
         return rows;
     }
 
-    public int getCols() {
-        return cols;
-    }
-
+    /**
+     * Set rows to display color tubes.
+     * @param newRows a new Rows value
+     */
     public void setRows(int newRows) {
         rows = newRows;
         calculateColumns();
@@ -169,35 +237,37 @@ public class BoardPanel extends JComponent {
         reDock();
     }
 
-    public void setCols(int newCols) {
-        cols = newCols;
-        calculateRows();
-        calculateSize();
-        updateTubesPos();
-        reDock();
-    }
-
+    /**
+     * Calculates how many columns are needed to display all color tubes on the board.
+     */
     private void calculateColumns() {
-        cols = tubes.size() / rows;
-        if (cols * rows < tubes.size()) {
+        cols = getTubesCount() / rows;
+        if (cols * rows < getTubesCount()) {
             cols++;
         }
     }
 
-    private void calculateRows() {
-        rows = tubes.size() / cols;
-        if (cols * rows < tubes.size()) {
-            rows++;
+    /**
+     * Calculates and sets the size of the Board to display color tubes.
+     */
+    private void calculateSize() {
+        if (!tubes.isEmpty()) {
+            setSize(spaceX + cols * (spaceX + tubes.get(0).getWidth()),
+                    spaceY + rows * (spaceY + tubes.get(0).getHeight()));
         }
     }
 
-    private void setTubePos(int number) {
+    /**
+     * Calculates and sets position of color tube depending on the current columns and rows values.
+     * @param number of the color tube to set its location.
+     */
+    private void updateTubePos(int number) {
         int col = number % cols;
         int row = number / cols;
         int x = spaceX + col * (getTube(number).getWidth() + spaceX);
         int y = spaceY + row * (getTube(number).getHeight() + spaceY);
         if (row == rows - 1) { // last row
-            int lastRowCols = tubes.size() - (cols * (rows - 1));
+            int lastRowCols = getTubesCount() - (cols * (rows - 1));
             if (lastRowCols != cols) {
                 switch (docked) {
                     case 0: // center
@@ -217,28 +287,45 @@ public class BoardPanel extends JComponent {
         getTube(number).setLocation(x, y);
     }
 
+    /**
+     * Calculates and sets position of all color tubes depending on the current columns and rows values.
+     */
     private void updateTubesPos() {
-        for (int i = 0; i < tubes.size(); i++) {
-            setTubePos(i);
+        for (int i = 0; i < getTubesCount(); i++) {
+            updateTubePos(i);
         }
     }
 
-    public void calculateSize() {
-        if (!tubes.isEmpty()) {
-            setSize(spaceX + cols * (spaceX + tubes.get(0).getWidth()),
-                    spaceY + rows * (spaceY + tubes.get(0).getHeight()));
-        }
-    }
-
+    /**
+     * Gets the edge of the MainFrame the panel is docked to: <ul>
+     * <li>0 - center;
+     * <li>1 - top;
+     * <li>2 - bottom;
+     * <li>3 - left;
+     * <li>4 - right.</ul>
+     *
+     * @return current dockedTo value
+     */
     public int getDockedTo() {
         return docked;
     }
 
-    public void setDockedTo(int number) {
-        docked = number;
-        reDock();
+    /**
+     * Sets the edge of the MainFrame the panel is docked to.
+     *
+     * @param newDocked a new docked value.
+     * @see #docked
+     */
+    public void setDockedTo(int newDocked) {
+        if (newDocked >= 0 && newDocked < 5) {
+            docked = newDocked;
+            reDock();
+        }
     }
 
+    /**
+     * Relocates the panel depending on the current docked value.
+     */
     public void reDock() {
         Rectangle r = Main.frame.getTubesArea();
         switch (docked) {
@@ -265,19 +352,16 @@ public class BoardPanel extends JComponent {
         setLocation(r.x, r.y);
     }
 
-
-    public void clearTubes() {
-        for (int i = 0; i < tubes.size(); i++) {
-            getTube(i).clear();
+    public void restoreLocation() {
+        if (Options.boardDockedTo >= 0
+                && Options.boardDockedTo <= 4
+                && Options.boardLines > 0
+                && Options.boardLines < 4) {
+            docked = Options.boardDockedTo;
+            setRows(Options.boardLines);
+        } else {
+            setRows(2);
         }
-    }
-
-    public void clearTube(int number) {
-        clearTube(getTube(number));
-    }
-
-    public void clearTube(ColorTube tube) {
-        tube.clear();
     }
 
     public ColorTube getTubeFrom() {
@@ -317,25 +401,23 @@ public class BoardPanel extends JComponent {
         }
     }
 
-    public void setTubeTo(int number) {
-        setTubeTo(getTube(number));
-    }
-
     public void clickTube(ColorTube tube) {
-
+        // overrides by MainFrame
     }
 
     public boolean canShowArrow(ColorTube tube) {
+        // overrides by MainFrame
         return true;
     }
 
     public boolean canHideArrow(ColorTube tube) {
+        // overrides by MainFrame
         return true;
     }
 
     public void updateColor(int colorNumber) {
         for (int i = 0; i < getTubesCount(); i++) {
-            if (getTube(i).hasColor(colorNumber)) {
+            if (getTube(i).getModel().hasColor((byte) colorNumber)) {
                 getTube(i).repaintColors();
             }
         }
@@ -349,10 +431,10 @@ public class BoardPanel extends JComponent {
 
     public boolean canGetColor(ColorTube tubeFrom) {
         boolean result = false;
-        int fromIdx = tubes.indexOf(tubeFrom);
+        int fromIdx = getTubeNumber(tubeFrom);
         int i = 0;
 
-        while (!result && i < tubes.size()) {
+        while (!result && i < getTubesCount()) {
             if (i != fromIdx) {
                 result = model.canMakeMove(fromIdx, i);
             }
@@ -363,7 +445,7 @@ public class BoardPanel extends JComponent {
 
     public int moveColor(ColorTube tubeFrom, ColorTube tubeTo) {
         int result = 0;
-        if (model.canMakeMove(tubes.indexOf(tubeFrom), tubes.indexOf(tubeTo))) {
+        if (model.canMakeMove(getTubeNumber(tubeFrom), getTubeNumber(tubeTo))) {
             byte clr = tubeFrom.getCurrentColor();
             int cnt = Math.min(tubeFrom.getModel().colorsToGet(), 4 - tubeTo.getColorsCount());
             result = cnt;

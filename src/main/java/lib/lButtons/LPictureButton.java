@@ -24,6 +24,22 @@ import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.JToolTip;
 
+/**
+ * This is extended JButton class with specified pictures for every button state.
+ * Images from <b>/img/</b> folder of application resources are used to paint the button.<br>
+ * <br>Every file with button images must be named as:
+ * <br>[button name]_enabled.png - for the ordinary state.
+ * <br>[button name]_disabled.png - for the disabled state.
+ * <br>[button name]_focused.png - for the focused state.
+ * <br>[button name]_hover.png - for the mouse over state.
+ * <br>[button name]_pressed.png - for the pressed state.
+ * <br>[button name]_default.png - for the window default button state.<br>
+ * <br>If the expected file is not found, the file of the enabled state will be
+ * used instead. So at least [button name]_enabled.png file must be in the
+ * /resources/img/ folder.
+ * At the constructor the [button name] is set, and all button's pictures will be loaded
+ * from files as described above.
+ */
 @SuppressWarnings("unused")
 public class LPictureButton extends JButton {
 
@@ -40,9 +56,8 @@ public class LPictureButton extends JButton {
     private BufferedImage imgHover = null;
     private BufferedImage imgPressed = null;
     private BufferedImage imgDefault = null;
-    private BufferedImage imgCurrent = null;
 
-// Text Colors:     
+    // Text Colors:
     private Color clrEnabled = new Color(255, 255, 255);
     private Color clrDisabled = new Color(128, 128, 128);
     private Color clrHover = new Color(0, 0, 0);
@@ -54,23 +69,37 @@ public class LPictureButton extends JButton {
 // ToolTip
     private final JToolTip toolTip;
 
-    public LPictureButton() {
-        this(null, null);
-    }
-
+    /**
+     * Creates the Picture button with the default name.
+     * @param owner the parent frame
+     */
     public LPictureButton(Container owner) {
         this(owner, null);
     }
 
+    /**
+     * Creates the Picture button with the specified name.
+     * @param name button name to load the state pictures from proper files.
+     */
     public LPictureButton(String name) {
         this(null, name);
     }
 
+    /**
+     * Creates the Picture button.
+     * @param owner the parent frame
+     * @param name button name to load the state pictures from proper files.
+     */
     public LPictureButton(Container owner, String name) {
         super();
         parent = owner;
 
         toolTip = new JToolTip();
+        toolTip.setBackground(clrToolTipBg);
+        toolTip.setForeground(clrToolTipFg);
+        toolTip.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(clrToolTipBorder),
+                BorderFactory.createEmptyBorder(3, 3, 3, 3)));
 
         this.setLayout(null);
         setContentAreaFilled(false);
@@ -79,49 +108,81 @@ public class LPictureButton extends JButton {
         setFocusable(true);
 
         setButtonName(name);
-        loadImages();
         if (imgEnabled != null) {
             setSize(imgEnabled.getWidth(), imgEnabled.getHeight());
         }
     }
 
+    /**
+     * Sets the new button name and reloads state pictures.
+     * @param name button name to load the state pictures from proper files.
+     */
     public void setButtonName(String name) {
         if (name != null && name.length() != 0) {
             buttonName = name;
         }
+        loadImages();
         repaint();
     }
 
+    /**
+     * Sets the Text color for the enabled button state.
+     * @param clr new text color.
+     */
     public void setColorEnabled(Color clr) {
         clrEnabled = clr;
         repaint();
     }
 
+    /**
+     * Sets the Text color for the disabled button state.
+     * @param clr new text color.
+     */
     public void setColorDisabled(Color clr) {
         clrDisabled = clr;
         repaint();
     }
 
+    /**
+     * Sets the Text color for the mouse over button state.
+     * @param clr new text color.
+     */
     public void setColorHover(Color clr) {
         clrHover = clr;
         repaint();
     }
 
+    /**
+     * Sets the Text color for the pressed button state.
+     * @param clr new text color.
+     */
     public void setColorPressed(Color clr) {
         clrPressed = clr;
         repaint();
     }
 
+    /**
+     * Sets the background color of the ToolTip window.
+     * @param clr new color.
+     */
     public void setToolTipBackground(Color clr) {
         clrToolTipBg = clr;
         toolTip.setBackground(clrToolTipBg);
     }
 
+    /**
+     * Sets the text color of the ToolTip window.
+     * @param clr new color.
+     */
     public void setToolTipForeground(Color clr) {
         clrToolTipFg = clr;
         toolTip.setForeground(clrToolTipFg);
     }
 
+    /**
+     * Sets the border color of the ToolTip window.
+     * @param clr new color.
+     */
     public void setToolTipBorder(Color clr) {
         clrToolTipBorder = clr;
         toolTip.setBorder(BorderFactory.createCompoundBorder(
@@ -165,14 +226,24 @@ public class LPictureButton extends JButton {
         }
     }
 
+    /**
+     * Gets the file name of the button state pictures.
+     * @param suffix the suffix after the button name.
+     * @return file name
+     */
     public String getImageFileName(String suffix) {
         return buttonName + "_" + suffix + ".png";
     }
 
-    public URL getImageURL(String fName) {
+    private URL getImageURL(String fName) {
         return Objects.requireNonNullElse(parent, this).getClass().getResource("/img/" + fName);
     }
 
+    /**
+     * Loads the button's state picture from the application resource.
+     * @param fName file name.
+     * @return image or null
+     */
     public BufferedImage loadImage(String fName) {
         BufferedImage img = null;
         URL imgURL = getImageURL(fName);
@@ -204,6 +275,7 @@ public class LPictureButton extends JButton {
         int x = ((getWidth() - 3) - textWidth) / 2 + 1;
         int y = ((getHeight() - 3) + textHeight) / 2 + 1;
 
+        BufferedImage imgCurrent;
         if (!this.isEnabled()) {
             imgCurrent = imgDisabled;
             g.setColor(clrDisabled);
@@ -232,7 +304,6 @@ public class LPictureButton extends JButton {
 
     @Override
     public JToolTip createToolTip() {
-
         return toolTip;
     }
 

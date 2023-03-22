@@ -358,18 +358,17 @@ public class TubesIO {
 
     /**
      * Stores tubes set from Tubes Board.
-     * @param bm a logical Board model
+     * @param bp Board Panel
      * @param emptyTubes how much empty tubes are at the board (used in GAME_FILL mode).
      */
-    public static void storeTubes(BoardModel bm, int emptyTubes) {
-        tubesCount = bm.size();
+    public static void storeTubes(BoardPanel bp, int emptyTubes) {
+        tubesCount = bp.getTubesCount();
         emptyCount = emptyTubes;
         storedTubes = new int[tubesCount];
         for (int i = 0; i < tubesCount; i++) {
-            storedTubes[i] = bm.get(i).storeColors();
+            storedTubes[i] = bp.getTube(i).getModel().storeColors();
         }
     }
-
     /**
      * Fills stored tubes to the specified Board Panel
      * @param bp Board Panel to restore tubes

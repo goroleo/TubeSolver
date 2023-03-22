@@ -222,13 +222,13 @@ import java.awt.event.ActionEvent;
     /** Handles the click on Clear this tube item. */
     private void clearClick() {
         if (correspTube != null) {
-            MainFrame.tubesPan.clearTube(correspTube);
+            Main.frame.clearTube(correspTube);
         }
     }
 
     /** Handles the click on Clear All tubes item. */
     private void clearAllClick() {
-        MainFrame.tubesPan.clearTubes();
+        Main.frame.clearAllTubes();
     }
 
     /** Handles the click on Undo one move item. */

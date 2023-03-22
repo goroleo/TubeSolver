@@ -243,26 +243,27 @@ public class PalettePanel extends JComponent {
      * <li>3 - right.</ul>
      *
      * @return current dockedTo value
-     * @see #docked
      */
     public int getDockedTo() {
         return docked;
     }
 
     /**
-     * Sets the edge of the MainFrame the toolbar is docked to.
+     * Sets the edge of the MainFrame the panel is docked to.
      *
      * @param newDocked the new docked value.
      * @see #docked
      */
     public void setDockedTo(int newDocked) {
-        docked = newDocked;
-        if (docked < 2) {
-            setRows(Math.min(rows, cols));
-        } else {
-            setColumns(Math.min(rows, cols));
+        if (newDocked >= 0 && newDocked < 4) {
+            docked = newDocked;
+            if (docked < 2) {
+                setRows(Math.min(rows, cols));
+            } else {
+                setColumns(Math.min(rows, cols));
+            }
+            reDock();
         }
-        reDock();
     }
 
     /**

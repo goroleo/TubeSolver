@@ -186,12 +186,13 @@ public class ToolPanel extends JPanel {
     /**
      * This routine creates and adds the new action button.
      *
-     * @param imgFSuffix the suffix of the image file name stored at <i>resources</i> folder.
+     * @param iconSuffix the suffix of the image file name stored at <i>/resources/img/</i> folder.
      * @param hint       the button's tooltip text
      * @return a new button
+     * @see lib.lButtons.LToolButton
      */
-    public LToolButton addNewButton(String imgFSuffix, String hint) {
-        LToolButton btn = new LToolButton(this, "btnTool32", imgFSuffix);
+    public LToolButton addNewButton(String iconSuffix, String hint) {
+        LToolButton btn = new LToolButton(this, "btnTool32", iconSuffix);
         btn.setColorEnabled(new Color(0xb8cfe5));
         btn.setColorDisabled(new Color(0x737c85));
         btn.setColorHover(new Color(0x222222));

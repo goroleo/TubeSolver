@@ -21,42 +21,59 @@ import java.io.File;
 import static lib.lOpenSaveDialog.OpenSavePanel.*;
 
 /**
- * OpenSave file chooser dialog.
+ * The OpenSave file chooser dialog.
  */
 @SuppressWarnings("unused")
 public class LOpenSaveDialog extends JDialog {
 
+    /**
+     * The owner of this dialog to place it in relative to the owner.
+     */
     private final JFrame owner;
+
+    /**
+     * The mode of the dialog. It can be SAVE_MODE or OPEN_MODE.
+     */
     public static int dialogMode;
+
+    /**
+     * A constant for the SAVE_MODE of the dialog.
+     */
     public final static int SAVE_MODE = 101;
+
+    /**
+     * A constant for the OPEN_MODE of the dialog.
+     */
     public final static int OPEN_MODE = 202;
 
+    /**
+     * The OpenSavePanel instance to access of all its routines from anywhere of the dialog.
+     */
     public static OpenSavePanel osPan;
 
-    public LOpenSaveDialog() {
-        this(null, 202, "");
-    }
-
+    /**
+     * Creates the Open file dialog.
+     * @param owner the owner frame.
+     */
     public LOpenSaveDialog(JFrame owner) {
         this(owner, 202, "");
     }
 
-    public LOpenSaveDialog(String fName) {
-        this(null, 202, fName);
-    }
-
-    public LOpenSaveDialog(int mode) {
-        this(null, mode, "");
-    }
-
+    /**
+     * Creates the OpenSave file dialog.
+     * @param owner the owner frame.
+     * @param mode the mode of the dialog. It can be OPEN_MODE of SAVE_MODE.
+     */
     public LOpenSaveDialog(JFrame owner, int mode) {
         this(owner, mode, "");
     }
 
-    public LOpenSaveDialog(int mode, String fName) {
-        this(null, mode, fName);
-    }
-
+    /**
+     * Creates the OpenSave file dialog.
+     * @param owner the owner frame.
+     * @param mode the mode of the dialog. It can be OPEN_MODE of SAVE_MODE.
+     * @param fName the expected name of the file.
+     */
     public LOpenSaveDialog(JFrame owner, int mode, String fName) {
         super(owner, ResStrings.getString("strOpenFile"), true);
 
@@ -170,6 +187,10 @@ public class LOpenSaveDialog extends JDialog {
 
     }
 
+    /**
+     * Sets or resets the mode of the dialog.
+     * @param mode a new mode. It can be OPEN_MODE of SAVE_MODE.
+     */
     public void setDialogMode(int mode) {
         dialogMode = (mode == SAVE_MODE) ? SAVE_MODE : OPEN_MODE;
         setTitle((dialogMode == SAVE_MODE)
@@ -187,19 +208,32 @@ public class LOpenSaveDialog extends JDialog {
         getContentPane().setForeground(fg);
     }
 
+    /**
+     * Shows the OpenFile dialog.
+     * @return an absolute path of the chosen file.
+     */
     public String showOpenDialog() {
         setDialogMode(OPEN_MODE);
         setVisible(true);
         return current.getFilePath();
     }
 
+    /**
+     * Shows the SaveFile dialog.
+     * @return an absolute path of the chosen file.
+     */
     public String showSaveDialog() {
         setDialogMode(SAVE_MODE);
         setVisible(true);
         return current.getFilePath();
     }
 
+    /**
+     * Saves current settings of the dialog to the tubesolver settings.
+     * Needs to be relocated.
+     */
     public void saveOptions() {
+        // todo: relocate this routine
         Options.osdPositionX = getX();
         Options.osdPositionY = getY();
         Options.osdSizeX = getWidth();
@@ -212,7 +246,13 @@ public class LOpenSaveDialog extends JDialog {
         Options.osdSortOrder = osPan.getFileSortAscending() ? 1 : 0;
     }
 
+    /**
+     * Gets the stored folder from the tubesolver settings.
+     * Needs to be relocated.
+     * @return stored folder or the empty string.
+     */
     public final String getStoredFolder() {
+        // todo: relocate this routine
         if (Options.osdCurrentDir != null && !"".equals(Options.osdCurrentDir)) {
             File f = new File(Options.osdCurrentDir);
             if (f.exists() && f.isDirectory()) {

@@ -117,6 +117,7 @@ public class ColorLayer extends JComponent implements Runnable {
         for (int i = 0; i < 4; i++) {
             eraseColor(i + 1);
         }
+        setSize(width, height);
     }
 
     /**
