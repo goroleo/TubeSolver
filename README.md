@@ -9,7 +9,7 @@ Two modes of initial filling of tubes:
 The ability to search for a solution to the current game combination.
 
 Two game modes:
-- normal game mode;
+- regular game mode;
 - assistant mode after a successfully found solution.
 
 The ability to adjust the palette of game colors for a better visual experience on your monitor.
