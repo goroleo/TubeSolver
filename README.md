@@ -11,7 +11,7 @@ Trying to search for a solution to the current game combination.
 
 Two game modes:
 - normal game mode;
-- assistant mode after a successfully found solution;
+- assistant mode after a successfully found solution.
 
 The ability to adjust the palette of game colors for a better visual experience on your monitor.
 
