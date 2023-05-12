@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.Properties;
 
 /**
- * All load and save routines for the application. And description
+ * All load and save routines for the application. And description of the file format when saves/loads the game.
  */
 @SuppressWarnings("unused")
 public class TubesIO {
