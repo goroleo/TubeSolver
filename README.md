@@ -20,7 +20,7 @@ Automatic saving of an unfinished game and its automatic loading at the new star
 Saving and loading the game.
 
 Game save suggestion (configurable) with file selection:
-- after the initial filling of the test tubes, manual or automatic;
+- after the initial filling of the tubes, manual or automatic;
 - after a successful search for a solution;
 - before closing the application.
 
