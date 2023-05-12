@@ -24,6 +24,8 @@ Game save suggestion (configurable) with file selection:
 - after a successful search for a solution;
 - before closing the application.
 
+The position of all panels is customizable.
+
 Language support: English, Russian, Ukrainian, Bulgarian. (Please report me any inaccurate translations).
 
 Made with pure Java Swing (Java8), without using any third-party libraries. All animation, drawings, pictures are completely homemade. To compile, just specify **run/main.java** as the main class of the application.
