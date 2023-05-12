@@ -28,6 +28,6 @@ The position of all panels is customizable (use mouse right-click).
 
 Language support: English, Russian, Ukrainian, Bulgarian. (Please report me any inaccurate translations).
 
-Made with pure Java Swing (Java8), without using any third-part libraries. All animation, drawings, pictures, dialogs are completely homemade. To compile, just specify **run/main.java** as the main class of the application.
+Made with pure Java Swing (Java8), without using any third-part libraries. All animation, drawings, pictures, dialogs are completely homemade. To compile, just specify **run/Main.java** as the main class of the application.
 
 **License: MIT.** Use it as you want. 
