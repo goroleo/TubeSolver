@@ -7,7 +7,7 @@ Two modes of initial filling of tubes:
 - automatic random filling;
 - filling manually.
 
-Trying to search for a solution to the current game combination.
+The ability to search for a solution to the current game combination.
 
 Two game modes:
 - normal game mode;
