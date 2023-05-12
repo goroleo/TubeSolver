@@ -16,7 +16,7 @@ The ability to adjust the palette of game colors for a better visual experience 
 
 Automatic saving of an unfinished game and its automatic loading at the new start of the application.
 
-Saving and loading the game to/from specified file.
+Saving and loading the game to/from the specified file.
 
 Game save suggestion (configurable) with file selection:
 - after the initial filling of the tubes, manual or automatic;
