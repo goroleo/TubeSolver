@@ -459,6 +459,9 @@ public class MainFrame extends JFrame {
                 tubesPan.updateColors();
             }
         };
+        for (int i = 0; i < pal.size() - 1; i++) {
+            palPan.getButton(i).setCount(4);
+        }
         palPan.addPopups();
         palPan.reDock();
         palPan.setVisible(true);

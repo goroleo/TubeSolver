@@ -164,7 +164,7 @@ public class ColorButton extends JButton {
 
         loadImages();
 
-        countLayer = new SlideLayer(imgCount4);
+        countLayer = new SlideLayer(null);
         countLayer.setExpDegrees(1.0d, 0.5d);
         countLayer.setStartPosOfSecondImg(imgCount1.getWidth() / 3, 0);
         countLayer.setEndPosOfFirstImg(0, imgCount1.getHeight() / 2);

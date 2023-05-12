@@ -89,7 +89,6 @@ public class PalettePanel extends JComponent {
 
         for (int i = 0; i < pal.size() - 1; i++) {
             ColorButton cb = new ColorButton(i);
-            cb.setCount(4);
             cb.addActionListener((ActionEvent e) -> clickButton(cb));
             colors.add(cb);
             this.add(cb);
