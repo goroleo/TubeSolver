@@ -38,4 +38,5 @@ Made with pure Java Swing (Java8), without using any third-part libraries. All a
 
 # Screenshots
 ![Image alt](https://github.com/goroleo/TubeSolver/raw/master/screenshot1.png)
+![Image alt](https://github.com/goroleo/TubeSolver/raw/master/screenshot2.png)
 
