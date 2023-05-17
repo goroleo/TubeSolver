@@ -21,7 +21,8 @@ import java.awt.event.ActionEvent;
  * The popup menu for the Tubes Board Panel.
  * @see BoardPanel
  * @see ColorTube
- */public class BoardMenu extends LPopupMenu {
+ */
+public class BoardMenu extends LPopupMenu {
 
 ///////////////////////////////////////////////////////////////////////////
 //

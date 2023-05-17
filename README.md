@@ -1,5 +1,5 @@
 # TubeSolver
-Introducing **TubeSolver**, another variation on the classic tube-to-tube color transfusion game.
+Introducing **TubeSolver**, another variation on the classic casual tube-to-tube color transfusion game.
 
 ## Key features
 Two modes of initial filling of tubes:
