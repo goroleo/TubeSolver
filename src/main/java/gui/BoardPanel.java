@@ -11,9 +11,6 @@ package gui;
 
 import core.BoardModel;
 import core.Options;
-import core.ResStrings;
-import dlg.MessageDlg;
-import dlg.SolveDlg;
 import run.Main;
 
 import javax.swing.*;
@@ -209,6 +206,10 @@ public class BoardPanel extends JComponent {
         for (int i = 0; i < getTubesCount(); i++) {
             clearTube(getTube(i));
         }
+    }
+
+    public BoardModel getModel() {
+        return model;
     }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -538,50 +539,6 @@ public class BoardPanel extends JComponent {
             Main.frame.startAssistMode();
         }
 
-    }
-
-    public boolean doSolve() {
-
-        boolean result = false;
-
-        MessageDlg msgDlg = new MessageDlg(Main.frame,
-                ResStrings.getString("strFindSolution"),
-                MessageDlg.BTN_YES_NO);
-        msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
-        msgDlg.setVisible(true);
-
-        if (msgDlg.result > 0) {
-
-            SolveDlg solveDlg = new SolveDlg(Main.frame, model);
-            solveDlg.solve();
-
-            switch (solveDlg.result) {
-                case -1: // window closed
-                case 0: // escape-cancel pressed
-                    msgDlg = new MessageDlg(Main.frame,
-                            ResStrings.getString("strCancelSolution"),
-                            MessageDlg.BTN_OK);
-                    msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_CENTER);
-                    msgDlg.setVisible(true);
-                    break;
-                case 1: // not solved 
-                    msgDlg = new MessageDlg(Main.frame,
-                            ResStrings.getString("strNotSolved"),
-                            MessageDlg.BTN_OK);
-                    msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
-                    msgDlg.setVisible(true);
-                    break;
-                case 2: // solved! 
-                    msgDlg = new MessageDlg(Main.frame,
-                            ResStrings.getString("strSolutionSuccess"),
-                            MessageDlg.BTN_YES_NO);
-                    msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
-                    msgDlg.setVisible(true);
-                    result = msgDlg.result > 0;
-            }
-        }
-
-        return result;
     }
 
     public boolean isSolved() {

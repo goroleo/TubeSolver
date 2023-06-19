@@ -17,6 +17,7 @@ import core.TubesIO;
 import dlg.MessageDlg;
 import dlg.StartDlg;
 import lib.lOpenSaveDialog.LOpenSaveDialog;
+import run.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,6 +47,8 @@ public class MainFrame extends JFrame {
 
     private final static CongratsPanel congPan = new CongratsPanel();
 
+    private static SolvePanel solvePan;
+
     public static GameMoves gameMoves = new GameMoves();
     public static int movesDone;
 
@@ -57,7 +60,7 @@ public class MainFrame extends JFrame {
     public final static int FILL_MODE = 100;
     public final static int PLAY_MODE = 200;
     public final static int ASSIST_MODE = 300;
-    public final static int VIEW_MODE = 400; // reserved for future use
+    public final static int SOLVE_MODE = 400;
 
     private static int filledTubes;
     private static int emptyTubes;
@@ -137,6 +140,11 @@ public class MainFrame extends JFrame {
     }
 
     public void closeFrame() {
+        if (solvePan.isVisible()) {
+            solvePan.stopSolver(1);
+            return;
+        }
+
         saveOptions();
         pal.savePalette();
         if (toolPan != null) {
@@ -162,6 +170,9 @@ public class MainFrame extends JFrame {
     private void initElements() {
         getContentPane().setLayout(null);
         getContentPane().setBackground(Palette.backgroundColor);
+
+        solvePan = new SolvePanel();
+        getContentPane().add(solvePan);
 
         congPan.setVisible(false);
         getContentPane().add(congPan);
@@ -374,7 +385,68 @@ public class MainFrame extends JFrame {
             gameMoves.remove(gameMoves.size() - 1);
         }
         setTubeFrom(null);
+        setTubeTo(null);
     }
+
+    public void startSolveMode() {
+
+        MessageDlg msgDlg = new MessageDlg(Main.frame,
+                ResStrings.getString("strFindSolution"),
+                MessageDlg.BTN_YES_NO);
+        msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
+        msgDlg.setVisible(true);
+
+        if (msgDlg.result > 0) {
+            setGameMode(SOLVE_MODE);
+            setResizable(false);
+            solvePan.startSolve(tubesPan.getModel());
+        }
+    }
+
+    public void endSolveMode(int reason) {
+
+        MessageDlg msgDlg;
+
+        setGameMode(PLAY_MODE);
+        setResizable(true);
+
+        switch (reason) {
+            case 0: // working
+                break;
+            case 1: // escape-cancel pressed
+                msgDlg = new MessageDlg(this,
+                        ResStrings.getString("strCancelSolution"),
+                        MessageDlg.BTN_OK);
+                msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_CENTER);
+                msgDlg.setVisible(true);
+                break;
+            case 2: // not solved
+                msgDlg = new MessageDlg(this,
+                        ResStrings.getString("strNotSolved"),
+                        MessageDlg.BTN_OK);
+                msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
+                msgDlg.setVisible(true);
+                break;
+            case 3: // solved!
+                msgDlg = new MessageDlg(this,
+                        ResStrings.getString("strSolutionSuccess"),
+                        MessageDlg.BTN_YES_NO);
+                msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
+                msgDlg.setVisible(true);
+                if (msgDlg.result == 0) reason = 0;
+        }
+
+        if (reason==3) {
+            startAssistMode();
+            if (Options.saveGameAfterSolve) {
+                saveGameAs(ResStrings.getString("strSaveIDSolved"));
+            }
+        } else {
+            endAssistMode();
+            startPlayMode();
+        }
+    }
+
 
     public void endGame() {
         saveTempOnExit = false;
@@ -417,17 +489,6 @@ public class MainFrame extends JFrame {
         repaint();
     }
 
-    public void doSolve() {
-        if (tubesPan.doSolve()) {
-            startAssistMode();
-            if (Options.saveGameAfterSolve) {
-                saveGameAs(ResStrings.getString("strSaveIDSolved"));
-            }
-        } else {
-            endAssistMode();
-            startPlayMode();
-        }
-    }
 
 //////////////////////////////////////////////////////////////////////////////
 //                  
@@ -1012,5 +1073,4 @@ public class MainFrame extends JFrame {
 
         setMinimumSize(dim);
     }
-
 }

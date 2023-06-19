@@ -589,7 +589,7 @@ public class TubesIO {
                 if (fileVer > 1) {
                     level = bais.readInt();         // read level 
                     gMode = bais.readInt();         // read gameMode
-                    if (gMode == 0) {
+                    if (gMode == 0 || gMode == MainFrame.SOLVE_MODE) {
                         gMode = MainFrame.PLAY_MODE;
                     }
                 } else {

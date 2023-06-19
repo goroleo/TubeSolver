@@ -1,5 +1,7 @@
 A set of animation and imaging layers to use at GUI components.
 
+BlurLayer – used at `/gui/SolvePanel` to blur the contents of the MainFrame 
+
 ColorLayer – used at `/gui/ColorTube` to animate of fill and erase tube’s color cells
 
 FlowerLayer – used at `/gui/CongratsPanel` to draw and rotate 2-color flower
@@ -18,4 +20,4 @@ SlideLayer – used at `/gui/ColorButton` to animate the counter changes
 
 WaveLayer – used at `/gui/ColorTube` (arrows) and `/gui/ConrgatsPanel` (congratulation text) to animate a wave-like change the transparency of an image
 
-WheelLayer – used at `/dlg/SolveDlg` to animate a spinning circle showing the application busyness
+WheelLayer – used at `/gui/SolvePanel` to animate a spinning circle showing the application busyness

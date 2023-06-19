@@ -260,6 +260,14 @@ public class ToolPanel extends JPanel {
      * @see MainFrame#gameMode
      */
     public void updateButtons(int gameMode) {
+
+        if (gameMode != MainFrame.SOLVE_MODE)
+        for (int i=0; i<btnCount; i++)
+            if (buttons[i] != null)
+                buttons[i].setEnabled(true);
+
+
+
         switch (gameMode) {
             case MainFrame.FILL_MODE:
                 buttons[3].setEnabled(true);  // 3 - save button
@@ -283,6 +291,11 @@ public class ToolPanel extends JPanel {
                 buttons[9].setEnabled(MainFrame.movesDone > 0);
                 buttons[10].setVisible(false); // 10 - clear all tubes 
                 buttons[11].setVisible(false); // 11 - auto fill button
+                break;
+            case MainFrame.SOLVE_MODE:
+                for (int i=0; i<btnCount; i++)
+                    if (buttons[i] != null)
+                        buttons[i].setEnabled(false);
                 break;
             default:
                 buttons[3].setEnabled(false); // 3 - save button
@@ -377,7 +390,7 @@ public class ToolPanel extends JPanel {
      * Click the Solve Game button
      */
     public void solveClick() {
-        Main.frame.doSolve();
+        Main.frame.startSolveMode();
     }
 
     /**
