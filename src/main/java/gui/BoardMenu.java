@@ -243,9 +243,7 @@ public class BoardMenu extends LPopupMenu {
     }
 
     /** Handles the click on Solve item. */
-    private void solveClick() {
-        Main.frame.startSolveMode();
-    }
+    private void solveClick() { Main.frame.startSolve();  }
 
     /** Gets the current docked position value and shows icon at the proper item. */
     private void updatePosIcons() {

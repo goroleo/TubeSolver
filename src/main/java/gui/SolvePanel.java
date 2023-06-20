@@ -161,7 +161,7 @@ public class SolvePanel extends JComponent {
         wheel.setVisible(false);
         btn.setVisible(false);
         blur.startHide();
-        Main.frame.endSolveMode(solveResult);
+        Main.frame.endSolve(solveResult);
     }
 
     public void onBlurFinished(boolean b) {

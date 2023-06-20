@@ -446,7 +446,7 @@ public class ToolPanel extends JPanel {
      */
     public void solveClick() {
         if (buttons[6].isEnabled() && buttons[6].isVisible()) {
-            Main.frame.startSolveMode();
+            Main.frame.startSolve();
         }
     }
 

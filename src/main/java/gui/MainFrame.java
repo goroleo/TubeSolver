@@ -401,7 +401,7 @@ public class MainFrame extends JFrame {
         setTubeTo(null);
     }
 
-    public void startSolveMode() {
+    public void startSolve() {
 
         setGameMode(BUZY_MODE);
 
@@ -422,7 +422,7 @@ public class MainFrame extends JFrame {
 
     }
 
-    public void endSolveMode(int reason) {
+    public void endSolve(int reason) {
 
         MessageDlg msgDlg;
 
@@ -598,7 +598,7 @@ public class MainFrame extends JFrame {
 
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //
 //                  *  ALL MODES routines *
 //
@@ -735,7 +735,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //                  
 //                  *  FILL MODE routines *
 //                  
@@ -955,6 +955,7 @@ public class MainFrame extends JFrame {
                     } else {
                         if (!tube.isClosed() && !tube.isEmpty()) {
                             // exit from the assist mode
+                            setGameMode(BUZY_MODE);
                             MessageDlg msgFrame = new MessageDlg(this,
                                     ResStrings.getString("strExitAssistMode"),
                                     MessageDlg.BTN_YES_NO);
@@ -962,7 +963,8 @@ public class MainFrame extends JFrame {
                             msgFrame.setVisible(true);
                             if (msgFrame.result > 0) {
                                 endAssistMode();
-                            }
+                            } else
+                                setGameMode(prevMode);
                         }
                     }
                 } else if (getTubeFrom() == tube) {
@@ -972,6 +974,7 @@ public class MainFrame extends JFrame {
                 } else {
                     if (!tube.isClosed()) {
                         // exit from the assist mode
+                        setGameMode(BUZY_MODE);
                         MessageDlg msgFrame = new MessageDlg(this,
                                 ResStrings.getString("strExitAssistMode"),
                                 MessageDlg.BTN_YES_NO);
@@ -979,7 +982,8 @@ public class MainFrame extends JFrame {
                         msgFrame.setVisible(true);
                         if (msgFrame.result > 0) {
                             endAssistMode();
-                        }
+                        } else
+                            setGameMode(prevMode);
                     }
                 }
 
