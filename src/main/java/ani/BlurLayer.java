@@ -1,9 +1,22 @@
+/*
+ * Copyright (c) 2023 legoru / goroleo <legoru@me.com>
+ *
+ * This software is distributed under the <b>MIT License.</b>
+ * The full text of the License you can read here:
+ * https://choosealicense.com/licenses/mit/
+ *
+ * Use this as you want! ))
+ */
 package ani;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * An animated layer that can blur the specified image. This class used quick and easy Laplace Blur
+ * by Fedor Tukmakov <a href="https://github.com/impfromliga">@impfromliga</a>.
+ */
 public class BlurLayer extends JComponent implements Runnable {
 
     /** The current value of opaque (from 0 to 0xff)  */
@@ -84,9 +97,9 @@ public class BlurLayer extends JComponent implements Runnable {
 
     /**
      * Blurs the image stored in the buffer.
-     * The Big Thanks to Fedor Tukmakov <a href="https://github.com/impfromliga">@impfromliga</a> for his Laplace Blur, quick and easy!
+     * Big Thanks to Fedor Tukmakov <a href="https://github.com/impfromliga">@impfromliga</a> for his Laplace Blur, quick and easy!
      * <a href="https://github.com/impfromliga/LaplaceBlur">Code</a>.
-     * <a href="https://habr.com/ru/articles/427077/">Description (in Russian)</a>.
+     * <a href="https://habr.com/ru/articles/427077/">Description</a> (in Russian).
      */
     private void blurFrame() {
 

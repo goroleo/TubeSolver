@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2023 legoru / goroleo <legoru@me.com>
+ *
+ * This software is distributed under the <b>MIT License.</b>
+ * The full text of the License you can read here:
+ * https://choosealicense.com/licenses/mit/
+ *
+ * Use this as you want! ))
+ */
 package gui;
 
 import ani.*;
@@ -14,16 +23,24 @@ import java.awt.image.BufferedImage;
 
 public class SolvePanel extends JComponent {
 
-    /** The solver of the game. */
+    /**
+     * The solver of the game.
+     */
     private Solver ts;
 
-    /** The layer that blurs the MainFrame's content . */
+    /**
+     * The layer that blurs the MainFrame's content .
+     */
     private final BlurLayer blur;
 
-    /** A spinning circle showing the application busyness. */
+    /**
+     * A spinning circle showing the application busyness.
+     */
     private final WheelLayer wheel;
 
-    /** The button to cancel calculation solve. */
+    /**
+     * The button to cancel calculation solve.
+     */
     private final LPictureButton btn;
 
     /**
@@ -59,7 +76,9 @@ public class SolvePanel extends JComponent {
         add(btn);
 
         blur = new BlurLayer() {
-            public void onThreadFinished(boolean b) { onBlurFinished(b); }
+            public void onThreadFinished(boolean b) {
+                onBlurFinished(b);
+            }
         };
         add(blur);
 
@@ -73,6 +92,7 @@ public class SolvePanel extends JComponent {
 
     /**
      * Starts the solve process.
+     *
      * @param startBoard - the current position at the game board that applies as the start combination.
      */
     public void startSolve(BoardModel startBoard) {
@@ -125,6 +145,7 @@ public class SolvePanel extends JComponent {
 
     /**
      * Stop solving!
+     *
      * @param result - result of the solve process
      * @see #solveResult
      */
@@ -152,6 +173,10 @@ public class SolvePanel extends JComponent {
         } else {
             setVisible(false);
         }
+    }
+
+    public void updateLanguage() {
+        btn.setText(ResStrings.getString("strCancel"));
     }
 
 }

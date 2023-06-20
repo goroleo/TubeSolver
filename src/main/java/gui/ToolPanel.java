@@ -111,41 +111,69 @@ public class ToolPanel extends JPanel {
         setBackground(Palette.dialogColor);
 
         // buttons[0] "Start new game"
-        tb = addNewButton("new", ResStrings.getString("strStartGame"));
+        tb = addNewButton("new", ResStrings.getString("strStartGame") + " (Cltr+N)");
         tb.addActionListener((ActionEvent e) -> newGameClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> newGameClick(),
+                KeyStroke.getKeyStroke('N', 2), // VK_N + MASK_CTRL
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[1] separator
         addSeparator();
 
         // buttons[2] "Load a game from file"
-        tb = addNewButton("load", ResStrings.getString("strLoadGame"));
+        tb = addNewButton("load", ResStrings.getString("strLoadGame") + " (Cltr+L)");
         tb.addActionListener((ActionEvent e) -> loadClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> loadClick(),
+                KeyStroke.getKeyStroke('L', 2), // VK_L + MASK_CTRL
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[3] "Save the game to file"
-        tb = addNewButton("save", ResStrings.getString("strSaveGame"));
+        tb = addNewButton("save", ResStrings.getString("strSaveGame") + " (Cltr+S)");
         tb.addActionListener((ActionEvent e) -> saveClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> saveClick(),
+                KeyStroke.getKeyStroke('S', 2), // VK_O + MASK_CTRL
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[4] separator
         addSeparator();
 
         // buttons[5] "Refresh" - @PLAY_MODE
-        tb = addNewButton("refresh", ResStrings.getString("strRefresh"));
+        tb = addNewButton("refresh", ResStrings.getString("strRefresh") + " (F5)");
         tb.addActionListener((ActionEvent e) -> refreshClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> refreshClick(),
+                KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0), // VK_F5
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[6] "Solve" - @PLAY_MODE
-        tb = addNewButton("solve", ResStrings.getString("strSolve"));
+        tb = addNewButton("solve", ResStrings.getString("strSolve") + " (F9)");
         tb.addActionListener((ActionEvent e) -> solveClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> solveClick(),
+                KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, 0), // VK_F9
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[7] separator
         addSeparator();
 
         // buttons[8] "Undo the last move" - @PLAY_MODE
-        tb = addNewButton("undo", ResStrings.getString("strUndoMove"));
+        tb = addNewButton("undo", ResStrings.getString("strUndoMove") + " (Ctrl+Z)");
         tb.addActionListener((ActionEvent e) -> undoClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> undoClick(),
+                KeyStroke.getKeyStroke('Z', 2), // VK_O + MASK_CTRL
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[9] "Restart the game from the beginning" - @PLAY_MODE
-        tb = addNewButton("replay", ResStrings.getString("strStartAgain"));
+        tb = addNewButton("replay", ResStrings.getString("strStartAgain") + " (F2)");
         tb.addActionListener((ActionEvent e) -> restartClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> restartClick(),
+                KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0), // VK_F2
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[10] "Clear all tubes" - @FILL_MODE
         tb = addNewButton("cleartubes", ResStrings.getString("strClearAllTubes"));
@@ -159,19 +187,31 @@ public class ToolPanel extends JPanel {
         addSeparator();
 
         // buttons[13] "Change palette"
-        tb = addNewButton("palette", ResStrings.getString("strChangePalette"));
+        tb = addNewButton("palette", ResStrings.getString("strChangePalette") + " (Ctrl+P)");
         tb.addActionListener((ActionEvent e) -> paletteClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> paletteClick(),
+                KeyStroke.getKeyStroke('P', 2), // VK_O + MASK_CTRL
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[14] "Application options"
-        tb = addNewButton("options", ResStrings.getString("strOptions"));
+        tb = addNewButton("options", ResStrings.getString("strOptions") + " (Ctrl+O)");
         tb.addActionListener((ActionEvent e) -> optionsClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> optionsClick(),
+                KeyStroke.getKeyStroke('O', 2), // VK_O + MASK_CTRL
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[15] separator
         addSeparator();
 
         // buttons[16] "Exit - close the application"
-        tb = addNewButton("exit", ResStrings.getString("strExit"));
+        tb = addNewButton("exit", ResStrings.getString("strExit") + " (Cltr+X)");
         tb.addActionListener((ActionEvent e) -> exitClick());
+        registerKeyboardAction(
+                (ActionEvent e) -> exitClick(),
+                KeyStroke.getKeyStroke('X', 2), // VK_O + MASK_CTRL
+                2); // WHEN_IN_FOCUSED_WINDOW
 
         updateButtons(0);
         addPopupMenu(this);
@@ -182,6 +222,7 @@ public class ToolPanel extends JPanel {
             align = Options.menuAlignment;
         }
     }
+
 
     /**
      * This routine creates and adds the new action button.
@@ -261,13 +302,6 @@ public class ToolPanel extends JPanel {
      */
     public void updateButtons(int gameMode) {
 
-        if (gameMode != MainFrame.SOLVE_MODE)
-        for (int i=0; i<btnCount; i++)
-            if (buttons[i] != null)
-                buttons[i].setEnabled(true);
-
-
-
         switch (gameMode) {
             case MainFrame.FILL_MODE:
                 buttons[3].setEnabled(true);  // 3 - save button
@@ -278,11 +312,25 @@ public class ToolPanel extends JPanel {
                 buttons[10].setVisible(true); // 10 - clear all tubes 
                 buttons[10].setEnabled(Palette.usedColors.getAllUsedColors() > 0);
                 buttons[11].setVisible(true); // 11 - auto fill button
+                buttons[11].setEnabled(true); // 11 - auto fill button
+
+                buttons[0].setVisible(true);
+                buttons[0].setEnabled(true);
+                buttons[2].setVisible(true);
+                buttons[2].setEnabled(true);
+                buttons[13].setVisible(true);
+                buttons[13].setEnabled(true);
+                buttons[14].setVisible(true);
+                buttons[14].setEnabled(true);
+                buttons[16].setVisible(true);
+                buttons[16].setEnabled(true);
+
                 break;
             case MainFrame.PLAY_MODE:
             case MainFrame.ASSIST_MODE:
                 buttons[3].setEnabled(true); // 3 - save button
                 buttons[5].setVisible(true); // 5 - refresh board
+                buttons[5].setEnabled(true);
                 buttons[6].setVisible(true); // 6 - solve button
                 buttons[6].setEnabled(gameMode != MainFrame.ASSIST_MODE);
                 buttons[8].setVisible(true); // 8 - undo move
@@ -291,9 +339,21 @@ public class ToolPanel extends JPanel {
                 buttons[9].setEnabled(MainFrame.movesDone > 0);
                 buttons[10].setVisible(false); // 10 - clear all tubes 
                 buttons[11].setVisible(false); // 11 - auto fill button
+
+                buttons[0].setVisible(true);
+                buttons[0].setEnabled(true);
+                buttons[2].setVisible(true);
+                buttons[2].setEnabled(true);
+                buttons[13].setVisible(true);
+                buttons[13].setEnabled(true);
+                buttons[14].setVisible(true);
+                buttons[14].setEnabled(true);
+                buttons[16].setVisible(true);
+                buttons[16].setEnabled(true);
+
                 break;
-            case MainFrame.SOLVE_MODE:
-                for (int i=0; i<btnCount; i++)
+            case MainFrame.BUZY_MODE:
+                for (int i = 0; i < btnCount; i++)
                     if (buttons[i] != null)
                         buttons[i].setEnabled(false);
                 break;
@@ -306,6 +366,7 @@ public class ToolPanel extends JPanel {
                 buttons[10].setVisible(false); // 10 - clear all tubes 
                 buttons[11].setVisible(false); // 11 - auto fill button
         }
+
         if (curMode != gameMode) {
             updateAllButtonsPos();
             curMode = gameMode;
@@ -319,115 +380,139 @@ public class ToolPanel extends JPanel {
 ///////////////////////////////////////////////////////////////////////////
 
     /**
-     * Click the New Game button
+     * Click the New Game button // buttons[0]
      */
     public void newGameClick() {
-        if (MainFrame.gameMode != MainFrame.END_GAME)
-            Main.frame.saveTempGame();
-        StartDlg dlg = new StartDlg(Main.frame);
-        dlg.setVisible(true);
+        if (buttons[0].isEnabled() && buttons[0].isVisible()) {
+            if (MainFrame.gameMode != MainFrame.END_GAME)
+                Main.frame.saveTempGame();
+            StartDlg dlg = new StartDlg(Main.frame);
+            dlg.setVisible(true);
+        }
     }
 
     /**
-     * Click the Load Game button
+     * Click the Load Game button // buttons [2]
      */
     public void loadClick() {
-        LOpenSaveDialog os = new LOpenSaveDialog(Main.frame);
-        String fileName = os.showOpenDialog();
-        if (!"".equals(fileName)) {
-            if (Main.frame.loadGame(fileName)) {
-                switch (MainFrame.gameMode) {
-                    case MainFrame.PLAY_MODE:
-                        Main.frame.startPlayMode();
-                        break;
-                    case MainFrame.ASSIST_MODE:
-                        Main.frame.startAssistMode();
-                        break;
-                    case MainFrame.FILL_MODE:
-                        Main.frame.resumeManualFillMode();
-                        break;
-                    default:
-                        break;
+        if (buttons[2].isEnabled() && buttons[2].isVisible()) {
+            LOpenSaveDialog os = new LOpenSaveDialog(Main.frame);
+            String fileName = os.showOpenDialog();
+            if (!"".equals(fileName)) {
+                if (Main.frame.loadGame(fileName)) {
+                    switch (MainFrame.gameMode) {
+                        case MainFrame.PLAY_MODE:
+                            Main.frame.startPlayMode();
+                            break;
+                        case MainFrame.ASSIST_MODE:
+                            Main.frame.startAssistMode();
+                            break;
+                        case MainFrame.FILL_MODE:
+                            Main.frame.resumeManualFillMode();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
     }
 
     /**
-     * Click the Save Game button
+     * Click the Save Game button // buttons[3]
      */
     public void saveClick() {
-        Main.frame.saveGameAs();
+        if (buttons[3].isEnabled() && buttons[3].isVisible()) {
+            Main.frame.saveGameAs();
+        }
     }
 
     /**
-     * Click the Undo Move button
-     */
-    public void undoClick() {
-        MainFrame.tubesPan.undoMoveColor();
-    }
-
-    /**
-     * Click the Restart Game button
-     */
-    public void restartClick() {
-        MainFrame.tubesPan.startAgain();
-    }
-
-    /**
-     * Click the Refresh Board button
+     * Click the Refresh Board button // buttons[5]
      */
     public void refreshClick() {
-        if (MainFrame.palPan != null) {
-            MainFrame.palPan.updateColors();
-        }
-        if (MainFrame.tubesPan != null) {
-            MainFrame.tubesPan.updateColors();
+        if (buttons[5].isEnabled() && buttons[5].isVisible()) {
+            if (MainFrame.palPan != null) {
+                MainFrame.palPan.updateColors();
+            }
+            if (MainFrame.tubesPan != null) {
+                MainFrame.tubesPan.updateColors();
+            }
         }
     }
 
     /**
-     * Click the Solve Game button
+     * Click the Solve Game button // buttons[6]
      */
     public void solveClick() {
-        Main.frame.startSolveMode();
+        if (buttons[6].isEnabled() && buttons[6].isVisible()) {
+            Main.frame.startSolveMode();
+        }
     }
 
     /**
-     * Click the Change Palette button
+     * Click the Undo Move button // buttons[8]
      */
-    public void paletteClick() {
-        PaletteDlg pd = new PaletteDlg(Main.frame);
-        pd.setVisible(true);
+    public void undoClick() {
+        if (buttons[8].isEnabled() && buttons[8].isVisible()) {
+            MainFrame.tubesPan.undoMoveColor();
+        }
     }
 
     /**
-     * Click the Clear All Tubes button
+     * Click the Restart Game button // buttons[9]
+     */
+    public void restartClick() {
+        if (buttons[9].isEnabled() && buttons[9].isVisible()) {
+            MainFrame.tubesPan.startAgain();
+        }
+    }
+
+    /**
+     * Click the Clear All Tubes button // buttons[10]
      */
     public void clearTubesClick() {
-        MainFrame.tubesPan.clearTubes();
+        if (buttons[10].isEnabled() && buttons[10].isVisible()) {
+            MainFrame.tubesPan.clearTubes();
+        }
     }
 
     /**
-     * Click the Auto Fill button
+     * Click the Auto Fill button // buttons[11]
      */
     public void autoFillClick() {
-        Main.frame.autoFillTheRest();
+        if (buttons[11].isEnabled() && buttons[11].isVisible()) {
+            Main.frame.autoFillTheRest();
+        }
     }
 
     /**
-     * Click the Options button
+     * Click the Change Palette button // buttons[13]
+     */
+    public void paletteClick() {
+        if (buttons[13].isEnabled() && buttons[13].isVisible()) {
+            PaletteDlg pd = new PaletteDlg(Main.frame);
+            pd.setVisible(true);
+        }
+    }
+
+    /**
+     * Click the Options button // buttons[14]
      */
     public void optionsClick() {
-        OptionsDlg od = new OptionsDlg(Main.frame);
-        od.setVisible(true);
+        if (buttons[14].isEnabled() && buttons[14].isVisible()) {
+            OptionsDlg od = new OptionsDlg(Main.frame);
+            od.setVisible(true);
+        }
     }
 
     /**
-     * Click the Exit Game button
+     * Click the Exit Game button // buttons[16]
      */
     public void exitClick() {
-        Main.frame.closeFrame();
+        if (buttons[16].isEnabled() && buttons[16].isVisible()) {
+            Main.frame.closeFrame();
+        }
     }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -616,18 +701,18 @@ public class ToolPanel extends JPanel {
      * Updates button tooltips if the application's language has been changed.
      */
     public void updateLanguage() {
-        buttons[0].setToolTipText(ResStrings.getString("strStartGame"));
-        buttons[2].setToolTipText(ResStrings.getString("strLoadGame"));
-        buttons[3].setToolTipText(ResStrings.getString("strSaveGame"));
-        buttons[5].setToolTipText(ResStrings.getString("strRefresh"));
-        buttons[6].setToolTipText(ResStrings.getString("strSolve"));
-        buttons[8].setToolTipText(ResStrings.getString("strUndoMove"));
-        buttons[9].setToolTipText(ResStrings.getString("strStartAgain"));
+        buttons[0].setToolTipText(ResStrings.getString("strStartGame") + " (Cltr+N)");
+        buttons[2].setToolTipText(ResStrings.getString("strLoadGame") + " (Cltr+L)");
+        buttons[3].setToolTipText(ResStrings.getString("strSaveGame") + " (Cltr+S)");
+        buttons[5].setToolTipText(ResStrings.getString("strRefresh") + " (F5)");
+        buttons[6].setToolTipText(ResStrings.getString("strSolve") + " (F9)");
+        buttons[8].setToolTipText(ResStrings.getString("strUndoMove") + " (Cltr+Z)");
+        buttons[9].setToolTipText(ResStrings.getString("strStartAgain") + " (F2)");
         buttons[10].setToolTipText(ResStrings.getString("strClearAllTubes"));
         buttons[11].setToolTipText(ResStrings.getString("strAutoFill"));
-        buttons[13].setToolTipText(ResStrings.getString("strChangePalette"));
-        buttons[14].setToolTipText(ResStrings.getString("strOptions"));
-        buttons[16].setToolTipText(ResStrings.getString("strExit"));
+        buttons[13].setToolTipText(ResStrings.getString("strChangePalette") + " (Cltr+P)");
+        buttons[14].setToolTipText(ResStrings.getString("strOptions") + " (Cltr+O)");
+        buttons[16].setToolTipText(ResStrings.getString("strExit") + " (Cltr+X)");
     }
 
     /**

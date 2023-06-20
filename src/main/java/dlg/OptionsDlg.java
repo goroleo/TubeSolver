@@ -11,6 +11,7 @@ package dlg;
 
 import core.Options;
 import core.ResStrings;
+import gui.MainFrame;
 import gui.Palette;
 import lib.lButtons.LPictureButton;
 import run.Main;
@@ -106,6 +107,7 @@ public class OptionsDlg extends JDialog {
     private void refuseAndClose() {
         setLangNum(oldLangNum);
         saveOptions();
+        Main.frame.setGameMode(MainFrame.prevMode);
         EventQueue.invokeLater(this::dispose);
     }
 
@@ -117,6 +119,7 @@ public class OptionsDlg extends JDialog {
         Options.saveGameAfterSolve = cbSaveAfterSolve.isSelected();
         Options.saveGameBeforeClose = cbSaveBeforeClose.isSelected();
         saveOptions();
+        Main.frame.setGameMode(MainFrame.prevMode);
         EventQueue.invokeLater(this::dispose);
     }
 
@@ -158,6 +161,7 @@ public class OptionsDlg extends JDialog {
             cbSaveAfterFill.setSelected(Options.saveGameAfterFill);
             cbSaveAfterSolve.setSelected(Options.saveGameAfterSolve);
             cbSaveBeforeClose.setSelected(Options.saveGameBeforeClose);
+            Main.frame.setGameMode(MainFrame.BUZY_MODE);
         }
         super.setVisible(b);
     }

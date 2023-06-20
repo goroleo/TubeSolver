@@ -137,7 +137,12 @@ public class PaletteDlg extends JDialog {
 
     @Override
     public void setVisible(boolean b) {
-        if (b) saveOldPalette();
+        if (b) {
+            saveOldPalette();
+            Main.frame.setGameMode(MainFrame.BUZY_MODE);
+        } else {
+//            Main.frame.setGameMode(MainFrame.prevMode);
+        }
         super.setVisible(b);
     }
 
@@ -206,11 +211,13 @@ public class PaletteDlg extends JDialog {
             case 0: // pressed 'cancel' button
                 restoreOldPalette();
                 saveOptions();
+                Main.frame.setGameMode(MainFrame.prevMode);
                 EventQueue.invokeLater(this::dispose);
                 break;
             case 1: // pressed 'Apply / OK' button
                 pal.savePalette();
                 saveOptions();
+                Main.frame.setGameMode(MainFrame.prevMode);
                 EventQueue.invokeLater(this::dispose);
                 break;
             case 4: // pressed 'default palette' button

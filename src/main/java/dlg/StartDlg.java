@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package dlg;
@@ -21,9 +21,7 @@ import lib.lOpenSaveDialog.LOpenSaveDialog;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -41,8 +39,11 @@ public class StartDlg extends JDialog {
     final int spaceX = 20;
     final int btnY = 40;
 
+    private int loadedMode;
+
     /**
      * Creates the Start Game dialog.
+     *
      * @param owner the parent frame.
      */
     public StartDlg(JFrame owner) {
@@ -61,24 +62,37 @@ public class StartDlg extends JDialog {
         if (TubesIO.fileExists(TubesIO.tempFileName)) {
             Main.frame.loadGame(TubesIO.tempFileName);
             btnResume.setEnabled(true);
+            loadedMode = MainFrame.gameMode;
         } else {
             btnResume.setEnabled(false);
         }
+
+        Main.frame.setGameMode(MainFrame.BUZY_MODE);
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (btnResume.isEnabled()) {
-                    buttonClick(0);
-                } else {
-                    dispose();
-                    Main.frame.closeFrame();
-                }
+                closeFrame();
             }
         });
 
+        getRootPane().registerKeyboardAction(
+                (ActionEvent e) -> {
+                    closeFrame();
+                },
+                KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
+                2); // WHEN_IN_FOCUSED_WINDOW
+    }
+
+    private void closeFrame() {
+        if (btnResume.isEnabled()) {
+            buttonClick(0);
+        } else {
+            dispose();
+            Main.frame.closeFrame();
+        }
     }
 
     private void calculateSize() {
@@ -120,7 +134,8 @@ public class StartDlg extends JDialog {
         CreateNewDlg newFrame;
         switch (number) {
             case 0: // resume
-                switch (MainFrame.gameMode) {
+//                Main.frame.setGameMode(loadedMode);
+                switch (loadedMode) {
                     case MainFrame.PLAY_MODE:
                         Main.frame.startPlayMode();
                         break;
@@ -182,7 +197,6 @@ public class StartDlg extends JDialog {
                 }
                 break;
         }
-
     }
 
     private void addButtons() {

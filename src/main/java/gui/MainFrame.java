@@ -42,7 +42,9 @@ public class MainFrame extends JFrame {
      */
     public static ToolPanel toolPan;
 
-    /** The background layer of the Main frame. */
+    /**
+     * The background layer of the Main frame.
+     */
     private static PatternLayer pattern;
 
     private final static CongratsPanel congPan = new CongratsPanel();
@@ -56,11 +58,12 @@ public class MainFrame extends JFrame {
      * Mode of the game.
      */
     public static int gameMode;
+    public static int prevMode; // previous mode
     public final static int END_GAME = 0;
     public final static int FILL_MODE = 100;
     public final static int PLAY_MODE = 200;
     public final static int ASSIST_MODE = 300;
-    public final static int SOLVE_MODE = 400;
+    public final static int BUZY_MODE = 400;
 
     private static int filledTubes;
     private static int emptyTubes;
@@ -185,14 +188,19 @@ public class MainFrame extends JFrame {
     }
 
     public void setGameMode(int aMode) {
-        gameMode = aMode;
-        toolPan.updateButtons(aMode);
+        if (aMode != gameMode) {
+            prevMode = gameMode;
+            gameMode = aMode;
+            toolPan.updateButtons(aMode);
+        }
     }
 
     public void updateLanguage() {
         setTitle(ResStrings.getString("strColorTubes"));
         if (toolPan != null)
             toolPan.updateLanguage();
+        if (solvePan != null)
+            solvePan.updateLanguage();
     }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -247,7 +255,11 @@ public class MainFrame extends JFrame {
 
     public void saveGame(String fileName) {
         if (tubesPan != null) {
-            TubesIO.storeGameMode(gameMode);
+            if (gameMode != BUZY_MODE)
+                TubesIO.storeGameMode(gameMode);
+            else
+                TubesIO.storeGameMode(prevMode);
+
             TubesIO.storeTubes(tubesPan,
                     (gameMode != FILL_MODE) ? 0 : emptyTubes);
             TubesIO.storeMoves(gameMoves, movesDone);
@@ -287,7 +299,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-//////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
 //
 //                  *  modes *
 //
@@ -318,6 +330,7 @@ public class MainFrame extends JFrame {
     }
 
     public void resumeManualFillMode() {
+        setGameMode(FILL_MODE);
         fileNameSuffix = ResStrings.getString("strSaveIDManualFill");
         tubesPan.paintImmediately(tubesPan.getBounds());
         startFindTubesTo();
@@ -390,24 +403,29 @@ public class MainFrame extends JFrame {
 
     public void startSolveMode() {
 
+        setGameMode(BUZY_MODE);
+
         MessageDlg msgDlg = new MessageDlg(Main.frame,
                 ResStrings.getString("strFindSolution"),
                 MessageDlg.BTN_YES_NO);
         msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
         msgDlg.setVisible(true);
 
+
         if (msgDlg.result > 0) {
-            setGameMode(SOLVE_MODE);
+            setGameMode(BUZY_MODE);
             setResizable(false);
             solvePan.startSolve(tubesPan.getModel());
+        } else {
+            setGameMode(prevMode);
         }
+
     }
 
     public void endSolveMode(int reason) {
 
         MessageDlg msgDlg;
 
-        setGameMode(PLAY_MODE);
         setResizable(true);
 
         switch (reason) {
@@ -436,7 +454,7 @@ public class MainFrame extends JFrame {
                 if (msgDlg.result == 0) reason = 0;
         }
 
-        if (reason==3) {
+        if (reason == 3) {
             startAssistMode();
             if (Options.saveGameAfterSolve) {
                 saveGameAs(ResStrings.getString("strSaveIDSolved"));
@@ -580,7 +598,7 @@ public class MainFrame extends JFrame {
 
     }
 
-//////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
 //
 //                  *  ALL MODES routines *
 //
@@ -717,7 +735,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-//////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
 //                  
 //                  *  FILL MODE routines *
 //                  
