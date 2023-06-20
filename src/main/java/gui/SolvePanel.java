@@ -129,7 +129,7 @@ public class SolvePanel extends JComponent {
             public void onNotSolved() {
                 breakCount <<= 1;
                 if (breakCount > 0) {
-                    System.out.println("!!! NOT SOLVED. new break " + breakCount);
+//                    System.out.println("!!! NOT SOLVED. Runs with the new break " + breakCount);
                     setStartTubes(startBoard);
                     setBreakStop(breakCount);
                     if (!externalBreak) {
@@ -161,7 +161,7 @@ public class SolvePanel extends JComponent {
         wheel.setVisible(false);
         btn.setVisible(false);
         blur.startHide();
-        Main.frame.endSolveMode(solveResult);
+        Main.frame.endSolve(solveResult);
     }
 
     public void onBlurFinished(boolean b) {

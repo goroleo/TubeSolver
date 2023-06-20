@@ -302,7 +302,7 @@ public class BoardModel extends ArrayList<TubeModel> {
                             // Rank the move! 
                             // -----------------------------------
                             cm.rank = Math.min(
-                                    // empty cells at Recipient
+                                    // number of empty cells at Recipient
                                     (4 - ctRecipient.count),
                                     // number of available cells of this color at whole the board
                                     usedColors.getColorCount(cm.color));
@@ -340,7 +340,7 @@ public class BoardModel extends ArrayList<TubeModel> {
                     emptyTubeProcessed = true;
                 }
             }
-        }
+        } // process the next recipient
 
         if (result > 0) {
             moves.sort(ColorMoveItem.RankComparator); // sort moves by rank!

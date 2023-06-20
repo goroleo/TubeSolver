@@ -25,6 +25,8 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import java.awt.event.KeyEvent;
+
 /**
  * The Start Game dialog. Chooses the game mode.
  */
@@ -79,10 +81,28 @@ public class StartDlg extends JDialog {
         });
 
         getRootPane().registerKeyboardAction(
-                (ActionEvent e) -> {
-                    closeFrame();
-                },
+                (ActionEvent e) -> { closeFrame(); },
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
+                2); // WHEN_IN_FOCUSED_WINDOW
+
+        getRootPane().registerKeyboardAction(
+                (ActionEvent e) -> { buttonClick(0); },
+                KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), // Button 0 - F5
+                2); // WHEN_IN_FOCUSED_WINDOW
+
+        getRootPane().registerKeyboardAction(
+                (ActionEvent e) -> { buttonClick(1); },
+                KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), // Button 1 - F6
+                2); // WHEN_IN_FOCUSED_WINDOW
+
+        getRootPane().registerKeyboardAction(
+                (ActionEvent e) -> { buttonClick(2); },
+                KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), // Button 2 - F7
+                2); // WHEN_IN_FOCUSED_WINDOW
+
+        getRootPane().registerKeyboardAction(
+                (ActionEvent e) -> { buttonClick(3); },
+                KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0), // Button 3 - F8
                 2); // WHEN_IN_FOCUSED_WINDOW
     }
 
@@ -90,8 +110,8 @@ public class StartDlg extends JDialog {
         if (btnResume.isEnabled()) {
             buttonClick(0);
         } else {
+            Main.frame.setGameMode(MainFrame.END_GAME);
             dispose();
-            Main.frame.closeFrame();
         }
     }
 
@@ -134,7 +154,6 @@ public class StartDlg extends JDialog {
         CreateNewDlg newFrame;
         switch (number) {
             case 0: // resume
-//                Main.frame.setGameMode(loadedMode);
                 switch (loadedMode) {
                     case MainFrame.PLAY_MODE:
                         Main.frame.startPlayMode();
@@ -143,7 +162,7 @@ public class StartDlg extends JDialog {
                         Main.frame.startAssistMode();
                         break;
                     case MainFrame.FILL_MODE:
-                        Main.frame.resumeManualFillMode();
+                        Main.frame.resumeFillMode();
                         break;
                     default:
                         break;
@@ -165,7 +184,7 @@ public class StartDlg extends JDialog {
                 newFrame.setVisible(true);
                 if (newFrame.ok) {
                     dispose();
-                    Main.frame.startManualFillMode(Options.cndFilledTubes, Options.cndEmptyTubes);
+                    Main.frame.startFillMode(Options.cndFilledTubes, Options.cndEmptyTubes);
                 }
                 break;
             case 3: // load
@@ -181,7 +200,7 @@ public class StartDlg extends JDialog {
                                 Main.frame.startAssistMode();
                                 break;
                             case MainFrame.FILL_MODE:
-                                Main.frame.resumeManualFillMode();
+                                Main.frame.resumeFillMode();
                                 break;
                             default:
                                 break;

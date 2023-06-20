@@ -104,8 +104,9 @@ public class Solver implements Runnable {
     @Override
     public void run() {
 
-        // myCount - counts all processed moves 
-        long myCount = 0;
+        // myCount - counts all processed moves
+        // used at final output only
+//        long myCount = 0;
 
         // breakCount - counts all processed moves after the last break
         int breakCount = 0;
@@ -133,7 +134,7 @@ public class Solver implements Runnable {
                     // Successful (true) means we have a continuation.
                     // So we'll put this move to the stack and go with a new combination
                     // counts
-                    myCount++;
+                    // myCount++; // not used
                     breakCount++;
 
                     // now we'll go with a new tubes configuration that we got after the move
@@ -151,7 +152,7 @@ public class Solver implements Runnable {
 
                     // doMove wasn't successful due to any reason (no continue, repeated combination etc.)
                     // counts
-                    myCount++;
+                    // myCount++; // not used
                     breakCount++;
 
                     // First we'll check is there enough to count this starting color 
@@ -216,9 +217,9 @@ public class Solver implements Runnable {
                 move = move.parent;
             } while (move != null);
             
-            System.out.println("Solved! " + "Count: " + myCount);
-            System.out.println("Time: " + workingTime + " ms");
-            System.out.println("Break: " + breakStop);
+//            System.out.println("Solved! " + "Count: " + myCount);
+//            System.out.println("Time: " + workingTime + " ms");
+//            System.out.println("Break: " + breakStop);
 
             // runs an external procedure if anyone was override it
             onSolved();
@@ -230,10 +231,10 @@ public class Solver implements Runnable {
                 onExternalBreak();
 
             } else {
-                System.out.println("NOT SOLVED. Try another parameters and/or change the break value.");
-                System.out.println("Time: " + workingTime + " ms");
-                System.out.println("Count: " + myCount);
-                System.out.println("Break: " + breakStop);
+//                System.out.println("NOT SOLVED. Try another parameters and/or change the break value.");
+//                System.out.println("Time: " + workingTime + " ms");
+//                System.out.println("Count: " + myCount);
+//                System.out.println("Break: " + breakStop);
 
                 // runs an external procedure if anyone was override it
                 onNotSolved();

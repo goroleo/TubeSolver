@@ -365,6 +365,17 @@ public class ToolPanel extends JPanel {
                 buttons[9].setVisible(false); // 9 - replay / start again
                 buttons[10].setVisible(false); // 10 - clear all tubes 
                 buttons[11].setVisible(false); // 11 - auto fill button
+
+                buttons[0].setVisible(true);
+                buttons[0].setEnabled(true);
+                buttons[2].setVisible(true);
+                buttons[2].setEnabled(true);
+                buttons[13].setVisible(true);
+                buttons[13].setEnabled(true);
+                buttons[14].setVisible(true);
+                buttons[14].setEnabled(true);
+                buttons[16].setVisible(true);
+                buttons[16].setEnabled(true);
         }
 
         if (curMode != gameMode) {
@@ -408,7 +419,7 @@ public class ToolPanel extends JPanel {
                             Main.frame.startAssistMode();
                             break;
                         case MainFrame.FILL_MODE:
-                            Main.frame.resumeManualFillMode();
+                            Main.frame.resumeFillMode();
                             break;
                         default:
                             break;
@@ -446,7 +457,7 @@ public class ToolPanel extends JPanel {
      */
     public void solveClick() {
         if (buttons[6].isEnabled() && buttons[6].isVisible()) {
-            Main.frame.startSolveMode();
+            Main.frame.startSolve();
         }
     }
 

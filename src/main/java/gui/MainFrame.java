@@ -52,6 +52,7 @@ public class MainFrame extends JFrame {
     private static SolvePanel solvePan;
 
     public static GameMoves gameMoves = new GameMoves();
+
     public static int movesDone;
 
     /**
@@ -97,7 +98,6 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-
     }
 
     private void createFrame() {
@@ -299,12 +299,12 @@ public class MainFrame extends JFrame {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //
 //                  *  modes *
 //
 //////////////////////////////////////////////////////////////////////////////
-    public void startManualFillMode(int aFilled, int aEmpty) {
+    public void startFillMode(int aFilled, int aEmpty) {
         setGameMode(FILL_MODE);
         clearBoard();
         addColorsPanel();
@@ -329,7 +329,7 @@ public class MainFrame extends JFrame {
         autoFillTheRest();
     }
 
-    public void resumeManualFillMode() {
+    public void resumeFillMode() {
         setGameMode(FILL_MODE);
         fileNameSuffix = ResStrings.getString("strSaveIDManualFill");
         tubesPan.paintImmediately(tubesPan.getBounds());
@@ -401,7 +401,7 @@ public class MainFrame extends JFrame {
         setTubeTo(null);
     }
 
-    public void startSolveMode() {
+    public void startSolve() {
 
         setGameMode(BUZY_MODE);
 
@@ -419,10 +419,9 @@ public class MainFrame extends JFrame {
         } else {
             setGameMode(prevMode);
         }
-
     }
 
-    public void endSolveMode(int reason) {
+    public void endSolve(int reason) {
 
         MessageDlg msgDlg;
 
@@ -465,7 +464,6 @@ public class MainFrame extends JFrame {
         }
     }
 
-
     public void endGame() {
         saveTempOnExit = false;
         TubesIO.fileDelete(TubesIO.tempFileName);
@@ -506,7 +504,6 @@ public class MainFrame extends JFrame {
         toolPan.updateButtons();
         repaint();
     }
-
 
 //////////////////////////////////////////////////////////////////////////////
 //                  
@@ -595,10 +592,9 @@ public class MainFrame extends JFrame {
         if (getContentPane().getComponentZOrder(tubesPan) > getContentPane().getComponentZOrder(pattern)) {
             getContentPane().setComponentZOrder(pattern, getContentPane().getComponentZOrder(tubesPan));
         }
-
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //
 //                  *  ALL MODES routines *
 //
@@ -735,7 +731,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //                  
 //                  *  FILL MODE routines *
 //                  
@@ -955,6 +951,7 @@ public class MainFrame extends JFrame {
                     } else {
                         if (!tube.isClosed() && !tube.isEmpty()) {
                             // exit from the assist mode
+                            setGameMode(BUZY_MODE);
                             MessageDlg msgFrame = new MessageDlg(this,
                                     ResStrings.getString("strExitAssistMode"),
                                     MessageDlg.BTN_YES_NO);
@@ -962,7 +959,8 @@ public class MainFrame extends JFrame {
                             msgFrame.setVisible(true);
                             if (msgFrame.result > 0) {
                                 endAssistMode();
-                            }
+                            } else
+                                setGameMode(prevMode);
                         }
                     }
                 } else if (getTubeFrom() == tube) {
@@ -972,6 +970,7 @@ public class MainFrame extends JFrame {
                 } else {
                     if (!tube.isClosed()) {
                         // exit from the assist mode
+                        setGameMode(BUZY_MODE);
                         MessageDlg msgFrame = new MessageDlg(this,
                                 ResStrings.getString("strExitAssistMode"),
                                 MessageDlg.BTN_YES_NO);
@@ -979,7 +978,8 @@ public class MainFrame extends JFrame {
                         msgFrame.setVisible(true);
                         if (msgFrame.result > 0) {
                             endAssistMode();
-                        }
+                        } else
+                            setGameMode(prevMode);
                     }
                 }
 

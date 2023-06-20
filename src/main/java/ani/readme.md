@@ -1,23 +1,23 @@
 A set of animation and imaging layers to use at GUI components.
 
-BlurLayer – used at `/gui/SolvePanel` to blur the contents of the MainFrame 
+BlurLayer – used at `SolvePanel` to animate blur the contents of the MainFrame
 
-ColorLayer – used at `/gui/ColorTube` to animate of fill and erase tube’s color cells
+ColorLayer – used at `ColorTube` to animate of fill and erase tube’s color cells
 
-FlowerLayer – used at `/gui/CongratsPanel` to draw and rotate 2-color flower
+FlowerLayer – used at `CongratsPanel` to draw and rotate 2-color flower
 
-ImageLayer – used at `/gui/ColorTube` and `/gui/ColorButton` to draw a static image without animation
+ImageLayer – used at `ColorTube` and `ColorButton` to draw a static image
 
-PatternLayer – used at `/gui/MainFrame` to draw a tiled background
+PatternLayer – used at `MainFrame` to draw a tiled background
 
-ScaleLayer – used at `/gui/CongratsPanel` to animate the zoom in of an image
+ScaleLayer – used at `CongratsPanel` for image zoom animation
 
-ShadeLayer – used at `/gui/ColorTube` and `/gui/ColorButton` to animate fade in and fade out of the control’s outline
+ShadeLayer – used at `ColorTube` and `ColorButton` to animate fade in and fade out of the control’s shadow and outline
 
-ShapeLayer – used at `/gui/ColorButton` to fill the button with the specified color of palette
+ShapeLayer – used at `ColorButton` to fill the shape with the specified color of palette
 
-SlideLayer – used at `/gui/ColorButton` to animate the counter changes
+SlideLayer – used at `ColorButton` to animate sliding replace of two images
 
-WaveLayer – used at `/gui/ColorTube` (arrows) and `/gui/ConrgatsPanel` (congratulation text) to animate a wave-like change the transparency of an image
+WaveLayer – used at `ColorTube` (arrows) and `ConrgatsPanel` (congratulation text) to animate a wave-like change the transparency of an image
 
-WheelLayer – used at `/gui/SolvePanel` to animate a spinning circle showing the application busyness
+WheelLayer – used at `SolvePanel` to animate a spinning circle showing the application busyness
