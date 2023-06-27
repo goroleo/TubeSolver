@@ -254,8 +254,20 @@ public class MainFrame extends JFrame {
      */
     public void showFrame() {
         EventQueue.invokeLater(() -> setVisible(true));
-        StartDlg startFrame = new StartDlg(this);
-        EventQueue.invokeLater(() -> startFrame.setVisible(true));
+        StartDlg startDlg = new StartDlg(this);
+
+        // center the Start dialog at the first start
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        if (Options.mainSizeX >= 300 && Options.mainSizeY >= 200
+                && Options.mainPositionX >= 0
+                && Options.mainPositionY >= 0
+                && Options.mainPositionX + Options.mainSizeX <= screenSize.width
+                && Options.mainPositionY + Options.mainSizeY <= screenSize.height) {
+            startDlg.setLocation(Options.mainPositionX + (Options.mainSizeX - startDlg.getWidth())/2,
+                    Options.mainPositionY + (Options.mainSizeY - startDlg.getHeight())/2);
+        }
+
+        EventQueue.invokeLater(() -> startDlg.setVisible(true));
     }
 
     /**
