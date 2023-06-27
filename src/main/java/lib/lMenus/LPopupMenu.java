@@ -9,10 +9,10 @@ import java.awt.*;
  * The Popup menu with this project's decoration.
  */
 public class LPopupMenu extends JPopupMenu {
-    public final Border menuBorder = BorderFactory.createCompoundBorder(
+    private final Border menuBorder = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.gray),
             BorderFactory.createEmptyBorder(2, 2, 2, 2));
-    public final Border itemBorder = BorderFactory.createCompoundBorder(
+    private final Border itemBorder = BorderFactory.createCompoundBorder(
             BorderFactory.createEmptyBorder(0, 0, 0, 0),
             BorderFactory.createEmptyBorder(3, 3, 3, 3));
 

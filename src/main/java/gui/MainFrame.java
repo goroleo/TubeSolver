@@ -16,7 +16,6 @@ import core.ResStrings;
 import core.TubesIO;
 import dlg.MessageDlg;
 import dlg.StartDlg;
-import lib.lOpenSaveDialog.LOpenSaveDialog;
 import run.Main;
 
 import javax.swing.*;
@@ -26,107 +25,215 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import lib.lOpenSaveDialog.LOpenSaveDialog;
 
+
+/**
+ * The main frame of the application
+ */
 @SuppressWarnings("unused")
 public class MainFrame extends JFrame {
 
-    private int width = 1000;
-    private int height = 760;
-    public static Palette pal;
+//////////////////////////////////////////////////////////////////////////////
+//
+//                  *  Game modes  *
+//
+//////////////////////////////////////////////////////////////////////////////
+    /**
+     * The current game mode. The mode can be as follows:
+     * @see #PLAY_MODE
+     * @see #ASSIST_MODE
+     * @see #FILL_MODE
+     * @see #BUSY_MODE
+     * @see #END_GAME
+     */
+    public static int gameMode;
 
+    /**
+     * The previous mode of the game.
+     * @see #gameMode
+     */
+    public static int prevMode; // previous mode
+
+    /**
+     * The End of the game mode. It also can be named as "Game is over". At this mode the user can start the new game,
+     * change some options or close the application.
+     */
+    public final static int END_GAME = 0;
+
+    /**
+     * Manual Fill mode. At this mode the user manually fill all the tubes
+     * with the specified colors choosing them from the palette.
+     */
+    public final static int FILL_MODE = 100;
+
+    /**
+     * Regular Game mode. The user himself/herself shifts the colored cells
+     * from one tube to another, trying to fill the tubes with one color.
+     */
+    public final static int PLAY_MODE = 200;
+
+    /**
+     * Assistant game mode. The application will show the user the next move, and will
+     * wait for this move from the user. If the user decides to make another move,
+     * this mode will end, the game will return to Regular mode.<br>
+     * Assistant mode is offered to the user after a successful search for a solution
+     * to the game.
+     */
+    public final static int ASSIST_MODE = 300;
+
+    /**
+     * Busy mode. This mode is activated when the application is busy. For example,
+     * when an application is waiting for the user to answer a question, when calling
+     * dialogs, when searching for a solution, etc. In this mode, the user must first
+     * eliminate the cause of the busyness, and only then continue to play.
+     */
+    public final static int BUSY_MODE = 400;
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//                  *  Game moves  *
+//
+//////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Game moves array, passed and prepared
+     */
+    public static GameMoves gameMoves = new GameMoves();
+
+    /**
+     * How much game moves has passed already
+     *
+     * @see #gameMoves
+     */
+    public static int movesDone;
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//                  *  Frame controls and layers *
+//
+//////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Colors palette for tube cells
+     *
+     * @see Palette
+     */
+    public static Palette palette = new Palette();
+
+    /**
+     * The background layer of the Main frame.
+     */
+    private static final PatternLayer pattern =
+            new PatternLayer(core.Options.createBufImage("imgPattern.png"));
+
+    /**
+     * Application control panels: The panel of color buttons for manual fill mode
+     */
     public static PalettePanel palPan;
+
+    /**
+     * Application control panels: The Tubes Board panel with color tubes
+     */
     public static BoardPanel tubesPan;
 
     /**
      * The toolbar with action buttons.
      */
-    public static ToolPanel toolPan;
+    public static ToolPanel toolPan = new ToolPanel();
 
     /**
-     * The background layer of the Main frame.
+     * Application panels: The panel with congratulations that showing when the game is done
      */
-    private static PatternLayer pattern;
-
     private final static CongratsPanel congPan = new CongratsPanel();
 
-    private static SolvePanel solvePan;
+    /**
+     * Application panels: The panel shows when application seeks for the solution
+     */
+    private final static SolvePanel solvePan = new SolvePanel();
 
-    public static GameMoves gameMoves = new GameMoves();
-
-    public static int movesDone;
+//////////////////////////////////////////////////////////////////////////////
+//
+//                  *  Game variables *
+//
+//////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Mode of the game.
+     * Number of filled tubes at start of the game.
      */
-    public static int gameMode;
-    public static int prevMode; // previous mode
-    public final static int END_GAME = 0;
-    public final static int FILL_MODE = 100;
-    public final static int PLAY_MODE = 200;
-    public final static int ASSIST_MODE = 300;
-    public final static int BUZY_MODE = 400;
-
     private static int filledTubes;
+
+    /**
+     * Number of уьзен tubes at start of the game.
+     */
     private static int emptyTubes;
 
+    /**
+     * If <i>true</i>, the current game combination will save to the temporary file when
+     * application is closed, to loads automatically when the application starts again.
+     */
     private boolean saveTempOnExit = false;
-    private String fileNameSuffix;
 
+    /**
+     * This is a preset string for filename ending for autosave the game. It depends on the current game mode.
+     */
+    private String fileNameEnding;
 
 //////////////////////////////////////////////////////////////////////////////
 //                  
-//                  *  main frame routines *
+//                  * Main frame routines *
 //                  
 //////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Creates the main frame. Sets initial values and restores saved options of the frame.
+     */
     public MainFrame() {
         super(ResStrings.getString("strColorTubes"));
 
-        pal = new Palette();
+        getContentPane().setLayout(null);
+        getContentPane().setBackground(Palette.backgroundColor);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        Image img = Options.getAppIcon();
+        setIconImage(img);
 
-        createFrame();
-        initElements();
+        int width = 1000; // default frame width
+        int height = 760; // default frame height
 
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                pattern.setBounds(getColorsArea());
-                toolPan.resize();
-                updatePanelsPos();
-                if (congPan.isVisible()) {
-                    congPan.updateSizeAndPos();
-                }
-            }
-        });
-    }
-
-    private void createFrame() {
-
-        Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
-
+        // Restoring saved position of the frame
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         if (Options.mainSizeX >= 300 && Options.mainSizeY >= 200
                 && Options.mainPositionX >= 0
                 && Options.mainPositionY >= 0
-                && Options.mainPositionX + Options.mainSizeX <= sSize.width
-                && Options.mainPositionY + Options.mainSizeY <= sSize.height) {
+                && Options.mainPositionX + Options.mainSizeX <= screenSize.width
+                && Options.mainPositionY + Options.mainSizeY <= screenSize.height) {
             setSize(Options.mainSizeX, Options.mainSizeY);
             width = Options.mainSizeX;
             height = Options.mainSizeY;
             setBounds(Options.mainPositionX, Options.mainPositionY, width, height);
         } else {
-            width = Math.min(width, sSize.width - 40);
-            height = Math.min(height, sSize.height - 40);
-            setBounds((sSize.width - width) / 2, (sSize.height - height) / 2, width, height);
+            width = Math.min(width, screenSize.width - 40);
+            height = Math.min(height, screenSize.height - 40);
+            setBounds((screenSize.width - width) / 2, (screenSize.height - height) / 2, width, height);
         }
-
         if (Options.mainMaximized) {
             setExtendedState(getExtendedState() | Frame.MAXIMIZED_BOTH);
         }
 
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        Image img = Options.getAppIcon();
-        setIconImage(img);
+        // Creating and adding panels except Palette & Tubes panels - they will be added in depend on the game mode.
+        solvePan.setVisible(false);
+        getContentPane().add(solvePan);
 
+        congPan.setVisible(false);
+        getContentPane().add(congPan);
+
+        toolPan.setVisible(true);
+        getContentPane().add(toolPan);
+
+        // Adding the background layer
+        getContentPane().add(pattern);
+
+        // Adding listeners
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -134,14 +241,26 @@ public class MainFrame extends JFrame {
             }
         });
 
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                resizeFrame();
+            }
+        });
     }
 
+    /**
+     * Shows the application frame.
+     */
     public void showFrame() {
         EventQueue.invokeLater(() -> setVisible(true));
         StartDlg startFrame = new StartDlg(this);
         EventQueue.invokeLater(() -> startFrame.setVisible(true));
     }
 
+    /**
+     * Closes the application frame and saves its options.
+     */
     public void closeFrame() {
         if (solvePan.isVisible()) {
             solvePan.stopSolver(1);
@@ -149,7 +268,7 @@ public class MainFrame extends JFrame {
         }
 
         saveOptions();
-        pal.savePalette();
+        palette.savePalette();
         if (toolPan != null) {
             toolPan.saveOptions();
         }
@@ -170,31 +289,21 @@ public class MainFrame extends JFrame {
         System.exit(0);
     }
 
-    private void initElements() {
-        getContentPane().setLayout(null);
-        getContentPane().setBackground(Palette.backgroundColor);
-
-        solvePan = new SolvePanel();
-        getContentPane().add(solvePan);
-
-        congPan.setVisible(false);
-        getContentPane().add(congPan);
-
-        toolPan = new ToolPanel();
-        getContentPane().add(toolPan);
-
-        pattern = new PatternLayer(core.Options.createBufImage("imgPattern.png"));
-        getContentPane().add(pattern);
-    }
-
-    public void setGameMode(int aMode) {
-        if (aMode != gameMode) {
-            prevMode = gameMode;
-            gameMode = aMode;
-            toolPan.updateButtons(aMode);
+    /**
+     * Handles the frame resizing events.
+     */
+    public void resizeFrame() {
+        pattern.setBounds(getColorsArea());
+        toolPan.resize();
+        updatePanelsPos();
+        if (congPan.isVisible()) {
+            congPan.updateSizeAndPos();
         }
     }
 
+    /**
+     * Updates a language of the application and all its panels.
+     */
     public void updateLanguage() {
         setTitle(ResStrings.getString("strColorTubes"));
         if (toolPan != null)
@@ -205,10 +314,16 @@ public class MainFrame extends JFrame {
 
 //////////////////////////////////////////////////////////////////////////////
 //                  
-//                  *  load and save routines  *
+//                  *  Load and Save routines  *
 //                  
 //////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Loads the saved game.
+     *
+     * @param fileName name of the file
+     * @return true if the game loaded successfully, false otherwise
+     */
     public boolean loadGame(String fileName) {
         clearBoard();
         boolean result = TubesIO.loadFromFile(fileName);
@@ -249,13 +364,21 @@ public class MainFrame extends JFrame {
         return result;
     }
 
+    /**
+     * Saves the game to the temporary file.
+     */
     public void saveTempGame() {
         saveGame(TubesIO.tempFileName);
     }
 
+    /**
+     * Saves the game to the specified file.
+     *
+     * @param fileName name of the file.
+     */
     public void saveGame(String fileName) {
         if (tubesPan != null) {
-            if (gameMode != BUZY_MODE)
+            if (gameMode != BUSY_MODE)
                 TubesIO.storeGameMode(gameMode);
             else
                 TubesIO.storeGameMode(prevMode);
@@ -267,17 +390,27 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Saves the game with the Save File Dialog
+     */
     public void saveGameAs() {
         saveGameAs("");
     }
 
-    public void saveGameAs(String suffix) {
+    /**
+     * Saves the game with the Save File Dialog
+     *
+     * @param ending is a preset string for filename ending
+     */
+    public void saveGameAs(String ending) {
+        setGameMode(MainFrame.BUSY_MODE);
+
         LOpenSaveDialog os;
 
-        if (!"".equals(suffix)) {
+        if (!"".equals(ending)) {
             os = new LOpenSaveDialog(this,
                     LOpenSaveDialog.SAVE_MODE,
-                    Options.getDateTimeStr() + " " + suffix);
+                    Options.getDateTimeStr() + " " + ending);
         } else {
             os = new LOpenSaveDialog(this, LOpenSaveDialog.SAVE_MODE);
         }
@@ -286,9 +419,12 @@ public class MainFrame extends JFrame {
         if (!"".equals(fileName)) {
             saveGame(fileName);
         }
-
+        setGameMode(prevMode);
     }
 
+    /**
+     * Saves the frame options
+     */
     private void saveOptions() {
         Options.mainMaximized = (getExtendedState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH;
         if (!Options.mainMaximized) {
@@ -301,9 +437,55 @@ public class MainFrame extends JFrame {
 
 //////////////////////////////////////////////////////////////////////////////
 //
-//                  *  modes *
+//                  *  Game modes routines *
 //
 //////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Sets a new game mode
+     *
+     * @param aMode new game mode
+     */
+    public void setGameMode(int aMode) {
+        if (aMode != gameMode) {
+            prevMode = gameMode;
+            gameMode = aMode;
+            toolPan.updateButtons(aMode);
+        }
+    }
+
+    /**
+     * Clears the game board and prepares it to the new game.
+     */
+    public void clearBoard() {
+        congPan.setVisible(false);
+        if (tubesPan != null) {
+            tubesPan.saveOptions();
+            remove(tubesPan);
+            tubesPan.emptyBoard();
+            tubesPan = null;
+        }
+        if (palPan != null) {
+            palPan.saveOptions();
+            remove(palPan);
+            palPan.removeAll();
+            palPan = null;
+        }
+        gameMoves.clear();
+        movesDone = 0;
+        TubesIO.clearMoves();
+        TubesIO.clearTubes();
+        Palette.usedColors.clearColorCounts();
+        toolPan.updateButtons();
+        repaint();
+    }
+
+    /**
+     * Starts the manual fill game mode.
+     *
+     * @param aFilled number of filled tubes
+     * @param aEmpty  number of empty tubes
+     */
     public void startFillMode(int aFilled, int aEmpty) {
         setGameMode(FILL_MODE);
         clearBoard();
@@ -312,14 +494,31 @@ public class MainFrame extends JFrame {
         filledTubes = aFilled;
         emptyTubes = aEmpty;
         saveTempOnExit = true;
-        fileNameSuffix = ResStrings.getString("strSaveIDManualFill");
+        fileNameEnding = ResStrings.getString("strSaveIDManualFill");
         tubesPan.paintImmediately(tubesPan.getBounds());
         startFindTubesTo();
         nextTubeTo(0);
     }
 
+    /**
+     * Resumes the manual fill game mode (for example after autoload the previous game).
+     */
+    public void resumeFillMode() {
+        setGameMode(FILL_MODE);
+        fileNameEnding = ResStrings.getString("strSaveIDManualFill");
+        tubesPan.paintImmediately(tubesPan.getBounds());
+        startFindTubesTo();
+        nextTubeTo(0);
+    }
+
+    /**
+     * Starts the autofill game mode.
+     *
+     * @param aFilled number of filled tubes
+     * @param aEmpty  number of empty tubes
+     */
     public void startAutoFillMode(int aFilled, int aEmpty) {
-        fileNameSuffix = ResStrings.getString("strSaveIDAutoFill");
+        fileNameEnding = ResStrings.getString("strSaveIDAutoFill");
         setGameMode(FILL_MODE);
         clearBoard();
         addTubesPanel(aFilled, aEmpty);
@@ -329,29 +528,27 @@ public class MainFrame extends JFrame {
         autoFillTheRest();
     }
 
-    public void resumeFillMode() {
-        setGameMode(FILL_MODE);
-        fileNameSuffix = ResStrings.getString("strSaveIDManualFill");
-        tubesPan.paintImmediately(tubesPan.getBounds());
-        startFindTubesTo();
-        nextTubeTo(0);
-    }
-
+    /**
+     * Ends the fill mode and starts the game.
+     */
     public void endFillMode() {
         // hiding palette
         if (palPan != null) {
             palPan.setVisible(false);
-            redockTubes();
+            updateTubesPos();
         }
+        setTubeTo(null);
+        setTubeFrom(null);
 
         setGameMode(PLAY_MODE);
+        saveTempGame();
+
         // preparing tubes for the play mode
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             ColorTube tube = tubesPan.getTube(i);
             tube.setClosed(tube.getModel().state == 3);
             tube.setActive(!tube.isClosed());
         }
-        setTubeFrom(null);
 
         // switching to play mode
         gameMoves.clear();
@@ -359,12 +556,14 @@ public class MainFrame extends JFrame {
         saveTempOnExit = true;
 
         // saving
-        saveTempGame();
         if (Options.saveGameAfterFill) {
-            saveGameAs(fileNameSuffix);
+            saveGameAs(fileNameEnding);
         }
     }
 
+    /**
+     * Starts the regular play mode.
+     */
     public void startPlayMode() {
         setGameMode(PLAY_MODE);
 
@@ -377,6 +576,9 @@ public class MainFrame extends JFrame {
         setTubeFrom(null);
     }
 
+    /**
+     * Starts the Assistant play mode.
+     */
     public void startAssistMode() {
         setGameMode(ASSIST_MODE);
         setTubeFrom(null);
@@ -385,6 +587,9 @@ public class MainFrame extends JFrame {
         showMove();
     }
 
+    /**
+     * Ends the Assistant mode and return to the regular play mode.
+     */
     public void endAssistMode() {
         setGameMode(PLAY_MODE);
         saveTempOnExit = true;
@@ -401,9 +606,12 @@ public class MainFrame extends JFrame {
         setTubeTo(null);
     }
 
+    /**
+     * Starts to find the solution of the game
+     */
     public void startSolve() {
 
-        setGameMode(BUZY_MODE);
+        setGameMode(BUSY_MODE);
 
         MessageDlg msgDlg = new MessageDlg(Main.frame,
                 ResStrings.getString("strFindSolution"),
@@ -413,7 +621,7 @@ public class MainFrame extends JFrame {
 
 
         if (msgDlg.result > 0) {
-            setGameMode(BUZY_MODE);
+            setGameMode(BUSY_MODE);
             setResizable(false);
             solvePan.startSolve(tubesPan.getModel());
         } else {
@@ -421,13 +629,19 @@ public class MainFrame extends JFrame {
         }
     }
 
-    public void endSolve(int reason) {
+    /**
+     * Ends of the search for a solution to the game.
+     *
+     * @param result the reason to end of the search for a solution.
+     * @see SolvePanel#solveResult
+     */
+    public void endSolve(int result) {
 
         MessageDlg msgDlg;
 
         setResizable(true);
 
-        switch (reason) {
+        switch (result) {
             case 0: // working
                 break;
             case 1: // escape-cancel pressed
@@ -450,10 +664,10 @@ public class MainFrame extends JFrame {
                         MessageDlg.BTN_YES_NO);
                 msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
                 msgDlg.setVisible(true);
-                if (msgDlg.result == 0) reason = 0;
+                if (msgDlg.result == 0) result = 0;
         }
 
-        if (reason == 3) {
+        if (result == 3) {
             startAssistMode();
             if (Options.saveGameAfterSolve) {
                 saveGameAs(ResStrings.getString("strSaveIDSolved"));
@@ -464,6 +678,9 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Shows congratulations after successful end of the game.
+     */
     public void endGame() {
         saveTempOnExit = false;
         TubesIO.fileDelete(TubesIO.tempFileName);
@@ -482,35 +699,15 @@ public class MainFrame extends JFrame {
         congPan.setVisible(true);
     }
 
-    public void clearBoard() {
-        congPan.setVisible(false);
-        if (tubesPan != null) {
-            tubesPan.saveOptions();
-            remove(tubesPan);
-            tubesPan.clearBoard();
-            tubesPan = null;
-        }
-        if (palPan != null) {
-            palPan.saveOptions();
-            remove(palPan);
-            palPan.removeAll();
-            palPan = null;
-        }
-        gameMoves.clear();
-        movesDone = 0;
-        TubesIO.clearMoves();
-        TubesIO.clearTubes();
-        Palette.usedColors.clearColorCounts();
-        toolPan.updateButtons();
-        repaint();
-    }
-
 //////////////////////////////////////////////////////////////////////////////
 //                  
-//                  *  create panels *
+//                  *  Create game controls panels *
 //                  
 //////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Adds the Palette panel with Color Buttons in manual fill mode.
+     */
     public void addColorsPanel() {
         palPan = new PalettePanel() {
             @Override
@@ -521,9 +718,9 @@ public class MainFrame extends JFrame {
             @Override
             public void changeColor(ColorButton cb) {
                 int colorNumber = cb.getColorNumber();
-                Color oldColor = pal.getColor(colorNumber);
+                Color oldColor = palette.getColor(colorNumber);
                 super.changeColor(cb);
-                Color newColor = pal.getColor(colorNumber);
+                Color newColor = palette.getColor(colorNumber);
                 if (newColor != oldColor) {
                     tubesPan.updateColor(colorNumber);
                 }
@@ -535,7 +732,7 @@ public class MainFrame extends JFrame {
                 tubesPan.updateColors();
             }
         };
-        for (int i = 0; i < pal.size() - 1; i++) {
+        for (int i = 0; i < palette.size() - 1; i++) {
             palPan.getButton(i).setCount(4);
         }
         palPan.addPopups();
@@ -548,6 +745,12 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Adds the Tubes Board panel with Color Tubes.
+     *
+     * @param aFilled number of filled tubes
+     * @param aEmpty  number of empty tubes
+     */
     public void addTubesPanel(int aFilled, int aEmpty) {
 
         tubesPan = new BoardPanel() {
@@ -599,6 +802,13 @@ public class MainFrame extends JFrame {
 //                  *  ALL MODES routines *
 //
 //////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Determines if this tube's arrow can be shown.
+     *
+     * @param tube specified color tube
+     * @return true if this tube's arrow can be shown, false otherwise
+     */
     public boolean canShowArrow(ColorTube tube) {
         switch (gameMode) {
             case FILL_MODE:
@@ -620,10 +830,20 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Returns the Color Tube from which the color will be taken (Donor / Donator).
+     *
+     * @return Donor color tube
+     */
     public ColorTube getTubeFrom() {
         return tubesPan.getTubeFrom();
     }
 
+    /**
+     * Sets the Color Tube from which the color will be taken (Donor / Donator).
+     *
+     * @param tube Donor color tube
+     */
     public void setTubeFrom(ColorTube tube) {
         tubesPan.setTubeFrom(tube);
 
@@ -654,10 +874,20 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Returns the Color Tube in which the color will be placed (Recipient).
+     *
+     * @return Recipient color tube
+     */
     public ColorTube getTubeTo() {
         return tubesPan.getTubeTo();
     }
 
+    /**
+     * Sets the Color Tube in which the color will be placed (Recipient).
+     *
+     * @param tube Recipient color tube
+     */
     public void setTubeTo(ColorTube tube) {
 
         int howMuch;
@@ -715,6 +945,15 @@ public class MainFrame extends JFrame {
         }
     }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+//                  *  PLAY MODE routines *
+//
+//////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Starts to find the Donor / Donator tube. Sets all arrows to green.
+     */
     public void startFindTubesFrom() {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             if (tubesPan.getTube(i).isActive()) {
@@ -723,6 +962,9 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Starts to find the Recipient tube. Sets all arrows to yellow.
+     */
     public void startFindTubesTo() {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             if (tubesPan.getTube(i).isActive()) {
@@ -731,11 +973,17 @@ public class MainFrame extends JFrame {
         }
     }
 
-//////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 //                  
 //                  *  FILL MODE routines *
 //                  
 //////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Clears the specified tube from all its colors.
+     *
+     * @param tube color tube
+     */
     public void clearTube(ColorTube tube) {
         if (tube != null) {
             byte clrNum;
@@ -746,7 +994,7 @@ public class MainFrame extends JFrame {
                     tube.extractColor();
 
                     ColorButton pb = palPan.getButtonByColor(clrNum);
-                    if (pb.getCount() < 0) {
+                    if (pb.getCount() <= 0) {
                         pb.setCount(1);
                     } else {
                         pb.incCount();
@@ -759,7 +1007,11 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Clears all tubes from all their colors. Starts the manual fill mode again.
+     */
     public void clearAllTubes() {
+        // clear all tubes
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             clearTube(tubesPan.getTube(i));
         }
@@ -774,31 +1026,34 @@ public class MainFrame extends JFrame {
         nextTubeTo(0);
     }
 
+    /**
+     * Disables Color Buttons if those colors cannot be used aon the board.<br>
+     * N.B. Let the board is configured with 9 filled and 2 empty tubes. Then we
+     * can't use more than 9 colors at the board. All the rest color buttons with
+     * unused colors should be disabled.
+     */
     public void disableUnusedColors() {
-        for (int i = 0; i < palPan.getColorsCount(); i++) {
-            if (Palette.usedColors.getColorCount((byte) palPan.getButtonColorNum(i)) == 0) {
-                palPan.getButton(i).setCount(-1);
-            }
-        }
-    }
-
-    public void fillUnusedColors() {
-        for (int i = 1; i < pal.size(); i++) {
+        for (int i = 1; i < palette.size(); i++) {
             if (Palette.usedColors.getColorCount((byte) i) == 0) {
                 Palette.usedColors.setColorCount((byte) i, 4);
+                if (palPan != null)
+                    palPan.getButton(i - 1).setCount(-1);
             }
         }
     }
 
+    /**
+     * Automatically fills the rest of tubes with random colors. Used also as the Automatic Fill mode.
+     */
     public void autoFillTheRest() {
-        fileNameSuffix = ResStrings.getString("strSaveIDAutoFill");
+        fileNameEnding = ResStrings.getString("strSaveIDAutoFill");
         for (int t = 0; t < filledTubes; t++) {
             for (int i = tubesPan.getTube(t).getColorsCount(); i < 4; i++) {
                 int clr = Palette.usedColors.getRandomColor();
                 tubesPan.getTube(t).putColor(clr);
                 Palette.usedColors.incColorCount((byte) clr);
                 if (Palette.usedColors.getAllUsedColors() >= filledTubes) {
-                    fillUnusedColors();
+                    disableUnusedColors();
                 }
             }
         }
@@ -806,6 +1061,11 @@ public class MainFrame extends JFrame {
         endFillMode();
     }
 
+    /**
+     * Finds and selects the next not filled tube on the board.
+     *
+     * @param startNumber number of the tube from which the search starts.
+     */
     public void nextTubeTo(int startNumber) {
         int num;
         boolean done = false;
@@ -843,6 +1103,9 @@ public class MainFrame extends JFrame {
 //
 //////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Shows the current move. TubeFrom (Donor) will display with the Green arrow & green frame, TubeTo (Recipient) - with the Yellow Arrow.
+     */
     public void showMove() {
         if (gameMode == ASSIST_MODE) {
             if (getTubeFrom() != null) {
@@ -869,6 +1132,9 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Hides the display of the current move.
+     */
     public void hideMove() {
         if (gameMode == ASSIST_MODE) {
             for (int i = 0; i < tubesPan.getTubesCount(); i++) {
@@ -880,6 +1146,12 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Checks if the Arrow above the Tube may be hidden.
+     *
+     * @param tube specified color tube
+     * @return true if the arrow is allowed to be hidden, false otherwise.
+     */
     public boolean canHideArrow(ColorTube tube) {
         if (gameMode == ASSIST_MODE) {
             return movesDone < gameMoves.size()
@@ -892,10 +1164,15 @@ public class MainFrame extends JFrame {
 
 //////////////////////////////////////////////////////////////////////////////
 //                  
-//                  *  click routines *
+//                  *  Mouse Click routines *
 //                  
 //////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Handles the click event on the Color Button at the Palette.
+     *
+     * @param cb specified Color Button
+     */
     public void clickColorButton(ColorButton cb) {
 
         if (gameMode == FILL_MODE) {
@@ -926,6 +1203,11 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Handles the click event on the Color Tube at the Board.
+     *
+     * @param tube specified Color Tube
+     */
     public void clickTube(ColorTube tube) {
         switch (gameMode) {
             case FILL_MODE:
@@ -951,7 +1233,7 @@ public class MainFrame extends JFrame {
                     } else {
                         if (!tube.isClosed() && !tube.isEmpty()) {
                             // exit from the assist mode
-                            setGameMode(BUZY_MODE);
+                            setGameMode(BUSY_MODE);
                             MessageDlg msgFrame = new MessageDlg(this,
                                     ResStrings.getString("strExitAssistMode"),
                                     MessageDlg.BTN_YES_NO);
@@ -970,7 +1252,7 @@ public class MainFrame extends JFrame {
                 } else {
                     if (!tube.isClosed()) {
                         // exit from the assist mode
-                        setGameMode(BUZY_MODE);
+                        setGameMode(BUSY_MODE);
                         MessageDlg msgFrame = new MessageDlg(this,
                                 ResStrings.getString("strExitAssistMode"),
                                 MessageDlg.BTN_YES_NO);
@@ -991,14 +1273,25 @@ public class MainFrame extends JFrame {
 
 //////////////////////////////////////////////////////////////////////////////
 //                  
-//                  *  position & resize routines *
+//                  *  Position & resize routines *
 //                  
 //////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Gets the client / content area of the Main Frame. Used to place the Tools Panel.
+     *
+     * @return client area as the rectangle
+     */
     public Rectangle getClientArea() {
         return getContentPane().getBounds();
     }
 
+    /**
+     * Gets the colors area of the Main Frame. Used to place the Palette Panel. Colors area
+     * is the client area of the MainFrame besides the Tools panel area.
+     *
+     * @return colors area as the rectangle
+     */
     public Rectangle getColorsArea() {
         Rectangle area = getClientArea();
         if (toolPan != null) {
@@ -1022,6 +1315,12 @@ public class MainFrame extends JFrame {
         return area;
     }
 
+    /**
+     * Gets the colors area of the Main Frame. Used to place the Tubes Board Panel. Tubes area
+     * is the client area of the MainFrame besides the Tools panel and the Palette panel areas.
+     *
+     * @return Tubes area as the rectangle
+     */
     public Rectangle getTubesArea() {
         Rectangle area = getColorsArea();
         if (palPan != null && palPan.isVisible()) {
@@ -1045,20 +1344,30 @@ public class MainFrame extends JFrame {
         return area;
     }
 
-    public void redockTubes() {
+    /**
+     * Re-docks and/or rearranges all panels after resizing the frame or re-docking.
+     */
+    public void updatePanelsPos() {
+        if (palPan != null) {
+            palPan.reDock();
+        }
+        updateTubesPos();
+        updateMinSize();
+    }
+
+    /**
+     * Re-docks and/or rearranges the Tubes Board panel only.
+     */
+    public void updateTubesPos() {
         if (tubesPan != null) {
             tubesPan.reDock();
         }
     }
 
-    public void updatePanelsPos() {
-        if (palPan != null) {
-            palPan.reDock();
-        }
-        redockTubes();
-        updateMinSize();
-    }
 
+    /**
+     * Updates Minimum size of the Frame after re-docking.
+     */
     public void updateMinSize() {
         Dimension dim = new Dimension(100, 100);
 

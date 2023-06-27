@@ -223,7 +223,6 @@ public class ToolPanel extends JPanel {
         }
     }
 
-
     /**
      * This routine creates and adds the new action button.
      *
@@ -304,6 +303,11 @@ public class ToolPanel extends JPanel {
 
         switch (gameMode) {
             case MainFrame.FILL_MODE:
+                buttons[0].setVisible(true);
+                buttons[0].setEnabled(true);
+
+                buttons[2].setVisible(true);
+                buttons[2].setEnabled(true);
                 buttons[3].setEnabled(true);  // 3 - save button
                 buttons[5].setVisible(false); // 5 - refresh board
                 buttons[6].setVisible(false); // 6 - solve button
@@ -314,10 +318,6 @@ public class ToolPanel extends JPanel {
                 buttons[11].setVisible(true); // 11 - auto fill button
                 buttons[11].setEnabled(true); // 11 - auto fill button
 
-                buttons[0].setVisible(true);
-                buttons[0].setEnabled(true);
-                buttons[2].setVisible(true);
-                buttons[2].setEnabled(true);
                 buttons[13].setVisible(true);
                 buttons[13].setEnabled(true);
                 buttons[14].setVisible(true);
@@ -328,6 +328,11 @@ public class ToolPanel extends JPanel {
                 break;
             case MainFrame.PLAY_MODE:
             case MainFrame.ASSIST_MODE:
+                buttons[0].setVisible(true);
+                buttons[0].setEnabled(true);
+                buttons[2].setVisible(true);
+                buttons[2].setEnabled(true);
+
                 buttons[3].setEnabled(true); // 3 - save button
                 buttons[5].setVisible(true); // 5 - refresh board
                 buttons[5].setEnabled(true);
@@ -340,10 +345,6 @@ public class ToolPanel extends JPanel {
                 buttons[10].setVisible(false); // 10 - clear all tubes 
                 buttons[11].setVisible(false); // 11 - auto fill button
 
-                buttons[0].setVisible(true);
-                buttons[0].setEnabled(true);
-                buttons[2].setVisible(true);
-                buttons[2].setEnabled(true);
                 buttons[13].setVisible(true);
                 buttons[13].setEnabled(true);
                 buttons[14].setVisible(true);
@@ -352,12 +353,17 @@ public class ToolPanel extends JPanel {
                 buttons[16].setEnabled(true);
 
                 break;
-            case MainFrame.BUZY_MODE:
+            case MainFrame.BUSY_MODE:
                 for (int i = 0; i < btnCount; i++)
                     if (buttons[i] != null)
                         buttons[i].setEnabled(false);
                 break;
             default:
+                buttons[0].setVisible(true);
+                buttons[0].setEnabled(true);
+                buttons[2].setVisible(true);
+                buttons[2].setEnabled(true);
+
                 buttons[3].setEnabled(false); // 3 - save button
                 buttons[5].setVisible(false); // 5 - refresh board
                 buttons[6].setVisible(false); // 6 - solve button
@@ -366,10 +372,6 @@ public class ToolPanel extends JPanel {
                 buttons[10].setVisible(false); // 10 - clear all tubes 
                 buttons[11].setVisible(false); // 11 - auto fill button
 
-                buttons[0].setVisible(true);
-                buttons[0].setEnabled(true);
-                buttons[2].setVisible(true);
-                buttons[2].setEnabled(true);
                 buttons[13].setVisible(true);
                 buttons[13].setEnabled(true);
                 buttons[14].setVisible(true);
@@ -407,6 +409,7 @@ public class ToolPanel extends JPanel {
      */
     public void loadClick() {
         if (buttons[2].isEnabled() && buttons[2].isVisible()) {
+            Main.frame.setGameMode(MainFrame.BUSY_MODE);
             LOpenSaveDialog os = new LOpenSaveDialog(Main.frame);
             String fileName = os.showOpenDialog();
             if (!"".equals(fileName)) {
@@ -425,6 +428,8 @@ public class ToolPanel extends JPanel {
                             break;
                     }
                 }
+            } else {
+                Main.frame.setGameMode(MainFrame.prevMode);
             }
         }
     }

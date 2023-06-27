@@ -13,9 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
  * A Folder Name Edit component. Displays the current folder in a combo box.
@@ -194,7 +194,7 @@ public class FolderComboBox extends JComponent implements FolderListener {
     }
 
     @Override
-    public void updateFolder(File folder) {
-        folderItem.setFile(folder);
+    public void updateFolder() {
+        folderItem.setFile(current.getFolder());
     }
 }

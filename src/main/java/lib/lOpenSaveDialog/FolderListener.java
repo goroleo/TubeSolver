@@ -9,15 +9,12 @@
  */
 package lib.lOpenSaveDialog;
 
-import java.io.File;
-
 /**
  * A listener of the current folder change events.
  */
 public interface FolderListener {
     /**
      * The listener that catches a current folder change event.
-     * @param folder current folder
      */
-    void updateFolder(File folder);
+    void updateFolder();
 }

@@ -98,7 +98,7 @@ public class OpenSavePanel extends JPanel {
     /**
      * An icon of this dialog frame
      */
-    public static BufferedImage lnFrameIcon;
+    public static BufferedImage imgFrameIcon;
 
     /**
      * An ButtonDown image for foldersComboBox and FileList sort indicator
@@ -326,7 +326,7 @@ public class OpenSavePanel extends JPanel {
      * Updates and refresh the current folder, reload the FilesList contents.
      */
     public void refreshFolder() {
-        filesPanel.refreshFolder();
+        filesPanel.updateFolder();
     }
 
     /**
@@ -481,8 +481,8 @@ public class OpenSavePanel extends JPanel {
         }
 
         if (doClose) {
-            EventQueue.invokeLater(dlgFrame::dispose);
             ((LOpenSaveDialog) dlgFrame).saveOptions();
+            EventQueue.invokeLater(dlgFrame::dispose);
         }
     }
 
@@ -494,8 +494,8 @@ public class OpenSavePanel extends JPanel {
             showFoldersPanel(false);
         } else {
             current.setFile("");
-            EventQueue.invokeLater(dlgFrame::dispose);
             ((LOpenSaveDialog) dlgFrame).saveOptions();
+            EventQueue.invokeLater(dlgFrame::dispose);
         }
     }
 
@@ -540,7 +540,7 @@ public class OpenSavePanel extends JPanel {
     private void loadResources() {
         imgBtnDown = createBufImage("btnTool22_down.png");
         imgBtnUp = createBufImage("btnTool22_up.png");
-        lnFrameIcon = createBufImage("lnopensavedialog_icon.png");
+        imgFrameIcon = createBufImage("lnopensavedialog_icon.png");
         cursorResize = Toolkit.getDefaultToolkit().createCustomCursor(
                 createBufImage("filelist_cursor_resize.png"),
                 new Point(10, 10), "");

@@ -21,12 +21,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 
+/**
+ * The panel that is displayed when a solution is being searched.
+ */
 public class SolvePanel extends JComponent {
 
     /**
      * The solver of the game.
      */
-    private Solver ts;
+    private static Solver ts;
 
     /**
      * The layer that blurs the MainFrame's content .
@@ -36,12 +39,12 @@ public class SolvePanel extends JComponent {
     /**
      * A spinning circle showing the application busyness.
      */
-    private final WheelLayer wheel;
+    private static final WheelLayer wheel = new WheelLayer();
 
     /**
      * The button to cancel calculation solve.
      */
-    private final LPictureButton btn;
+    private static LPictureButton btn;
 
     /**
      * How much tries before we'll break the solving and start it again with the new color
@@ -64,8 +67,6 @@ public class SolvePanel extends JComponent {
     public SolvePanel() {
 
         setVisible(false);
-
-        wheel = new WheelLayer();
         add(wheel);
 
         btn = new LPictureButton(this, "btnDialog");
@@ -76,8 +77,8 @@ public class SolvePanel extends JComponent {
         add(btn);
 
         blur = new BlurLayer() {
-            public void onThreadFinished(boolean b) {
-                onBlurFinished(b);
+            public void onThreadFinished(boolean appearing) {
+                onBlurThreadFinished(appearing);
             }
         };
         add(blur);
@@ -129,7 +130,6 @@ public class SolvePanel extends JComponent {
             public void onNotSolved() {
                 breakCount <<= 1;
                 if (breakCount > 0) {
-//                    System.out.println("!!! NOT SOLVED. Runs with the new break " + breakCount);
                     setStartTubes(startBoard);
                     setBreakStop(breakCount);
                     if (!externalBreak) {
@@ -146,7 +146,7 @@ public class SolvePanel extends JComponent {
     /**
      * Stop solving!
      *
-     * @param result - result of the solve process
+     * @param result result of the solve process
      * @see #solveResult
      */
     public void stopSolver(int result) {
@@ -164,17 +164,26 @@ public class SolvePanel extends JComponent {
         Main.frame.endSolve(solveResult);
     }
 
-    public void onBlurFinished(boolean b) {
+    /**
+     * This routine calls when the blur animation has done.
+     * @param b the direction of the animation performed: appearing (blurring) if <i>true</i>, or hiding if <i>false</i>.
+     */
+    public void onBlurThreadFinished(boolean b) {
         if (b) {
+            // after blurring shows the button and the wheel circle
             btn.setVisible(true);
             btn.requestFocus();
             wheel.setVisible(true);
             wheel.start();
         } else {
+            // hides the panel
             setVisible(false);
         }
     }
 
+    /**
+     * Updates a button caption when the language of the application is changed.
+     */
     public void updateLanguage() {
         btn.setText(ResStrings.getString("strCancel"));
     }

@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import static gui.MainFrame.pal;
+import static gui.MainFrame.palette;
 
 /**
  * ColorLayer is a layer of ColorTube to draw animation of fill and erase color cells.
@@ -208,7 +208,7 @@ public class ColorLayer extends JComponent implements Runnable {
         if (colorNum == 0) {
             return transparent;
         } else {
-            return pal.getColor(colorNum);
+            return palette.getColor(colorNum);
         }
     }
 

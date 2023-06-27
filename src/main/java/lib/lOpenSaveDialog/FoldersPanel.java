@@ -9,17 +9,11 @@
  */
 package lib.lOpenSaveDialog;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelEvent;
-import java.io.File;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.*;
+
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
@@ -183,8 +177,8 @@ public class FoldersPanel extends JComponent implements FolderListener {
     }
 
     @Override
-    public void updateFolder(File folder) {
-        foldersList.setFolder(folder);
+    public void updateFolder() {
+        foldersList.setFolder(current.getFolder());
         updateComponents();
     }
 }

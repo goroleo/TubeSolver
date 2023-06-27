@@ -396,6 +396,7 @@ public class ColorTube extends JComponent {
                 colors.repaintColor(i + 1, 0, false);
             }
         }
+//        colors.setCount(model.count);
         colors.repaint();
     }
 
@@ -409,6 +410,21 @@ public class ColorTube extends JComponent {
             putColor((byte) (storedColors & 0xff));
             storedColors = storedColors >> 8;
         }
+    }
+
+    /**
+     * Restores colors from the model.
+     */
+    public void restoreColors() {
+        colors.useAnimation = false;
+        colors.clearColors();
+        colors.useAnimation = true;
+        for (int i = 0; i < 4; i++) {
+            if (model.colors[i] > 0) {
+                colors.addColor(model.colors[i]);
+            }
+        }
+        setClosed(model.state == 3);
     }
 
     /**

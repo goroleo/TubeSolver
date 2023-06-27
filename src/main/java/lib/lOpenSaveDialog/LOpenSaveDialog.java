@@ -19,7 +19,7 @@ import java.awt.event.*;
 import java.io.File;
 
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
-import static lib.lOpenSaveDialog.OpenSavePanel.lnFrameIcon;
+import static lib.lOpenSaveDialog.OpenSavePanel.imgFrameIcon;
 
 /**
  * The OpenSave file chooser dialog.
@@ -96,7 +96,7 @@ public class LOpenSaveDialog extends JDialog {
 
     private void initFrame() {
         setDefaultCloseOperation(0); // DO_NOTHING_ON_CLOSE
-        setIconImage(lnFrameIcon);
+        setIconImage(imgFrameIcon);
         calculateSize();
         setMinimumSize(new Dimension(350, 300));
 

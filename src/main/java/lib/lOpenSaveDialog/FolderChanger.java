@@ -271,7 +271,7 @@ public class FolderChanger {
      */
     public void addFolderListener(FolderListener toAdd) {
         folderListeners.add(toAdd);
-        toAdd.updateFolder(currentFolder);
+        toAdd.updateFolder();
     }
 
     /**
@@ -316,7 +316,7 @@ public class FolderChanger {
      */
     public void updateFolder() {
         for (FolderListener fl : folderListeners) {
-            fl.updateFolder(currentFolder);
+            fl.updateFolder();
         }
     }
 
@@ -328,6 +328,4 @@ public class FolderChanger {
             fl.updateFile();
         }
     }
-
-
 }

@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 
-import static gui.MainFrame.pal;
+import static gui.MainFrame.palette;
 
 /**
  * This layer draws and rotates a drum (a torus) composed of the palette colors. <br>
@@ -75,7 +75,7 @@ public class WheelLayer extends JComponent implements Runnable {
      * The angle size of sector, in radians.
      */
     private final double colorsSectorAngle
-            = TWO_PI / (pal.size() - 1) / (1 + spacing);
+            = TWO_PI / (palette.size() - 1) / (1 + spacing);
 
     /**
      * The angle size of spacing (gap), in radians
@@ -225,7 +225,7 @@ public class WheelLayer extends JComponent implements Runnable {
         g2d.clearRect(0, 0, r_Max * 2, r_Max * 2);
 
         // draw DRUM (TOR) of colors:
-        for (int i = 1; i < pal.size(); i++) {
+        for (int i = 1; i < palette.size(); i++) {
 
             angle1 = (colorsSectorAngle + colorsSpaceAngle) * i + drumAngle;
             sin_a1 = Math.sin(angle1);
@@ -243,7 +243,7 @@ public class WheelLayer extends JComponent implements Runnable {
             sin_ba2 = Math.sin(bezierAngle2);
             cos_ba2 = Math.cos(bezierAngle2);
 
-            g2d.setPaint(pal.getColor(i));
+            g2d.setPaint(palette.getColor(i));
             GeneralPath poly = new GeneralPath();
 
             // first point at the outer curve

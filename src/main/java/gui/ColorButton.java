@@ -177,7 +177,7 @@ public class ColorButton extends JButton {
         this.add(bevelLayer);
 
         colorLayer = new ShapeLayer(imgColorShape);
-        colorLayer.setColor(MainFrame.pal.getColor(colorNumber));
+        colorLayer.setColor(MainFrame.palette.getColor(colorNumber));
         this.add(colorLayer);
 
         shadeLayer = new ShadeLayer(imgShade);
@@ -238,7 +238,7 @@ public class ColorButton extends JButton {
 
     /** Changes the color by call the Color dialog. Used when the button is clicked/pressed.    */
     public void changeColor() {
-        Color oldColor = MainFrame.pal.getColor(colorNumber);
+        Color oldColor = MainFrame.palette.getColor(colorNumber);
 
         LColorDialog lcd = new LColorDialog(Main.frame, oldColor);
         lcd.setBackground(Palette.dialogColor);
@@ -259,15 +259,15 @@ public class ColorButton extends JButton {
 
 
         if (newColor != oldColor) {
-            MainFrame.pal.set(colorNumber, newColor);
-            MainFrame.pal.savePalette();
+            MainFrame.palette.set(colorNumber, newColor);
+            MainFrame.palette.savePalette();
         }
         repaintColor();
     }
 
     /** Repaints the color layer by the current palette color value. */
     public void repaintColor() {
-        colorLayer.setColor(MainFrame.pal.getColor(colorNumber));
+        colorLayer.setColor(MainFrame.palette.getColor(colorNumber));
     }
 
     /** Decrements the counter value by one. */
@@ -323,7 +323,7 @@ public class ColorButton extends JButton {
      * @return the current color from the palette.
      */
     public Color getColor() {
-        return MainFrame.pal.get(colorNumber);
+        return MainFrame.palette.get(colorNumber);
     }
 
     /** Gets the color number of this button.

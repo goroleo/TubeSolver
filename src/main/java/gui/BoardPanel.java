@@ -33,7 +33,8 @@ public class BoardPanel extends JComponent {
     /**
      * Color tubes array.
      */
-    private final ArrayList<ColorTube> tubes = new ArrayList<>();
+    private final static ArrayList<ColorTube> tubes = new ArrayList<>();
+
     /**
      * The horizontal space between two tubes.
      */
@@ -147,12 +148,6 @@ public class BoardPanel extends JComponent {
         calculateColumns();
     }
 
-    public void clearBoard() {
-        removeAll();
-        model.clear();
-        tubes.clear();
-    }
-
     /**
      * Adds the popup menu to the board panel components.
      * We need to add it to every color tube and to the board itself.
@@ -182,6 +177,12 @@ public class BoardPanel extends JComponent {
         });
     }
 
+    /**
+     * Gets the tube by its number from the tubes list.
+     *
+     * @param number tube's number
+     * @return color tube
+     */
     public ColorTube getTube(int number) {
         if (number >= 0 && number < getTubesCount()) {
             return tubes.get(number);
@@ -190,24 +191,30 @@ public class BoardPanel extends JComponent {
         }
     }
 
+    /**
+     * Gets the number of the specified tube.
+     *
+     * @param tube color tube
+     * @return tube's number
+     */
     public int getTubeNumber(ColorTube tube) {
         return tubes.indexOf(tube);
     }
 
+    /**
+     * Gets the count of color tubes
+     *
+     * @return tubes' count
+     */
     public int getTubesCount() {
         return tubes.size();
     }
 
-    public void clearTube(ColorTube tube) {
-        tube.clear();
-    }
-
-    public void clearTubes() {
-        for (int i = 0; i < getTubesCount(); i++) {
-            clearTube(getTube(i));
-        }
-    }
-
+    /**
+     * Gets the logical BoradModel of the panel
+     *
+     * @return model
+     */
     public BoardModel getModel() {
         return model;
     }
@@ -246,6 +253,18 @@ public class BoardPanel extends JComponent {
         if (cols * rows < getTubesCount()) {
             cols++;
         }
+    }
+
+    /**
+     * Set spaces between color tubes.
+     *
+     * @param spaceX horizontal space between tubes
+     * @param spaceY vertical spaces between tubes
+     */
+    public void setSpaces(int spaceX, int spaceY) {
+        this.spaceX = spaceX;
+        this.spaceY = spaceY;
+        reDock();
     }
 
     /**
@@ -298,14 +317,9 @@ public class BoardPanel extends JComponent {
     }
 
     /**
-     * Gets the edge of the MainFrame the panel is docked to: <ul>
-     * <li>0 - center;
-     * <li>1 - top;
-     * <li>2 - bottom;
-     * <li>3 - left;
-     * <li>4 - right.</ul>
-     *
+     * Gets the edge of the MainFrame the panel is docked to
      * @return current dockedTo value
+     * @see #docked
      */
     public int getDockedTo() {
         return docked;
@@ -353,6 +367,9 @@ public class BoardPanel extends JComponent {
         setLocation(r.x, r.y);
     }
 
+    /**
+     * Restores the location of this panel which was previously saved in the application options.
+     */
     public void restoreLocation() {
         if (Options.boardDockedTo >= 0
                 && Options.boardDockedTo <= 4
@@ -365,10 +382,49 @@ public class BoardPanel extends JComponent {
         }
     }
 
+    /**
+     * Saves current lines and position to the application options.
+     */
+    public void saveOptions() {
+        Options.boardDockedTo = docked;
+        Options.boardLines = rows;
+    }
+
+///////////////////////////////////////////////////////////////////////////
+//
+//               * Game and Color routines *
+//
+///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Determines if the game is solved already?
+     * @return true if the board is solved, false otherwise.
+     */
+    public boolean isSolved() {
+        return model.isSolved();
+    }
+
+    /**
+     * Clears whole the board, deletes all tubes.
+     */
+    public void emptyBoard() {
+        removeAll();
+        model.clear();
+        tubes.clear();
+    }
+
+    /**
+     * Gets the current Donor tube, from which the color cell will be got.
+     * @return the donor tube or <i>null</i> if the donor is not stated.
+     */
     public ColorTube getTubeFrom() {
         return tubeFrom;
     }
 
+    /**
+     * Sets the Donor tube, from which the color cell will be got.
+     * @param tube the new donor tube, or <i>null</i> if you want to clear the donor.
+     */
     public void setTubeFrom(ColorTube tube) {
         if (tube != tubeFrom) {
             if (tubeFrom != null) {
@@ -383,10 +439,18 @@ public class BoardPanel extends JComponent {
         }
     }
 
+    /**
+     * Gets the current Recipient tube, it which the color cell will be put.
+     * @return the recipient tube or <i>null</i> if the recipient is not stated.
+     */
     public ColorTube getTubeTo() {
         return tubeTo;
     }
 
+    /**
+     * Sets the current Recipient tube, it which the color cell will be put.
+     * @param tube the new recipient tube, or <i>null</i> if you want to clear the recipient.
+     */
     public void setTubeTo(ColorTube tube) {
         if (tube != tubeTo) {
             if (tubeTo != null) {
@@ -402,20 +466,42 @@ public class BoardPanel extends JComponent {
         }
     }
 
+    /**
+     * Handles the mouse click event on the specified tube. This procedure is intended to override it.
+     *
+     * @param tube specified tube
+     */
     public void clickTube(ColorTube tube) {
         // overrides by MainFrame
     }
 
+    /**
+     * Determines if this tube's arrow can be shown. This procedure is intended to override it.
+     *
+     * @param tube specified color tube
+     * @return true if this tube's arrow can be shown, false otherwise
+     */
     public boolean canShowArrow(ColorTube tube) {
         // overrides by MainFrame
         return true;
     }
 
+    /**
+     * Determines if this tube's arrow can be hidden. This procedure is intended to override it.
+     *
+     * @param tube specified color tube
+     * @return true if this tube's arrow can be shown, false otherwise
+     */
     public boolean canHideArrow(ColorTube tube) {
         // overrides by MainFrame
         return true;
     }
 
+    /**
+     * Repaints one color at the Board. I.e. repaints all tubes that have this color.
+     *
+     * @param colorNumber number of the color in palette.
+     */
     public void updateColor(int colorNumber) {
         for (int i = 0; i < getTubesCount(); i++) {
             if (getTube(i).getModel().hasColor((byte) colorNumber)) {
@@ -424,17 +510,45 @@ public class BoardPanel extends JComponent {
         }
     }
 
+    /**
+     * Repaints all tubes  at the Board.
+     */
     public void updateColors() {
         for (int i = 0; i < getTubesCount(); i++) {
             getTube(i).repaintColors();
         }
     }
 
-    public boolean canGetColor(ColorTube tubeFrom) {
-        boolean result = false;
-        int fromIdx = getTubeNumber(tubeFrom);
-        int i = 0;
+    /**
+     * Clears all colors from the specified tube.
+     * @param tube specified color tube
+     */
+    public void clearTube(ColorTube tube) {
+        tube.clear();
+    }
 
+    /**
+     * Clears all colors from all tubes.
+     */
+    public void clearTubes() {
+        for (int i = 0; i < getTubesCount(); i++) {
+            clearTube(getTube(i));
+        }
+    }
+
+    /**
+     * Determines whether a color can be taken from the specific tube. The routine
+     * gets the Current Color from the tube and tries to find another tube that has
+     * a place to put that color in.
+     *
+     * @param tube specific tube
+     * @return true if the Current Color of this tube has another tube to place it in, false otherwise.
+     * @see ColorTube#getCurrentColor()
+     */
+    public boolean canGetColor(ColorTube tube) {
+        boolean result = false;
+        int fromIdx = getTubeNumber(tube);
+        int i = 0;
         while (!result && i < getTubesCount()) {
             if (i != fromIdx) {
                 result = model.canMakeMove(fromIdx, i);
@@ -444,6 +558,13 @@ public class BoardPanel extends JComponent {
         return result;
     }
 
+    /**
+     * Doing the move!
+     *
+     * @param tubeFrom Donor color tube.
+     * @param tubeTo Recipient color tube.
+     * @return count ot the transferred color cells.
+     */
     public int moveColor(ColorTube tubeFrom, ColorTube tubeTo) {
         int result = 0;
         if (model.canMakeMove(getTubeNumber(tubeFrom), getTubeNumber(tubeTo))) {
@@ -460,6 +581,9 @@ public class BoardPanel extends JComponent {
         return result;
     }
 
+    /**
+     * Undoes the one last move.
+     */
     public void undoMoveColor() {
         if (MainFrame.gameMoves.isEmpty()) {
             return;
@@ -488,15 +612,13 @@ public class BoardPanel extends JComponent {
         }
     }
 
+    /**
+     * Undoes all moves of the current game. Starts the game again.
+     */
     public void startAgain() {
 
         if (MainFrame.gameMoves.isEmpty()) {
             return;
-        }
-
-        int[] storedTubes = new int[getTubesCount()];
-        for (int i = 0; i < getTubesCount(); i++) {
-            storedTubes[i] = model.get(i).storeColors();
         }
 
         int movesCount = 0;
@@ -507,12 +629,12 @@ public class BoardPanel extends JComponent {
             movesCount = MainFrame.movesDone;
         }
 
+        // undo moves at the board model
         for (int i = movesCount; i > 0; i--) {
             int idxFrom = MainFrame.gameMoves.getTubeFrom(i - 1);
             int idxTo = MainFrame.gameMoves.getTubeTo(i - 1);
             int mCount = MainFrame.gameMoves.getMoveCount(i - 1);
             byte mColor = MainFrame.gameMoves.getColor(i - 1);
-
             while (mCount > 0) {
                 model.get(idxTo).extractColor();
                 model.get(idxFrom).putColor(mColor);
@@ -522,43 +644,13 @@ public class BoardPanel extends JComponent {
                 MainFrame.gameMoves.remove(i - 1);
             }
         }
+
         MainFrame.movesDone = 0;
         MainFrame.toolPan.updateButtons();
-        for (int i = 0;
-             i < getTubesCount();
-             i++) {
-            int newTube = model.get(i).storeColors();
-            model.get(i).assignColors(storedTubes[i]);
 
-            getTube(i).clear();
-            getTube(i).restoreColors(newTube);
+        // restore initial colors to ColorTubes from the board model
+        for (int i = 0; i < getTubesCount(); i++) {
+            getTube(i).restoreColors();
         }
-        if (MainFrame.gameMode == MainFrame.PLAY_MODE) {
-            Main.frame.startPlayMode();
-        } else if (MainFrame.gameMode == MainFrame.ASSIST_MODE) {
-            Main.frame.startAssistMode();
-        }
-
-    }
-
-    public boolean isSolved() {
-        return model.isSolved();
-    }
-
-    /**
-     * Set spaces between color tubes
-     *
-     * @param spaceX horizontal space between tubes
-     * @param spaceY vertical spaces between tubes
-     */
-    public void setSpaces(int spaceX, int spaceY) {
-        this.spaceX = spaceX;
-        this.spaceY = spaceY;
-        reDock();
-    }
-
-    public void saveOptions() {
-        Options.boardDockedTo = docked;
-        Options.boardLines = rows;
     }
 }

@@ -15,7 +15,8 @@ import java.awt.image.BufferedImage;
 
 /**
  * An animated layer that can blur the specified image. This class used quick and easy Laplace Blur
- * by Fedor Tukmakov <a href="https://github.com/impfromliga">@impfromliga</a>.
+ * by Fedor Tukmakov <a href="https://github.com/impfromliga">@impfromliga</a>.<br>
+ * After blurring, this layer will be hidden by changing its opacity.
  */
 public class BlurLayer extends JComponent implements Runnable {
 
@@ -23,19 +24,19 @@ public class BlurLayer extends JComponent implements Runnable {
     private int opaque = 0xff;
 
     /** Step value of opaque for the next frame  */
-    private int opaqueStep = 7;
+    private final int opaqueStep = 7;
 
     /** Time delay after every frame */
-    private int blurCount = 50;
+    private final int blurCount = 50;
 
     /** The current blur value */
     private int blurStep;
 
     /** Time delay after every frame */
-    private int delay = 7;
+    private final int delay = 7;
 
     /** An animation direction: blurring or hiding  */
-    private boolean blurring = true;
+    private boolean appearing = true;
 
     /** A buffer to store pixels' info  */
     private int[] buf;
@@ -67,19 +68,19 @@ public class BlurLayer extends JComponent implements Runnable {
             buf = new int[w * h];
         }
         frame.getGraphics().drawImage(bi, 0, 0, null);
+        repaint();
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 buf[x + y * w] = bi.getRGB(x, y);
             }
         }
-        repaint();
     }
 
     /**
      * Starts the blurring thread.
      */
     public void startBlur() {
-        blurring = true;
+        appearing = true;
         blurStep = 0;
         Thread t = new Thread(this);
         t.start();
@@ -89,7 +90,7 @@ public class BlurLayer extends JComponent implements Runnable {
      * Starts the thread to hide the layer.
      */
     public void startHide() {
-        blurring = false;
+        appearing = false;
         opaque = 0xff;
         Thread t = new Thread(this);
         t.start();
@@ -103,7 +104,7 @@ public class BlurLayer extends JComponent implements Runnable {
      */
     private void blurFrame() {
 
-        int x01 = 0x010101, x7f = 0x7f7f7f, opaque = 0xff000000;
+        int x01 = 0x010101, x7f = 0x7f7f7f, op = 0xff000000;
 
         // 1st pass: horizontal from left to right
         for (int idx = h * w; idx > 0; idx -= w) {
@@ -137,10 +138,10 @@ public class BlurLayer extends JComponent implements Runnable {
             }
         }
 
-        // sets pixels from buffer into frame
+        // sets pixels from buffer into frame image
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                frame.setRGB(x, y, (buf[x + y * w] & 0xffffff) | opaque);
+                frame.setRGB(x, y, (buf[x + y * w] & 0xffffff) | op);
             }
         }
     }
@@ -169,7 +170,7 @@ public class BlurLayer extends JComponent implements Runnable {
 
         while (working) {
 
-            if (blurring) {
+            if (appearing) {
                 blurFrame();
                 blurStep++;
                 if (blurStep > blurCount) {
@@ -193,12 +194,14 @@ public class BlurLayer extends JComponent implements Runnable {
 
         }
 
-        onThreadFinished(blurring);
+        onThreadFinished(appearing);
     }
 
-
-
-    public void onThreadFinished(boolean appear) {
+    /**
+     * This routine is called after the animation has done.
+     * @param appearing the direction of the animation performed: appearing (blurring) if <i>true</i>, or hiding if <i>false</i>.
+     */
+    public void onThreadFinished(boolean appearing) {
         // the routine to override it
     }
 

@@ -1,31 +1,25 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package ani;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.swing.JComponent;
 
 /**
  * This layer draws and unlimited rotates 2-colors flower.
  */
 public class FlowerLayer extends JComponent implements Runnable {
 
-    /**
-     * An original image 400x400 pix.
-     */
-    private final BufferedImage imgOrig
-            = new BufferedImage(400, 400, 2);
+    // An original image represented as a buffer 400x400 points
+    private final int[] imgBuf = new int[400 * 400];
 
     /**
      * The image displayed every single frame of animation.
@@ -43,19 +37,9 @@ public class FlowerLayer extends JComponent implements Runnable {
     private final double angleIncrement = 1d / 180d * Math.PI;
 
     /**
-     * Delay between teo frames.
+     * Delay between two frames.
      */
-    private final long delay = 30;
-
-    /**
-     * The X coordinate of the center of the original image.
-     */
-    private final double origCenterX = imgOrig.getWidth() / 2.0d;
-
-    /**
-     * The Y coordinate of the center of the original image.
-     */
-    private final double origCenterY = imgOrig.getHeight() / 2.0d;
+    private final long delay = 10;
 
     /**
      * The X coordinate of the rotation point.
@@ -83,28 +67,22 @@ public class FlowerLayer extends JComponent implements Runnable {
      */
     public FlowerLayer() {
         prepareFlower();
-
-        setBackground(null);
-        setForeground(null);
         setSize(500, 350);
-
-        RenderingHints rh = new RenderingHints(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        rh.put(RenderingHints.KEY_RENDERING,
-                RenderingHints.VALUE_RENDER_QUALITY);
-        Graphics2D gOrig = (Graphics2D) imgOrig.getGraphics();
-        gOrig.setRenderingHints(rh);
     }
 
     @Override
     public final void setSize(int width, int height) {
         super.setSize(width, height);
-        imgFrame = new BufferedImage(width, height, 2);
+        if (imgFrame == null
+                || imgFrame.getWidth() != width
+                || imgFrame.getHeight() != height) {
+            imgFrame = new BufferedImage(width, height, 2);
+        }
     }
 
     /**
      * Sets the rotation point coordinates.
+     *
      * @param x horizontal coordinate
      * @param y vertical coordinate
      */
@@ -133,16 +111,24 @@ public class FlowerLayer extends JComponent implements Runnable {
         working = false;
     }
 
-    private int mixColors(int clr1, int clr2, double alpha1, double alpha2) {
-        int R = (int) (alpha1 * (clr1 & 0xff)
-                + alpha2 * (clr2 & 0xff));
-        int G = (int) (alpha1 * ((clr1 >> 8) & 0xff)
-                + alpha2 * ((clr2 >> 8) & 0xff));
-        int B = (int) (alpha1 * ((clr1 >> 16) & 0xff)
-                + alpha2 * ((clr2 >> 16) & 0xff));
-        int A = (int) (alpha1 * ((clr1 >> 24) & 0xff)
-                + alpha2 * ((clr2 >> 24) & 0xff));
-        return (R & 0xff) | ((G & 0xff) << 8) | ((B & 0xff) << 16) | ((A & 0xff) << 24);
+    /**
+     * Mixes two colors. Please note (w1 + w2) must be 1 or less.
+     * @param clr1 first color
+     * @param clr2 second color
+     * @param w1 first color's weight fraction (from 0 to 1)
+     * @param w2 second color's weight fraction (from 0 to 1)
+     * @return mixed color
+     */
+    private int mixColors(int clr1, int clr2, double w1, double w2) {
+        int a = (int) (w1 * ((clr1 >> 24) & 0xff)
+                + w2 * ((clr2 >> 24) & 0xff));    // alpha component
+        int r = (int) (w1 * ((clr1 >> 16) & 0xff)
+                + w2 * ((clr2 >> 16) & 0xff));    // red component
+        int g = (int) (w1 * ((clr1 >> 8) & 0xff)
+                + w2 * ((clr2 >> 8) & 0xff));     // green component
+        int b = (int) (w1 * (clr1 & 0xff)
+                + w2 * (clr2 & 0xff));            // blue component
+        return (b & 0xff) | ((g & 0xff) << 8) | ((r & 0xff) << 16) | ((a & 0xff) << 24);
     }
 
     /**
@@ -169,8 +155,8 @@ public class FlowerLayer extends JComponent implements Runnable {
         // size of the area (in angles) where one color transits to another
         double shadeAngle = (clrAngle * 2 - secAngle) / 2;
 
-        Color clr1 = new Color(0xfd68b3); // color1
-        Color clr2 = new Color(0xfff003); // color2
+        int clr1 = 0xfffd68b3; // color1 0xAARRGGBB
+        int clr2 = 0xfffff003; // color2 0xAARRGGBB
         double alpha1, alpha2; // transparency of color1 and color2; 
 
         double maxRad1 = 190.0d, maxRad2 = 200.0d; // radius for color1 and color2
@@ -192,7 +178,7 @@ public class FlowerLayer extends JComponent implements Runnable {
                 // point's angle 
                 a = Math.atan2(dy, dx);
                 // we need positive value for the angle
-                if (a < 0) {            
+                if (a < 0) {
                     a += 2 * Math.PI;
                 }
 
@@ -205,7 +191,7 @@ public class FlowerLayer extends JComponent implements Runnable {
                     alpha2 = 1.0 - alpha1;
                     maxRad = maxRad1 * alpha1 + maxRad2 * alpha2;
                     shRad = shRad1 * alpha1 + shRad2 * alpha2;
-                    clr = mixColors(clr1.getRGB(), clr2.getRGB(), alpha1, alpha2);
+                    clr = mixColors(clr1, clr2, alpha1, alpha2);
 
                 } else if (a < clrAngle - shadeAngle) {
                     // body of the color 1 
@@ -213,7 +199,7 @@ public class FlowerLayer extends JComponent implements Runnable {
                     // alpha2 = 0; - don't need to assign
                     maxRad = maxRad1;
                     shRad = shRad1;
-                    clr = clr1.getRGB();
+                    clr = clr1;
 
                 } else if (a < clrAngle) {
                     // color 1 -> color 2
@@ -221,7 +207,7 @@ public class FlowerLayer extends JComponent implements Runnable {
                     alpha2 = 1.0 - alpha1;
                     maxRad = maxRad1 * alpha1 + maxRad2 * alpha2;
                     shRad = shRad1 * alpha1 + shRad2 * alpha2;
-                    clr = mixColors(clr1.getRGB(), clr2.getRGB(), alpha1, alpha2);
+                    clr = mixColors(clr1, clr2, alpha1, alpha2);
 
                 } else {
                     // (a < secAngle)
@@ -230,31 +216,29 @@ public class FlowerLayer extends JComponent implements Runnable {
                     // alpha2 = 1; - don't need to assign
                     maxRad = maxRad2;
                     shRad = shRad2;
-                    clr = clr2.getRGB();
+                    clr = clr2;
                 }
 
                 // transparency depends on radius
                 if (r >= (maxRad - shRad)
-                        // main body, pixel color is calculated above, do nothing
                         && r < maxRad) {
                     // transparency from (maxRad - shRad) to (maxRad)
                     int alpha = (int) (((maxRad - r) / shRad) // current shade coordinate
                             * ((clr >> 24) & 0xff));              // alpha channel from the pix
                     clr = (clr & 0xffffff) | ((alpha & 0xff) << 24);
 
-                } else {
-                    // (r >= maxRad)
+                } else if (r >= maxRad) {
                     // pixel is outside the radius
                     clr = 0;
                 }
 
-                imgOrig.setRGB(x, y, clr);
+                imgBuf[x + y * 400] = clr;
             }
         }
     }
 
     /**
-     * Clears the frame before the animation start.
+     * Clears frame before the animation start.
      */
     private void clearFrame() {
         if (imgFrame != null) {
@@ -271,23 +255,25 @@ public class FlowerLayer extends JComponent implements Runnable {
     private void drawCurrentFrame() {
         int w = imgFrame.getWidth();
         int h = imgFrame.getHeight();
+        double cx = 400 / 2.0d; // center of the original image
+        double cy = 400 / 2.0d; // center of the original image
         int alpha;
 
         double dx, dy;     // coordinates relative to the center
-        double ox, oy;     // coordinates relative to the center
+        double ox, oy;     // coordinates of the original image
         double r, a;       // polar coordinates: radius and angle 
         int clr;           // color for every pixel 
 
         for (int x = 0; x < w; x++) {
-            
+
             if (x == rotationX) {
                 dx = 0;
             } else if (x < rotationX) {
-                dx = (x - rotationX) / rotationX * origCenterX;
+                dx = (x - rotationX) / rotationX * cx;
             } else {
-                dx = (x - rotationX) / (w - rotationX) * origCenterX;
+                dx = (x - rotationX) / (w - rotationX) * cx;
             }
-            
+
             for (int y = 0; y < h; y++) {
 
                 // We have a point (x, y) of the imgFrame. 
@@ -302,9 +288,9 @@ public class FlowerLayer extends JComponent implements Runnable {
                 if (y == rotationY) {
                     dy = 0;
                 } else if (y < rotationY) {
-                    dy = (rotationY - y) / rotationY * origCenterY;
+                    dy = (rotationY - y) / rotationY * cy;
                 } else {
-                    dy = (rotationY - y) / (h - rotationY) * origCenterY;
+                    dy = (rotationY - y) / (h - rotationY) * cy;
                 }
 
                 // calculating corresponding polar coordinates of the original image 
@@ -317,17 +303,18 @@ public class FlowerLayer extends JComponent implements Runnable {
                 a += angleCurrent;
 
                 // calculate new coordinates after rotate
-                ox = r * Math.cos(a) + origCenterX;
-                oy = r * Math.sin(a) + origCenterY;
+                ox = r * Math.cos(a) + cx;
+                oy = r * Math.sin(a) + cy;
 
                 // getting pixel color from the new coordinates
-                if (ox < 0 || ox >= imgOrig.getWidth()
-                        || oy < 0 || oy >= imgOrig.getHeight()) {
+                if (ox < 0 || ox >= 400
+                        || oy < 0 || oy >= 400) {
                     clr = 0;
                 } else {
-                    clr = imgOrig.getRGB((int) ox, (int) oy);
+                    clr = imgBuf[(int) ox + (int) oy * 400];
                 }
 
+                // apply the opacity
                 if (masterAlpha < 1) {
                     alpha = (clr >> 24) & 0xff;
                     if (alpha != 0) {

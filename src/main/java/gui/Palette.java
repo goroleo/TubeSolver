@@ -36,8 +36,15 @@ public class Palette extends ArrayList<Color> {
      * Counters of used colors at the board
      */
     public static UsedColors usedColors;
+
+    /**
+     * Properties to load/save to/from the file.
+     */
     private final Properties paletteProps;
 
+    /**
+     * Creates the palette.
+     */
     public Palette() {
         paletteProps = new Properties();
 

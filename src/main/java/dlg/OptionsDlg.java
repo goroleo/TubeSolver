@@ -161,7 +161,7 @@ public class OptionsDlg extends JDialog {
             cbSaveAfterFill.setSelected(Options.saveGameAfterFill);
             cbSaveAfterSolve.setSelected(Options.saveGameAfterSolve);
             cbSaveBeforeClose.setSelected(Options.saveGameBeforeClose);
-            Main.frame.setGameMode(MainFrame.BUZY_MODE);
+            Main.frame.setGameMode(MainFrame.BUSY_MODE);
         }
         super.setVisible(b);
     }

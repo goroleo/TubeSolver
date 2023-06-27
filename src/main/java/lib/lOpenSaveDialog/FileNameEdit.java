@@ -10,11 +10,11 @@
 package lib.lOpenSaveDialog;
 
 import lib.lTextFields.LTextField;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
@@ -30,7 +30,6 @@ public class FileNameEdit extends LTextField implements FolderListener, FileList
     /**
      * FileEditPanel constructor
      */
-    @SuppressWarnings("MagicConstant")
     public FileNameEdit() {
 
         // configuring nameField
@@ -75,10 +74,9 @@ public class FileNameEdit extends LTextField implements FolderListener, FileList
 
     /**
      * This catches the folder change events
-     * @param folder current folder
      */
     @Override
-    public void updateFolder(File folder) {
+    public void updateFolder() {
         setValue(current.getDisplayedFileName());
     }
 

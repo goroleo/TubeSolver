@@ -25,7 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import static gui.MainFrame.pal;
+import static gui.MainFrame.palette;
 
 /**
  * Dialog to change palette colors.
@@ -52,7 +52,7 @@ public class PaletteDlg extends JDialog {
     public int modalResult = 3;
 
     /** Old palette colors, to restore the palette if the Cancel button will be pressed/clicked.  */
-    private static final Color[] oldPalette = new Color[pal.size()-1];
+    private static final Color[] oldPalette = new Color[palette.size()-1];
 
     /** The constructor. Creating a frame of Dialog and adding its components.
      * @param owner the parent frame to center the dialog.
@@ -69,19 +69,19 @@ public class PaletteDlg extends JDialog {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                btnClick(3);
+                clickButton(3);
             }
         });
 
         // ESCAPE pressed
         getRootPane().registerKeyboardAction(
-                (ActionEvent e) -> btnClick(0),
+                (ActionEvent e) -> clickButton(0),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
                 2); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
-                (ActionEvent e) -> btnClick(1),
+                (ActionEvent e) -> clickButton(1),
                 KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
                 2); // WHEN_IN_FOCUSED_WINDOW
 
@@ -98,7 +98,7 @@ public class PaletteDlg extends JDialog {
             }
         };
 
-        for (int i = 0; i < pal.size() - 1; i++) {
+        for (int i = 0; i < palette.size() - 1; i++) {
             palPan.getButton(i).setCount(0);
         }
         palPan.setSpaces(5, 5);
@@ -138,10 +138,8 @@ public class PaletteDlg extends JDialog {
     @Override
     public void setVisible(boolean b) {
         if (b) {
-            saveOldPalette();
-            Main.frame.setGameMode(MainFrame.BUZY_MODE);
-        } else {
-//            Main.frame.setGameMode(MainFrame.prevMode);
+            storeOldPalette();
+            Main.frame.setGameMode(MainFrame.BUSY_MODE);
         }
         super.setVisible(b);
     }
@@ -159,7 +157,7 @@ public class PaletteDlg extends JDialog {
         btn.setForeground(null);
         btn.setFocusable(true);
         btn.setLocation(palPan.getWidth() + 30, cooY);
-        btn.addActionListener((ActionEvent e) -> btnClick(number));
+        btn.addActionListener((ActionEvent e) -> clickButton(number));
         btnHeight = btn.getHeight();
         btnWidth = btn.getWidth();
 
@@ -204,7 +202,7 @@ public class PaletteDlg extends JDialog {
      * Handles the control button click.
      * @param btnNum number of the button clicked
      */
-    private void btnClick(int btnNum) {
+    private void clickButton(int btnNum) {
         modalResult = btnNum;
         switch (btnNum) {
             case -1: // pressed 'close window' button
@@ -215,14 +213,14 @@ public class PaletteDlg extends JDialog {
                 EventQueue.invokeLater(this::dispose);
                 break;
             case 1: // pressed 'Apply / OK' button
-                pal.savePalette();
+                palette.savePalette();
                 saveOptions();
                 Main.frame.setGameMode(MainFrame.prevMode);
                 EventQueue.invokeLater(this::dispose);
                 break;
             case 4: // pressed 'default palette' button
-                pal.setDefaultPalette();
-                for (int i = 0; i < pal.size() - 1; i++) {
+                palette.setDefaultPalette();
+                for (int i = 0; i < palette.size() - 1; i++) {
                     palPan.getButton(i).repaintColor();
                 }
                 if (cbShowChanges.isSelected()) {
@@ -233,16 +231,16 @@ public class PaletteDlg extends JDialog {
     }
 
     /** Saves palette colors before show this dialog to make a possibility to restore them. */
-    private void saveOldPalette() {
-        for (int i = 0; i < pal.size()-1; i++) {
-            oldPalette[i] = pal.get(i+1);
+    private void storeOldPalette() {
+        for (int i = 0; i < palette.size()-1; i++) {
+            oldPalette[i] = palette.get(i+1);
         }
     }
 
     /** Restores palette colors if Cancel button has been clicked. */
     private void restoreOldPalette() {
-        for (int i = 0; i < pal.size()-1; i++) {
-            pal.set(i+1, oldPalette[i]);
+        for (int i = 0; i < palette.size()-1; i++) {
+            palette.set(i+1, oldPalette[i]);
         }
         updateColors();
     }
@@ -278,11 +276,11 @@ public class PaletteDlg extends JDialog {
      */
     private void changeColor(ColorButton cb) {
 
-        LColorDialog lcd = new LColorDialog(Main.frame, pal.getColor(cb.getColorNumber()));
+        LColorDialog lcd = new LColorDialog(Main.frame, palette.getColor(cb.getColorNumber()));
         lcd.setBackground(Palette.dialogColor);
-        lcd.addColorListener(() -> {
 
-            pal.set(cb.getColorNumber(), lcd.getColor());
+        lcd.addColorListener(() -> {
+            palette.set(cb.getColorNumber(), lcd.getColor());
             cb.repaintColor();
             if (cbShowChanges.isSelected()) {
                 updateColor(cb.getColorNumber());
@@ -303,7 +301,7 @@ public class PaletteDlg extends JDialog {
         Options.ccdPositionY = lcd.getY();
         Options.ccdDialogMode = lcd.getDialogMode();
 
-        pal.set(cb.getColorNumber(), newColor);
+        palette.set(cb.getColorNumber(), newColor);
         cb.repaintColor();
     }
 

@@ -14,8 +14,14 @@ import core.ResStrings;
 import gui.MainFrame;
 import static java.awt.EventQueue.invokeLater;
 
+/**
+ * Runnable class of the application
+ */
 public class Main {
 
+    /**
+     * Application's main frame
+     */
     public static MainFrame frame;
 
     /**

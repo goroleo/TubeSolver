@@ -150,7 +150,7 @@ public class FilesPanel extends JComponent implements FolderListener {
                         }
                         break;
                     case KeyEvent.VK_F5:
-                        refreshFolder();
+                        updateFolder();
                         break;
                     case KeyEvent.VK_BACK_SPACE:
                         current.upFolder();
@@ -255,14 +255,6 @@ public class FilesPanel extends JComponent implements FolderListener {
         header.setColumnWidths(name, size, date);
     }
 
-
-    /**
-     * Updates and refresh the current folder, reload the FilesList contents.
-     */
-    public void refreshFolder() {
-        updateFolder(current.getFolder());
-    }
-
     /**
      * Sorts the FilesList.
      *
@@ -332,9 +324,13 @@ public class FilesPanel extends JComponent implements FolderListener {
         }
     }
 
+    /**
+     * Updates and refresh the current folder, reload the FilesList contents.
+     * Also used when the folder has changed.
+     */
     @Override
-    public void updateFolder(File folder) {
-        fileList.setFolder(folder);
+    public void updateFolder() {
+        fileList.setFolder(current.getFolder());
         scrollbar.setPosition(0);
         updateComponents();
     }

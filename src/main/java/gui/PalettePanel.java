@@ -18,7 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import static gui.MainFrame.pal;
+import static gui.MainFrame.palette;
 import static run.Main.frame;
 
 /**
@@ -87,7 +87,7 @@ public class PalettePanel extends JComponent {
      */
     public PalettePanel() {
 
-        for (int i = 0; i < pal.size() - 1; i++) {
+        for (int i = 0; i < palette.size() - 1; i++) {
             ColorButton cb = new ColorButton(i);
             cb.addActionListener((ActionEvent e) -> clickButton(cb));
             colors.add(cb);
@@ -287,7 +287,7 @@ public class PalettePanel extends JComponent {
                 break;
         }
         setLocation(r.x, r.y);
-        frame.redockTubes();
+        frame.updateTubesPos();
     }
 
     /**
@@ -348,7 +348,7 @@ public class PalettePanel extends JComponent {
      * Sets the default palette colors to all color buttons
      */
     public void setDefaultPalette() {
-        pal.setDefaultPalette();
+        palette.setDefaultPalette();
         updateColors();
     }
 
@@ -356,7 +356,7 @@ public class PalettePanel extends JComponent {
      * This routine updates and repaints all the color buttons
      */
     public void updateColors() {
-        for (int i = 0; i < pal.size() - 1; i++) {
+        for (int i = 0; i < palette.size() - 1; i++) {
             getButton(i).repaintColor();
         }
     }
