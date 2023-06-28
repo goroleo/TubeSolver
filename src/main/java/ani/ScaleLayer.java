@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package ani;
@@ -59,6 +59,7 @@ public class ScaleLayer extends JComponent implements Runnable {
 
     /**
      * Creates the Scale Layer.
+     *
      * @param bi image to scale.
      */
     public ScaleLayer(BufferedImage bi) {
@@ -67,6 +68,7 @@ public class ScaleLayer extends JComponent implements Runnable {
 
     /**
      * Sets the image to scale.
+     *
      * @param bi new buffered image.
      */
     public void setImage(BufferedImage bi) {

@@ -41,6 +41,7 @@ public class MainFrame extends JFrame {
 //////////////////////////////////////////////////////////////////////////////
     /**
      * The current game mode. The mode can be as follows:
+     *
      * @see #PLAY_MODE
      * @see #ASSIST_MODE
      * @see #FILL_MODE
@@ -51,6 +52,7 @@ public class MainFrame extends JFrame {
 
     /**
      * The previous mode of the game.
+     *
      * @see #gameMode
      */
     public static int prevMode; // previous mode
@@ -263,8 +265,8 @@ public class MainFrame extends JFrame {
                 && Options.mainPositionY >= 0
                 && Options.mainPositionX + Options.mainSizeX <= screenSize.width
                 && Options.mainPositionY + Options.mainSizeY <= screenSize.height) {
-            startDlg.setLocation(Options.mainPositionX + (Options.mainSizeX - startDlg.getWidth())/2,
-                    Options.mainPositionY + (Options.mainSizeY - startDlg.getHeight())/2);
+            startDlg.setLocation(Options.mainPositionX + (Options.mainSizeX - startDlg.getWidth()) / 2,
+                    Options.mainPositionY + (Options.mainSizeY - startDlg.getHeight()) / 2);
         }
 
         EventQueue.invokeLater(() -> startDlg.setVisible(true));
@@ -337,9 +339,9 @@ public class MainFrame extends JFrame {
      * @return true if the game loaded successfully, false otherwise
      */
     public boolean loadGame(String fileName) {
-        clearBoard();
         boolean result = TubesIO.loadFromFile(fileName);
         if (result) {
+            clearBoard();
             setGameMode(TubesIO.getGameMode());
             if (gameMode == FILL_MODE) {
                 addColorsPanel();
@@ -485,12 +487,19 @@ public class MainFrame extends JFrame {
         }
         gameMoves.clear();
         movesDone = 0;
-        TubesIO.clearMoves();
-        TubesIO.clearTubes();
         Palette.usedColors.clearColorCounts();
         toolPan.updateButtons();
         repaint();
     }
+
+    /**
+     * Clears stored tubes and moves.
+     */
+    public void clearStored() {
+        TubesIO.clearMoves();
+        TubesIO.clearTubes();
+    }
+
 
     /**
      * Starts the manual fill game mode.
@@ -501,6 +510,7 @@ public class MainFrame extends JFrame {
     public void startFillMode(int aFilled, int aEmpty) {
         setGameMode(FILL_MODE);
         clearBoard();
+        clearStored();
         addColorsPanel();
         addTubesPanel(aFilled, aEmpty);
         filledTubes = aFilled;
@@ -533,6 +543,7 @@ public class MainFrame extends JFrame {
         fileNameEnding = ResStrings.getString("strSaveIDAutoFill");
         setGameMode(FILL_MODE);
         clearBoard();
+        clearStored();
         addTubesPanel(aFilled, aEmpty);
         filledTubes = aFilled;
         emptyTubes = aEmpty;
@@ -1205,7 +1216,7 @@ public class MainFrame extends JFrame {
                     if (Palette.usedColors.getAllUsedColors() >= filledTubes) {
                         disableUnusedColors();
                     }
-                    if (Palette.usedColors.getAllFilledColors() == palette.size()-1) {
+                    if (Palette.usedColors.getAllFilledColors() == palette.size() - 1) {
                         endFillMode();
                     }
                 }
@@ -1373,7 +1384,6 @@ public class MainFrame extends JFrame {
             tubesPan.reDock();
         }
     }
-
 
     /**
      * Updates Minimum size of the Frame after re-docking.

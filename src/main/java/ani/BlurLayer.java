@@ -20,43 +20,65 @@ import java.awt.image.BufferedImage;
  */
 public class BlurLayer extends JComponent implements Runnable {
 
-    /** The current value of opaque (from 0 to 0xff)  */
+    /**
+     * The current value of opaque (from 0 to 0xff)
+     */
     private int opaque = 0xff;
 
-    /** Step value of opaque for the next frame  */
+    /**
+     * Step value of opaque for the next frame
+     */
     private final int opaqueStep = 7;
 
-    /** Time delay after every frame */
+    /**
+     * Time delay after every frame
+     */
     private final int blurCount = 50;
 
-    /** The current blur value */
+    /**
+     * The current blur value
+     */
     private int blurStep;
 
-    /** Time delay after every frame */
+    /**
+     * Time delay after every frame
+     */
     private final int delay = 7;
 
-    /** An animation direction: blurring or hiding  */
+    /**
+     * An animation direction: blurring or hiding
+     */
     private boolean appearing = true;
 
-    /** A buffer to store pixels' info  */
+    /**
+     * A buffer to store pixels' info
+     */
     private int[] buf;
 
-    /** Layer's width.  */
+    /**
+     * Layer's width.
+     */
     private int w;
 
-    /** Layer's height.  */
+    /**
+     * Layer's height.
+     */
     private int h;
 
-    /** An image to draw every frame.  */
+    /**
+     * An image to draw every frame.
+     */
     private BufferedImage frame;
 
     /**
      * Creates of the blur layer.
      */
-    public BlurLayer() { }
+    public BlurLayer() {
+    }
 
     /**
      * Sets the original image.
+     *
      * @param bi an original image
      */
     public final void setImage(BufferedImage bi) {
@@ -199,6 +221,7 @@ public class BlurLayer extends JComponent implements Runnable {
 
     /**
      * This routine is called after the animation has done.
+     *
      * @param appearing the direction of the animation performed: appearing (blurring) if <i>true</i>, or hiding if <i>false</i>.
      */
     public void onThreadFinished(boolean appearing) {

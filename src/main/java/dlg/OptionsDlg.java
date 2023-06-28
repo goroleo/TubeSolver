@@ -41,6 +41,7 @@ public class OptionsDlg extends JDialog {
 
     /**
      * Creates the Options dialog.
+     *
      * @param owner parent frame
      */
     @SuppressWarnings("MagicConstant")
@@ -168,6 +169,7 @@ public class OptionsDlg extends JDialog {
 
     /**
      * Creates and sets up the new checkbox.
+     *
      * @return checkbox created
      */
     @SuppressWarnings("MagicConstant")
@@ -185,6 +187,7 @@ public class OptionsDlg extends JDialog {
 
     /**
      * Creates and sets up the new panel.
+     *
      * @return panel created
      */
     private JPanel newPanel() {
@@ -249,6 +252,7 @@ public class OptionsDlg extends JDialog {
 
     /**
      * Handles the language checkbox click / change.
+     *
      * @param num number of the checkbox.
      */
     private void setLangNum(int num) {
@@ -281,6 +285,7 @@ public class OptionsDlg extends JDialog {
 
     /**
      * Draws the caption of the panel.
+     *
      * @param g panel's graphics instance to draw.
      * @param s panel caption.
      */

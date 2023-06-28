@@ -229,6 +229,7 @@ public class WaveLayer extends JComponent implements Runnable {
 
     /**
      * Creates a WaveLayer
+     *
      * @param bi image that has a wave animation.
      */
     public WaveLayer(BufferedImage bi) {
@@ -239,6 +240,7 @@ public class WaveLayer extends JComponent implements Runnable {
 
     /**
      * Sets an image to animate.
+     *
      * @param bi image
      */
     public void setImage(BufferedImage bi) {

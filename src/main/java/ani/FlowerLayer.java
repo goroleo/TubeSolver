@@ -113,10 +113,11 @@ public class FlowerLayer extends JComponent implements Runnable {
 
     /**
      * Mixes two colors. Please note (w1 + w2) must be 1 or less.
+     *
      * @param clr1 first color
      * @param clr2 second color
-     * @param w1 first color's weight fraction (from 0 to 1)
-     * @param w2 second color's weight fraction (from 0 to 1)
+     * @param w1   first color's weight fraction (from 0 to 1)
+     * @param w2   second color's weight fraction (from 0 to 1)
      * @return mixed color
      */
     private int mixColors(int clr1, int clr2, double w1, double w2) {

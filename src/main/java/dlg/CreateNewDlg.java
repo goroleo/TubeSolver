@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package dlg;
@@ -12,6 +12,7 @@ package dlg;
 import core.Options;
 import gui.Palette;
 import core.ResStrings;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -25,6 +26,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.KeyStroke;
+
 import lib.lButtons.LPictureButton;
 import lib.lButtons.LToolButton;
 import lib.lTextFields.LDecTextField;
@@ -52,6 +54,7 @@ public class CreateNewDlg extends JDialog {
 
     /**
      * Creates the dialog.
+     *
      * @param owner frame owner
      */
     @SuppressWarnings("MagicConstant")
@@ -195,6 +198,7 @@ public class CreateNewDlg extends JDialog {
 
     /**
      * Updates tubes counts when one of the field changed.
+     *
      * @param invoker the field that initiate changes. All other fields will be updated.
      */
     private void updateTubesCount(TubesCountField invoker) {
@@ -221,8 +225,9 @@ public class CreateNewDlg extends JDialog {
 
     /**
      * Adds label to the frame.
+     *
      * @param number number of the label.
-     * @param text label caption.
+     * @param text   label caption.
      * @return label created.
      */
     @SuppressWarnings("MagicConstant")
@@ -318,6 +323,7 @@ public class CreateNewDlg extends JDialog {
             btnMinus.setEnabled(tf.getValue() > tf.getMinValue());
             btnPlus.setEnabled(tf.getValue() < tf.getMaxValue());
         }
+
         public int getMaxValue() {
             return tf.getMaxValue();
         }

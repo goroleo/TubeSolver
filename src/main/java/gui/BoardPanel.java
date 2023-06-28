@@ -101,6 +101,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Adds a new ColorTube to the board.
+     *
      * @return a new color tube.
      */
     public ColorTube addNewTube() {
@@ -131,8 +132,9 @@ public class BoardPanel extends JComponent {
 
     /**
      * Adds some number of color tubes to the board.
+     *
      * @param filled number of filled tubes.
-     * @param empty number of empty tubes.
+     * @param empty  number of empty tubes.
      */
     public void addNewTubes(int filled, int empty) {
         for (int i = 0; i < filled; i++) {
@@ -151,6 +153,7 @@ public class BoardPanel extends JComponent {
     /**
      * Adds the popup menu to the board panel components.
      * We need to add it to every color tube and to the board itself.
+     *
      * @param comp a component to add the menu.
      */
     public final void addPopup(JComponent comp) {
@@ -227,6 +230,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Gets number of rows to display color tubes.
+     *
      * @return rows
      */
     public int getRows() {
@@ -235,6 +239,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Set rows to display color tubes.
+     *
      * @param newRows a new Rows value
      */
     public void setRows(int newRows) {
@@ -279,6 +284,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Calculates and sets position of color tube depending on the current columns and rows values.
+     *
      * @param number of the color tube to set its location.
      */
     private void setTubeLocation(int number) {
@@ -318,6 +324,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Gets the edge of the MainFrame the panel is docked to
+     *
      * @return current dockedTo value
      * @see #docked
      */
@@ -398,6 +405,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Determines if the game is solved already?
+     *
      * @return true if the board is solved, false otherwise.
      */
     public boolean isSolved() {
@@ -415,6 +423,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Gets the current Donor tube, from which the color cell will be got.
+     *
      * @return the donor tube or <i>null</i> if the donor is not stated.
      */
     public ColorTube getTubeFrom() {
@@ -423,6 +432,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Sets the Donor tube, from which the color cell will be got.
+     *
      * @param tube the new donor tube, or <i>null</i> if you want to clear the donor.
      */
     public void setTubeFrom(ColorTube tube) {
@@ -441,6 +451,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Gets the current Recipient tube, it which the color cell will be put.
+     *
      * @return the recipient tube or <i>null</i> if the recipient is not stated.
      */
     public ColorTube getTubeTo() {
@@ -449,6 +460,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Sets the current Recipient tube, it which the color cell will be put.
+     *
      * @param tube the new recipient tube, or <i>null</i> if you want to clear the recipient.
      */
     public void setTubeTo(ColorTube tube) {
@@ -521,6 +533,7 @@ public class BoardPanel extends JComponent {
 
     /**
      * Clears all colors from the specified tube.
+     *
      * @param tube specified color tube
      */
     public void clearTube(ColorTube tube) {
@@ -562,7 +575,7 @@ public class BoardPanel extends JComponent {
      * Doing the move!
      *
      * @param tubeFrom Donor color tube.
-     * @param tubeTo Recipient color tube.
+     * @param tubeTo   Recipient color tube.
      * @return count ot the transferred color cells.
      */
     public int moveColor(ColorTube tubeFrom, ColorTube tubeTo) {

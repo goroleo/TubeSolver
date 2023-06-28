@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package core;
@@ -16,34 +16,41 @@ import java.util.ResourceBundle;
 
 /**
  * A class to process languages/locales and resource strings. <br>
- *  All languages are stored in a files like
- *  <b>/resources/lang/</b>[lang_id]<b>.properties</b>.<br>
- *  Where <i>[lang_id]</i> is a three-letters lowercase language identifier, corresponding ISO 639-2.
- *  All language files must have EVERY string resource to avoid crashing the application.
+ * All languages are stored in a files like
+ * <b>/resources/lang/</b>[lang_id]<b>.properties</b>.<br>
+ * Where <i>[lang_id]</i> is a three-letters lowercase language identifier, corresponding ISO 639-2.
+ * All language files must have EVERY string resource to avoid crashing the application.
  */
 @SuppressWarnings("unused")
 public class ResStrings {
 
-    /** A current locale bundle  */
+    /**
+     * A current locale bundle
+     */
     private static ResourceBundle bundle;
 
     /**
      * Currently defined languages.
+     *
      * @see #fillLangsArray
      */
     private static final String[][] languages = {
-        {"eng", ""},
-        {"rus", ""},
-        {"ukr", ""},
-        {"blg", ""}
+            {"eng", ""},
+            {"rus", ""},
+            {"ukr", ""},
+            {"blg", ""}
     };
 
-    /** Creates resource bundle with English as the default. */
+    /**
+     * Creates resource bundle with English as the default.
+     */
     public ResStrings() {
         this("eng");
     }
 
-    /** Creates resource bundle with the specified language.
+    /**
+     * Creates resource bundle with the specified language.
+     *
      * @param langCode language ID, the three-letters ISO 639-2 language code
      */
     public ResStrings(String langCode) {
@@ -51,27 +58,34 @@ public class ResStrings {
         setBundle(langCode);
     }
 
-    /** Fills language array with Languages names from resources.  */
+    /**
+     * Fills language array with Languages names from resources.
+     */
     private static void fillLangsArray() {
         for (String[] lang : languages) {
             ResourceBundle b = java.util.ResourceBundle.getBundle("lang/" + lang[0]);
-            lang[1] = b.getString("LangID"); 
+            lang[1] = b.getString("LangID");
         }
     }
 
-    /** Check if language array is not filled.  */
+    /**
+     * Check if language array is not filled.
+     */
     private static void checkLangsArray() {
         if ("".equals(languages[0][1]))
             fillLangsArray();
     }
 
-    /** @return count of available languages.  */
+    /**
+     * @return count of available languages.
+     */
     public static int getLangsCount() {
         return languages.length;
     }
 
     /**
      * Get language ID (3-letters) by the language number.
+     *
      * @param number - language number in the array
      * @return language ID, the three-letters ISO 639-2 language code.
      */
@@ -84,6 +98,7 @@ public class ResStrings {
 
     /**
      * Get language name by the language number.
+     *
      * @param number language number in the array
      * @return full name of the language
      */
@@ -97,6 +112,7 @@ public class ResStrings {
 
     /**
      * Get language number by the language number.
+     *
      * @param langCode language ID, the three-letters ISO 639-2 language code
      * @return number of this language in the array
      */
@@ -112,6 +128,7 @@ public class ResStrings {
 
     /**
      * Get full language name by the language number.
+     *
      * @param langCode - language ID, the three-letters ISO 639-2 language code
      * @return full name of the language
      */
@@ -127,6 +144,7 @@ public class ResStrings {
 
     /**
      * Sets the current language bundle.
+     *
      * @param langCode - language ID, the three-letters ISO 639-2 language code
      */
     public static void setBundle(String langCode) {
@@ -150,6 +168,7 @@ public class ResStrings {
     /**
      * Gets the resource string from the current bundle.
      * Be careful with the parameter, that ID must be in the resource!
+     *
      * @param resID - the resource identifier.
      * @return the resource string from the desired language.
      */
@@ -164,5 +183,5 @@ public class ResStrings {
             return resID;
         }
     }
-    
+
 }

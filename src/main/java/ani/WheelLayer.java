@@ -174,7 +174,7 @@ public class WheelLayer extends JComponent implements Runnable {
     //
 
     /**
-     *  Creates a WheelLayer.
+     * Creates a WheelLayer.
      */
     public WheelLayer() {
         super();

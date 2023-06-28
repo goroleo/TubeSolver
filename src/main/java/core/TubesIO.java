@@ -123,9 +123,9 @@ public class TubesIO {
      * @return the path string
      */
     public static String getAppDir() {
-        String appDir = System.getProperty("user.home") + File.separator + ".tubesolver" + File.separator;
+        String appDir = System.getProperty("user.home") + File.separator
+                + ".tubesolver" + File.separator;
         File F = new File(appDir);
-        //noinspection ResultOfMethodCallIgnored
         F.mkdirs();
         return appDir;
     }
@@ -181,7 +181,6 @@ public class TubesIO {
      */
     public static final String tempFileName
             = getAppDirFile(".$notsolved.jctl");
-
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -343,6 +342,7 @@ public class TubesIO {
 
     /**
      * Stores the current game mode.
+     *
      * @param gm game mode.
      */
     public static void storeGameMode(int gm) {
@@ -351,6 +351,7 @@ public class TubesIO {
 
     /**
      * Gets stored game mode.
+     *
      * @return game mode
      */
     public static int getGameMode() {
@@ -359,7 +360,8 @@ public class TubesIO {
 
     /**
      * Stores tubes set from Tubes Board.
-     * @param bp Board Panel
+     *
+     * @param bp         Board Panel
      * @param emptyTubes how much empty tubes are at the board (used in GAME_FILL mode).
      */
     public static void storeTubes(BoardPanel bp, int emptyTubes) {
@@ -370,8 +372,10 @@ public class TubesIO {
             storedTubes[i] = bp.getTube(i).getModel().storeColors();
         }
     }
+
     /**
      * Fills stored tubes to the specified Board Panel
+     *
      * @param bp Board Panel to restore tubes
      */
     public static void restoreTubes(BoardPanel bp) {
@@ -380,7 +384,8 @@ public class TubesIO {
 
     /**
      * Fills stored tubes to the specified Board Panel
-     * @param bp Board Panel to restore tubes
+     *
+     * @param bp                Board Panel to restore tubes
      * @param hideFillAnimation if true, tubes will be filled without an animation.
      */
     public static void restoreTubes(BoardPanel bp, boolean hideFillAnimation) {
@@ -410,7 +415,7 @@ public class TubesIO {
         int stored; // one of stored tubes
         int i;
 
-        UsedColors colors = new UsedColors(MainFrame.palette.size()-1);
+        UsedColors colors = new UsedColors(MainFrame.palette.size() - 1);
         colors.clearColorCounts();
 
         // fill used colors array
@@ -435,6 +440,7 @@ public class TubesIO {
 
     /**
      * Gets count of empty tubes.
+     *
      * @return number of empty tubes
      */
     public static int getEmptyTubes() {
@@ -443,6 +449,7 @@ public class TubesIO {
 
     /**
      * Gets count of filled tubes.
+     *
      * @return number of filled tubes
      */
     public static int getFilledTubes() {
@@ -460,7 +467,8 @@ public class TubesIO {
 
     /**
      * Stores the moves list from the current game.
-     * @param gm GameMoves array
+     *
+     * @param gm    GameMoves array
      * @param moves how much moves has been passed.
      */
     public static void storeMoves(GameMoves gm, int moves) {
@@ -478,6 +486,7 @@ public class TubesIO {
 
     /**
      * Restores GameMoves array / list
+     *
      * @param gm GameMoves array to restore move items
      * @return how much moves has been passed.
      */

@@ -166,6 +166,7 @@ public class SolvePanel extends JComponent {
 
     /**
      * This routine calls when the blur animation has done.
+     *
      * @param b the direction of the animation performed: appearing (blurring) if <i>true</i>, or hiding if <i>false</i>.
      */
     public void onBlurThreadFinished(boolean b) {

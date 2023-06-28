@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2021 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package core;
@@ -46,8 +46,9 @@ public class Solver implements Runnable {
 
     /**
      * Constructor of the class Solver
+     *
      * @param startBoard the start configuration of the tubes board
-     * @param breakStop how much tries before we'll break the solving and start it again with the new color
+     * @param breakStop  how much tries before we'll break the solving and start it again with the new color
      */
     public Solver(BoardModel startBoard, int breakStop) {
         setStartTubes(startBoard);
@@ -57,6 +58,7 @@ public class Solver implements Runnable {
 
     /**
      * Sets the start tubes board
+     *
      * @param startBoard the start configuration of the tubes board
      */
     public final void setStartTubes(BoardModel startBoard) {
@@ -67,7 +69,7 @@ public class Solver implements Runnable {
         } else {
             board.clear();
         }
-        
+
         // copying board tubes into new model 
         for (int i = 0; i < startBoard.size(); i++) {
             board.addNewTube();
@@ -77,6 +79,7 @@ public class Solver implements Runnable {
 
     /**
      * Sets the breakStop
+     *
      * @param breakStop how much tries before we'll break the solving and start it again with the new color
      * @see #breakStop
      * @see #useBreak
@@ -216,7 +219,7 @@ public class Solver implements Runnable {
                 gameMoves.add(movesDone, move.storeMove());
                 move = move.parent;
             } while (move != null);
-            
+
 //            System.out.println("Solved! " + "Count: " + myCount);
 //            System.out.println("Time: " + workingTime + " ms");
 //            System.out.println("Break: " + breakStop);

@@ -27,24 +27,36 @@ import java.awt.image.BufferedImage;
  */
 public class CongratsPanel extends JComponent {
 
-    /** The image of the award ribbon. */
+    /**
+     * The image of the award ribbon.
+     */
     private static final BufferedImage imgRibbon
             = core.Options.createBufImage("imgBadge_ribbon.png");
 
-    /** The image of the congratulatory text. */
+    /**
+     * The image of the congratulatory text.
+     */
     private static final BufferedImage imgText
             = core.Options.createBufImage("imgBadge_text.png");
 
-    /** The rotating flower layer.  */
+    /**
+     * The rotating flower layer.
+     */
     private final FlowerLayer flower;
 
-    /** The award ribbon layer. */
+    /**
+     * The award ribbon layer.
+     */
     private final ScaleLayer ribbon;
 
-    /** The congratulatory text layer. */
+    /**
+     * The congratulatory text layer.
+     */
     private final WaveLayer text;
 
-    /** Constructor. It creates the panel and adds layers. */
+    /**
+     * Constructor. It creates the panel and adds layers.
+     */
     public CongratsPanel() {
         setBackground(null);
         setForeground(null);
@@ -104,7 +116,7 @@ public class CongratsPanel extends JComponent {
         int w = Math.max(imgRibbon.getWidth(), MainFrame.tubesPan.getWidth());
         int h = Math.max(imgRibbon.getHeight(), MainFrame.tubesPan.getHeight());
 
-        setBounds(r.x + (r.width - w) / 2,r.y + (r.height - h) / 2, w, h);
+        setBounds(r.x + (r.width - w) / 2, r.y + (r.height - h) / 2, w, h);
     }
 
     /**
@@ -122,7 +134,5 @@ public class CongratsPanel extends JComponent {
         setVisible(false);
         StartDlg startFrame = new StartDlg(Main.frame);
         EventQueue.invokeLater(() -> startFrame.setVisible(true));
-
     }
-
 }

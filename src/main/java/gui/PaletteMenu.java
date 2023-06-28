@@ -22,6 +22,7 @@ import static gui.MainFrame.palPan;
 
 /**
  * The popup menu for the Palette Panel and Color Buttons.
+ *
  * @see PalettePanel
  * @see ColorButton
  */
@@ -33,49 +34,79 @@ public class PaletteMenu extends LPopupMenu {
 //
 ///////////////////////////////////////////////////////////////////////////
 
-    /** This menu caption. */
+    /**
+     * This menu caption.
+     */
     private final JMenuItem pal;
 
-    /** Docked position menu item. */
+    /**
+     * Docked position menu item.
+     */
     private final JMenu pos;
 
-    /** Position menu item: docked to top. */
+    /**
+     * Position menu item: docked to top.
+     */
     private final JMenuItem top;
 
-    /** Position menu item: docked to bottom. */
+    /**
+     * Position menu item: docked to bottom.
+     */
     private final JMenuItem bottom;
 
-    /** Position menu item: docked to left. */
+    /**
+     * Position menu item: docked to left.
+     */
     private final JMenuItem left;
 
-    /** Position menu item: docked to right. */
+    /**
+     * Position menu item: docked to right.
+     */
     private final JMenuItem right;
 
-    /** Lines menu item (number of rows or cols at the Palette panel). */
+    /**
+     * Lines menu item (number of rows or cols at the Palette panel).
+     */
     private final JMenu lines;
 
-    /** lines menu item: 1. */
+    /**
+     * lines menu item: 1.
+     */
     private final JMenuItem lines1;
 
-    /** lines menu item: 2. */
+    /**
+     * lines menu item: 2.
+     */
     private final JMenuItem lines2;
 
-    /** lines menu item: 3. */
+    /**
+     * lines menu item: 3.
+     */
     private final JMenuItem lines3;
 
-    /** Menu separator. */
+    /**
+     * Menu separator.
+     */
     private final JSeparator sep1;
 
-    /** Color change menu item. */
+    /**
+     * Color change menu item.
+     */
     private final JMenuItem change;
 
-    /** Default palette menu item. */
+    /**
+     * Default palette menu item.
+     */
     private final JMenuItem def;
 
-    /** Corresponding ColorButton to change its color. */
+    /**
+     * Corresponding ColorButton to change its color.
+     */
     private ColorButton correspButton;
 
-    /** The Image to get the Icon of the corresponding Button's color. */
+    /**
+     * The Image to get the Icon of the corresponding Button's color.
+     */
     private final BufferedImage icon = new BufferedImage(16, 16, 1);
 
 ///////////////////////////////////////////////////////////////////////////
@@ -193,6 +224,7 @@ public class PaletteMenu extends LPopupMenu {
 
     /**
      * Shows or hides Color change menu item.
+     *
      * @param doShow set true to show the item, false to hide it.
      */
     public void showColorChange(boolean doShow) {
@@ -202,6 +234,7 @@ public class PaletteMenu extends LPopupMenu {
 
     /**
      * Shows the corresponding color icon at the Color Change menu item.
+     *
      * @param clr the color
      */
     public void setColorIcon(Color clr) {
@@ -249,6 +282,7 @@ public class PaletteMenu extends LPopupMenu {
 
     /**
      * Gets the current lines (rows, cols) value and shows icon at the proper item.
+     *
      * @param number number of lines
      */
     private void updateLinesIcons(int number) {

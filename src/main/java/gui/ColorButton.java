@@ -150,6 +150,7 @@ public class ColorButton extends JButton {
 
     /**
      * The constructor. Creates the Button and adds layers.
+     *
      * @param number Button number in the Palette Panel.
      */
     public ColorButton(int number) {
@@ -211,7 +212,9 @@ public class ColorButton extends JButton {
         super.setBounds(x, y, width, height);
     }
 
-    /** Redraws button layers depending on the current button state. */
+    /**
+     * Redraws button layers depending on the current button state.
+     */
     private void changeButtonState() {
         if (isEnabled()) {
             if (getModel().isPressed()) {
@@ -236,7 +239,9 @@ public class ColorButton extends JButton {
         }
     }
 
-    /** Changes the color by call the Color dialog. Used when the button is clicked/pressed.    */
+    /**
+     * Changes the color by call the Color dialog. Used when the button is clicked/pressed.
+     */
     public void changeColor() {
         Color oldColor = MainFrame.palette.getColor(colorNumber);
 
@@ -247,7 +252,8 @@ public class ColorButton extends JButton {
             lcd.setLocation(core.Options.ccdPositionX, core.Options.ccdPositionY);
         }
         if (Options.ccdDialogMode < 0 || Options.ccdDialogMode > 5) {
-            Options.ccdDialogMode = 0; }
+            Options.ccdDialogMode = 0;
+        }
         lcd.setDialogMode(Options.ccdDialogMode);
 
         Color newColor = lcd.chooseColor();
@@ -265,27 +271,37 @@ public class ColorButton extends JButton {
         repaintColor();
     }
 
-    /** Repaints the color layer by the current palette color value. */
+    /**
+     * Repaints the color layer by the current palette color value.
+     */
     public void repaintColor() {
         colorLayer.setColor(MainFrame.palette.getColor(colorNumber));
     }
 
-    /** Decrements the counter value by one. */
+    /**
+     * Decrements the counter value by one.
+     */
     public void decCount() {
         setCount(count - 1);
     }
 
-    /** Increments the counter value by one. */
+    /**
+     * Increments the counter value by one.
+     */
     public void incCount() {
         setCount(count + 1);
     }
 
-    /** @return the counter value. */
+    /**
+     * @return the counter value.
+     */
     public int getCount() {
         return count;
     }
 
-    /** Sets the new counter value.
+    /**
+     * Sets the new counter value.
+     *
      * @param newCount new counter value
      */
     public final void setCount(int newCount) {
@@ -319,21 +335,27 @@ public class ColorButton extends JButton {
         countLayer.start();
     }
 
-    /** Gets the color of this button.
+    /**
+     * Gets the color of this button.
+     *
      * @return the current color from the palette.
      */
     public Color getColor() {
         return MainFrame.palette.get(colorNumber);
     }
 
-    /** Gets the color number of this button.
+    /**
+     * Gets the color number of this button.
+     *
      * @return the current color number from the palette.
      */
     public int getColorNumber() {
         return colorNumber;
     }
 
-    /** Loads layer images from application resources.  */
+    /**
+     * Loads layer images from application resources.
+     */
     private void loadImages() {
         if (imgShade == null) {
             imgShade = core.Options.createBufImage("imgColor_shade_gray.png");

@@ -1,15 +1,16 @@
 /*
  * Copyright (c) 2021 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package core;
 
 import static gui.Palette.usedColors;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -129,7 +130,7 @@ public class BoardModel extends ArrayList<TubeModel> {
      * Creates and adds new move to the move's list.
      *
      * @param idxFrom index of the donator tube
-     * @param idxTo index of the recipient tube
+     * @param idxTo   index of the recipient tube
      * @return new ColorMove
      * @see ColorMoveItem
      */
@@ -153,7 +154,7 @@ public class BoardModel extends ArrayList<TubeModel> {
      * Creates and adds new move to the move's list.
      *
      * @param ctFrom donator tube
-     * @param ctTo recipient tube
+     * @param ctTo   recipient tube
      * @return new ColorMove
      * @see ColorMoveItem
      */
@@ -201,7 +202,7 @@ public class BoardModel extends ArrayList<TubeModel> {
      * tube to another. Donator tube must be not empty and not closed.
      *
      * @param ctFrom donator tube
-     * @param ctTo recipient tube
+     * @param ctTo   recipient tube
      * @return true or false
      */
     public boolean canMakeMove(TubeModel ctFrom, TubeModel ctTo) {
@@ -215,7 +216,7 @@ public class BoardModel extends ArrayList<TubeModel> {
      * tube to another.
      *
      * @param idxFrom index of the donator tube
-     * @param idxTo index of the recipient tube
+     * @param idxTo   index of the recipient tube
      * @return true or false
      */
     public boolean canMakeMove(int idxFrom, int idxTo) {
@@ -258,14 +259,14 @@ public class BoardModel extends ArrayList<TubeModel> {
         ColorMoveItem cm;
         int result = 0;
 
-       /*
-        * We can have more than one empty tube at the current board. 
-        * Each empty tube repeats the already calculated moves again, 
-        * moves are unnecessarily duplicated.
-        * We don't need to increase unnecessarily the number of available 
-        * moves and then calculate their consequences. Therefore, we will 
-        * not calculate the second and subsequent empty tubes.
-        */
+        /*
+         * We can have more than one empty tube at the current board.
+         * Each empty tube repeats the already calculated moves again,
+         * moves are unnecessarily duplicated.
+         * We don't need to increase unnecessarily the number of available
+         * moves and then calculate their consequences. Therefore, we will
+         * not calculate the second and subsequent empty tubes.
+         */
         boolean emptyTubeProcessed = false; // true if one of empty tube has processed already
 
         fillAvailableColors();
@@ -356,7 +357,7 @@ public class BoardModel extends ArrayList<TubeModel> {
      * Doing move
      *
      * @param ctFrom Donator tube
-     * @param ctTo Recipient tube
+     * @param ctTo   Recipient tube
      * @return number of colors that were be moved
      */
     public int moveColor(TubeModel ctFrom, TubeModel ctTo) {
@@ -376,7 +377,7 @@ public class BoardModel extends ArrayList<TubeModel> {
      * Doing move
      *
      * @param idxFrom index of the Donator tube
-     * @param idxTo index of the Recipient tube
+     * @param idxTo   index of the Recipient tube
      * @return number of colors that were be moved
      */
     public int moveColor(int idxFrom, int idxTo) {

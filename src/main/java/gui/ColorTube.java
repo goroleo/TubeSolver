@@ -47,6 +47,7 @@ public class ColorTube extends JComponent {
 // --- Layers: ---
     /**
      * The layer with color cells.
+     *
      * @see ColorLayer
      */
     private final ColorLayer colors;
@@ -118,7 +119,7 @@ public class ColorTube extends JComponent {
      */
     public final static int ARROW_YELLOW = 2;
 
-// --- Tube states: ---
+    // --- Tube states: ---
     private boolean active = true;
 
     /**
@@ -575,6 +576,7 @@ public class ColorTube extends JComponent {
     /**
      * The routine for introducing additional conditions for showing an arrow above the tube.
      * You can override it.
+     *
      * @return all what you want (now true)
      */
     public boolean canShowArrow() {
@@ -585,6 +587,7 @@ public class ColorTube extends JComponent {
     /**
      * The routine for introducing additional conditions for hiding an arrow above the tube.
      * You can override it.
+     *
      * @return all what you want (now true)
      */
     public boolean canHideArrow() {
@@ -627,5 +630,4 @@ public class ColorTube extends JComponent {
             imgArrowGreen = core.Options.createBufImage("imgTube_arrow_out_green.png");
         }
     }
-
 }

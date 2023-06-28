@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2021 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package core;
@@ -48,7 +48,7 @@ public class UsedColors {
     /**
      * Increases the number of colors by a specific value.
      *
-     * @param clr number of the palette's color.
+     * @param clr   number of the palette's color.
      * @param count value to increase color's use.
      */
     public void incColorCount(byte clr, int count) {
@@ -67,7 +67,7 @@ public class UsedColors {
     /**
      * Set the count value for a specific color.
      *
-     * @param clr number of the palette's color
+     * @param clr   number of the palette's color
      * @param value new count
      */
     public void setColorCount(byte clr, int value) {
@@ -123,6 +123,7 @@ public class UsedColors {
 
     /**
      * Returns the count of all colors not used at the board.
+     *
      * @return count of all available colors.
      */
     public int getAvailableColors() {
@@ -135,6 +136,7 @@ public class UsedColors {
 
     /**
      * Returns the random unused color.
+     *
      * @return Palette's color number
      */
     public byte getRandomColor() {

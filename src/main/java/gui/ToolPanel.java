@@ -434,6 +434,7 @@ public class ToolPanel extends JPanel {
                             MessageDlg.BTN_OK);
                     msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
                     msgDlg.setVisible(true);
+                    Main.frame.setGameMode(MainFrame.prevMode);
                 }
             } else {
                 Main.frame.setGameMode(MainFrame.prevMode);

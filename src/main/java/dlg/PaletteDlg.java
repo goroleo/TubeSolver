@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package dlg;
@@ -32,29 +32,45 @@ import static gui.MainFrame.palette;
  */
 public class PaletteDlg extends JDialog {
 
-    /** Palette panel with color buttons  */
+    /**
+     * Palette panel with color buttons
+     */
     private final PalettePanel palPan;
 
-    /** The parent frame to locate this dialog relative to parent.  */
+    /**
+     * The parent frame to locate this dialog relative to parent.
+     */
     private final JFrame parent;
 
-    /** A CheckBox "Show colors change".  */
+    /**
+     * A CheckBox "Show colors change".
+     */
     private final JCheckBox cbShowChanges;
 
-    /** Width of control buttons used for calculating dialog size. */
+    /**
+     * Width of control buttons used for calculating dialog size.
+     */
     private int btnWidth;
 
-    /** Height of control buttons, used for calculating dialog size. */
+    /**
+     * Height of control buttons, used for calculating dialog size.
+     */
     private int btnHeight;
 
-    /** Modal result of the dialog, a number of the button causes it to close. */
+    /**
+     * Modal result of the dialog, a number of the button causes it to close.
+     */
     @SuppressWarnings("unused")
     public int modalResult = 3;
 
-    /** Old palette colors, to restore the palette if the Cancel button will be pressed/clicked.  */
-    private static final Color[] oldPalette = new Color[palette.size()-1];
+    /**
+     * Old palette colors, to restore the palette if the Cancel button will be pressed/clicked.
+     */
+    private static final Color[] oldPalette = new Color[palette.size() - 1];
 
-    /** The constructor. Creating a frame of Dialog and adding its components.
+    /**
+     * The constructor. Creating a frame of Dialog and adding its components.
+     *
      * @param owner the parent frame to center the dialog.
      */
     @SuppressWarnings("MagicConstant")
@@ -146,9 +162,10 @@ public class PaletteDlg extends JDialog {
 
     /**
      * Adds a control button to the dialog.
-     * @param number number of the button that means the dialog modal result.
+     *
+     * @param number   number of the button that means the dialog modal result.
      * @param aCaption caption (text) on the button.
-     * @param cooY the Y coordinate.
+     * @param cooY     the Y coordinate.
      */
     private void addButton(int number, String aCaption, int cooY) {
         LPictureButton btn = new LPictureButton(this, "btnDialog");
@@ -164,7 +181,9 @@ public class PaletteDlg extends JDialog {
         getContentPane().add(btn);
     }
 
-    /** Calculates and sets the dialog size. */
+    /**
+     * Calculates and sets the dialog size.
+     */
     private void calculateSize() {
         setResizable(true);
         Dimension dim = new Dimension();
@@ -182,7 +201,9 @@ public class PaletteDlg extends JDialog {
         setResizable(false);
     }
 
-    /** Calculates and sets the dialog location. */
+    /**
+     * Calculates and sets the dialog location.
+     */
     private void calculatePos() {
         Rectangle r = getGraphicsConfiguration().getBounds();
         if (Options.pdPositionX >= 0 && Options.pdPositionY >= 0
@@ -200,6 +221,7 @@ public class PaletteDlg extends JDialog {
 
     /**
      * Handles the control button click.
+     *
      * @param btnNum number of the button clicked
      */
     private void clickButton(int btnNum) {
@@ -230,23 +252,28 @@ public class PaletteDlg extends JDialog {
         }
     }
 
-    /** Saves palette colors before show this dialog to make a possibility to restore them. */
+    /**
+     * Saves palette colors before show this dialog to make a possibility to restore them.
+     */
     private void storeOldPalette() {
-        for (int i = 0; i < palette.size()-1; i++) {
-            oldPalette[i] = palette.get(i+1);
+        for (int i = 0; i < palette.size() - 1; i++) {
+            oldPalette[i] = palette.get(i + 1);
         }
     }
 
-    /** Restores palette colors if Cancel button has been clicked. */
+    /**
+     * Restores palette colors if Cancel button has been clicked.
+     */
     private void restoreOldPalette() {
-        for (int i = 0; i < palette.size()-1; i++) {
-            palette.set(i+1, oldPalette[i]);
+        for (int i = 0; i < palette.size() - 1; i++) {
+            palette.set(i + 1, oldPalette[i]);
         }
         updateColors();
     }
 
     /**
      * Repaints one color on all panels of the MainFrame.
+     *
      * @param colorNum A number of the Color in the Palette.
      */
     private void updateColor(int colorNum) {
@@ -272,6 +299,7 @@ public class PaletteDlg extends JDialog {
 
     /**
      * Change the color by clicked on Color Button.
+     *
      * @param cb Specified Color Button
      */
     private void changeColor(ColorButton cb) {
@@ -291,7 +319,8 @@ public class PaletteDlg extends JDialog {
             lcd.setLocation(Options.ccdPositionX, Options.ccdPositionY);
         }
         if (Options.ccdDialogMode < 0 || Options.ccdDialogMode > 5) {
-            Options.ccdDialogMode = 0; }
+            Options.ccdDialogMode = 0;
+        }
         lcd.setDialogMode(Options.ccdDialogMode);
 
         Color newColor = lcd.chooseColor();

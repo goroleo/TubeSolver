@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2022 legoru / goroleo <legoru@me.com>
- * 
+ *
  * This software is distributed under the <b>MIT License.</b>
- * The full text of the License you can read here: 
+ * The full text of the License you can read here:
  * https://choosealicense.com/licenses/mit/
- * 
+ *
  * Use this as you want! ))
  */
 package gui;
@@ -13,12 +13,14 @@ import core.Options;
 import core.ResStrings;
 import lib.lMenus.LPopupMenu;
 import run.Main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
  * The popup menu for the Tubes Board Panel.
+ *
  * @see BoardPanel
  * @see ColorTube
  */
@@ -30,60 +32,96 @@ public class BoardMenu extends LPopupMenu {
 //
 ///////////////////////////////////////////////////////////////////////////
 
-    /** This menu caption. */
+    /**
+     * This menu caption.
+     */
     private final JMenuItem board;
 
-    /** Docked position menu item. */
+    /**
+     * Docked position menu item.
+     */
     private final JMenu pos;
 
-    /** Position menu item: docked to the center of the main frame. */
+    /**
+     * Position menu item: docked to the center of the main frame.
+     */
     private final JMenuItem center;
 
-    /** Position menu item: docked to top. */
+    /**
+     * Position menu item: docked to top.
+     */
     private final JMenuItem top;
 
-    /** Position menu item: docked to bottom. */
+    /**
+     * Position menu item: docked to bottom.
+     */
     private final JMenuItem bottom;
 
-    /** Position menu item: docked to left. */
+    /**
+     * Position menu item: docked to left.
+     */
     private final JMenuItem left;
 
-    /** Position menu item: docked to right. */
+    /**
+     * Position menu item: docked to right.
+     */
     private final JMenuItem right;
 
-    /** Lines menu item (number of rows of color tubes). */
+    /**
+     * Lines menu item (number of rows of color tubes).
+     */
     private final JMenu lines;
 
-    /** lines menu item: 1 line. */
+    /**
+     * lines menu item: 1 line.
+     */
     private final JMenuItem lines1;
 
-    /** lines menu item: 2 lines. */
+    /**
+     * lines menu item: 2 lines.
+     */
     private final JMenuItem lines2;
 
-    /** lines menu item: 3 lines. */
+    /**
+     * lines menu item: 3 lines.
+     */
     private final JMenuItem lines3;
 
-    /** Clear current tube menu item. Used at FILL_MODE.
+    /**
+     * Clear current tube menu item. Used at FILL_MODE.
+     *
      * @see #correspTube
      */
     public final JMenuItem clear;
 
-    /** Clear All tubes menu item. Used at FILL_MODE. */
+    /**
+     * Clear All tubes menu item. Used at FILL_MODE.
+     */
     private final JMenuItem clearAll;
 
-    /** Undo one move menu item. Used at PLAY_MODE and ASSIST_MODE. */
+    /**
+     * Undo one move menu item. Used at PLAY_MODE and ASSIST_MODE.
+     */
     private final JMenuItem undo;
 
-    /** Undo all moves (start the game again) menu item. Used at PLAY_MODE and ASSIST_MODE. */
+    /**
+     * Undo all moves (start the game again) menu item. Used at PLAY_MODE and ASSIST_MODE.
+     */
     private final JMenuItem start;
 
-    /** Menu separator. */
+    /**
+     * Menu separator.
+     */
     private final JSeparator sep2;
 
-    /** Solve the game menu item. Used at PLAY_MODE. */
+    /**
+     * Solve the game menu item. Used at PLAY_MODE.
+     */
     private final JMenuItem solve;
 
-    /** A pointer to corresponding tube. Used at FILL_MODE to Clear this tube.
+    /**
+     * A pointer to corresponding tube. Used at FILL_MODE to Clear this tube.
+     *
      * @see #clear
      */
     private ColorTube correspTube;
@@ -94,7 +132,9 @@ public class BoardMenu extends LPopupMenu {
 //
 ///////////////////////////////////////////////////////////////////////////
 
-    /** The constructor of the Board menu. Creates the menu and adds items.  */
+    /**
+     * The constructor of the Board menu. Creates the menu and adds items.
+     */
     @SuppressWarnings("MagicConstant")
     public BoardMenu() {
 
@@ -207,45 +247,63 @@ public class BoardMenu extends LPopupMenu {
         super.show(invoker, x, y);
     }
 
-    /** Handles the click on position items. */
+    /**
+     * Handles the click on position items.
+     */
     private void positionClick(int number) {
         MainFrame.tubesPan.setDockedTo(number);
         updatePosIcons();
     }
 
-    /** Handles the click on lines items. */
+    /**
+     * Handles the click on lines items.
+     */
     private void linesClick(int number) {
         MainFrame.tubesPan.setRows(number);
         MainFrame.tubesPan.reDock();
         updateLinesIcons();
     }
 
-    /** Handles the click on Clear this tube item. */
+    /**
+     * Handles the click on Clear this tube item.
+     */
     private void clearClick() {
         if (correspTube != null) {
             Main.frame.clearTube(correspTube);
         }
     }
 
-    /** Handles the click on Clear All tubes item. */
+    /**
+     * Handles the click on Clear All tubes item.
+     */
     private void clearAllClick() {
         Main.frame.clearAllTubes();
     }
 
-    /** Handles the click on Undo one move item. */
+    /**
+     * Handles the click on Undo one move item.
+     */
     private void undoClick() {
         MainFrame.tubesPan.undoMoveColor();
     }
 
-    /** Handles the click on Undo All Moves (Start the game again) item. */
+    /**
+     * Handles the click on Undo All Moves (Start the game again) item.
+     */
     private void startClick() {
         MainFrame.tubesPan.startAgain();
     }
 
-    /** Handles the click on Solve item. */
-    private void solveClick() { Main.frame.startSolve();  }
+    /**
+     * Handles the click on Solve item.
+     */
+    private void solveClick() {
+        Main.frame.startSolve();
+    }
 
-    /** Gets the current docked position value and shows icon at the proper item. */
+    /**
+     * Gets the current docked position value and shows icon at the proper item.
+     */
     private void updatePosIcons() {
         switch (MainFrame.tubesPan.getDockedTo()) {
             case 0:
@@ -286,7 +344,9 @@ public class BoardMenu extends LPopupMenu {
         }
     }
 
-    /** Gets the current rows value and shows icon at the proper item.  */
+    /**
+     * Gets the current rows value and shows icon at the proper item.
+     */
     private void updateLinesIcons() {
         switch (MainFrame.tubesPan.getRows()) {
             case 1:
@@ -307,7 +367,9 @@ public class BoardMenu extends LPopupMenu {
         }
     }
 
-    /** Updates menu captions if the application's language has been changed. */
+    /**
+     * Updates menu captions if the application's language has been changed.
+     */
     public void updateLanguage() {
         board.setText(ResStrings.getString("strColorTubes"));
         pos.setText(ResStrings.getString("strPosition"));

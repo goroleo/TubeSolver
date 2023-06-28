@@ -30,34 +30,54 @@ public class ToolMenu extends LPopupMenu {
 //
 ///////////////////////////////////////////////////////////////////////////
 
-    /** This menu caption. */
+    /**
+     * This menu caption.
+     */
     private final JMenuItem tools;
 
-    /** Docked position menu item. */
+    /**
+     * Docked position menu item.
+     */
     private final JMenu pos;
 
-    /** Position menu item: docked to top. */
+    /**
+     * Position menu item: docked to top.
+     */
     private final JMenuItem top;
 
-    /** Position menu item: docked to bottom. */
+    /**
+     * Position menu item: docked to bottom.
+     */
     private final JMenuItem bottom;
 
-    /** Position menu item: docked to left. */
+    /**
+     * Position menu item: docked to left.
+     */
     private final JMenuItem left;
 
-    /** Position menu item: docked to right. */
+    /**
+     * Position menu item: docked to right.
+     */
     private final JMenuItem right;
 
-    /** Alignment menu item. */
+    /**
+     * Alignment menu item.
+     */
     private final JMenu align;
 
-    /** Alignment menu item: align to begin (top / left). */
+    /**
+     * Alignment menu item: align to begin (top / left).
+     */
     private final JMenuItem begin;
 
-    /** Alignment menu item: align to center. */
+    /**
+     * Alignment menu item: align to center.
+     */
     private final JMenuItem center;
 
-    /** Alignment menu item: align to end (bottom / right). */
+    /**
+     * Alignment menu item: align to end (bottom / right).
+     */
     private final JMenuItem end;
 
 ///////////////////////////////////////////////////////////////////////////
@@ -200,5 +220,4 @@ public class ToolMenu extends LPopupMenu {
         center.setText(ResStrings.getString("strCenter"));
         end.setText(ResStrings.getString("strEnd"));
     }
-
 }

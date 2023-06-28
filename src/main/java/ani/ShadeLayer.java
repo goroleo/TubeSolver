@@ -107,8 +107,10 @@ public class ShadeLayer extends JComponent implements Runnable {
 // -----------------------------------------------------
 //     Routines
 //
+
     /**
      * Creates the Shade Layer.
+     *
      * @param bi an image to animate.
      */
     public ShadeLayer(BufferedImage bi) {
@@ -118,6 +120,7 @@ public class ShadeLayer extends JComponent implements Runnable {
 
     /**
      * Sets the new image to the Shade Layer.
+     *
      * @param bi an image to animate.
      */
     public void setImage(BufferedImage bi) {
