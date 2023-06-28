@@ -549,23 +549,13 @@ public class MainFrame extends JFrame {
             palPan.setVisible(false);
             updateTubesPos();
         }
+        //
         setTubeTo(null);
-        setTubeFrom(null);
 
-        setGameMode(PLAY_MODE);
-        saveTempGame();
-
-        // preparing tubes for the play mode
-        for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            ColorTube tube = tubesPan.getTube(i);
-            tube.setClosed(tube.getModel().state == 3);
-            tube.setActive(!tube.isClosed());
-        }
-
-        // switching to play mode
+        // starting PLAY_MODE
         gameMoves.clear();
         movesDone = 0;
-        saveTempOnExit = true;
+        startPlayMode();
 
         // saving
         if (Options.saveGameAfterFill) {
@@ -578,25 +568,33 @@ public class MainFrame extends JFrame {
      */
     public void startPlayMode() {
         setGameMode(PLAY_MODE);
-
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            if (!tubesPan.getTube(i).isClosed()) {
-                tubesPan.getTube(i).setActive(true);
-            }
+            tubesPan.getTube(i).setClosed(tubesPan.getTube(i).getModel().state == 3);
+            tubesPan.getTube(i).setActive(!tubesPan.getTube(i).isClosed());
         }
-        saveTempOnExit = true;
-        setTubeFrom(null);
+
+        if (tubesPan.isSolved())
+            setGameMode(END_GAME);
+        else {
+            saveTempGame();
+            saveTempOnExit = true;
+            setTubeFrom(null);
+        }
     }
 
     /**
      * Starts the Assistant play mode.
      */
     public void startAssistMode() {
-        setGameMode(ASSIST_MODE);
-        setTubeFrom(null);
-        saveTempOnExit = true;
-        hideMove();
-        showMove();
+        if (tubesPan.isSolved())
+            setGameMode(END_GAME);
+        else {
+            setGameMode(ASSIST_MODE);
+            setTubeFrom(null);
+            saveTempOnExit = true;
+            hideMove();
+            showMove();
+        }
     }
 
     /**
@@ -1207,7 +1205,7 @@ public class MainFrame extends JFrame {
                     if (Palette.usedColors.getAllUsedColors() >= filledTubes) {
                         disableUnusedColors();
                     }
-                    if (Palette.usedColors.getAllFilledColors() >= filledTubes) {
+                    if (Palette.usedColors.getAllFilledColors() == palette.size()-1) {
                         endFillMode();
                     }
                 }

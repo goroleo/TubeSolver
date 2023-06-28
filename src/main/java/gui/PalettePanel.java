@@ -39,7 +39,7 @@ public class PalettePanel extends JComponent {
     /**
      * Color Buttons array.
      */
-    private final ArrayList<ColorButton> colors = new ArrayList<>();
+    private final ArrayList<ColorButton> buttons = new ArrayList<>();
 
     /**
      * The space between buttons by horizontal direction.
@@ -90,7 +90,7 @@ public class PalettePanel extends JComponent {
         for (int i = 0; i < palette.size() - 1; i++) {
             ColorButton cb = new ColorButton(i);
             cb.addActionListener((ActionEvent e) -> clickButton(cb));
-            colors.add(cb);
+            buttons.add(cb);
             this.add(cb);
         }
 
@@ -115,7 +115,7 @@ public class PalettePanel extends JComponent {
      */
     public void addPopups() {
         addPopupMenu(this);
-        for (ColorButton cb : colors) {
+        for (ColorButton cb : buttons) {
             addPopupMenu(cb);
         }
     }
@@ -169,8 +169,8 @@ public class PalettePanel extends JComponent {
         rows = newRows;
 
         // calculating columns
-        cols = colors.size() / rows;
-        if (cols * rows < colors.size()) {
+        cols = buttons.size() / rows;
+        if (cols * rows < buttons.size()) {
             cols++;
         }
 
@@ -188,8 +188,8 @@ public class PalettePanel extends JComponent {
         cols = newCols;
 
         // calculating rows
-        rows = colors.size() / cols;
-        if (cols * rows < colors.size()) {
+        rows = buttons.size() / cols;
+        if (cols * rows < buttons.size()) {
             rows++;
         }
 
@@ -209,7 +209,7 @@ public class PalettePanel extends JComponent {
         int x = spaceX + col * (getButton(number).getWidth() + spaceX);
         int y = spaceY + row * (getButton(number).getHeight() + spaceY);
         if (row == rows - 1) {
-            int lastRowCols = colors.size() - (cols * (rows - 1));
+            int lastRowCols = buttons.size() - (cols * (rows - 1));
             if (lastRowCols != cols) {
                 x = x + (cols - lastRowCols) * (getButton(number).getWidth() + spaceX) / 2;
             }
@@ -221,7 +221,7 @@ public class PalettePanel extends JComponent {
      * Update all buttons' location.
      */
     private void updateAllButtonsPos() {
-        for (int i = 0; i < colors.size(); i++) {
+        for (int i = 0; i < buttons.size(); i++) {
             locateButton(i);
         }
     }
@@ -230,8 +230,8 @@ public class PalettePanel extends JComponent {
      * Calculates and sets the component size. The size depends on current value of rows and columns.
      */
     public final void updateSize() {
-        setSize(spaceX + cols * (spaceX + colors.get(0).getWidth()),
-                spaceY + rows * (spaceY + colors.get(0).getHeight()));
+        setSize(spaceX + cols * (spaceX + buttons.get(0).getWidth()),
+                spaceY + rows * (spaceY + buttons.get(0).getHeight()));
     }
 
     /**
@@ -311,7 +311,7 @@ public class PalettePanel extends JComponent {
      * @return Color button
      */
     public ColorButton getButton(int number) {
-        return colors.get(number);
+        return buttons.get(number);
     }
 
     /**
@@ -321,7 +321,7 @@ public class PalettePanel extends JComponent {
      * @return Color button
      */
     public ColorButton getButtonByColor(int colorNum) {
-        return colors.get(colorNum - 1);
+        return buttons.get(colorNum - 1);
     }
 
     /**
@@ -331,7 +331,7 @@ public class PalettePanel extends JComponent {
      * @return number of color at the palette
      */
     public int getButtonColorNum(int number) {
-        return colors.get(number).getColorNumber();
+        return buttons.get(number).getColorNumber();
     }
 
     /**
@@ -341,7 +341,7 @@ public class PalettePanel extends JComponent {
      * @return Color
      */
     public Color getColor(int number) {
-        return colors.get(number).getColor();
+        return buttons.get(number).getColor();
     }
 
     /**
@@ -365,7 +365,7 @@ public class PalettePanel extends JComponent {
      * @return the count of color buttons.
      */
     public int getColorsCount() {
-        return colors.size();
+        return buttons.size();
     }
 
     /**

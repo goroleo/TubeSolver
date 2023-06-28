@@ -315,8 +315,8 @@ public class CreateNewDlg extends JDialog {
         }
 
         private void updateButtonsState() {
-            btnMinus.setEnabled(tf.getValue() >= tf.getMinValue());
-            btnPlus.setEnabled(tf.getValue() <= tf.getMaxValue());
+            btnMinus.setEnabled(tf.getValue() > tf.getMinValue());
+            btnPlus.setEnabled(tf.getValue() < tf.getMaxValue());
         }
         public int getMaxValue() {
             return tf.getMaxValue();

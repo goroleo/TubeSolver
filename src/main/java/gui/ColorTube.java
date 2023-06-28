@@ -343,9 +343,9 @@ public class ColorTube extends JComponent {
      */
     public boolean canPutColor(int colorNum) {
         switch (MainFrame.gameMode) {
-            case 100: // FILL_MODE
+            case MainFrame.FILL_MODE:
                 return active && getColorsCount() < 4;
-            case 200: // GAME MODE
+            case MainFrame.PLAY_MODE:
                 return model.canPutColor((byte) colorNum);
             default:
                 return false;
@@ -396,7 +396,6 @@ public class ColorTube extends JComponent {
                 colors.repaintColor(i + 1, 0, false);
             }
         }
-//        colors.setCount(model.count);
         colors.repaint();
     }
 

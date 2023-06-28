@@ -11,6 +11,7 @@ package gui;
 
 import core.Options;
 import core.ResStrings;
+import dlg.MessageDlg;
 import dlg.OptionsDlg;
 import dlg.PaletteDlg;
 import dlg.StartDlg;
@@ -427,6 +428,12 @@ public class ToolPanel extends JPanel {
                         default:
                             break;
                     }
+                } else {
+                    MessageDlg msgDlg = new MessageDlg(Main.frame,
+                            ResStrings.getString("strCannotLoad"),
+                            MessageDlg.BTN_OK);
+                    msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
+                    msgDlg.setVisible(true);
                 }
             } else {
                 Main.frame.setGameMode(MainFrame.prevMode);

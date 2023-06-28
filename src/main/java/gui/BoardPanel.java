@@ -281,7 +281,7 @@ public class BoardPanel extends JComponent {
      * Calculates and sets position of color tube depending on the current columns and rows values.
      * @param number of the color tube to set its location.
      */
-    private void updateTubePos(int number) {
+    private void setTubeLocation(int number) {
         int col = number % cols;
         int row = number / cols;
         int x = spaceX + col * (getTube(number).getWidth() + spaceX);
@@ -312,7 +312,7 @@ public class BoardPanel extends JComponent {
      */
     private void updateTubesPos() {
         for (int i = 0; i < getTubesCount(); i++) {
-            updateTubePos(i);
+            setTubeLocation(i);
         }
     }
 
@@ -541,7 +541,7 @@ public class BoardPanel extends JComponent {
      * gets the Current Color from the tube and tries to find another tube that has
      * a place to put that color in.
      *
-     * @param tube specific tube
+     * @param tube specified tube
      * @return true if the Current Color of this tube has another tube to place it in, false otherwise.
      * @see ColorTube#getCurrentColor()
      */
@@ -589,23 +589,24 @@ public class BoardPanel extends JComponent {
             return;
         }
 
-        int moveNumber = MainFrame.movesDone - 1;
+        // get last move
+        MainFrame.movesDone--;
+        int idxFrom = MainFrame.gameMoves.getTubeFrom(MainFrame.movesDone);
+        int idxTo = MainFrame.gameMoves.getTubeTo(MainFrame.movesDone);
+        int mCount = MainFrame.gameMoves.getMoveCount(MainFrame.movesDone);
+        byte mColor = MainFrame.gameMoves.getColor(MainFrame.movesDone);
 
-        int idxFrom = MainFrame.gameMoves.getTubeFrom(moveNumber);
-        int idxTo = MainFrame.gameMoves.getTubeTo(moveNumber);
-        int mCount = MainFrame.gameMoves.getMoveCount(moveNumber);
-        byte mColor = MainFrame.gameMoves.getColor(moveNumber);
-
+        // undo move
         while (mCount > 0) {
             getTube(idxTo).extractColor();
             getTube(idxFrom).putColor(mColor);
             mCount--;
         }
 
-        MainFrame.movesDone--;
+        // update board
         MainFrame.toolPan.updateButtons();
         if (MainFrame.gameMode != MainFrame.ASSIST_MODE) {
-            MainFrame.gameMoves.remove(moveNumber);
+            MainFrame.gameMoves.remove(MainFrame.movesDone);
         } else {
             Main.frame.hideMove();
             Main.frame.showMove();
@@ -621,8 +622,8 @@ public class BoardPanel extends JComponent {
             return;
         }
 
+        // how much moves will be cancelled
         int movesCount = 0;
-
         if (MainFrame.gameMode == MainFrame.PLAY_MODE) {
             movesCount = MainFrame.gameMoves.size();
         } else if (MainFrame.gameMode == MainFrame.ASSIST_MODE) {
@@ -645,12 +646,17 @@ public class BoardPanel extends JComponent {
             }
         }
 
-        MainFrame.movesDone = 0;
-        MainFrame.toolPan.updateButtons();
-
-        // restore initial colors to ColorTubes from the board model
+        // restore initial colors from the board model to ColorTubes
         for (int i = 0; i < getTubesCount(); i++) {
             getTube(i).restoreColors();
+        }
+
+        // update board configuration
+        MainFrame.movesDone = 0;
+        MainFrame.toolPan.updateButtons();
+        if (MainFrame.gameMode == MainFrame.ASSIST_MODE) {
+            Main.frame.hideMove();
+            Main.frame.showMove();
         }
     }
 }

@@ -12,6 +12,7 @@ package core;
 import gui.BoardPanel;
 import gui.ColorTube;
 import gui.MainFrame;
+import run.Main;
 
 import java.io.*;
 import java.net.URL;
@@ -399,6 +400,40 @@ public class TubesIO {
     }
 
     /**
+     * Checks stored tubes. Each existing color in the tubes must occur 4 times,
+     * otherwise there were errors in loaded game.
+     * The storedTubes array has to been filled before calling this routine.
+     *
+     * @return true when validation was successful, false otherwise
+     */
+    public static boolean checkTubes() {
+        int stored; // one of stored tubes
+        int i;
+
+        UsedColors colors = new UsedColors(MainFrame.palette.size()-1);
+        colors.clearColorCounts();
+
+        // fill used colors array
+        for (i = 0; i < tubesCount; i++) {
+            stored = storedTubes[i];
+            do {
+                if ((stored & 0xff) > 0)
+                    colors.incColorCount((byte) (stored & 0xff));
+                stored >>= 8;
+            } while (stored > 0);
+        }
+
+        // check used colors array
+        for (i = 1; i < MainFrame.palette.size(); i++) {
+            if (colors.getColorCount((byte) i) != 0
+                    && colors.getColorCount((byte) i) != 4) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Gets count of empty tubes.
      * @return number of empty tubes
      */
@@ -604,6 +639,7 @@ public class TubesIO {
                     emptyCount = 0;                      // empty tubes count is null 
                     tubesCount = bais.readInt();         // read tubes count 
                 }
+
                 if (fileVer > 1) {
                     movesDone = bais.readWord();
                     movesCount = bais.readWord();
@@ -614,8 +650,7 @@ public class TubesIO {
                     if (movesDone > movesCount) {
                         movesDone = 0;
                     }
-
-                } else { // 
+                } else { //
                     movesDone = 0;
                     movesCount = 0;
                     storedMoves = null;
@@ -629,6 +664,10 @@ public class TubesIO {
                 for (int i = 0; i < tubesCount; i++) {
                     storedTubes[i] = bais.readInt();
                 }
+
+                // In FILL_MODE not all tubes can be filled completely
+                if (gMode != MainFrame.FILL_MODE)
+                    result = checkTubes();
             }
 
             if (result && fileVer > 1 && movesCount > 0) {
