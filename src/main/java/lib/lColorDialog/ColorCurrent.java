@@ -18,10 +18,16 @@ import java.awt.event.MouseEvent;
 import static lib.lColorDialog.ColorPanel.current;
 import static lib.lColorDialog.ColorPanel.previousColor;
 
+/**
+ * The panel of two squares with current and previous colors.
+ */
 public class ColorCurrent extends JComponent implements ColorListener {
 
     private final int wh = 45; // width and height;
 
+    /**
+     * Creates the panel with current and previous colors.
+     */
     public ColorCurrent() {
         setSize(20 + wh * 2 + 3, 20 + wh);
         lnPrevColorMouseLayer mouseLayer = new lnPrevColorMouseLayer();
@@ -41,6 +47,9 @@ public class ColorCurrent extends JComponent implements ColorListener {
         repaint();
     }
 
+    /**
+     * Handles a mouse click on the previous color box.
+     */
     private class lnPrevColorMouseLayer extends JComponent {
 
         public lnPrevColorMouseLayer() {

@@ -19,6 +19,9 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
+/**
+ * The text field that only accepts decimal numbers and returns an integer value.
+ */
 public class LDecTextField extends JTextField {
 
     private int minValue;
@@ -26,6 +29,10 @@ public class LDecTextField extends JTextField {
     private int Value;
     private int digits;
 
+    /**
+     * True if the current value is not being changed by this field, but by any external
+     * controls/routines. External edit is when the focus is not in this field.
+     */
     private boolean externalEdit = true;
     private final Border border = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.gray),
@@ -34,6 +41,12 @@ public class LDecTextField extends JTextField {
             BorderFactory.createLineBorder(new Color(0xb8cfe5)),
             BorderFactory.createEmptyBorder(2, 3, 2, 3));
 
+    /**
+     * Creates the text field with decimal numbers.
+     *
+     * @param min minimal value
+     * @param max maximal value
+     */
     public LDecTextField(int min, int max) {
         setMinValue(min);
         setMaxValue(max);
@@ -134,13 +147,23 @@ public class LDecTextField extends JTextField {
         setText(Integer.toString(Value));
     } // constructor lnTextField
 
+    /**
+     * Validates the new value of the field.
+     *
+     * @param newValue value to validate
+     * @return result value that can be stated here
+     */
     public int checkValue(int newValue) {
         if (newValue < minValue) {
             return minValue;
         } else return Math.min(newValue, maxValue);
     }
 
-    // external changes of the value
+    /**
+     * Sets the new value by external change.
+     *
+     * @param newValue a value to set
+     */
     public void setValue(int newValue) {
         if (externalEdit) {
             int oldValue = Value;
@@ -149,12 +172,22 @@ public class LDecTextField extends JTextField {
                 setText(Integer.toString(Value));
             }
         }
-    } // setValue
+    }
 
+    /**
+     * Returns the current value
+     *
+     * @return value
+     */
     public int getValue() {
         return Value;
     }
 
+    /**
+     * Sets the minimal value
+     *
+     * @param newMinValue new minimum
+     */
     public void setMinValue(int newMinValue) {
         minValue = newMinValue;
         int newValue = checkValue(Value);
@@ -163,10 +196,18 @@ public class LDecTextField extends JTextField {
         }
     }
 
+    /**
+     * @return current minimal value
+     */
     public int getMinValue() {
         return minValue;
     }
 
+    /**
+     * Sets the maximal value
+     *
+     * @param newMaxValue new maximal
+     */
     public void setMaxValue(int newMaxValue) {
         maxValue = newMaxValue;
         int newValue = checkValue(Value);
@@ -181,16 +222,24 @@ public class LDecTextField extends JTextField {
         } while (tmp > 9); 
     }
 
+    /**
+     * @return current maximal value
+     */
     public int getMaxValue() {
         return maxValue;
     }
 
-    // Change the value due to in-field edit
+    /**
+     * Handles the change the focus. A routine to override it.
+     */
     public void focusChanged() {
         
     } 
     
     // Change the value due to in-field edit
+    /**
+     * Handles the change of the value. A routine to overrideit.
+     */
     public void valueChanged() {
         
     } 

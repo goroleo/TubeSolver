@@ -27,7 +27,7 @@ import java.awt.image.BufferedImage;
  */
 public class ColorTube extends JComponent {
 
-// --- TUBE MODEL ---
+// --- Tube model ---
     /**
      * The logical model of the tube without any visualization.
      */
@@ -155,6 +155,7 @@ public class ColorTube extends JComponent {
 
         frame = new ShadeLayer(imgShadeGray);
         frame.setLocation(0, 20);
+        frame.useAnimation = true;
         this.add(frame);
 
         ImageLayer bottle = new ImageLayer(imgBottle);
@@ -310,7 +311,7 @@ public class ColorTube extends JComponent {
      * @return colors count
      */
     public int getColorsCount() {
-        return model.count;
+        return model.getCount();
     }
 
     /**
@@ -319,7 +320,7 @@ public class ColorTube extends JComponent {
      * @return current tube color.
      */
     public byte getCurrentColor() {
-        return model.currentColor;
+        return model.getCurrentColor();
     }
 
     /**
@@ -330,7 +331,7 @@ public class ColorTube extends JComponent {
      */
     public int getColor(int number) {
         if (number >= 0 && number < 4) {
-            return model.colors[number];
+            return model.getColor(number);
         } else {
             return 0;
         }
@@ -362,7 +363,7 @@ public class ColorTube extends JComponent {
     public void putColor(int colorNum) {
         if (model.putColor((byte) colorNum)) {
             colors.addColor(colorNum);
-            setClosed(model.state == 3);
+            setClosed(model.getState() == 3);
         }
     }
 
@@ -373,7 +374,7 @@ public class ColorTube extends JComponent {
     public void extractColor() {
         if (model.extractColor() != 0) {
             colors.removeColor();
-            setClosed(model.state == 3);
+            setClosed(model.getState() == 3);
         }
     }
 
@@ -391,7 +392,7 @@ public class ColorTube extends JComponent {
      */
     public void repaintColors() {
         for (int i = 0; i < 4; i++) {
-            if (i < model.count) {
+            if (i < model.getCount()) {
                 colors.repaintColor(i + 1, getColor(i), false);
             } else {
                 colors.repaintColor(i + 1, 0, false);
@@ -420,11 +421,11 @@ public class ColorTube extends JComponent {
         colors.clearColors();
         colors.useAnimation = true;
         for (int i = 0; i < 4; i++) {
-            if (model.colors[i] > 0) {
-                colors.addColor(model.colors[i]);
+            if (model.getColor(i) > 0) {
+                colors.addColor(model.getColor(i));
             }
         }
-        setClosed(model.state == 3);
+        setClosed(model.getState() == 3);
     }
 
     /**
@@ -488,7 +489,6 @@ public class ColorTube extends JComponent {
      * Shows a frame around the tube. Frame color and/or frame number must be set before.
      */
     public void showFrame() {
-        frame.useAnimation = true;
         frame.doShow();
     }
 
@@ -496,7 +496,6 @@ public class ColorTube extends JComponent {
      * Hides a frame around the tube.
      */
     public void hideFrame() {
-        frame.useAnimation = true;
         frame.doHide();
     }
 
@@ -504,7 +503,6 @@ public class ColorTube extends JComponent {
      * Pulses a frame around the tube, i.e. shows and hides it without stopping.
      */
     public void pulseFrame() {
-        frame.useAnimation = true;
         frame.doPulse();
     }
 

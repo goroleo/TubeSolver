@@ -63,7 +63,7 @@ public class LOpenSaveDialog extends JDialog {
     /**
      * Creates the OpenSave file dialog.
      * @param owner the owner frame.
-     * @param mode the mode of the dialog. It can be OPEN_MODE of SAVE_MODE.
+     * @param mode the mode of the dialog. It can be OPEN_MODE or SAVE_MODE.
      */
     public LOpenSaveDialog(JFrame owner, int mode) {
         this(owner, mode, "");
@@ -118,9 +118,6 @@ public class LOpenSaveDialog extends JDialog {
         setForeground(Color.white);
 
         getLayeredPane().add(osPan, 100);
-//        getContentPane().add(osPan);
-
-
     }
 
     private void calculateSize() {
@@ -213,6 +210,15 @@ public class LOpenSaveDialog extends JDialog {
     public void setForeground(Color fg) {
         getContentPane().setForeground(fg);
         getLayeredPane().setForeground(fg);
+    }
+
+    /**
+     * Sets the default file name. Use it before showing the dialog.
+     *
+     * @param fName file name
+     */
+    public void setFileName(String fName) {
+        current.setFile(fName);
     }
 
     /**

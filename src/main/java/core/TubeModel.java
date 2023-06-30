@@ -22,15 +22,15 @@ package core;
 public class TubeModel {
 
     /**
-     * Count of the filled colors
+     * Count of the filled colors.
      */
-    public int count = 0;
+    private int count = 0;
 
     /**
      * Color cells. Array of color numbers which are in this tube now. Note
      * color number 0 is an empty cell.
      */
-    public final byte[] colors = new byte[4];
+    private final byte[] colors = new byte[4];
 
     /**
      * The state of the tube. The states can be as follows: <ul>
@@ -44,12 +44,61 @@ public class TubeModel {
      * I don't want to add neither another class no list of constants for the
      * <b>state</b>. I just use an integer value.
      */
-    public int state = 0;
+    private int state = 0;
 
     /**
      * Current color of this tube. Current color is always the top color of the tube.
      */
-    public byte currentColor = 0;
+    private byte currentColor = 0;
+
+    /**
+     * Returns the count of the filled colors.
+     *
+     * @return colors count
+     */
+    public int getCount() {
+        return count;
+    }
+
+    /**
+     * Returns the state of the tube. The states can be as follows: <ul>
+     * <li><b>STATE_EMPTY</b> (0). The tube has no colors. <br>
+     * <li><b>STATE_REGULAR</b> (1). The tube has different colors and their count
+     * less than 4. So this tube can both put and extract a color.
+     * <li><b>STATE_FILLED</b> (2). The whole tube is filled with different colors.
+     * It can extract a color, but there is no place to put them more.
+     * <li><b>STATE_CLOSED</b> (3). The whole tube is filled with one color. So
+     * this tube is no longer in the game.<br></ul>
+     * I don't want to add neither another class no list of constants for the
+     * <b>state</b>. I just use an integer value.
+     *
+     * @return current state of the tube
+     */
+    public int getState() {
+        return state;
+    }
+
+
+    /**
+     * Returns the count of the filled colors.
+     *
+     * @return colors count
+     */
+    public byte getCurrentColor() {
+        return currentColor;
+    }
+
+    /**
+     * Gets color cell. Array of color numbers which are in this tube now. Note
+     * color number 0 is an empty cell.
+     * @param idx idex must be from 0 to colors count
+     * @return color number of the palette
+     */
+    public byte getColor(int idx) {
+        if (idx >= 0 && idx < count)
+            return colors[idx];
+        else return 0;
+    }
 
     /**
      * Is this tube empty?

@@ -18,11 +18,25 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+/**
+ * The text field that only accepts hexadecimal numbers and returns them as an integer value.
+ */
 public class LHexTextField extends JTextField {
 
+    /**
+     * How much hexadecimal digits may be in this field.
+     */
     private final int digits;
+
+    /**
+     * Current value
+     */
     private int value;
 
+    /**
+     * True if the current value is not being changed by this field, but by any external
+     * controls/routines. External edit is when the focus is not in this field.
+     */
     private boolean externalEdit = true;
     private final Border border = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.gray),
@@ -31,6 +45,11 @@ public class LHexTextField extends JTextField {
             BorderFactory.createLineBorder(new Color(0xb8cfe5)),
             BorderFactory.createEmptyBorder(2, 3, 2, 3));
 
+    /**
+     * Creates the text field that accepted hexadecimal numbers and returned them as an integer value.
+     *
+     * @param aDigits number of hexadecimal digits.
+     */
     public LHexTextField(int aDigits) {
         this.digits = aDigits;
         setSize(70, 22);
@@ -108,6 +127,11 @@ public class LHexTextField extends JTextField {
 
     }
 
+    /**
+     * Sets the new value and displays it as a hexadecimal digits.
+     *
+     * @param newValue the new value
+     */
     public void setValue(int newValue) {
         if (externalEdit) {
             value = newValue;
@@ -122,16 +146,27 @@ public class LHexTextField extends JTextField {
         }
     }
 
+    /**
+     * Gets the current value .
+     *
+     * @return current value
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * Handles the change of the focus. An abstract routine to override it
+     */
     public void focusChanged() {
-        // abstract routine for override it
+        // abstract routine to override it
     }
 
+    /**
+     * Handles the change of current value. An abstract routine to override it
+     */
     public void valueChanged() {
-        // abstract routine for override it
+        // abstract routine to override it
     }
 
 }

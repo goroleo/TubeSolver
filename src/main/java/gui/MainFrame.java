@@ -419,14 +419,12 @@ public class MainFrame extends JFrame {
     public void saveGameAs(String ending) {
         setGameMode(MainFrame.BUSY_MODE);
 
-        LOpenSaveDialog os;
+        LOpenSaveDialog os = new LOpenSaveDialog(this, LOpenSaveDialog.SAVE_MODE);
 
         if (!"".equals(ending)) {
-            os = new LOpenSaveDialog(this,
-                    LOpenSaveDialog.SAVE_MODE,
-                    Options.getDateTimeStr() + " " + ending);
+            os.setFileName(Options.getDateTimeStr() + " " + ending);
         } else {
-            os = new LOpenSaveDialog(this, LOpenSaveDialog.SAVE_MODE);
+            os.setFileName(Options.getDateTimeStr());
         }
 
         String fileName = os.showSaveDialog();
@@ -580,7 +578,7 @@ public class MainFrame extends JFrame {
     public void startPlayMode() {
         setGameMode(PLAY_MODE);
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            tubesPan.getTube(i).setClosed(tubesPan.getTube(i).getModel().state == 3);
+            tubesPan.getTube(i).setClosed(tubesPan.getTube(i).getModel().getState() == 3);
             tubesPan.getTube(i).setActive(!tubesPan.getTube(i).isClosed());
         }
 

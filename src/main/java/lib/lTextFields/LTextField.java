@@ -22,9 +22,18 @@ import javax.swing.text.PlainDocument;
 public class LTextField extends JTextField {
 
     private String Value;
+
+    /**
+     * Forbidden characters for this field
+     */
     private String forbidden = "";
 
+    /**
+     * True if the current value is not being changed by this field, but by any external
+     * controls/routines. External edit is when the focus is not in this field.
+     */
     private boolean externalEdit = true;
+
     private final Border border = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.gray),
             BorderFactory.createEmptyBorder(2, 3, 2, 3));
@@ -108,17 +117,31 @@ public class LTextField extends JTextField {
         return newValue.trim();
     }
 
+    /**
+     * @return the set of characters that are forbidden to this field.
+     */
     @SuppressWarnings("unused")
     public String getForbiddenSigns() {
         return forbidden;
     }
 
+    /**
+     * Sets the set of characters that would be prohibited to this field.
+     *
+     * @param s set of forbidden characters
+     */
     public void setForbiddenSigns(String s) {
         String temp = getValue();
         forbidden = s;
         setText(temp);
     }
 
+    /**
+     * Sets the new value to this field.
+     *
+     * @param newValue new string value
+     * @param doAnyway if true perform it in any case regardless of external or internal editing.
+     */
     // external changes of the value
     public void setValue(String newValue, boolean doAnyway) {
         if (externalEdit || doAnyway) {
@@ -131,14 +154,26 @@ public class LTextField extends JTextField {
         }
     } // setValue
 
+    /**
+     * @return the current value
+     */
     public String getValue() {
         return Value;
     }
-    
-    public void focusChanged() { }
 
-    // Change the value due to in-field edit
-    public void valueChanged() {  }
+    /**
+     * Handles the change of the focus. An abstract routine to override it
+     */
+    public void focusChanged() {
+        // abstract routine to override it
+    }
+
+    /**
+     * Handles the change of current value. An abstract routine to override it
+     */
+    public void valueChanged() {
+        // abstract routine to override it
+    }
 
 } // lnTextField class
 

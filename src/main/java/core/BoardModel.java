@@ -79,12 +79,12 @@ public class BoardModel extends ArrayList<TubeModel> {
      * Is this tubes board solved already?
      *
      * @return false if any tube state is REGULAR or FILLED
-     * @see TubeModel#state
+     * @see TubeModel#getState()
      */
     public boolean isSolved() {
         for (TubeModel aTube : this) {
-            if (aTube.state == 1 // STATE_REGULAR
-                    || aTube.state == 2) { // STATE_FILLED
+            if (aTube.getState() == 1 // STATE_REGULAR
+                    || aTube.getState() == 2) { // STATE_FILLED
                 return false;
             }
         }
@@ -141,7 +141,7 @@ public class BoardModel extends ArrayList<TubeModel> {
 
         ColorMoveItem cm = new ColorMoveItem();
         cm.bmBefore = this;
-        cm.color = get(idxFrom).currentColor;
+        cm.color = get(idxFrom).getCurrentColor();
         cm.idxFrom = idxFrom;
         cm.idxTo = idxTo;
 
@@ -206,9 +206,9 @@ public class BoardModel extends ArrayList<TubeModel> {
      * @return true or false
      */
     public boolean canMakeMove(TubeModel ctFrom, TubeModel ctTo) {
-        return (ctFrom.state == 1 // STATE_REGULAR
-                || ctFrom.state == 2) // STATE_FILLED
-                && ctTo.canPutColor(ctFrom.currentColor);
+        return (ctFrom.getState() == 1 // STATE_REGULAR
+                || ctFrom.getState() == 2) // STATE_FILLED
+                && ctTo.canPutColor(ctFrom.getCurrentColor());
     }
 
     /**
@@ -228,14 +228,14 @@ public class BoardModel extends ArrayList<TubeModel> {
      * The colors that are at the top of each tube. <br>
      * The resulting array is used to rank the available moves.
      *
-     * @see TubeModel#state
+     * @see TubeModel#getState()
      */
     public void fillAvailableColors() {
         usedColors.clearColorCounts();
         for (TubeModel ct : this) {
-            if (ct.state == 1 // STATE_REGULAR
-                    || ct.state == 2) {      // STATE_FILLED
-                usedColors.incColorCount(ct.currentColor, ct.colorsToGet());
+            if (ct.getState() == 1 // STATE_REGULAR
+                    || ct.getState() == 2) {      // STATE_FILLED
+                usedColors.incColorCount(ct.getCurrentColor(), ct.colorsToGet());
             }
         }
     }
@@ -273,8 +273,8 @@ public class BoardModel extends ArrayList<TubeModel> {
 
         for (TubeModel ctRecipient : this) {
 
-            if (ctRecipient.state == 1 // STATE_REGULAR
-                    || (ctRecipient.state == 0 // STATE_EMPTY
+            if (ctRecipient.getState() == 1 // STATE_REGULAR
+                    || (ctRecipient.getState() == 0 // STATE_EMPTY
                     && !emptyTubeProcessed)) { // one of empty tubes is passed already
 
                 for (TubeModel ctDonator : this) {
@@ -295,7 +295,7 @@ public class BoardModel extends ArrayList<TubeModel> {
 
                             cm.count = Math.min(
                                     // empty cells at Recipient
-                                    (4 - ctRecipient.count),
+                                    (4 - ctRecipient.getCount()),
                                     // number of donator's cells of this color
                                     dColorsToGet);
 
@@ -304,21 +304,21 @@ public class BoardModel extends ArrayList<TubeModel> {
                             // -----------------------------------
                             cm.rank = Math.min(
                                     // number of empty cells at Recipient
-                                    (4 - ctRecipient.count),
+                                    (4 - ctRecipient.getCount()),
                                     // number of available cells of this color at whole the board
                                     usedColors.getColorCount(cm.color));
 
-                            if (ctRecipient.count > 0 && ctRecipient.count == rColorsToGet) {
+                            if (ctRecipient.getCount() > 0 && ctRecipient.getCount() == rColorsToGet) {
                                 // if the whole tube of the Recipient is filled by this color
                                 cm.rank += 3;
                             }
 
-                            if (dColorsToGet == ctDonator.count) {
+                            if (dColorsToGet == ctDonator.getCount()) {
                                 // if the whole tube of the Donator is filled by this color
                                 cm.rank += 2;
                             }
 
-                            if (dColorsToGet > 4 - ctRecipient.count) {
+                            if (dColorsToGet > 4 - ctRecipient.getCount()) {
                                 // if the Donator tube is not completely emptied after the move
                                 cm.rank -= 4;
                             }
@@ -363,7 +363,7 @@ public class BoardModel extends ArrayList<TubeModel> {
     public int moveColor(TubeModel ctFrom, TubeModel ctTo) {
         int result = 0;
         if (canMakeMove(ctFrom, ctTo)) {
-            int cnt = Math.min(ctFrom.colorsToGet(), 4 - ctTo.count);
+            int cnt = Math.min(ctFrom.colorsToGet(), 4 - ctTo.getCount());
             result = cnt;
             do {
                 ctTo.putColor(ctFrom.extractColor());
@@ -403,8 +403,8 @@ public class BoardModel extends ArrayList<TubeModel> {
         for (int i = 3; i >= 0; i--) {
             str = new StringBuilder("| ");
             for (TubeModel tubeModel : this) {
-                if (tubeModel.colors[i] != 0) {
-                    str.append(Integer.toHexString(tubeModel.colors[i]));
+                if (tubeModel.getColor(i) != 0) {
+                    str.append(Integer.toHexString(tubeModel.getColor(i)));
                 } else {
                     str.append(" ");
                 }

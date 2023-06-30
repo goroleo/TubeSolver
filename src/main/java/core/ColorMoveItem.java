@@ -23,7 +23,7 @@ public class ColorMoveItem {
      * This move's number in moves array.
      */
     @Deprecated
-    public int number;     // Deprecated. Use array index instead
+    private int number;     // Deprecated. Use array index instead
 
     /**
      * Number (index) of the tube where we'll get the color(s). A.k.a. color's
