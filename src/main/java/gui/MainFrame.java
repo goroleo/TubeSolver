@@ -704,8 +704,6 @@ public class MainFrame extends JFrame {
 
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             tubesPan.getTube(i).setClosed(true);
-            tubesPan.getTube(i).setFrame(4);
-            tubesPan.getTube(i).showFrame();
         }
 
         setGameMode(END_GAME);
@@ -847,7 +845,7 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Returns the Color Tube from which the color will be taken (Donor / Donator).
+     * Returns the Color Tube from which the color will be taken (Donor).
      *
      * @return Donor color tube
      */
@@ -856,7 +854,7 @@ public class MainFrame extends JFrame {
     }
 
     /**
-     * Sets the Color Tube from which the color will be taken (Donor / Donator).
+     * Sets the Color Tube from which the color will be taken (Donor).
      *
      * @param tube Donor color tube
      */
@@ -968,7 +966,7 @@ public class MainFrame extends JFrame {
 //////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Starts to find the Donor / Donator tube. Sets all arrows to green.
+     * Starts to find the Donor tube. Sets all arrows to green.
      */
     public void startFindTubesFrom() {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {

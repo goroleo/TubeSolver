@@ -78,7 +78,6 @@ public class TubeModel {
         return state;
     }
 
-
     /**
      * Returns the count of the filled colors.
      *
@@ -91,7 +90,7 @@ public class TubeModel {
     /**
      * Gets color cell. Array of color numbers which are in this tube now. Note
      * color number 0 is an empty cell.
-     * @param idx idex must be from 0 to colors count
+     * @param idx index must be from 0 to colors count
      * @return color number of the palette
      */
     public byte getColor(int idx) {
@@ -321,7 +320,7 @@ public class TubeModel {
      * Fills this tube colors' array from another tube. Used for copying specified
      * tube to this tube.
      *
-     * @param tmFrom the donator tube
+     * @param tmFrom the donor tube
      */
     public void assignColors(TubeModel tmFrom) {
         System.arraycopy(tmFrom.colors, 0, this.colors, 0, 4);

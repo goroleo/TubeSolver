@@ -129,7 +129,7 @@ public class BoardModel extends ArrayList<TubeModel> {
     /**
      * Creates and adds new move to the move's list.
      *
-     * @param idxFrom index of the donator tube
+     * @param idxFrom index of the donor tube
      * @param idxTo   index of the recipient tube
      * @return new ColorMove
      * @see ColorMoveItem
@@ -153,7 +153,7 @@ public class BoardModel extends ArrayList<TubeModel> {
     /**
      * Creates and adds new move to the move's list.
      *
-     * @param ctFrom donator tube
+     * @param ctFrom donor tube
      * @param ctTo   recipient tube
      * @return new ColorMove
      * @see ColorMoveItem
@@ -199,9 +199,9 @@ public class BoardModel extends ArrayList<TubeModel> {
 
     /**
      * This routine checks the possibility to transfer a color cell from one
-     * tube to another. Donator tube must be not empty and not closed.
+     * tube to another. Donor tube must be not empty and not closed.
      *
-     * @param ctFrom donator tube
+     * @param ctFrom donor tube
      * @param ctTo   recipient tube
      * @return true or false
      */
@@ -215,7 +215,7 @@ public class BoardModel extends ArrayList<TubeModel> {
      * This routine checks the possibility to transfer a color cell from one
      * tube to another.
      *
-     * @param idxFrom index of the donator tube
+     * @param idxFrom index of the donor tube
      * @param idxTo   index of the recipient tube
      * @return true or false
      */
@@ -249,7 +249,7 @@ public class BoardModel extends ArrayList<TubeModel> {
      */
     public int calculateMoves() {
 
-        int dColorsToGet; // donator's ColorsToGet
+        int dColorsToGet; // donor's ColorsToGet
         int rColorsToGet; // recipient's ColorsToGet
 
         if (hasMoves()) {
@@ -277,26 +277,26 @@ public class BoardModel extends ArrayList<TubeModel> {
                     || (ctRecipient.getState() == 0 // STATE_EMPTY
                     && !emptyTubeProcessed)) { // one of empty tubes is passed already
 
-                for (TubeModel ctDonator : this) {
+                for (TubeModel ctDonor : this) {
 
-                    if (ctDonator != ctRecipient) {
+                    if (ctDonor != ctRecipient) {
 
-                        if (canMakeMove(ctDonator, ctRecipient)) {
+                        if (canMakeMove(ctDonor, ctRecipient)) {
 
-                            cm = addNewMove(ctDonator, ctRecipient);
+                            cm = addNewMove(ctDonor, ctRecipient);
                             if (this != root) {
                                 cm.parent = this.parentMove;
                             } else {
                                 cm.parent = null;
                             }
 
-                            dColorsToGet = ctDonator.colorsToGet();
+                            dColorsToGet = ctDonor.colorsToGet();
                             rColorsToGet = ctRecipient.colorsToGet();
 
                             cm.count = Math.min(
                                     // empty cells at Recipient
                                     (4 - ctRecipient.getCount()),
-                                    // number of donator's cells of this color
+                                    // number of donor's cells of this color
                                     dColorsToGet);
 
                             // -----------------------------------
@@ -313,18 +313,18 @@ public class BoardModel extends ArrayList<TubeModel> {
                                 cm.rank += 3;
                             }
 
-                            if (dColorsToGet == ctDonator.getCount()) {
-                                // if the whole tube of the Donator is filled by this color
+                            if (dColorsToGet == ctDonor.getCount()) {
+                                // if the whole tube of the Donor is filled by this color
                                 cm.rank += 2;
                             }
 
                             if (dColorsToGet > 4 - ctRecipient.getCount()) {
-                                // if the Donator tube is not completely emptied after the move
+                                // if the Donor tube is not completely emptied after the move
                                 cm.rank -= 4;
                             }
 
                             if (dColorsToGet + rColorsToGet == 4) {
-                                // if the donator and recipient will give a filled closed tube, 
+                                // if the donor and recipient will give a filled closed tube,
                                 // the fewer colors movement will be the higher rank.
                                 cm.rank += 4 - cm.count;
                             }
@@ -335,7 +335,7 @@ public class BoardModel extends ArrayList<TubeModel> {
                             result++;
                         } // canMakeMove
                     }
-                } // process the next donator
+                } // process the next donor
 
                 if (ctRecipient.isEmpty() && !emptyTubeProcessed) {
                     emptyTubeProcessed = true;
@@ -356,7 +356,7 @@ public class BoardModel extends ArrayList<TubeModel> {
     /**
      * Doing move
      *
-     * @param ctFrom Donator tube
+     * @param ctFrom Donor tube
      * @param ctTo   Recipient tube
      * @return number of colors that were be moved
      */
@@ -376,7 +376,7 @@ public class BoardModel extends ArrayList<TubeModel> {
     /**
      * Doing move
      *
-     * @param idxFrom index of the Donator tube
+     * @param idxFrom index of the Donor tube
      * @param idxTo   index of the Recipient tube
      * @return number of colors that were be moved
      */

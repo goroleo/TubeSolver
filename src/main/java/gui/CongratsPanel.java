@@ -111,11 +111,9 @@ public class CongratsPanel extends JComponent {
      * Sets new size and position in depends on the main frame size.
      */
     public void updateSizeAndPos() {
-
         Rectangle r = Main.frame.getTubesArea();
         int w = Math.max(imgRibbon.getWidth(), MainFrame.tubesPan.getWidth());
         int h = Math.max(imgRibbon.getHeight(), MainFrame.tubesPan.getHeight());
-
         setBounds(r.x + (r.width - w) / 2, r.y + (r.height - h) / 2, w, h);
     }
 

@@ -212,7 +212,7 @@ public class BoardPanel extends JComponent {
     }
 
     /**
-     * Gets the logical BoradModel of the panel
+     * Gets the logical BoardModel of the panel
      *
      * @return model
      */
