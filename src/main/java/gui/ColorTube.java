@@ -119,8 +119,7 @@ public class ColorTube extends JComponent {
      */
     public final static int ARROW_YELLOW = 2;
 
-    // --- Tube states: ---
-    private boolean active = true;
+// --- Tube states: ---
 
     /**
      * The tube can be closed in 2 cases. In the game mode, a closed tube is a tube, all cells of
@@ -176,14 +175,14 @@ public class ColorTube extends JComponent {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (active && e.getButton() == 1) {
+                if (!closed && e.getButton() == 1) {
                     doClick();
                 }
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (active) {
+                if (!closed) {
                     shade.doShow();
                     if (canShowArrow()) {
                         arrow.startUnlimited();
@@ -230,28 +229,6 @@ public class ColorTube extends JComponent {
      */
     public boolean isEmpty() {
         return model.isEmpty();
-    }
-
-    /**
-     * Is this tube active?
-     *
-     * @return true if the tube is still in the game.
-     */
-    public boolean isActive() {
-        return active;
-    }
-
-    /**
-     * Sets the tube's activity.
-     *
-     * @param b true if this tube becomes active, false otherwise.
-     */
-    public void setActive(boolean b) {
-        if (!b) {
-            arrow.stop();
-            shade.doHide();
-        }
-        active = b;
     }
 
     /**
@@ -346,7 +323,7 @@ public class ColorTube extends JComponent {
     public boolean canPutColor(int colorNum) {
         switch (MainFrame.gameMode) {
             case MainFrame.FILL_MODE:
-                return active && getColorsCount() < 4;
+                return !closed && getColorsCount() < 4;
             case MainFrame.PLAY_MODE:
                 return model.canPutColor((byte) colorNum);
             default:

@@ -397,8 +397,6 @@ public class TubesIO {
             if (hideFillAnimation)
                 tube.setColorsAnimation(false);
             tube.restoreColors(storedTubes[i]);
-            if (gMode != MainFrame.FILL_MODE)
-                tube.setActive(!tube.isClosed());
             tube.setColorsAnimation(true);
         }
         bp.restoreLocation();

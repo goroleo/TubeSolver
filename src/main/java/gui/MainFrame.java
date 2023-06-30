@@ -364,10 +364,8 @@ public class MainFrame extends JFrame {
                 if (Palette.usedColors.getAllUsedColors() >= filledTubes) {
                     disableUnusedColors();
                 }
-
                 for (int i = filledTubes; i < tubesPan.getTubesCount(); i++) {
                     tubesPan.getTube(i).setClosed(true);
-                    tubesPan.getTube(i).setActive(false);
                 }
             } else {
                 addTubesPanel(0, 0);
@@ -577,9 +575,9 @@ public class MainFrame extends JFrame {
      */
     public void startPlayMode() {
         setGameMode(PLAY_MODE);
+
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             tubesPan.getTube(i).setClosed(tubesPan.getTube(i).getModel().getState() == 3);
-            tubesPan.getTube(i).setActive(!tubesPan.getTube(i).isClosed());
         }
 
         if (tubesPan.isSolved())
@@ -705,7 +703,6 @@ public class MainFrame extends JFrame {
         TubesIO.fileDelete(TubesIO.tempFileName);
 
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            tubesPan.getTube(i).setActive(false);
             tubesPan.getTube(i).setClosed(true);
             tubesPan.getTube(i).setFrame(4);
             tubesPan.getTube(i).showFrame();
@@ -975,7 +972,7 @@ public class MainFrame extends JFrame {
      */
     public void startFindTubesFrom() {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            if (tubesPan.getTube(i).isActive()) {
+            if (!tubesPan.getTube(i).isClosed()) {
                 tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_GREEN);
             }
         }
@@ -986,7 +983,7 @@ public class MainFrame extends JFrame {
      */
     public void startFindTubesTo() {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            if (tubesPan.getTube(i).isActive()) {
+            if (!tubesPan.getTube(i).isClosed()) {
                 tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_YELLOW);
             }
         }
@@ -1006,7 +1003,7 @@ public class MainFrame extends JFrame {
     public void clearTube(ColorTube tube) {
         if (tube != null) {
             byte clrNum;
-            if (tube.isActive()) {
+            if (!tube.isClosed()) {
 
                 for (int i = tube.getColorsCount() - 1; i >= 0; i--) {
                     clrNum = tube.getCurrentColor();

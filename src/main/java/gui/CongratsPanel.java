@@ -125,7 +125,6 @@ public class CongratsPanel extends JComponent {
     public void doClick() {
 
         for (int i = 0; i < MainFrame.tubesPan.getTubesCount(); i++) {
-            MainFrame.tubesPan.getTube(i).setActive(false);
             MainFrame.tubesPan.getTube(i).setClosed(true);
             MainFrame.tubesPan.getTube(i).setFrame(4);
             MainFrame.tubesPan.getTube(i).showFrame();

@@ -140,11 +140,9 @@ public class BoardPanel extends JComponent {
         for (int i = 0; i < filled; i++) {
             ColorTube tube = addNewTube();
             tube.setFrame(0);
-            tube.setActive(true);
         }
         for (int i = 0; i < empty; i++) {
             ColorTube tube = addNewTube();
-            tube.setActive(false);
             tube.setClosed(true);
         }
         calculateColumns();
