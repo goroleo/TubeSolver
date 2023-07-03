@@ -49,7 +49,7 @@ public class ColorBox extends JComponent implements ColorListener {
 
     /**
      * <b>Creates the class which draws ColorBox.</b> <br>
-     * It has 256x256 poins plus 10 extra points for each side (left, right,
+     * It has 256x256 points plus 10 extra points for each side (left, right,
      * top, bottom). These extra points are used to draw a circle cursor that
      * indicates the current color position.<br>
      * No params need for this constructor.
@@ -65,7 +65,7 @@ public class ColorBox extends JComponent implements ColorListener {
     }
 
     /**
-     * Overrided routine for repaint this conponent. It just draws the buffered
+     * Overrided routine for repaint this component. It just draws the buffered
      * image, made before.
      */
     @Override
@@ -93,60 +93,60 @@ public class ColorBox extends JComponent implements ColorListener {
      * @see ColorChanger
      */
     private void setCurrentColor() {
-        int r, g, b1;
-        float h, s, b;
+        int r, g, b; // red, green, blue
+        float h, s, l; // hue, saturation, luminosity (ot brightness)
 
         switch (cPanel.getDialogMode()) {
             case 0: // Hue
                 s = curX / 255.0f;
-                b = 1.0f - (curY / 255.0f);
+                l = 1.0f - (curY / 255.0f);
                 if (cPanel.getColorScheme() == 0) {
                     h = current.getHSBhue();
-                    current.setHSB(this, h, s, b);
+                    current.setHSB(this, h, s, l);
                 } else {
                     h = current.getHSLhue();
-                    current.setHSL(this, h, s, b);
+                    current.setHSL(this, h, s, l);
                 }
                 break;
             case 1: // Saturation
                 h = curX / 255.0f;
-                b = 1.0f - (curY / 255.0f);
+                l = 1.0f - (curY / 255.0f);
                 if (cPanel.getColorScheme() == 0) {
                     s = current.getHSBsat();
-                    current.setHSB(this, h, s, b);
+                    current.setHSB(this, h, s, l);
                 } else {
                     s = current.getHSLsat();
-                    current.setHSL(this, h, s, b);
+                    current.setHSL(this, h, s, l);
                 }
                 break;
             case 2: // Brightness
                 h = curX / 255.0f;
                 s = 1.0f - (curY / 255.0f);
                 if (cPanel.getColorScheme() == 0) {
-                    b = current.getHSBbri();
-                    current.setHSB(this, h, s, b);
+                    l = current.getHSBbri();
+                    current.setHSB(this, h, s, l);
                 } else {
-                    b = current.getHSLlight();
-                    current.setHSL(this, h, s, b);
+                    l = current.getHSLlight();
+                    current.setHSL(this, h, s, l);
                 }
                 break;
             case 3: // Red
                 r = current.getRed();
-                b1 = curX;
+                b = curX;
                 g = 255 - curY;
-                current.setRGB(this, r, g, b1);
+                current.setRGB(this, r, g, b);
                 break;
             case 4: // Green
                 g = current.getGreen();
-                b1 = curX;
+                b = curX;
                 r = 255 - curY;
-                current.setRGB(this, r, g, b1);
+                current.setRGB(this, r, g, b);
                 break;
             case 5: // Blue
-                b1 = current.getBlue();
+                b = current.getBlue();
                 r = curX;
                 g = 255 - curY;
-                current.setRGB(this, r, g, b1);
+                current.setRGB(this, r, g, b);
         }
     }
 
@@ -204,8 +204,8 @@ public class ColorBox extends JComponent implements ColorListener {
      * @see ColorPanel#getDialogMode
      */
     private void drawBox() {
-        float h, s, b;
-        int r, g, b1, clr;
+        float h, s, l;
+        int r, g, b, clr;
 
         switch (cPanel.getDialogMode()) {
             case 0: // Hue
@@ -217,11 +217,11 @@ public class ColorBox extends JComponent implements ColorListener {
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         s = x / 255.0f;
-                        b = 1.0f - y / 255.0f;
+                        l = 1.0f - y / 255.0f;
                         if (cPanel.getColorScheme() == 0) {
-                            clr = ColorChanger.HSBtoColor(h, s, b);
+                            clr = ColorChanger.HSBtoColor(h, s, l);
                         } else {
-                            clr = ColorChanger.HSLtoColor(h, s, b);
+                            clr = ColorChanger.HSLtoColor(h, s, l);
                         }
                         buffer.setRGB(x, y, clr);
                     }
@@ -237,31 +237,31 @@ public class ColorBox extends JComponent implements ColorListener {
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         h = x / 255.0f;
-                        b = 1.0f - y / 255.0f;
+                        l = 1.0f - y / 255.0f;
                         if (cPanel.getColorScheme() == 0) {
-                            clr = ColorChanger.HSBtoColor(h, s, b);
+                            clr = ColorChanger.HSBtoColor(h, s, l);
                         } else {
-                            clr = ColorChanger.HSLtoColor(h, s, b);
+                            clr = ColorChanger.HSLtoColor(h, s, l);
                         }
                         buffer.setRGB(x, y, clr);
                     }
                 }
                 break;
 
-            case 2: // Brightness
+            case 2: // Brightness or Luminosity
                 if (cPanel.getColorScheme() == 0) {
-                    b = current.getHSBbri();
+                    l = current.getHSBbri();
                 } else {
-                    b = current.getHSLlight();
+                    l = current.getHSLlight();
                 }
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         h = x / 255.0f;
                         s = 1.0f - y / 255.0f;
                         if (cPanel.getColorScheme() == 0) {
-                            clr = ColorChanger.HSBtoColor(h, s, b);
+                            clr = ColorChanger.HSBtoColor(h, s, l);
                         } else {
-                            clr = ColorChanger.HSLtoColor(h, s, b);
+                            clr = ColorChanger.HSLtoColor(h, s, l);
                         }
                         buffer.setRGB(x, y, clr);
                     }
@@ -272,10 +272,10 @@ public class ColorBox extends JComponent implements ColorListener {
                 r = current.getRed();
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
-                        b1 = x;
+                        b = x;
                         g = 255 - y;
                         buffer.setRGB(x, y,
-                                0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff));
+                                0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff));
                     }
                 }
                 break;
@@ -284,22 +284,22 @@ public class ColorBox extends JComponent implements ColorListener {
                 g = current.getGreen();
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
-                        b1 = x;
+                        b = x;
                         r = 255 - y;
                         buffer.setRGB(x, y,
-                                0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff));
+                                0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff));
                     }
                 }
                 break;
 
             case 5: // Blue
-                b1 = current.getBlue();
+                b = current.getBlue();
                 for (int x = 0; x < 256; x++) {
                     for (int y = 0; y < 256; y++) {
                         g = 255 - y;
                         r = x;
                         buffer.setRGB(x, y,
-                                0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b1 & 0xff));
+                                0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff));
                     }
                 }
         } // switch dialogMode

@@ -6,11 +6,11 @@
 
     <groupId>com.me.legoru</groupId>
     <artifactId>TubeSolver</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.99</version>
 
     <properties>
-        <maven.compiler.source>19</maven.compiler.source>
-        <maven.compiler.target>19</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

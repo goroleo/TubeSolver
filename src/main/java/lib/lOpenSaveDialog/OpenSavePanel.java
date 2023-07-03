@@ -76,7 +76,7 @@ public class OpenSavePanel extends JPanel {
     /**
      * Dialog controls: A File Edit Panel. Displays and edits a name of the current file.
      */
-    private final FileNameEdit FileNameEdit;
+    private final FileNameEdit fileNameEdit;
 
     /**
      * Dialog controls: OK button. The dialog panel has an option to hide
@@ -145,7 +145,7 @@ public class OpenSavePanel extends JPanel {
         filesPanel = new FilesPanel();
         folderComboBox = new FolderComboBox();
         toolsPanel = new ToolsPanel();
-        FileNameEdit = new FileNameEdit();
+        fileNameEdit = new FileNameEdit();
 
         // create labels
         JLabel folderLabel = new JLabel(ResStrings.getString("strFolder"));
@@ -207,7 +207,7 @@ public class OpenSavePanel extends JPanel {
         bottomLine.setBackground(null);
         bottomLine.setForeground(null);
         bottomLine.add(fileLabel, BorderLayout.WEST);
-        bottomLine.add(FileNameEdit, BorderLayout.CENTER);
+        bottomLine.add(fileNameEdit, BorderLayout.CENTER);
         bottomLine.add(extLabel, BorderLayout.EAST);
 
         if (showButtons)
@@ -222,8 +222,8 @@ public class OpenSavePanel extends JPanel {
         current.addFolderListener(foldersPanel);
         current.addFolderListener(filesPanel);
         current.addFolderListener(folderComboBox);
-        current.addFolderListener(FileNameEdit);
-        current.addFileListener(FileNameEdit);
+        current.addFolderListener(fileNameEdit);
+        current.addFileListener(fileNameEdit);
 
         if (Options.osdSortCol > 0 && Options.osdSortCol < 4
                 && Options.osdSortOrder >= 0 && Options.osdSortOrder <= 1) {
@@ -283,7 +283,7 @@ public class OpenSavePanel extends JPanel {
             foldersPanel.setFocusable(b);
             toolsPanel.setFocusable(!b);
             filesPanel.setFocusable(!b);
-            FileNameEdit.setFocusable(!b);
+            fileNameEdit.setFocusable(!b);
             if (btnOk != null) {
                 btnOk.setFocusable(!b);
                 btnCancel.setFocusable(!b);
@@ -345,7 +345,7 @@ public class OpenSavePanel extends JPanel {
     public void setFileName(File f) {
         if (f != null) {
             if (f.isDirectory()) {
-                FileNameEdit.setValue(f.getName());
+                fileNameEdit.setValue(f.getName());
             } else {
                 current.setFile(f.getName());
             }
@@ -420,7 +420,7 @@ public class OpenSavePanel extends JPanel {
         }
 
         // reading the current file/path name value from fileEditPanel
-        fName = FileNameEdit.getValue().trim();
+        fName = fileNameEdit.getValue().trim();
         if ("".equals(fName)) {
             return;
         }
