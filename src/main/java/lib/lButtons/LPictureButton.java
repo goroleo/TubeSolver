@@ -9,20 +9,12 @@
  */
 package lib.lButtons;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Toolkit;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import java.awt.Container;
-import java.util.Objects;
-import javax.swing.BorderFactory;
-import javax.swing.JToolTip;
 
 /**
  * This is extended JButton class with specified pictures for every button state.
@@ -57,7 +49,7 @@ public class LPictureButton extends JButton {
     private BufferedImage imgPressed = null;
     private BufferedImage imgDefault = null;
 
-    // Text Colors:
+// Text Colors:
     private Color clrEnabled = new Color(255, 255, 255);
     private Color clrDisabled = new Color(128, 128, 128);
     private Color clrHover = new Color(0, 0, 0);
@@ -236,7 +228,7 @@ public class LPictureButton extends JButton {
     }
 
     private URL getImageURL(String fName) {
-        return Objects.requireNonNullElse(parent, this).getClass().getResource("/img/" + fName);
+        return this.getClass().getResource("/img/" + fName);
     }
 
     /**

@@ -24,7 +24,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 import static lib.lOpenSaveDialog.LOpenSaveDialog.dialogMode;
 
@@ -291,7 +290,10 @@ public class OpenSavePanel extends JPanel {
             if (b) {
                 foldersPanel.requestFocus();
             } else {
-                Objects.requireNonNullElse(invoker, filesPanel).requestFocus();
+                if (invoker != null)
+                    invoker.requestFocus();
+                else
+                    filesPanel.requestFocus();
             }
         }
     }
