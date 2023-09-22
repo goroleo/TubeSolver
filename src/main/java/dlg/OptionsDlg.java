@@ -19,6 +19,8 @@ import run.Main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * The dialog box to displaying and changing application settings.
@@ -56,6 +58,12 @@ public class OptionsDlg extends JDialog {
         addLanguages();
         addSavingOptions();
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                refuseAndClose();
+            }
+        });
 
         // ESCAPE pressed
         getRootPane().registerKeyboardAction(
@@ -163,8 +171,6 @@ public class OptionsDlg extends JDialog {
             cbSaveAfterSolve.setSelected(Options.saveGameAfterSolve);
             cbSaveBeforeClose.setSelected(Options.saveGameBeforeClose);
             Main.frame.setGameMode(MainFrame.BUSY_MODE);
-        } else {
-            Main.frame.setGameMode(MainFrame.prevMode);
         }
         super.setVisible(b);
     }
