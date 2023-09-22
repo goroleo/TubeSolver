@@ -12,9 +12,8 @@ public class LPopupMenu extends JPopupMenu {
     private final Border menuBorder = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.gray),
             BorderFactory.createEmptyBorder(2, 2, 2, 2));
-    private final Border itemBorder = BorderFactory.createCompoundBorder(
-            BorderFactory.createEmptyBorder(0, 0, 0, 0),
-            BorderFactory.createEmptyBorder(3, 3, 3, 3));
+    private final Border itemBorder =
+            BorderFactory.createEmptyBorder(3, 3, 3, 3);
 
     /**
      * Creates the popup menu with this project's decoration.
@@ -31,13 +30,12 @@ public class LPopupMenu extends JPopupMenu {
      * @param text this menu item's caption
      * @return menu instance
      */
-    @SuppressWarnings("MagicConstant")
     public JMenu addMenu(JMenu parent, String text) {
         JMenu menu = new JMenu(text);
         menu.setBackground(Palette.dialogColor);
         menu.setForeground(Color.white);
         menu.setBorder(itemBorder);
-        menu.setFont(menu.getFont().deriveFont(0)); // Font.PLAIN
+        menu.setFont(menu.getFont().deriveFont(Font.PLAIN));
         menu.getPopupMenu().setBackground(Palette.dialogColor);
         menu.getPopupMenu().setForeground(Color.white);
         menu.getPopupMenu().setBorder(menuBorder);
@@ -55,14 +53,13 @@ public class LPopupMenu extends JPopupMenu {
      * @param text this menu item's caption
      * @return menu item instance
      */
-    @SuppressWarnings("MagicConstant")
     public JMenuItem addMenuItem(JMenu parent, String text) {
         JMenuItem menu = new JMenuItem(text);
         menu.setBackground(Palette.dialogColor);
         menu.setForeground(Color.white);
         menu.setBorder(itemBorder);
         menu.setIcon(null);
-        menu.setFont(menu.getFont().deriveFont(0)); // Font.PLAIN
+        menu.setFont(menu.getFont().deriveFont(Font.PLAIN)); // Font.PLAIN
         if (parent != null) {
             parent.add(menu);
         } else {
@@ -87,5 +84,4 @@ public class LPopupMenu extends JPopupMenu {
         }
         return sep;
     }
-
 }

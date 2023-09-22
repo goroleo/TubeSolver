@@ -34,7 +34,7 @@ https://choosealicense.com/licenses/mit/
 Use it as you want. 
 
 ## Compiling
-Made with pure Java Swing (Java 9), with neither any third-party libraries no any dependencies. All animation, drawings, pictures, dialogs are completely homemade.
+Made with pure Java Swing (Java 8), with neither any third-party libraries no any dependencies. All animation, drawings, pictures, dialogs are completely homemade.
 
 To compile, just specify `run/Main.java` as the main class of the application.
 

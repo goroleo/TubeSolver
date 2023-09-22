@@ -74,7 +74,7 @@ public class ColorPanel extends JComponent {
      * <i>HSB/HSV (or HSL) color model:</i><ul>
      * <li>0. <b>H</b>ue
      * <li>1. <b>S</b>aturation
-     * <li>2. <b>B</b>ightness (<b>L</b>ightness when HSL)</ul>
+     * <li>2. <b>B</b>rightness (<b>L</b>ightness when HSL)</ul>
      * <i>RGB color model:</i><ul>
      * <li>3. <b>R</b>ed
      * <li>4. <b>G</b>reen
@@ -192,13 +192,18 @@ public class ColorPanel extends JComponent {
     }
 
     /**
-     * @return dialog mdoe
+     * @return dialog mode
      * @see ColorPanel#dialogMode
      */
     public int getDialogMode() {
         return dialogMode;
     }
 
+    /**
+     * Sets the mode of the dialog
+     * @param newMode a new mode of the dialog
+     * @see ColorPanel#dialogMode
+     */
     public void setDialogMode(int newMode) {
         dialogMode = newMode;
         cBox.updateColor();
@@ -206,10 +211,19 @@ public class ColorPanel extends JComponent {
         cLabels.updateDialogMode();
     }
 
+    /**
+     * @return color scheme
+     * @see ColorPanel#colorScheme
+     */
     public int getColorScheme() {
         return colorScheme;
     }
 
+    /**
+     * Sets color scheme
+     * @param scheme new color scheme
+     * @see ColorPanel#colorScheme
+     */
     public void setColorScheme(int scheme) {
         if (scheme == 0 || scheme == 1) {
             colorScheme = scheme;
@@ -219,20 +233,31 @@ public class ColorPanel extends JComponent {
         }
     }
 
+    /**
+     * Gets the current color chosen by user
+     * @return current color
+     */
     public Color getColor() {
         return current.getColor();
     }
 
+    /**
+     * Sets the current color of the dialog
+     * @param clr new color
+     */
     public void setColor(Color clr) {
         current.setRGB(this, clr.getRGB());
     }
 
+    /**
+     * Sets the previous color of the dialog
+     * @param clr previous color
+     */
     public void setPrevColor(Color clr) {
         previousColor = clr.getRGB();
         cCur.repaint();
     }
 
-    @SuppressWarnings("SameParameterValue")
     private LPictureButton addButton(String txt, int x, int y) {
         LPictureButton btn = new LPictureButton(this);
         btn.setText(txt);

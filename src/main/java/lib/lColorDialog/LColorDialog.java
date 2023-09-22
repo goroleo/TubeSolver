@@ -33,7 +33,10 @@ import static lib.lColorDialog.ColorPanel.current;
 public class LColorDialog extends JDialog {
 
     private final JFrame owner;
-    
+
+    /**
+     * @see ColorPanel
+     */
     public static ColorPanel cPanel;
 
     public LColorDialog(JFrame owner) {
@@ -137,7 +140,7 @@ public class LColorDialog extends JDialog {
 
     /**
      * @param newMode dialog mode
-     * @see ColorPanel#getDialogMode
+     * @see ColorPanel#setDialogMode
      */
     public void setDialogMode(int newMode) {
         cPanel.setDialogMode(newMode);
