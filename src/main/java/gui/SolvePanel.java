@@ -9,9 +9,9 @@
  */
 package gui;
 
-import ani.*;
+import ani.BlurLayer;
+import ani.WheelLayer;
 import core.BoardModel;
-import core.Options;
 import core.ResStrings;
 import core.Solver;
 import lib.lButtons.LPictureButton;
@@ -88,7 +88,7 @@ public class SolvePanel extends JComponent {
         registerKeyboardAction(
                 (ActionEvent e) -> stopSolver(1),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
     }
 
