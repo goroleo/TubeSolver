@@ -636,10 +636,10 @@ public class MainFrame extends JFrame {
         msgDlg.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
         msgDlg.setVisible(true);
 
-
         if (msgDlg.result > 0) {
             setGameMode(BUSY_MODE);
             setResizable(false);
+            Options.numSolverRun++;
             solvePan.startSolve(tubesPan.getModel());
         } else {
             setGameMode(prevMode);
@@ -655,13 +655,13 @@ public class MainFrame extends JFrame {
     public void endSolve(int result) {
 
         MessageDlg msgDlg;
-
         setResizable(true);
 
         switch (result) {
             case 0: // working
                 break;
             case 1: // escape-cancel pressed
+                Options.numSolverCancel ++;
                 msgDlg = new MessageDlg(this,
                         ResStrings.getString("strCancelSolution"),
                         MessageDlg.BTN_OK);
@@ -669,6 +669,7 @@ public class MainFrame extends JFrame {
                 msgDlg.setVisible(true);
                 break;
             case 2: // not solved
+                Options.numSolverNotSolved ++;
                 msgDlg = new MessageDlg(this,
                         ResStrings.getString("strNotSolved"),
                         MessageDlg.BTN_OK);
@@ -676,6 +677,7 @@ public class MainFrame extends JFrame {
                 msgDlg.setVisible(true);
                 break;
             case 3: // solved!
+                Options.numSolverSuccess ++;
                 msgDlg = new MessageDlg(this,
                         ResStrings.getString("strSolutionSuccess"),
                         MessageDlg.BTN_YES_NO);
@@ -1071,6 +1073,7 @@ public class MainFrame extends JFrame {
                 }
             }
         }
+        Options.numAutoFill ++;
         tubesPan.paintImmediately(tubesPan.getBounds());
         endFillMode();
     }
@@ -1210,6 +1213,7 @@ public class MainFrame extends JFrame {
                         disableUnusedColors();
                     }
                     if (Palette.usedColors.getAllFilledColors() == palette.size() - 1) {
+                        Options.numManualFill ++;
                         endFillMode();
                     }
                 }

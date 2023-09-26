@@ -228,6 +228,53 @@ public class Options {
      */
     public static int odPositionY = -1;
 
+// --------- statistics -------------
+    /**
+     * Number of random filled boards from the first start
+     */
+    public static int numAutoFill = 0;
+
+    /**
+     * Number of manual filled boards from the first start
+     */
+    public static int numManualFill = 0;
+
+    /**
+     * Number of solver execution
+     */
+    public static int numSolverRun = 0;
+
+    /**
+     * Number of solver successes
+     */
+    public static int numSolverSuccess = 0;
+
+    /**
+     * Number of solver cancellations
+     */
+    public static int numSolverCancel = 0;
+
+    /**
+     * Number of solver "not solved" results
+     */
+    public static int numSolverNotSolved = 0;
+
+    /**
+     * Last time of solver's success working, in seconds
+     */
+    public static double solverTimeLast = 0.0;
+
+    /**
+     * Maximal time of solver's success working, in seconds
+     */
+    public static double solverTimeMax = 0.0;
+
+    /**
+     * Average time of solver's success working, in seconds
+     */
+    public static double solverTimeAvg = 0.0;
+
+
 
 // --------- Options routines  -------------
 
@@ -282,6 +329,16 @@ public class Options {
         // --------- options dialog -------------
         sProps.setProperty("OptionsDialogPosX", Integer.toString(odPositionX));
         sProps.setProperty("OptionsDialogPosY", Integer.toString(odPositionY));
+        // --------- statistics -------------
+        sProps.setProperty("xStatNumberAutoFill", Integer.toString(numAutoFill));
+        sProps.setProperty("xStatNumberManualFill", Integer.toString(numManualFill));
+        sProps.setProperty("xStatNumberSolverRun", Integer.toString(numSolverRun));
+        sProps.setProperty("xStatNumberSolverSuccess", Integer.toString(numSolverSuccess));
+        sProps.setProperty("xStatNumberSolverCancel", Integer.toString(numSolverCancel));
+        sProps.setProperty("xStatNumberSolverNotSolved", Integer.toString(numSolverNotSolved));
+        sProps.setProperty("xStatSolverTimeLast(sec)", Double.toString(solverTimeLast));
+        sProps.setProperty("xStatSolverTimeMax(sec)", Double.toString(solverTimeMax));
+        sProps.setProperty("xStatSolverTimeAverage(sec)", Double.toString(solverTimeAvg));
 
         TubesIO.saveOptions(sProps);
         sProps.clear();
@@ -349,6 +406,16 @@ public class Options {
             // --------- options dialog -------------
             odPositionX = Integer.parseInt(sProps.getProperty("OptionsDialogPosX", "-1"));
             odPositionY = Integer.parseInt(sProps.getProperty("OptionsDialogPosY", "-1"));
+            // --------- statistics -------------
+            numAutoFill = Integer.parseInt(sProps.getProperty("xStatNumberAutoFill", "0"));
+            numManualFill = Integer.parseInt(sProps.getProperty("xStatNumberManualFill", "0"));
+            numSolverRun = Integer.parseInt(sProps.getProperty("xStatNumberSolverRun", "0"));
+            numSolverSuccess = Integer.parseInt(sProps.getProperty("xStatNumberSolverSuccess", "0"));
+            numSolverCancel = Integer.parseInt(sProps.getProperty("xStatNumberSolverCancel", "0"));
+            numSolverNotSolved = Integer.parseInt(sProps.getProperty("xStatNumberSolverNotSolved", "0"));
+            solverTimeLast = Double.parseDouble(sProps.getProperty("xStatSolverTimeLast(sec)", "0.0"));
+            solverTimeMax = Double.parseDouble(sProps.getProperty("xStatSolverTimeMax(sec)", "0.0"));
+            solverTimeAvg = Double.parseDouble(sProps.getProperty("xStatSolverTimeAverage(sec)", "0.0"));
         }
     }
 

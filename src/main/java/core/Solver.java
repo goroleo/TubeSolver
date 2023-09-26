@@ -214,6 +214,13 @@ public class Solver implements Runnable {
 
         if (solved) {
 
+            // save statistics
+            Options.solverTimeLast = workingTime / 1000;
+            if (Options.solverTimeMax < Options.solverTimeLast)
+                Options.solverTimeMax = Options.solverTimeLast;
+            Options.solverTimeAvg = (Options.solverTimeAvg * Options.numSolverSuccess
+                    + Options.solverTimeLast) / (Options.numSolverSuccess + 1);
+
             // place solution to the gameMoves array
             do {
                 gameMoves.add(movesDone, move.storeMove());

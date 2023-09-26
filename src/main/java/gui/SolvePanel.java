@@ -11,6 +11,7 @@ package gui;
 
 import ani.*;
 import core.BoardModel;
+import core.Options;
 import core.ResStrings;
 import core.Solver;
 import lib.lButtons.LPictureButton;
