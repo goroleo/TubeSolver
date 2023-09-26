@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Properties;
@@ -274,14 +275,13 @@ public class Options {
      */
     public static double solverTimeAvg = 0.0;
 
-
-
 // --------- Options routines  -------------
 
     /**
      * Saves application settings.
      */
     public static void saveOptions() {
+
         Properties sProps = new Properties();
         // --------- language -------------
         sProps.setProperty("Language", langCode);
@@ -336,9 +336,9 @@ public class Options {
         sProps.setProperty("xStatNumberSolverSuccess", Integer.toString(numSolverSuccess));
         sProps.setProperty("xStatNumberSolverCancel", Integer.toString(numSolverCancel));
         sProps.setProperty("xStatNumberSolverNotSolved", Integer.toString(numSolverNotSolved));
-        sProps.setProperty("xStatSolverTimeLast(sec)", Double.toString(solverTimeLast));
-        sProps.setProperty("xStatSolverTimeMax(sec)", Double.toString(solverTimeMax));
-        sProps.setProperty("xStatSolverTimeAverage(sec)", Double.toString(solverTimeAvg));
+        sProps.setProperty("xStatSolverTimeLast(sec)", DoubleToString1000(solverTimeLast));
+        sProps.setProperty("xStatSolverTimeMax(sec)", DoubleToString1000(solverTimeMax));
+        sProps.setProperty("xStatSolverTimeAverage(sec)", DoubleToString1000(solverTimeAvg));
 
         TubesIO.saveOptions(sProps);
         sProps.clear();
@@ -596,6 +596,16 @@ public class Options {
     }
 
     /**
+     * Converts Double Value into string with 3 decimal digits
+     * @param value double value
+     * @return string
+     */
+    public static String DoubleToString1000(double value) {
+        value = ((double) Math.round(value * 1000)) / 1000;
+        return Double.toString(value);
+    }
+
+    /**
      * Makes the string with the current date and time: YYYY-MM-DD HH-MM-SS.
      *
      * @return new string with the date-time stamp.
@@ -609,6 +619,4 @@ public class Options {
                 + leadZero(Integer.toString(dt.getMinute()), 2) + "-"
                 + leadZero(Integer.toString(dt.getSecond()), 2);
     }
-
-
 }
