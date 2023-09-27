@@ -1073,7 +1073,7 @@ public class MainFrame extends JFrame {
                 }
             }
         }
-        Options.numAutoFill ++;
+        Options.numRandomFill ++;
         tubesPan.paintImmediately(tubesPan.getBounds());
         endFillMode();
     }

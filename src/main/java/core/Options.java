@@ -233,7 +233,7 @@ public class Options {
     /**
      * Number of random filled boards from the first start
      */
-    public static int numAutoFill = 0;
+    public static int numRandomFill = 0;
 
     /**
      * Number of manual filled boards from the first start
@@ -330,7 +330,7 @@ public class Options {
         sProps.setProperty("OptionsDialogPosX", Integer.toString(odPositionX));
         sProps.setProperty("OptionsDialogPosY", Integer.toString(odPositionY));
         // --------- statistics -------------
-        sProps.setProperty("xStatNumberAutoFill", Integer.toString(numAutoFill));
+        sProps.setProperty("xStatNumberRandomFill", Integer.toString(numRandomFill));
         sProps.setProperty("xStatNumberManualFill", Integer.toString(numManualFill));
         sProps.setProperty("xStatNumberSolverRun", Integer.toString(numSolverRun));
         sProps.setProperty("xStatNumberSolverSuccess", Integer.toString(numSolverSuccess));
@@ -407,7 +407,7 @@ public class Options {
             odPositionX = Integer.parseInt(sProps.getProperty("OptionsDialogPosX", "-1"));
             odPositionY = Integer.parseInt(sProps.getProperty("OptionsDialogPosY", "-1"));
             // --------- statistics -------------
-            numAutoFill = Integer.parseInt(sProps.getProperty("xStatNumberAutoFill", "0"));
+            numRandomFill = Integer.parseInt(sProps.getProperty("xStatNumberRandomFill", "0"));
             numManualFill = Integer.parseInt(sProps.getProperty("xStatNumberManualFill", "0"));
             numSolverRun = Integer.parseInt(sProps.getProperty("xStatNumberSolverRun", "0"));
             numSolverSuccess = Integer.parseInt(sProps.getProperty("xStatNumberSolverSuccess", "0"));
