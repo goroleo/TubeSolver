@@ -16,7 +16,7 @@ ShadeLayer – used at `ColorTube` and `ColorButton` to animate fade in and fade
 
 ShapeLayer – used at `ColorButton` to fill the shape with the specified color of palette
 
-SlideLayer – used at `ColorButton` to animate sliding replace of two images
+SlideLayer – used at `ColorButton` (counters) and `ColorTube` (cork) to animate sliding replace of two images
 
 WaveLayer – used at `ColorTube` (arrows) and `ConrgatsPanel` (congratulation text) to animate a wave-like change the transparency of an image
 
