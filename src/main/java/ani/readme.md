@@ -18,6 +18,6 @@ ShapeLayer – used at `ColorButton` to fill the shape with the specified color 
 
 SlideLayer – used at `ColorButton` (counters) and `ColorTube` (cork) to animate sliding replace of two images
 
-WaveLayer – used at `ColorTube` (arrows) and `ConrgatsPanel` (congratulation text) to animate a wave-like change the transparency of an image
+WaveLayer – used at `ColorTube` (arrows) and `ConrgatsPanel` (congratulation text) to animate a wave-like change transparency of an image
 
 WheelLayer – used at `SolvePanel` to animate a spinning circle showing the application busyness
