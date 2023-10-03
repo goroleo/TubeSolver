@@ -638,7 +638,7 @@ public class MainFrame extends JFrame {
 
         if (msgDlg.result > 0) {
             setGameMode(BUSY_MODE);
-            setResizable(false);
+//            setResizable(false);
             Options.numSolverRun++;
             solvePan.startSolve(tubesPan.getModel());
         } else {
@@ -655,7 +655,7 @@ public class MainFrame extends JFrame {
     public void endSolve(int result) {
 
         MessageDlg msgDlg;
-        setResizable(true);
+  //      setResizable(true);
 
         switch (result) {
             case 0: // working
