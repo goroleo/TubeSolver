@@ -381,12 +381,11 @@ public class WaveLayer extends JComponent implements Runnable {
      * Starts the animation thread.
      */
     public void start() {
+        disappear = false;
         if (!working) {
             working = true;
             Thread t = new Thread(this);
             t.start();
-        } else {
-            disappear = false;
         }
     }
 
@@ -394,8 +393,11 @@ public class WaveLayer extends JComponent implements Runnable {
      * Stops the animation thread. It just switches the <i>disappear</i> field and then the cycle will stop after doing it.
      */
     public void stop() {
-        if (working) {
-            disappear = true;
+        disappear = true;
+        if (!working) {
+            working = true;
+            Thread t = new Thread(this);
+            t.start();
         }
     }
 

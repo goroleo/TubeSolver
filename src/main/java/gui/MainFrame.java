@@ -367,8 +367,8 @@ public class MainFrame extends JFrame {
                 if (Palette.usedColors.getAllUsedColors() >= filledTubes) {
                     disableUnusedColors();
                 }
-                for (int i = filledTubes; i < tubesPan.getTubesCount(); i++) {
-                    tubesPan.getTube(i).setClosed(true);
+                for (int i = 0; i < emptyTubes; i++) {
+                    tubesPan.getTube(filledTubes + i).setClosed(true);
                 }
             } else {
                 addTubesPanel(0, 0);
@@ -512,12 +512,11 @@ public class MainFrame extends JFrame {
         clearStored();
         addColorsPanel();
         addTubesPanel(aFilled, aEmpty);
+        startFindTubesTo();
         filledTubes = aFilled;
         emptyTubes = aEmpty;
         saveTempOnExit = true;
         fileNameEnding = ResStrings.getString("strSaveIDManualFill");
-        tubesPan.paintImmediately(tubesPan.getBounds());
-        startFindTubesTo();
         nextTubeTo(0);
     }
 
@@ -527,7 +526,6 @@ public class MainFrame extends JFrame {
     public void resumeFillMode() {
         setGameMode(FILL_MODE);
         fileNameEnding = ResStrings.getString("strSaveIDManualFill");
-        tubesPan.paintImmediately(tubesPan.getBounds());
         startFindTubesTo();
         nextTubeTo(0);
     }
@@ -546,7 +544,7 @@ public class MainFrame extends JFrame {
         addTubesPanel(aFilled, aEmpty);
         filledTubes = aFilled;
         emptyTubes = aEmpty;
-        tubesPan.paintImmediately(tubesPan.getBounds());
+//        tubesPan.paintImmediately(tubesPan.getBounds());
         autoFillTheRest();
     }
 
@@ -611,19 +609,17 @@ public class MainFrame extends JFrame {
      * Ends the Assistant mode and return to the regular play mode.
      */
     public void endAssistMode() {
-        setGameMode(PLAY_MODE);
-        saveTempOnExit = true;
-        if (gameMoves.size() > movesDone) {
-            tubesPan.getTube(gameMoves.getTubeFrom(movesDone)).hideArrow();
-            tubesPan.getTube(gameMoves.getTubeFrom(movesDone)).hideFrame();
-            tubesPan.getTube(gameMoves.getTubeTo(movesDone)).hideArrow();
-            tubesPan.getTube(gameMoves.getTubeTo(movesDone)).hideFrame();
-        }
+
+        hideMove();
         while (gameMoves.size() > movesDone) {
             gameMoves.remove(gameMoves.size() - 1);
         }
-        setTubeFrom(null);
+
+        setGameMode(PLAY_MODE);
+        saveTempOnExit = true;
+
         setTubeTo(null);
+        setTubeFrom(null);
     }
 
     /**
@@ -694,7 +690,6 @@ public class MainFrame extends JFrame {
             }
         } else {
             endAssistMode();
-            startPlayMode();
         }
     }
 
@@ -821,6 +816,7 @@ public class MainFrame extends JFrame {
     public boolean canShowArrow(ColorTube tube) {
         switch (gameMode) {
             case FILL_MODE:
+                tube.setArrow(ColorTube.ARROW_YELLOW);
                 return tube.canPutColor(0) && tube != getTubeTo();
             case PLAY_MODE:
                 if (getTubeFrom() == null) {
@@ -967,6 +963,8 @@ public class MainFrame extends JFrame {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             if (!tubesPan.getTube(i).isClosed()) {
                 tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_GREEN);
+            } else {
+                tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_NO_COLOR);
             }
         }
     }
@@ -978,6 +976,8 @@ public class MainFrame extends JFrame {
         for (int i = 0; i < tubesPan.getTubesCount(); i++) {
             if (!tubesPan.getTube(i).isClosed()) {
                 tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_YELLOW);
+            } else {
+                tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_NO_COLOR);
             }
         }
     }
@@ -1250,10 +1250,11 @@ public class MainFrame extends JFrame {
                                     MessageDlg.BTN_YES_NO);
                             msgFrame.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
                             msgFrame.setVisible(true);
+                            setGameMode(prevMode);
+
                             if (msgFrame.result > 0) {
                                 endAssistMode();
-                            } else
-                                setGameMode(prevMode);
+                            }
                         }
                     }
                 } else if (getTubeFrom() == tube) {
@@ -1269,10 +1270,11 @@ public class MainFrame extends JFrame {
                                 MessageDlg.BTN_YES_NO);
                         msgFrame.setButtonsLayout(MessageDlg.BTN_LAYOUT_RIGHT);
                         msgFrame.setVisible(true);
+                        setGameMode(prevMode);
+
                         if (msgFrame.result > 0) {
                             endAssistMode();
-                        } else
-                            setGameMode(prevMode);
+                        }
                     }
                 }
 

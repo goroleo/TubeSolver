@@ -110,6 +110,11 @@ public class ColorTube extends JComponent {
     private int arrowNum = 0;
 
     /**
+     * No arrow
+     */
+    public final static int ARROW_NO_COLOR = 0;
+
+    /**
      * There is a GREEN arrow above the tube. (Shows the direction FROM tube).
      */
     public final static int ARROW_GREEN = 1;
@@ -144,6 +149,7 @@ public class ColorTube extends JComponent {
         int h = imgBottle.getHeight() + 20;
 
         arrow = new WaveLayer(imgArrowGreen);
+        arrowNum = ARROW_GREEN;
         arrow.setLocation(0, 0);
         this.add(arrow);
 
