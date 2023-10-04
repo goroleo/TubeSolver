@@ -472,15 +472,16 @@ public class MainFrame extends JFrame {
      */
     public void clearBoard() {
         congPan.setVisible(false);
+        solvePan.setVisible(false);
         if (tubesPan != null) {
             tubesPan.saveOptions();
-            remove(tubesPan);
+            getLayeredPane().remove(tubesPan);
             tubesPan.emptyBoard();
             tubesPan = null;
         }
         if (palPan != null) {
             palPan.saveOptions();
-            remove(palPan);
+            getLayeredPane().remove(palPan);
             palPan.removeAll();
             palPan = null;
         }
@@ -498,7 +499,6 @@ public class MainFrame extends JFrame {
         TubesIO.clearMoves();
         TubesIO.clearTubes();
     }
-
 
     /**
      * Starts the manual fill game mode.
