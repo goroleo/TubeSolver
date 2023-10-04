@@ -442,6 +442,7 @@ public class ColorChanger {
     /**
      * Removes the all the color listeners.
      */
+    @SuppressWarnings("unused")
     public void removeAllListeners() {
         for (ColorListener cl : colorListeners) {
             colorListeners.remove(cl);

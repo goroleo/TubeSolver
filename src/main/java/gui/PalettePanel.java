@@ -330,6 +330,7 @@ public class PalettePanel extends JComponent {
      * @param number button number
      * @return number of color at the palette
      */
+    @SuppressWarnings("unused")
     public int getButtonColorNum(int number) {
         return buttons.get(number).getColorNumber();
     }
@@ -340,6 +341,7 @@ public class PalettePanel extends JComponent {
      * @param number button number
      * @return Color
      */
+    @SuppressWarnings("unused")
     public Color getColor(int number) {
         return buttons.get(number).getColor();
     }

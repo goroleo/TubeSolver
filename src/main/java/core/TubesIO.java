@@ -12,7 +12,6 @@ package core;
 import gui.BoardPanel;
 import gui.ColorTube;
 import gui.MainFrame;
-import run.Main;
 
 import java.io.*;
 import java.net.URL;
@@ -126,6 +125,7 @@ public class TubesIO {
         String appDir = System.getProperty("user.home") + File.separator
                 + ".tubesolver" + File.separator;
         File F = new File(appDir);
+        //noinspection ResultOfMethodCallIgnored
         F.mkdirs();
         return appDir;
     }

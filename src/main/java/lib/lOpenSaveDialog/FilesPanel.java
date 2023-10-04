@@ -238,6 +238,7 @@ public class FilesPanel extends JComponent implements FolderListener {
      * @param size width of the FileSize column.
      * @param date width of the FileDate column.
      */
+    @SuppressWarnings("unused")
     public void updateColumnWidths(int name, int size, int date) {
         if (fileList != null) {
             fileList.setColumnWidths(size, date);

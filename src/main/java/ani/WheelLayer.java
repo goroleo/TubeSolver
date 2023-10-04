@@ -27,6 +27,7 @@ import static gui.MainFrame.palette;
  * The transparency fan will draw above the drum. It rotates in the opposite direction.
  */
 
+@SuppressWarnings("FieldCanBeLocal")
 public class WheelLayer extends JComponent implements Runnable {
 
     // radian constants

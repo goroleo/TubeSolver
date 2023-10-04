@@ -238,6 +238,7 @@ public class ColorTube extends JComponent {
      *
      * @return true if this tube is closed or false otherwise.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isClosed() {
         return closed;
     }
@@ -429,6 +430,7 @@ public class ColorTube extends JComponent {
      *
      * @return frame number
      */
+    @SuppressWarnings("unused")
     public int getFrame() {
         return frameNum;
     }

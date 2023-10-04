@@ -164,6 +164,7 @@ public class LTextField extends JTextField {
     /**
      * Handles the change of the focus. An abstract routine to override it
      */
+    @SuppressWarnings("EmptyMethod")
     public void focusChanged() {
         // abstract routine to override it
     }

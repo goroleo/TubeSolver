@@ -82,28 +82,28 @@ public class StartDlg extends JDialog {
 
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> closeFrame(),
-                KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), // VK_ESCAPE
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> buttonClick(0),
                 KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), // Button 0 - F5
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> buttonClick(1),
                 KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), // Button 1 - F6
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> buttonClick(2),
                 KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), // Button 2 - F7
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> buttonClick(3),
                 KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0), // Button 3 - F8
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
     }
 
     private void closeFrame() {

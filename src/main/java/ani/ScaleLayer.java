@@ -20,6 +20,7 @@ import javax.swing.JComponent;
  * shows the image resizing (from zero to normal) and its opacity changing
  * (from zero to one).
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class ScaleLayer extends JComponent implements Runnable {
 
     /**

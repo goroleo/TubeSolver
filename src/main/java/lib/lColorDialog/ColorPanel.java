@@ -258,6 +258,7 @@ public class ColorPanel extends JComponent {
         cCur.repaint();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private LPictureButton addButton(String txt, int x, int y) {
         LPictureButton btn = new LPictureButton(this);
         btn.setText(txt);

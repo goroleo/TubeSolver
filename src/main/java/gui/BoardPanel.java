@@ -264,6 +264,7 @@ public class BoardPanel extends JComponent {
      * @param spaceX horizontal space between tubes
      * @param spaceY vertical spaces between tubes
      */
+    @SuppressWarnings("unused")
     public void setSpaces(int spaceX, int spaceY) {
         this.spaceX = spaceX;
         this.spaceY = spaceY;

@@ -299,7 +299,8 @@ public class TubeModel {
      * @param storedColors integer value of the stored colors.
      * @see #storeColors
      */
-    public void assignColors(int storedColors) { // 
+    @SuppressWarnings("unused")
+    public void assignColors(int storedColors) { //
         count = 0;
         for (int i = 0; i < 4; i++) {
             colors[i] = (byte) storedColors;

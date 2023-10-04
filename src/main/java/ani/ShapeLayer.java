@@ -58,6 +58,7 @@ public class ShapeLayer extends JComponent {
      *
      * @return color
      */
+    @SuppressWarnings("unused")
     public Color getColor() {
         return new Color(rgb);
     }
@@ -67,6 +68,7 @@ public class ShapeLayer extends JComponent {
      *
      * @return color as integer
      */
+    @SuppressWarnings("unused")
     public int getColorValue() {
         return rgb;
     }

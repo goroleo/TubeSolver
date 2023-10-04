@@ -182,6 +182,7 @@ public class ColorLine extends JComponent implements ColorListener {
      *
      * @see ColorPanel#getDialogMode
      */
+    @SuppressWarnings("CommentedOutCode")
     private void drawLine() {
         float h, s, b;
         int r, g, b1;

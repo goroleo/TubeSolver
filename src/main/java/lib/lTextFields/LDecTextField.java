@@ -89,7 +89,7 @@ public class LDecTextField extends JTextField {
                     Value = checkValue(newValue);
                     valueChanged();
                 }
-            } // insertSring
+            } // insertString
 
             @Override
             public void replace(int offset, int length, String text,
@@ -232,13 +232,14 @@ public class LDecTextField extends JTextField {
     /**
      * Handles the change the focus. A routine to override it.
      */
+    @SuppressWarnings("EmptyMethod")
     public void focusChanged() {
         
     } 
     
     // Change the value due to in-field edit
     /**
-     * Handles the change of the value. A routine to overrideit.
+     * Handles the change of the value. A routine to override it.
      */
     public void valueChanged() {
         

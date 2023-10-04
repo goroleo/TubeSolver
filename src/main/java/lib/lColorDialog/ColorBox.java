@@ -65,7 +65,7 @@ public class ColorBox extends JComponent implements ColorListener {
     }
 
     /**
-     * Overrided routine for repaint this component. It just draws the buffered
+     * Override routine for repaint this component. It just draws the buffered
      * image, made before.
      */
     @Override

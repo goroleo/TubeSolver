@@ -32,7 +32,7 @@ import java.net.URL;
  * At the constructor the [button name] is set, and all button's pictures will be loaded
  * from files as described above.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class LPictureButton extends JButton {
 
 // Button name 

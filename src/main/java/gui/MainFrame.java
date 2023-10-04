@@ -101,7 +101,7 @@ public class MainFrame extends JFrame {
     /**
      * Game moves array, passed and prepared
      */
-    public static GameMoves gameMoves = new GameMoves();
+    public static final GameMoves gameMoves = new GameMoves();
 
     /**
      * How much game moves has passed already
@@ -121,7 +121,7 @@ public class MainFrame extends JFrame {
      *
      * @see Palette
      */
-    public static Palette palette = new Palette();
+    public static final Palette palette = new Palette();
 
     /**
      * The background layer of the Main frame.
@@ -142,7 +142,7 @@ public class MainFrame extends JFrame {
     /**
      * The toolbar with action buttons.
      */
-    public static ToolPanel toolPan = new ToolPanel();
+    public static final ToolPanel toolPan = new ToolPanel();
 
     /**
      * Application panels: The panel with congratulations that showing when the game is done
@@ -177,7 +177,7 @@ public class MainFrame extends JFrame {
     private boolean saveTempOnExit = false;
 
     /**
-     * This is a preset string for filename ending for autosave the game. It depends on the current game mode.
+     * This is a preset string for filename ending for auto save the game. It depends on the current game mode.
      */
     private String fileNameEnding;
 
@@ -224,16 +224,16 @@ public class MainFrame extends JFrame {
 
         // Creating and adding panels except Palette & Tubes panels - they will be added in depend on the game mode.
         solvePan.setVisible(false);
-        getContentPane().add(solvePan);
+        getLayeredPane().add(solvePan, JLayeredPane.MODAL_LAYER);
 
         congPan.setVisible(false);
-        getContentPane().add(congPan);
+        getLayeredPane().add(congPan, JLayeredPane.MODAL_LAYER);
 
         toolPan.setVisible(true);
-        getContentPane().add(toolPan);
+        getLayeredPane().add(toolPan, JLayeredPane.PALETTE_LAYER);
 
         // Adding the background layer
-        getContentPane().add(pattern);
+        getLayeredPane().add(pattern, JLayeredPane.DEFAULT_LAYER);
 
         // Adding listeners
         addWindowListener(new WindowAdapter() {
@@ -312,6 +312,9 @@ public class MainFrame extends JFrame {
         updatePanelsPos();
         if (congPan.isVisible()) {
             congPan.updateSizeAndPos();
+        }
+        if (solvePan.isVisible()) {
+            solvePan.updateSizeAndPos();
         }
     }
 
@@ -638,7 +641,6 @@ public class MainFrame extends JFrame {
 
         if (msgDlg.result > 0) {
             setGameMode(BUSY_MODE);
-            setResizable(false);
             Options.numSolverRun++;
             solvePan.startSolve(tubesPan.getModel());
         } else {
@@ -655,7 +657,6 @@ public class MainFrame extends JFrame {
     public void endSolve(int result) {
 
         MessageDlg msgDlg;
-        setResizable(true);
 
         switch (result) {
             case 0: // working
@@ -754,11 +755,7 @@ public class MainFrame extends JFrame {
         palPan.addPopups();
         palPan.reDock();
         palPan.setVisible(true);
-        getContentPane().add(palPan);
-
-        if (getContentPane().getComponentZOrder(palPan) > getContentPane().getComponentZOrder(pattern)) {
-            getContentPane().setComponentZOrder(pattern, getContentPane().getComponentZOrder(palPan));
-        }
+        getLayeredPane().add(palPan, JLayeredPane.PALETTE_LAYER);
     }
 
     /**
@@ -802,15 +799,11 @@ public class MainFrame extends JFrame {
             tubesPan.addNewTubes(aFilled, aEmpty);
         }
 
-        getContentPane().add(tubesPan);
         tubesPan.setDockedTo(0);
         tubesPan.restoreLocation();
 
+        getLayeredPane().add(tubesPan, JLayeredPane.PALETTE_LAYER);
         tubesPan.setVisible(true);
-
-        if (getContentPane().getComponentZOrder(tubesPan) > getContentPane().getComponentZOrder(pattern)) {
-            getContentPane().setComponentZOrder(pattern, getContentPane().getComponentZOrder(tubesPan));
-        }
     }
 
 //////////////////////////////////////////////////////////////////////////////

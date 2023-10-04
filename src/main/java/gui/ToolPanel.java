@@ -22,6 +22,7 @@ import run.Main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -29,6 +30,7 @@ import java.awt.event.MouseEvent;
  * The toolbar with action buttons: new, load, save, options, etc. The toolbar can be horizontal or vertical.
  * It can be docked to any edge of the main frame (left, right, top, bottom).
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class ToolPanel extends JPanel {
 
 ///////////////////////////////////////////////////////////////////////////
@@ -112,31 +114,31 @@ public class ToolPanel extends JPanel {
         setBackground(Palette.dialogColor);
 
         // buttons[0] "Start new game"
-        tb = addNewButton("new", ResStrings.getString("strStartGame") + " (Cltr+N)");
+        tb = addNewButton("new", ResStrings.getString("strStartGame") + " (Ctlr+N)");
         tb.addActionListener((ActionEvent e) -> newGameClick());
         registerKeyboardAction(
                 (ActionEvent e) -> newGameClick(),
-                KeyStroke.getKeyStroke('N', 2), // VK_N + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('N', InputEvent.CTRL_DOWN_MASK), // VK_N + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[1] separator
         addSeparator();
 
         // buttons[2] "Load a game from file"
-        tb = addNewButton("load", ResStrings.getString("strLoadGame") + " (Cltr+L)");
+        tb = addNewButton("load", ResStrings.getString("strLoadGame") + " (Ctlr+L)");
         tb.addActionListener((ActionEvent e) -> loadClick());
         registerKeyboardAction(
                 (ActionEvent e) -> loadClick(),
-                KeyStroke.getKeyStroke('L', 2), // VK_L + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('L', InputEvent.CTRL_DOWN_MASK), // VK_L + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[3] "Save the game to file"
-        tb = addNewButton("save", ResStrings.getString("strSaveGame") + " (Cltr+S)");
+        tb = addNewButton("save", ResStrings.getString("strSaveGame") + " (Ctlr+S)");
         tb.addActionListener((ActionEvent e) -> saveClick());
         registerKeyboardAction(
                 (ActionEvent e) -> saveClick(),
-                KeyStroke.getKeyStroke('S', 2), // VK_O + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK), // VK_O + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[4] separator
         addSeparator();
@@ -147,7 +149,7 @@ public class ToolPanel extends JPanel {
         registerKeyboardAction(
                 (ActionEvent e) -> refreshClick(),
                 KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0), // VK_F5
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[6] "Solve" - @PLAY_MODE
         tb = addNewButton("solve", ResStrings.getString("strSolve") + " (F9)");
@@ -155,18 +157,18 @@ public class ToolPanel extends JPanel {
         registerKeyboardAction(
                 (ActionEvent e) -> solveClick(),
                 KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, 0), // VK_F9
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[7] separator
         addSeparator();
 
         // buttons[8] "Undo the last move" - @PLAY_MODE
-        tb = addNewButton("undo", ResStrings.getString("strUndoMove") + " (Ctrl+Z)");
+        tb = addNewButton("undo", ResStrings.getString("strUndoMove") + " (Ctlr+Z)");
         tb.addActionListener((ActionEvent e) -> undoClick());
         registerKeyboardAction(
                 (ActionEvent e) -> undoClick(),
-                KeyStroke.getKeyStroke('Z', 2), // VK_O + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('Z', InputEvent.CTRL_DOWN_MASK), // VK_O + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[9] "Restart the game from the beginning" - @PLAY_MODE
         tb = addNewButton("replay", ResStrings.getString("strStartAgain") + " (F2)");
@@ -174,7 +176,7 @@ public class ToolPanel extends JPanel {
         registerKeyboardAction(
                 (ActionEvent e) -> restartClick(),
                 KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0), // VK_F2
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[10] "Clear all tubes" - @FILL_MODE
         tb = addNewButton("cleartubes", ResStrings.getString("strClearAllTubes"));
@@ -192,27 +194,27 @@ public class ToolPanel extends JPanel {
         tb.addActionListener((ActionEvent e) -> paletteClick());
         registerKeyboardAction(
                 (ActionEvent e) -> paletteClick(),
-                KeyStroke.getKeyStroke('P', 2), // VK_O + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('P', InputEvent.CTRL_DOWN_MASK), // VK_O + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[14] "Application options"
         tb = addNewButton("options", ResStrings.getString("strOptions") + " (Ctrl+O)");
         tb.addActionListener((ActionEvent e) -> optionsClick());
         registerKeyboardAction(
                 (ActionEvent e) -> optionsClick(),
-                KeyStroke.getKeyStroke('O', 2), // VK_O + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK), // VK_O + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // buttons[15] separator
         addSeparator();
 
         // buttons[16] "Exit - close the application"
-        tb = addNewButton("exit", ResStrings.getString("strExit") + " (Cltr+X)");
+        tb = addNewButton("exit", ResStrings.getString("strExit") + " (Ctlr+X)");
         tb.addActionListener((ActionEvent e) -> exitClick());
         registerKeyboardAction(
                 (ActionEvent e) -> exitClick(),
-                KeyStroke.getKeyStroke('X', 2), // VK_O + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('X', InputEvent.CTRL_DOWN_MASK), // VK_O + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         updateButtons(0);
         addPopupMenu(this);
@@ -686,16 +688,16 @@ public class ToolPanel extends JPanel {
         if (Main.frame != null) {
             int startX;
 
-            int panLength = (docked < 2)
+            int panelLength = (docked < 2)
                     ? Main.frame.getClientArea().width
                     : Main.frame.getClientArea().height;
 
             switch (align) {
                 case 1: // center
-                    startX = (panLength - getButtonsLength()) / 2;
+                    startX = (panelLength - getButtonsLength()) / 2;
                     break;
                 case 2: // end (right / bottom)
-                    startX = panLength - getButtonsLength();
+                    startX = panelLength - getButtonsLength();
                     break;
                 default: // begin (top / left)
                     startX = 0;
@@ -725,18 +727,18 @@ public class ToolPanel extends JPanel {
      * Updates button tooltips if the application's language has been changed.
      */
     public void updateLanguage() {
-        buttons[0].setToolTipText(ResStrings.getString("strStartGame") + " (Cltr+N)");
-        buttons[2].setToolTipText(ResStrings.getString("strLoadGame") + " (Cltr+L)");
-        buttons[3].setToolTipText(ResStrings.getString("strSaveGame") + " (Cltr+S)");
+        buttons[0].setToolTipText(ResStrings.getString("strStartGame") + " (Ctlr+N)");
+        buttons[2].setToolTipText(ResStrings.getString("strLoadGame") + " (Ctlr+L)");
+        buttons[3].setToolTipText(ResStrings.getString("strSaveGame") + " (Ctlr+S)");
         buttons[5].setToolTipText(ResStrings.getString("strRefresh") + " (F5)");
         buttons[6].setToolTipText(ResStrings.getString("strSolve") + " (F9)");
-        buttons[8].setToolTipText(ResStrings.getString("strUndoMove") + " (Cltr+Z)");
+        buttons[8].setToolTipText(ResStrings.getString("strUndoMove") + " (Ctlr+Z)");
         buttons[9].setToolTipText(ResStrings.getString("strStartAgain") + " (F2)");
         buttons[10].setToolTipText(ResStrings.getString("strClearAllTubes"));
         buttons[11].setToolTipText(ResStrings.getString("strAutoFill"));
-        buttons[13].setToolTipText(ResStrings.getString("strChangePalette") + " (Cltr+P)");
-        buttons[14].setToolTipText(ResStrings.getString("strOptions") + " (Cltr+O)");
-        buttons[16].setToolTipText(ResStrings.getString("strExit") + " (Cltr+X)");
+        buttons[13].setToolTipText(ResStrings.getString("strChangePalette") + " (Ctlr+P)");
+        buttons[14].setToolTipText(ResStrings.getString("strOptions") + " (Ctlr+O)");
+        buttons[16].setToolTipText(ResStrings.getString("strExit") + " (Ctlr+X)");
     }
 
     /**

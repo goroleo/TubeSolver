@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
  * hide an image from current opacity to zero (see doHide), and pulsate an image, i.e.
  * show and hide it without stopping (see doPulse).
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class ShadeLayer extends JComponent implements Runnable {
 
 // -----------------------------------------------------
@@ -252,6 +253,7 @@ public class ShadeLayer extends JComponent implements Runnable {
     /**
      * This routine calls when the animation has done.
      */
+    @SuppressWarnings("EmptyMethod")
     public void onThreadFinished() {
         // the routine to override it
     }

@@ -21,6 +21,7 @@ import static gui.MainFrame.palette;
  *
  * @see gui.ColorTube
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class ColorLayer extends JComponent implements Runnable {
 
 // -----------------------------------------------------

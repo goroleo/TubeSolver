@@ -29,7 +29,7 @@ import java.awt.image.BufferedImage;
  * @see #axis
  * @see #forward
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class WaveLayer extends JComponent implements Runnable {
 
 // -----------------------------------------------------
@@ -391,7 +391,7 @@ public class WaveLayer extends JComponent implements Runnable {
     }
 
     /**
-     * Stops the animation thread. It just switches the <i>dissappear</i> field and then the cycle will stop after doing it.
+     * Stops the animation thread. It just switches the <i>disappear</i> field and then the cycle will stop after doing it.
      */
     public void stop() {
         if (working) {

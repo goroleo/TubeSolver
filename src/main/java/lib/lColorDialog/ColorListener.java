@@ -12,7 +12,7 @@ package lib.lColorDialog;
 
 /**
  *
- * Nothing to discribe... ))
+ * Nothing to describe... ))
  */
 public interface ColorListener {
     /**

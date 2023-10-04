@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
  * exponential function, not linear.<br>
  * Also, both of images can be <i>null</i>
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class SlideLayer extends JComponent implements Runnable {
 
 // -----------------------------------------------------
@@ -54,6 +55,7 @@ public class SlideLayer extends JComponent implements Runnable {
     /**
      * Enables and disables filling animation. If <b>true</b> then animation is enabled.
      */
+    @SuppressWarnings("CanBeFinal")
     public Boolean useAnimation = true;
 
 // -----------------------------------------------------

@@ -263,6 +263,7 @@ public class Solver implements Runnable {
     /**
      * Calls when the Solver was interrupted by the user. The routine to override it.
      */
+    @SuppressWarnings("EmptyMethod")
     public void onExternalBreak() {
         // the routine to override
     }

@@ -34,7 +34,7 @@ import lib.lButtons.LPictureButton;
 /**
  *
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "CanBeFinal"})
 public class MessageDlg extends JDialog {
 
     private final JFrame parent;

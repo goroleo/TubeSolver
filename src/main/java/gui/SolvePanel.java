@@ -65,6 +65,7 @@ public class SolvePanel extends JComponent {
     /**
      * Creates the SolvePanel.
      */
+    @SuppressWarnings("unused")
     public SolvePanel() {
 
         setVisible(false);
@@ -78,8 +79,20 @@ public class SolvePanel extends JComponent {
         add(btn);
 
         blur = new BlurLayer() {
-            public void onThreadFinished(boolean appearing) {
-                onBlurThreadFinished(appearing);
+
+            @SuppressWarnings("unused")
+            @Override
+            public void onThreadFinished(boolean appeared) {
+                if (appeared) {
+                    // after blurring shows the button and the wheel circle
+                    btn.setVisible(true);
+                    btn.requestFocus();
+                    wheel.setVisible(true);
+                    wheel.start();
+                } else {
+                    // hides the panel
+                    SolvePanel.this.setVisible(false);
+                }
             }
         };
         add(blur);
@@ -89,7 +102,6 @@ public class SolvePanel extends JComponent {
                 (ActionEvent e) -> stopSolver(1),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
                 JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
-
     }
 
     /**
@@ -97,25 +109,18 @@ public class SolvePanel extends JComponent {
      *
      * @param startBoard - the current position at the game board that applies as the start combination.
      */
+    @SuppressWarnings("unused")
     public void startSolve(BoardModel startBoard) {
 
-        setBounds(Main.frame.getContentPane().getBounds());
-
         BufferedImage img = new BufferedImage(
-                Main.frame.getContentPane().getWidth(), Main.frame.getContentPane().getHeight(),
+                Main.frame.getContentPane().getWidth(),
+                Main.frame.getContentPane().getHeight(),
                 BufferedImage.TYPE_INT_RGB);
-        Main.frame.getContentPane().paint(img.getGraphics());
+        Main.frame.getLayeredPane().paint(img.getGraphics());
         blur.setImage(img);
 
-        int h = wheel.getHeight() + btn.getHeight() + 30;
-        Rectangle r = Main.frame.getTubesArea();
+        updateSizeAndPos();
 
-        wheel.setLocation(r.x + (r.width - wheel.getWidth()) / 2,
-                r.y + (r.height - h) / 2);
-        btn.setLocation(r.x + (r.width - btn.getWidth()) / 2,
-                r.y + (r.height + h) / 2 - btn.getHeight());
-
-        blur.setVisible(true);
         setVisible(true);
         blur.startBlur();
 
@@ -166,28 +171,27 @@ public class SolvePanel extends JComponent {
     }
 
     /**
-     * This routine calls when the blur animation has done.
-     *
-     * @param b the direction of the animation performed: appearing (blurring) if <i>true</i>, or hiding if <i>false</i>.
-     */
-    public void onBlurThreadFinished(boolean b) {
-        if (b) {
-            // after blurring shows the button and the wheel circle
-            btn.setVisible(true);
-            btn.requestFocus();
-            wheel.setVisible(true);
-            wheel.start();
-        } else {
-            // hides the panel
-            setVisible(false);
-        }
-    }
-
-    /**
      * Updates a button caption when the language of the application is changed.
      */
+    @SuppressWarnings("unused")
     public void updateLanguage() {
         btn.setText(ResStrings.getString("strCancel"));
     }
 
+    /**
+     * Updates components size and location when MainFrame is being resized.
+     */
+    public void updateSizeAndPos() {
+        setBounds(Main.frame.getContentPane().getBounds());
+
+        int h = wheel.getHeight() + btn.getHeight() + 30;
+        Rectangle r = Main.frame.getTubesArea();
+
+        wheel.setLocation(r.x + (r.width - wheel.getWidth()) / 2,
+                r.y + (r.height - h) / 2);
+        btn.setLocation(r.x + (r.width - btn.getWidth()) / 2,
+                r.y + (r.height + h) / 2 - btn.getHeight());
+
+        blur.setSize(getSize());
+    }
 }

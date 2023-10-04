@@ -164,8 +164,7 @@ public class OpenSavePanel extends JPanel {
         extLabel.setFont(folderLabel.getFont().deriveFont(1, 13.0f));
         extLabel.setPreferredSize(toolsPanel.getPreferredSize());
 
-
-        // create buttons
+        // create buttons and add them to BoxLayout
         JPanel buttonsLine = new JPanel();
         if (showButtons) {
             btnOk = new LPictureButton(this);
@@ -185,15 +184,16 @@ public class OpenSavePanel extends JPanel {
             buttonsLine.setBackground(null);
             buttonsLine.setForeground(null);
             buttonsLine.setLayout(new BoxLayout(buttonsLine, BoxLayout.X_AXIS));
+            buttonsLine.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
             buttonsLine.add(Box.createHorizontalGlue());
             buttonsLine.add(btnOk);
-            buttonsLine.add(Box.createRigidArea(new Dimension(15, btnOk.getHeight() + 10)));
+            buttonsLine.add(Box.createRigidArea(new Dimension(15, 0)));
             buttonsLine.add(btnCancel);
         }
 
-
-        //////  creating top line
+        // creating layout manager panels
+        // creating top line
         JPanel topLine = new JPanel(new BorderLayout(10, 10));
         topLine.setBackground(null);
         topLine.setForeground(null);
@@ -201,7 +201,7 @@ public class OpenSavePanel extends JPanel {
         topLine.add(folderComboBox, BorderLayout.CENTER);
         topLine.add(toolsPanel, BorderLayout.EAST);
 
-        //////  creating bottom line
+        // creating bottom line
         JPanel bottomLine = new JPanel(new BorderLayout(10, 10));
         bottomLine.setBackground(null);
         bottomLine.setForeground(null);
@@ -290,6 +290,7 @@ public class OpenSavePanel extends JPanel {
             if (b) {
                 foldersPanel.requestFocus();
             } else {
+                //noinspection ReplaceNullCheck
                 if (invoker != null)
                     invoker.requestFocus();
                 else

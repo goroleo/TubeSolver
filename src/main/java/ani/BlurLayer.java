@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
  * by Fedor Tukmakov <a href="https://github.com/impfromliga">@impfromliga</a>.<br>
  * After blurring, this layer will be hidden by changing its opacity.
  */
+@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection"})
 public class BlurLayer extends JComponent implements Runnable {
 
     /**
@@ -70,9 +71,12 @@ public class BlurLayer extends JComponent implements Runnable {
      */
     private BufferedImage frame;
 
+    boolean working = false;
+
     /**
      * Creates of the blur layer.
      */
+    @SuppressWarnings("unused")
     public BlurLayer() {
     }
 
@@ -84,18 +88,22 @@ public class BlurLayer extends JComponent implements Runnable {
     public final void setImage(BufferedImage bi) {
         w = bi.getWidth();
         h = bi.getHeight();
-        setSize(bi.getWidth(), bi.getHeight());
         if (frame == null || frame.getWidth() != w || frame.getHeight() != h) {
             frame = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
             buf = new int[w * h];
         }
-        frame.getGraphics().drawImage(bi, 0, 0, null);
-        repaint();
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 buf[x + y * w] = bi.getRGB(x, y);
             }
         }
+//        setSize(w, h);
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+        super.setSize(width, height);
+        repaint();
     }
 
     /**
@@ -103,9 +111,13 @@ public class BlurLayer extends JComponent implements Runnable {
      */
     public void startBlur() {
         appearing = true;
+        opaque = 0xff;
         blurStep = 0;
-        Thread t = new Thread(this);
-        t.start();
+        if (!working) {
+            working = true;
+            Thread t = new Thread(this);
+            t.start();
+        }
     }
 
     /**
@@ -114,8 +126,11 @@ public class BlurLayer extends JComponent implements Runnable {
     public void startHide() {
         appearing = false;
         opaque = 0xff;
-        Thread t = new Thread(this);
-        t.start();
+        if (!working) {
+            working = true;
+            Thread t = new Thread(this);
+            t.start();
+        }
     }
 
     /**
@@ -124,9 +139,10 @@ public class BlurLayer extends JComponent implements Runnable {
      * <a href="https://github.com/impfromliga/LaplaceBlur">Code</a>.
      * <a href="https://habr.com/ru/articles/427077/">Description</a> (in Russian).
      */
+    @SuppressWarnings("SpellCheckingInspection")
     private void blurFrame() {
 
-        int x01 = 0x010101, x7f = 0x7f7f7f, op = 0xff000000;
+        int x01 = 0x010101, x7f = 0x7f7f7f;
 
         // 1st pass: horizontal from left to right
         for (int idx = h * w; idx > 0; idx -= w) {
@@ -163,7 +179,7 @@ public class BlurLayer extends JComponent implements Runnable {
         // sets pixels from buffer into frame image
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                frame.setRGB(x, y, (buf[x + y * w] & 0xffffff) | op);
+                frame.setRGB(x, y, (buf[x + y * w] & 0xffffff) | (0xff000000));
             }
         }
     }
@@ -182,13 +198,11 @@ public class BlurLayer extends JComponent implements Runnable {
     }
 
     public void paintComponent(Graphics g) {
-        g.drawImage(frame, 0, 0, null);
+        g.drawImage(frame, 0, 0, getWidth(), getHeight(), null);
     }
 
     @Override
     public void run() {
-
-        boolean working = true;
 
         while (working) {
 
@@ -209,6 +223,7 @@ public class BlurLayer extends JComponent implements Runnable {
             repaint();
 
             try {
+                //noinspection BusyWait
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
                 // do nothing
@@ -222,9 +237,9 @@ public class BlurLayer extends JComponent implements Runnable {
     /**
      * This routine is called after the animation has done.
      *
-     * @param appearing the direction of the animation performed: appearing (blurring) if <i>true</i>, or hiding if <i>false</i>.
+     * @param appeared the direction of the animation performed: appearing (blurring) if <i>true</i>, or hiding if <i>false</i>.
      */
-    public void onThreadFinished(boolean appearing) {
+    public void onThreadFinished(boolean appeared) {
         // the routine to override it
     }
 
