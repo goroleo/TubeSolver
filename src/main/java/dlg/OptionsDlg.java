@@ -19,6 +19,7 @@ import run.Main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -46,7 +47,6 @@ public class OptionsDlg extends JDialog {
      *
      * @param owner parent frame
      */
-    @SuppressWarnings("MagicConstant")
     public OptionsDlg(JFrame owner) {
         super(owner, ResStrings.getString("strOptions"), true);
         this.parent = owner;
@@ -69,13 +69,13 @@ public class OptionsDlg extends JDialog {
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> refuseAndClose(),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> confirmAndClose(),
-                KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), // VK_ENTER + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         btnOk = new LPictureButton(this, "btnDialog");
         btnOk.setText(ResStrings.getString("strOk"));

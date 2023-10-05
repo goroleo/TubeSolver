@@ -277,11 +277,11 @@ public class PaletteDlg extends JDialog {
      * @param colorNum A number of the Color in the Palette.
      */
     private void updateColor(int colorNum) {
-        if (MainFrame.palPan != null) {
-            MainFrame.palPan.getButtonByColor(colorNum).repaintColor();
+        if (MainFrame.palettePanel != null) {
+            MainFrame.palettePanel.getButtonByColor(colorNum).repaintColor();
         }
-        if (MainFrame.tubesPan != null) {
-            MainFrame.tubesPan.updateColor(colorNum);
+        if (MainFrame.tubesPanel != null) {
+            MainFrame.tubesPanel.updateColor(colorNum);
         }
     }
 
@@ -289,11 +289,11 @@ public class PaletteDlg extends JDialog {
      * Repaints all colors on all panels of the MainFrame.
      */
     private void updateColors() {
-        if (MainFrame.palPan != null) {
-            MainFrame.palPan.updateColors();
+        if (MainFrame.palettePanel != null) {
+            MainFrame.palettePanel.updateColors();
         }
-        if (MainFrame.tubesPan != null) {
-            MainFrame.tubesPan.updateColors();
+        if (MainFrame.tubesPanel != null) {
+            MainFrame.tubesPanel.updateColors();
         }
     }
 

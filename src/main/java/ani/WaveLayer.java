@@ -174,7 +174,7 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * The size of the image's diagonal (in pixels).
      */
-    private float diagSize;
+    private float diagonalSize;
 
     /**
      * Size of the wave shape (in pixels).
@@ -248,7 +248,7 @@ public class WaveLayer extends JComponent implements Runnable {
         if (imgFrame == null || w != bi.getWidth() || h != bi.getHeight()) {
             w = bi.getWidth();
             h = bi.getHeight();
-            diagSize = (float) Math.sqrt(w * w + h * h);
+            diagonalSize = (float) Math.sqrt(w * w + h * h);
             calculateShapeSize();
             imgFrame = new BufferedImage(w, h, 2);
             setBounds(0, 0, w, h);
@@ -373,7 +373,7 @@ public class WaveLayer extends JComponent implements Runnable {
                 break;
             case 2: // diagonal 1 (SW-NE, BottomLeft to TopRight)
             case 3: // diagonal 2 (NW-SE, TopLeft to BottomRight)
-                shapeSize = shapeSize * diagSize;
+                shapeSize = shapeSize * diagonalSize;
         }
     }
 
@@ -461,14 +461,14 @@ public class WaveLayer extends JComponent implements Runnable {
                 } else {
                     y = h - y;
                 }
-                coordinate = (x * w + y * h) / diagSize;
+                coordinate = (x * w + y * h) / diagonalSize;
                 break;
             default: // diagonal 2 (NW-SE, TopLeft - BottomRight)
                 if (forward) {
                     x = w - x;
                     y = h - y;
                 }
-                coordinate = (x * w + y * h) / diagSize;
+                coordinate = (x * w + y * h) / diagonalSize;
         }
 
         // second calculate the fraction and find alpha-channel value from the shape

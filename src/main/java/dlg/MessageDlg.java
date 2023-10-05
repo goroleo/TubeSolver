@@ -16,69 +16,97 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import core.ResStrings;
 import core.Options;
 import lib.lButtons.LPictureButton;
 
 /**
- *
+ * Modal dialog with some message and set of buttons. When hides it returns pressed button number.
  */
-@SuppressWarnings({"unused", "CanBeFinal"})
 public class MessageDlg extends JDialog {
 
     private final JFrame parent;
+
+    /**
+     * The result of the dialog (pressed button number)
+     */
     public int result = 0;
-    int dimX = 20, dimY = 20;
+    @SuppressWarnings({"FieldCanBeLocal", "RedundantSuppression"})
+    private final int dimX = 20, dimY = 20, w = 450;
 
-    int w = 450;
-
+    /**
+     * Presets of buttons at message dialogs: Cancel button only.
+     */
     public final static int BTN_CANCEL = 0;
+
+    /**
+     * Presets of buttons at message dialogs: OK button only.
+     */
     public final static int BTN_OK = 1;
+
+    /**
+     * Presets of buttons at message dialogs: Start button only.
+     */
     public final static int BTN_START = 2;
+
+    /**
+     * Presets of buttons at message dialogs: OK & Cancel buttons.
+     */
     public final static int BTN_OK_CANCEL = 10;
+
+    /**
+     * Presets of buttons at message dialogs: Start & Cancel buttons.
+     */
     public final static int BTN_START_CANCEL = 11;
+
+    /**
+     * Presets of buttons at message dialogs: Yes & No buttons.
+     */
     public final static int BTN_YES_NO = 20;
+
+    /**
+     * Presets of buttons at message dialogs: Yes, No and Cancel buttons.
+     */
     public final static int BTN_YES_NO_CANCEL = 30;
+
+    /**
+     * Buttons count
+     */
     private int btnCount = 1;
 
+    /**
+     * Presets of buttons layout: buttons are at left side of the dialog.
+     */
     public final static int BTN_LAYOUT_LEFT = 1;
+
+    /**
+     * Presets of buttons layout: buttons are at center of the dialog.
+     */
     public final static int BTN_LAYOUT_CENTER = 2;
+
+    /**
+     * Presets of buttons layout: buttons are at right side of the dialog.
+     */
     public final static int BTN_LAYOUT_RIGHT = 3;
     private int btnLayout = 2;
 
-    private JPanel contPan;
-    private JPanel btnPan;
+    private JPanel contentPanel;
+    private JPanel buttonsPanel;
 
     private LPictureButton[] buttons;
 
-    public MessageDlg() {
-        this(null, "", 0);
-    }
-
-    public MessageDlg(String msg) {
-        this(null, msg, 0);
-    }
-
-    public MessageDlg(JFrame owner, String msg) {
-        this(owner, msg, 0);
-    }
-
-    public MessageDlg(String msg, int btnSet) {
-        this(null, msg, btnSet);
-    }
-
-    @SuppressWarnings("MagicConstant")
+    /**
+     * Creates the message dialog
+     * @param owner owner frame to center the dialog with/
+     * @param msg message string to output
+     * @param btnSet set of buttons
+     */
     public MessageDlg(JFrame owner, String msg, int btnSet) {
 
         super(owner, "Message", true);
@@ -101,7 +129,7 @@ public class MessageDlg extends JDialog {
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> btnClick(0),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
@@ -110,8 +138,8 @@ public class MessageDlg extends JDialog {
                         btnClick(btnCount - 1);
                     }
                 },
-                KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), // VK_ENTER + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         addButtonPanel(btnSet);
         addContentPanel(msg);
@@ -123,8 +151,8 @@ public class MessageDlg extends JDialog {
     private void calculateSize() {
         setResizable(true);
         Dimension dim = new Dimension();
-        dim.width = Math.max(contPan.getWidth(), btnPan.getWidth());
-        dim.height = contPan.getHeight() + btnPan.getHeight();
+        dim.width = Math.max(contentPanel.getWidth(), buttonsPanel.getWidth());
+        dim.height = contentPanel.getHeight() + buttonsPanel.getHeight();
         setPreferredSize(dim);
         pack();
 
@@ -154,20 +182,20 @@ public class MessageDlg extends JDialog {
     private void addContentPanel(String sText) {
         BufferedImage bi = Options.createBufImage("imgMessageDlg_icon.png");
 
-        contPan = new JPanel();
+        contentPanel = new JPanel();
 
-        contPan.setBackground(null); // content panel 
-        contPan.setForeground(null); // content panel 
-        contPan.setLayout(null); // content panel 
+        contentPanel.setBackground(null); // content panel
+        contentPanel.setForeground(null); // content panel
+        contentPanel.setLayout(null); // content panel
 
         JLabel icon = new JLabel(new ImageIcon(bi));
-        contPan.add(icon);
+        contentPanel.add(icon);
         icon.setBounds(dimX, dimY, bi.getWidth(), bi.getHeight());
 
         JTextArea textArea = new JTextArea(sText);
         textArea.setBounds(
                 dimX * 2 + icon.getWidth(), dimY,
-                Math.max(w, btnPan.getWidth()) - dimX * 3 - bi.getWidth(),
+                Math.max(w, buttonsPanel.getWidth()) - dimX * 3 - bi.getWidth(),
                 icon.getHeight());
         textArea.setBackground(null);
         textArea.setForeground(null);
@@ -179,44 +207,46 @@ public class MessageDlg extends JDialog {
         Dimension dim = textArea.getPreferredSize();
         textArea.setSize(dim);
 
-        contPan.setSize(dimX * 3 + icon.getWidth() + textArea.getWidth(),
+        contentPanel.setSize(dimX * 3 + icon.getWidth() + textArea.getWidth(),
                 dimY * 2 + Math.max(icon.getHeight(), textArea.getHeight()));
 
-        contPan.add(textArea);
+        contentPanel.add(textArea);
 
-        getContentPane().add(contPan);
+        getContentPane().add(contentPanel);
     }
 
-    private LPictureButton addButton(int number, String aCaption) {
+    private void addButton(int number, String aCaption) {
         LPictureButton btn = new LPictureButton(this, "btnDialog");
         btn.setText(aCaption);
         btn.setBackground(null);
         btn.setForeground(null);
         btn.setFocusable(true);
         btn.addActionListener((ActionEvent e) -> btnClick(number));
-        btnPan.add(btn);
+        buttonsPanel.add(btn);
         buttons[number] = btn;
-        return btn;
     }
 
     private void addButtonPanel(int btnSet) {
-        btnPan = new JPanel();
-        btnPan.setBackground(null);
-        btnPan.setForeground(null);
-        btnPan.setLayout(null);
+        buttonsPanel = new JPanel();
+        buttonsPanel.setBackground(null);
+        buttonsPanel.setForeground(null);
+        buttonsPanel.setLayout(null);
 
         changeButtons(btnSet);
 
-        getContentPane().add(btnPan);
+        getContentPane().add(buttonsPanel);
     }
 
+    /**
+     * Sets the new buttons set
+     * @param btnSet new set of buttons
+     */
     public void changeButtons(int btnSet) {
 
         if (buttons != null) {
             for (LPictureButton button : buttons) {
-                btnPan.remove(button);
+                buttonsPanel.remove(button);
                 btnCount--;
-//                button = null;
             }
         }
 
@@ -268,33 +298,36 @@ public class MessageDlg extends JDialog {
                 break;
         }
 
-        btnPan.setSize(dimX * 2 + btnCount * buttons[0].getWidth() + (btnCount - 1) * 15,
+        buttonsPanel.setSize(dimX * 2 + btnCount * buttons[0].getWidth() + (btnCount - 1) * 15,
                 dimY * 3 / 2 + buttons[0].getHeight());
 
         for (int i = 0; i < btnCount; i++) {
             buttons[i].setLocation(
-                    btnPan.getWidth() - dimX - i * 15 - (i + 1) * buttons[i].getWidth(),
+                    buttonsPanel.getWidth() - dimX - i * 15 - (i + 1) * buttons[i].getWidth(),
                     dimY / 2
             );
         }
     }
 
+    /**
+     * Sets new buttons' layout
+     * @param buttonLayout new button's layout (left-center-right)
+     */
     public final void setButtonsLayout(int buttonLayout) {
         switch (buttonLayout) {
             case BTN_LAYOUT_LEFT:
-                btnPan.setLocation(0, contPan.getHeight());
+                buttonsPanel.setLocation(0, contentPanel.getHeight());
                 break;
             case BTN_LAYOUT_RIGHT:
-                btnPan.setLocation(
-                        getContentPane().getWidth() - btnPan.getWidth(),
-                        contPan.getHeight());
+                buttonsPanel.setLocation(
+                        getContentPane().getWidth() - buttonsPanel.getWidth(),
+                        contentPanel.getHeight());
                 break;
             default:
-                btnPan.setLocation(
-                        (getContentPane().getWidth() - btnPan.getWidth()) / 2,
-                        contPan.getHeight());
+                buttonsPanel.setLocation(
+                        (getContentPane().getWidth() - buttonsPanel.getWidth()) / 2,
+                        contentPanel.getHeight());
         }
         btnLayout = buttonLayout;
     }
-
 }

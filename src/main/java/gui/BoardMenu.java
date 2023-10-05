@@ -90,7 +90,7 @@ public class BoardMenu extends LPopupMenu {
     /**
      * Clear current tube menu item. Used at FILL_MODE.
      *
-     * @see #correspTube
+     * @see #correspondTube
      */
     public final JMenuItem clear;
 
@@ -124,7 +124,7 @@ public class BoardMenu extends LPopupMenu {
      *
      * @see #clear
      */
-    private ColorTube correspTube;
+    private ColorTube correspondTube;
 
 ///////////////////////////////////////////////////////////////////////////
 //
@@ -135,13 +135,12 @@ public class BoardMenu extends LPopupMenu {
     /**
      * The constructor of the Board menu. Creates the menu and adds items.
      */
-    @SuppressWarnings("MagicConstant")
     public BoardMenu() {
 
         super();
 
         board = addMenuItem(null, ResStrings.getString("strColorTubes"));
-        board.setFont(board.getFont().deriveFont(1, 13f));
+        board.setFont(board.getFont().deriveFont(Font.BOLD, 13f));
         addSeparator(null);
 
         // position menu
@@ -205,9 +204,9 @@ public class BoardMenu extends LPopupMenu {
         switch (MainFrame.gameMode) {
             case MainFrame.FILL_MODE:
                 if (invoker instanceof ColorTube) {
-                    correspTube = (ColorTube) invoker;
+                    correspondTube = (ColorTube) invoker;
                     clear.setVisible(true);
-                    clear.setEnabled(correspTube.getColorsCount() > 0);
+                    clear.setEnabled(correspondTube.getColorsCount() > 0);
                 } else {
                     clear.setVisible(false);
                 }
@@ -251,7 +250,7 @@ public class BoardMenu extends LPopupMenu {
      * Handles the click on position items.
      */
     private void positionClick(int number) {
-        MainFrame.tubesPan.setDockedTo(number);
+        MainFrame.tubesPanel.setDockedTo(number);
         updatePosIcons();
     }
 
@@ -259,8 +258,8 @@ public class BoardMenu extends LPopupMenu {
      * Handles the click on lines items.
      */
     private void linesClick(int number) {
-        MainFrame.tubesPan.setRows(number);
-        MainFrame.tubesPan.reDock();
+        MainFrame.tubesPanel.setRows(number);
+        MainFrame.tubesPanel.reDock();
         updateLinesIcons();
     }
 
@@ -268,8 +267,8 @@ public class BoardMenu extends LPopupMenu {
      * Handles the click on Clear this tube item.
      */
     private void clearClick() {
-        if (correspTube != null) {
-            Main.frame.clearTube(correspTube);
+        if (correspondTube != null) {
+            Main.frame.clearTube(correspondTube);
         }
     }
 
@@ -284,14 +283,14 @@ public class BoardMenu extends LPopupMenu {
      * Handles the click on Undo one move item.
      */
     private void undoClick() {
-        MainFrame.tubesPan.undoMoveColor();
+        MainFrame.tubesPanel.undoMoveColor();
     }
 
     /**
      * Handles the click on Undo All Moves (Start the game again) item.
      */
     private void startClick() {
-        MainFrame.tubesPan.startAgain();
+        MainFrame.tubesPanel.startAgain();
     }
 
     /**
@@ -305,7 +304,7 @@ public class BoardMenu extends LPopupMenu {
      * Gets the current docked position value and shows icon at the proper item.
      */
     private void updatePosIcons() {
-        switch (MainFrame.tubesPan.getDockedTo()) {
+        switch (MainFrame.tubesPanel.getDockedTo()) {
             case 0:
                 center.setIcon(Options.cbIconSelected);
                 top.setIcon(null);
@@ -348,7 +347,7 @@ public class BoardMenu extends LPopupMenu {
      * Gets the current rows value and shows icon at the proper item.
      */
     private void updateLinesIcons() {
-        switch (MainFrame.tubesPan.getRows()) {
+        switch (MainFrame.tubesPanel.getRows()) {
             case 1:
                 lines1.setIcon(Options.cbIconSelected);
                 lines2.setIcon(null);

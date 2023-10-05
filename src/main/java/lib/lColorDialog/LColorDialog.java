@@ -29,7 +29,6 @@ import static lib.lColorDialog.ColorPanel.current;
  * window.
  *
  */
-@SuppressWarnings("unused")
 public class LColorDialog extends JDialog {
 
     private final JFrame owner;
@@ -39,14 +38,11 @@ public class LColorDialog extends JDialog {
      */
     public static ColorPanel cPanel;
 
-    public LColorDialog(JFrame owner) {
-        this(owner, Color.white);
-    }
-
-    public LColorDialog(Color clr) {
-        this(null, clr);
-    }
-    
+    /**
+     * Creates the color chooser dialog
+     * @param owner owner frame to center the dialog
+     * @param clr initial color
+     */
     public LColorDialog(JFrame owner, Color clr) {
         super(owner, ResStrings.getString("strChangeColorTitle"), true);
         this.owner = owner;
@@ -146,54 +142,118 @@ public class LColorDialog extends JDialog {
         cPanel.setDialogMode(newMode);
     }
 
+    /**
+     * Gets the color scheme
+     * @return color scheme
+     * @see ColorPanel#getColorScheme()
+     */
+    @SuppressWarnings("unused")
     public int getColorScheme() {
         return cPanel.getColorScheme();
     }
+
+    /**
+     * Sets the color scheme
+     * @param scheme color scheme
+     * @see ColorPanel#getColorScheme()
+     */
+    @SuppressWarnings("unused")
     public void setColorScheme(int scheme) {
         cPanel.setColorScheme(scheme);
     }
 
+    /**
+     * Gets chosen color at RGB integer value: 0xAARRGGBB.
+     * @return RGB integer value.
+     */
+    @SuppressWarnings("unused")
     public int getColorValue() {
         return cPanel.getColor().getRGB();
     }
 
+    /**
+     * Gets chosen color.
+     * @return color
+     */
     public Color getColor() {
         return cPanel.getColor();
     }
 
+    /**
+     * Sets the initial color.
+     * @param rgb color integer value: 0xAARRGGBB.
+     */
+    @SuppressWarnings("unused")
     public void setColor(int rgb) {
         cPanel.setColor(new Color(rgb));
     }
 
+    /**
+     * Sets the initial color.
+     * @param clr color
+     */
+    @SuppressWarnings("unused")
     public void setColor(Color clr) {
         cPanel.setColor(clr);
     }
 
+    /**
+     * Sets color to shows as previous color
+     * @param rgb color integer value: 0xAARRGGBB.
+     */
+    @SuppressWarnings("unused")
     public void setPrevColor(int rgb) {
         cPanel.setPrevColor(new Color(rgb));
     }
 
+    /**
+     * Sets color to shows as previous color
+     * @param clr color
+     */
+    @SuppressWarnings("unused")
     public void setPrevColor(Color clr) {
         cPanel.setPrevColor(clr);
     }
 
+    /**
+     * Sets the both color, initial and previous
+     * @param rgb color integer value: 0xAARRGGBB.
+     */
+    @SuppressWarnings("unused")
     public void setColors(int rgb) {
         setColors(new Color(rgb));
     }
 
+    /**
+     * Sets the both color, initial and previous
+     * @param clr color
+     */
     public void setColors(Color clr) {
         cPanel.setPrevColor(clr);
         cPanel.setColor(clr);
     }
 
+    /**
+     * Adds en external color's change listener
+     * @param toAdd listener
+     */
     public void addColorListener(ColorListener toAdd) {
         current.addListener(toAdd);
     }
 
+    /**
+     * Removes an external listener
+     * @param toRemove listener
+     */
+    @SuppressWarnings("unused")
     public void removeColorListener(ColorListener toRemove) {
         current.removeListener(toRemove);
     }
 
+    /**
+     * shows the color choose dialog
+     * @return chosen color
+     */
     public Color chooseColor() {
         setVisible(true);
         return current.getColor();

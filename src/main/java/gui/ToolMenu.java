@@ -17,7 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-import static gui.MainFrame.toolPan;
+import static gui.MainFrame.toolPanel;
 
 /**
  * The popup menu for the toolbar / tool panel.
@@ -89,12 +89,11 @@ public class ToolMenu extends LPopupMenu {
     /**
      * The constructor. Creates the Tool menu and adds menu items.
      */
-    @SuppressWarnings("MagicConstant")
     public ToolMenu() {
         super();
 
         tools = addMenuItem(null, ResStrings.getString("strToolbar"));
-        tools.setFont(tools.getFont().deriveFont(1, 13f));
+        tools.setFont(tools.getFont().deriveFont(Font.BOLD, 13f));
 
         addSeparator(null);
 
@@ -138,7 +137,7 @@ public class ToolMenu extends LPopupMenu {
      * Handles the click on position items.
      */
     private void positionClick(int number) {
-        toolPan.setDockedTo(number);
+        toolPanel.setDockedTo(number);
         updatePosIcons();
     }
 
@@ -146,7 +145,7 @@ public class ToolMenu extends LPopupMenu {
      * Handles the click on alignment items.
      */
     private void alignClick(int number) {
-        toolPan.setAlignment(number);
+        toolPanel.setAlignment(number);
         updateAlignIcons();
     }
 
@@ -154,7 +153,7 @@ public class ToolMenu extends LPopupMenu {
      * Gets the current docked position value and shows icon at the proper item.
      */
     private void updatePosIcons() {
-        switch (toolPan.getDockedTo()) {
+        switch (toolPanel.getDockedTo()) {
             case 0:
                 top.setIcon(Options.cbIconSelected);
                 bottom.setIcon(null);
@@ -186,7 +185,7 @@ public class ToolMenu extends LPopupMenu {
      * Gets the current alignment value and shows icon at the proper item.
      */
     private void updateAlignIcons() {
-        switch (toolPan.getAlignment()) {
+        switch (toolPanel.getAlignment()) {
             case 0:
                 begin.setIcon(Options.cbIconSelected);
                 center.setIcon(null);

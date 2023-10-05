@@ -616,7 +616,7 @@ public class BoardPanel extends JComponent {
         }
 
         // update board
-        MainFrame.toolPan.updateButtons();
+        MainFrame.toolPanel.updateButtons();
         if (MainFrame.gameMode != MainFrame.ASSIST_MODE) {
             MainFrame.gameMoves.remove(MainFrame.movesDone);
         } else {
@@ -665,7 +665,7 @@ public class BoardPanel extends JComponent {
 
         // update board configuration
         MainFrame.movesDone = 0;
-        MainFrame.toolPan.updateButtons();
+        MainFrame.toolPanel.updateButtons();
         if (MainFrame.gameMode == MainFrame.ASSIST_MODE) {
             Main.frame.hideMove();
             Main.frame.showMove();

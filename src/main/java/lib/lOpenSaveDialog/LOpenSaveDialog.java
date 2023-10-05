@@ -242,7 +242,7 @@ public class LOpenSaveDialog extends JDialog {
     }
 
     /**
-     * Saves current settings of the dialog to the tubesolver settings.
+     * Saves current settings of the dialog to the application settings.
      * Needs to be relocated.
      */
     public void saveOptions() {
@@ -260,7 +260,7 @@ public class LOpenSaveDialog extends JDialog {
     }
 
     /**
-     * Gets the stored folder from the tubesolver settings.
+     * Gets the stored folder from the application settings.
      * Needs to be relocated.
      * @return stored folder or the empty string.
      */

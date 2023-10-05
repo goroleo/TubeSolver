@@ -36,6 +36,7 @@ public class OpenSavePanel extends JPanel {
     /**
      * Default file extension.
      */
+    @SuppressWarnings("SpellCheckingInspection")
     public static final String DEFAULT_EXT = ".jctl";
 
     /**

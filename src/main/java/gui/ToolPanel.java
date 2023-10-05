@@ -458,11 +458,11 @@ public class ToolPanel extends JPanel {
      */
     public void refreshClick() {
         if (buttons[5].isEnabled() && buttons[5].isVisible()) {
-            if (MainFrame.palPan != null) {
-                MainFrame.palPan.updateColors();
+            if (MainFrame.palettePanel != null) {
+                MainFrame.palettePanel.updateColors();
             }
-            if (MainFrame.tubesPan != null) {
-                MainFrame.tubesPan.updateColors();
+            if (MainFrame.tubesPanel != null) {
+                MainFrame.tubesPanel.updateColors();
             }
         }
     }
@@ -481,7 +481,7 @@ public class ToolPanel extends JPanel {
      */
     public void undoClick() {
         if (buttons[8].isEnabled() && buttons[8].isVisible()) {
-            MainFrame.tubesPan.undoMoveColor();
+            MainFrame.tubesPanel.undoMoveColor();
         }
     }
 
@@ -490,7 +490,7 @@ public class ToolPanel extends JPanel {
      */
     public void restartClick() {
         if (buttons[9].isEnabled() && buttons[9].isVisible()) {
-            MainFrame.tubesPan.startAgain();
+            MainFrame.tubesPanel.startAgain();
         }
     }
 
@@ -499,7 +499,7 @@ public class ToolPanel extends JPanel {
      */
     public void clearTubesClick() {
         if (buttons[10].isEnabled() && buttons[10].isVisible()) {
-            MainFrame.tubesPan.clearTubes();
+            MainFrame.tubesPanel.clearTubes();
         }
     }
 

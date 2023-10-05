@@ -107,7 +107,7 @@ public class ColorTube extends JComponent {
     /**
      * The current arrow number.
      */
-    private int arrowNum = 0;
+    private int arrowNum;
 
     /**
      * No arrow
@@ -275,9 +275,9 @@ public class ColorTube extends JComponent {
         }
         if (closed) {
             if (MainFrame.gameMode == MainFrame.FILL_MODE) {
-                this.setFrame(1);
+                this.setFrame(FRAME_RED);
             } else {
-                this.setFrame(4);
+                this.setFrame(FRAME_BLUE);
             }
             showFrame();
         }

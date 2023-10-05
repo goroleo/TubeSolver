@@ -18,7 +18,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 
-import static gui.MainFrame.palPan;
+import static gui.MainFrame.palettePanel;
 
 /**
  * The popup menu for the Palette Panel and Color Buttons.
@@ -102,7 +102,7 @@ public class PaletteMenu extends LPopupMenu {
     /**
      * Corresponding ColorButton to change its color.
      */
-    private ColorButton correspButton;
+    private ColorButton correspondButton;
 
     /**
      * The Image to get the Icon of the corresponding Button's color.
@@ -118,12 +118,11 @@ public class PaletteMenu extends LPopupMenu {
     /**
      * The constructor. Creates the Palette menu and adds menu items.
      */
-    @SuppressWarnings("MagicConstant")
     public PaletteMenu() {
         super();
 
         pal = addMenuItem(null, ResStrings.getString("strPalette"));
-        pal.setFont(pal.getFont().deriveFont(1, 13f));
+        pal.setFont(pal.getFont().deriveFont(Font.BOLD, 13f));
         addSeparator(null);
 
         // position menu
@@ -175,11 +174,11 @@ public class PaletteMenu extends LPopupMenu {
     @Override
     public void show(Component invoker, int x, int y) {
         if (invoker instanceof ColorButton) {
-            correspButton = (ColorButton) invoker;
-            setColorIcon(correspButton.getColor());
+            correspondButton = (ColorButton) invoker;
+            setColorIcon(correspondButton.getColor());
             showColorChange(true);
         } else {
-            correspButton = null;
+            correspondButton = null;
             showColorChange(false);
         }
         updatePosIcons();
@@ -191,27 +190,27 @@ public class PaletteMenu extends LPopupMenu {
      * Handles the click on position items.
      */
     private void positionClick(int number) {
-        palPan.setDockedTo(number);
+        palettePanel.setDockedTo(number);
     }
 
     /**
      * Handles the click on lines items.
      */
     private void linesClick(int number) {
-        if (palPan.getDockedTo() < 2) {
-            palPan.setRows(number);
+        if (palettePanel.getDockedTo() < 2) {
+            palettePanel.setRows(number);
         } else {
-            palPan.setColumns(number);
+            palettePanel.setColumns(number);
         }
-        palPan.reDock();
+        palettePanel.reDock();
     }
 
     /**
      * Handles the click on Color Change item.
      */
     private void clrChangeClick() {
-        if (correspButton != null) {
-            palPan.changeColor(correspButton);
+        if (correspondButton != null) {
+            palettePanel.changeColor(correspondButton);
         }
     }
 
@@ -219,7 +218,7 @@ public class PaletteMenu extends LPopupMenu {
      * Handles the click on Default Palette item.
      */
     private void defaultClick() {
-        palPan.setDefaultPalette();
+        palettePanel.setDefaultPalette();
     }
 
     /**
@@ -248,34 +247,34 @@ public class PaletteMenu extends LPopupMenu {
      * Gets the current docked position value and shows icon at the proper item.
      */
     private void updatePosIcons() {
-        switch (palPan.getDockedTo()) {
+        switch (palettePanel.getDockedTo()) {
             case 0:
                 top.setIcon(Options.cbIconSelected);
                 bottom.setIcon(null);
                 left.setIcon(null);
                 right.setIcon(null);
-                updateLinesIcons(palPan.getRows());
+                updateLinesIcons(palettePanel.getRows());
                 break;
             case 1:
                 top.setIcon(null);
                 bottom.setIcon(Options.cbIconSelected);
                 left.setIcon(null);
                 right.setIcon(null);
-                updateLinesIcons(palPan.getRows());
+                updateLinesIcons(palettePanel.getRows());
                 break;
             case 2:
                 top.setIcon(null);
                 bottom.setIcon(null);
                 left.setIcon(Options.cbIconSelected);
                 right.setIcon(null);
-                updateLinesIcons(palPan.getCols());
+                updateLinesIcons(palettePanel.getCols());
                 break;
             case 3:
                 top.setIcon(null);
                 bottom.setIcon(null);
                 left.setIcon(null);
                 right.setIcon(Options.cbIconSelected);
-                updateLinesIcons(palPan.getCols());
+                updateLinesIcons(palettePanel.getCols());
                 break;
         }
     }
@@ -316,7 +315,7 @@ public class PaletteMenu extends LPopupMenu {
         left.setText(ResStrings.getString("strLeft"));
         right.setText(ResStrings.getString("strRight"));
         lines.setText(ResStrings.getString(
-                (palPan.getDockedTo() < 2) ? "strRows" : "strCols"));
+                (palettePanel.getDockedTo() < 2) ? "strRows" : "strCols"));
         change.setText(ResStrings.getString("strChangeColor"));
         def.setText(ResStrings.getString("strDefaultPalette"));
     }

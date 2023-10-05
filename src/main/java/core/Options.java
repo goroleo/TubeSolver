@@ -434,7 +434,10 @@ public class Options {
      * Enumeration of possible operating systems.
      */
     public enum OS {
-        WINDOWS, LINUX, MAC, SOLARIS
+        @SuppressWarnings("MissingJavadoc") WINDOWS,
+        @SuppressWarnings("MissingJavadoc") LINUX,
+        @SuppressWarnings("MissingJavadoc") MAC,
+        @SuppressWarnings("MissingJavadoc") SOLARIS
     } // Operating systems.
 
     /**

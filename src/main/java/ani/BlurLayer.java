@@ -18,7 +18,6 @@ import java.awt.image.BufferedImage;
  * by Fedor Tukmakov <a href="https://github.com/impfromliga">@impfromliga</a>.<br>
  * After blurring, this layer will be hidden by changing its opacity.
  */
-@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection"})
 public class BlurLayer extends JComponent implements Runnable {
 
     /**
@@ -29,11 +28,13 @@ public class BlurLayer extends JComponent implements Runnable {
     /**
      * Step value of opaque for the next frame
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int opaqueStep = 7;
 
     /**
      * Time delay after every frame
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int blurCount = 50;
 
     /**
@@ -44,6 +45,7 @@ public class BlurLayer extends JComponent implements Runnable {
     /**
      * Time delay after every frame
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int delay = 7;
 
     /**
@@ -74,13 +76,6 @@ public class BlurLayer extends JComponent implements Runnable {
     boolean working = false;
 
     /**
-     * Creates of the blur layer.
-     */
-    @SuppressWarnings("unused")
-    public BlurLayer() {
-    }
-
-    /**
      * Sets the original image.
      *
      * @param bi an original image
@@ -97,7 +92,6 @@ public class BlurLayer extends JComponent implements Runnable {
                 buf[x + y * w] = bi.getRGB(x, y);
             }
         }
-//        setSize(w, h);
     }
 
     @Override
@@ -139,7 +133,6 @@ public class BlurLayer extends JComponent implements Runnable {
      * <a href="https://github.com/impfromliga/LaplaceBlur">Code</a>.
      * <a href="https://habr.com/ru/articles/427077/">Description</a> (in Russian).
      */
-    @SuppressWarnings("SpellCheckingInspection")
     private void blurFrame() {
 
         int x01 = 0x010101, x7f = 0x7f7f7f;
