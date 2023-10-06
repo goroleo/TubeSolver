@@ -428,7 +428,7 @@ public class Options {
      * An icon showing the non_selected state for any CheckBoxes and Menus at all parts of the application.
      */
     public static final ImageIcon cbIconStandard
-            = createImageIcon("checkbutton_icon_standard.png");     // Icon_Selected for menus 
+            = createImageIcon("checkbutton_icon_standard.png");     // Icon_non_Selected for menus
 
     /**
      * Enumeration of possible operating systems.
