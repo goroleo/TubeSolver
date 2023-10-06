@@ -42,5 +42,6 @@ To compile just specify `run/Main.java` as the main class of the application. So
 Tested at Windows 10 with OpenJDK20 and Linux Mint 21.2 (Ubuntu 22.04) with OpenJDK11.
 
 ## Screenshots
+![Screenshot1](/screenshot1.png)
 ![Screenshot2](/screenshot2.png)
 
