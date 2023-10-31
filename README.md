@@ -37,7 +37,9 @@ Use it as you want.
 ## Compiling 
 Made with pure Java Swing (Java 9), with neither third-party libraries no any dependencies. All animation, drawings, pictures, dialogs are completely homemade.
 
-To compile just specify `run/Main.java` as the main class of the application. Some saved games are in the `examples` folder.
+To compile just specify `run/Main.java` as the main class of the application. 
+
+The compiled JAR file is located in the `target` folder. Some saved games are in the `examples` folder.
 
 Tested at Windows 10 with OpenJDK20 and Linux Mint 21.2 (Ubuntu 22.04) with OpenJDK11.
 
