@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
  * by Fedor Tukmakov <a href="https://github.com/impfromliga">@impfromliga</a>.<br>
  * After blurring, this layer will be hidden by changing its opacity.
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class BlurLayer extends JComponent implements Runnable {
 
     /**
@@ -48,7 +49,7 @@ public class BlurLayer extends JComponent implements Runnable {
     @SuppressWarnings("FieldCanBeLocal")
     private final int delay = 7;
 
-    /**
+     /**
      * An animation direction: blurring or hiding
      */
     private boolean appearing = true;
@@ -123,7 +124,7 @@ public class BlurLayer extends JComponent implements Runnable {
         if (!working) {
             working = true;
             Thread t = new Thread(this);
-            t.start();
+           t.start();
         }
     }
 
@@ -133,6 +134,7 @@ public class BlurLayer extends JComponent implements Runnable {
      * <a href="https://github.com/impfromliga/LaplaceBlur">Code</a>.
      * <a href="https://habr.com/ru/articles/427077/">Description</a> (in Russian).
      */
+    @SuppressWarnings("SpellCheckingInspection")
     private void blurFrame() {
 
         int x01 = 0x010101, x7f = 0x7f7f7f;

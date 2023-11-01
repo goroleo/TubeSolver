@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.LOpenSaveDialog.osPanel;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
@@ -106,9 +106,9 @@ public class ToolsPanel extends JComponent {
      * @param btnNumber number of clicked button
      */
     public void buttonClick(int btnNumber) {
-        if (osPan.isFoldersPanelVisible()) {
+        if (osPanel.isFoldersPanelVisible()) {
             curBtnFocus = btnNumber;
-            osPan.showFoldersPanel(false);
+            osPanel.showFoldersPanel(false);
             drawFocus();
         } else {
             switch (btnNumber) {
@@ -116,10 +116,10 @@ public class ToolsPanel extends JComponent {
                     current.upFolder();
                     break;
                 case 1:
-                    osPan.refreshFolder();
+                    osPanel.refreshFolder();
                     break;
                 case 2:
-                    osPan.createNewFolder();
+                    osPanel.createNewFolder();
             }
         }
     }

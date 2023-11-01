@@ -16,7 +16,6 @@ import java.awt.image.BufferedImage;
 /**
  * This layer draws and unlimited rotates 2-colors flower.
  */
-@SuppressWarnings("FieldCanBeLocal")
 public class FlowerLayer extends JComponent implements Runnable {
 
     // An original image represented as a buffer 400x400 points
@@ -35,11 +34,13 @@ public class FlowerLayer extends JComponent implements Runnable {
     /**
      * The increments of the rotation angle for the next animation frame.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final double angleIncrement = 1d / 180d * Math.PI;
 
     /**
      * Delay between two frames.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final long delay = 10;
 
     /**
@@ -60,6 +61,7 @@ public class FlowerLayer extends JComponent implements Runnable {
     /**
      * The increment of the alpha-channel value for the next frame.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final double alphaIncrement = 0.05d;
 
     /**

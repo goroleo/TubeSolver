@@ -293,13 +293,12 @@ public class TubeModel {
         return result;
     }
 
+    /* unused
     /**
      * Fills this tube colors' array from the stored integer variable.
      *
      * @param storedColors integer value of the stored colors.
      * @see #storeColors
-     */
-    @SuppressWarnings("unused")
     public void assignColors(int storedColors) { //
         count = 0;
         for (int i = 0; i < 4; i++) {
@@ -316,6 +315,7 @@ public class TubeModel {
         }
         updateState();
     }
+     */
 
     /**
      * Fills this tube colors' array from another tube. Used for copying specified
@@ -330,13 +330,12 @@ public class TubeModel {
         this.state = tmFrom.state;
     }
 
+    /* unused
     /**
      * Compares this tube with the another tube.
      *
      * @param tm another tube to compare.
      * @return true if both the tubes are consists of the same colors.
-     */
-    @SuppressWarnings("unused")
     public boolean equalsTo(TubeModel tm) {
         for (int i = 0; i < 4; i++) {
             if (this.colors[i] != tm.colors[i]) {
@@ -345,5 +344,6 @@ public class TubeModel {
         }
         return true;
     }
+     */
 
 }

@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.LOpenSaveDialog.osPanel;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
@@ -40,8 +40,8 @@ public class FileNameEdit extends LTextField implements FolderListener, FileList
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (osPan.isFoldersPanelVisible()) {
-                    osPan.showFoldersPanel(FileNameEdit.this, false);
+                if (osPanel.isFoldersPanelVisible()) {
+                    osPanel.showFoldersPanel(FileNameEdit.this, false);
                 }
             }
         });
@@ -51,7 +51,7 @@ public class FileNameEdit extends LTextField implements FolderListener, FileList
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == '\n' && !e.isControlDown()) {
                     if (!getValue().equals("")) {
-                        osPan.confirmAndClose();
+                        osPanel.confirmAndClose();
                     }
                 }
             }
@@ -60,7 +60,7 @@ public class FileNameEdit extends LTextField implements FolderListener, FileList
 
     @Override
     public void valueChanged() {
-        osPan.scrollToFileName(getValue());
+        osPanel.scrollToFileName(getValue());
     }
 
     /**

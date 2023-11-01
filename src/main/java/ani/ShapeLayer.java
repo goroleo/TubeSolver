@@ -43,35 +43,35 @@ public class ShapeLayer extends JComponent {
         bi = new BufferedImage(img.getWidth(), img.getHeight(), 2);
     }
 
+    /* unused
     /**
      * @param img shape image to fill it
      * @param clr color to fill the shape
-     */
-    @SuppressWarnings("unused")
     public ShapeLayer(BufferedImage img, Color clr) {
         this(img);
         setColor(clr);
     }
+     */
 
+    /* unused
     /**
      * Get current filled color
      *
      * @return color
-     */
-    @SuppressWarnings("unused")
     public Color getColor() {
         return new Color(rgb);
     }
+    */
 
+    /* unused
     /**
      * Get current filled color as an integer value
      *
      * @return color as integer
-     */
-    @SuppressWarnings("unused")
     public int getColorValue() {
         return rgb;
     }
+    */
 
     /**
      * Set color to fill the shape

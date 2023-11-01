@@ -191,7 +191,8 @@ public class ColorLine extends JComponent implements ColorListener {
         switch (cPanel.getDialogMode()) {
 
             case 0: // Hue
-                if (cPanel.getColorScheme() == 0) {
+                if (cPanel.getColorScheme() == 0) //noinspection SpellCheckingInspection
+                {
                     s = 1.0f;                             // This is the Photoshop's style -  
                     b = 1.0f;                             // HUE line is never change due to current color.
 
@@ -206,7 +207,8 @@ public class ColorLine extends JComponent implements ColorListener {
                             buffer.setRGB(x, y, clr);
                         }
                     }
-                } else {
+                } else //noinspection SpellCheckingInspection
+                {
                     s = 1.0f;                             // This is the Photoshop's style -  
                     b = 0.5f;                             // HUE line is never change due to current color.
 

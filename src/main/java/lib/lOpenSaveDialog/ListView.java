@@ -18,7 +18,6 @@ import java.util.ArrayList;
 /**
  * This is the parent class of the list of files/folders. It provides all common methods and routines.
  */
-@SuppressWarnings("unused")
 public class ListView extends JComponent {
 
     /**
@@ -69,14 +68,15 @@ public class ListView extends JComponent {
         return fi;
     }
 
+    /* unused
     /**
      * Creates a new FileItem and no adds it to the list. Used default parameters: detailsMode is true, itemLevel is 0.
      * @param f file
      * @return a new created FileItem.
-     */
     public FileItem createNewItem(File f) {
         return createNewItem(f, true, 0);
     }
+     */
 
     /**
      * Creates a new FileItem without adding it to the list.
@@ -285,14 +285,15 @@ public class ListView extends JComponent {
         return list.indexOf(item);
     }
 
+    /* unused
     /**
      * Gets FileItem of the list by specified index.
-     * @param index index of the Item.
+     * @param index an index of the Item.
      * @return FileItem with the specified index or null/
-     */
     public FileItem getItemOf(int index) {
         return list.get(index);
     }
+     */
 
     /**
      * Gets how many items can be displayed on one page (one screen).
@@ -391,13 +392,14 @@ public class ListView extends JComponent {
         }
     }
 
+    /* unused
     /**
      * Gets the item with the mouse cursor over it.
      * @return file list item with the mouse cursor over it.
-     */
     public FileItem getMouseOverItem() {
         return mouseOverItem;
     }
+     */
 
     /**
      * Sets the item with the mouse cursor over it.
@@ -429,7 +431,7 @@ public class ListView extends JComponent {
      * Handles the mouse press on the specified item. Used to override it.
      * @param item the FileList item that has been clicked.
      */
-    public void onItemPressed(FileItem item) {
+    public void onItemPressed(@SuppressWarnings("unused") FileItem item) {
     }
 
     /**
@@ -443,7 +445,7 @@ public class ListView extends JComponent {
      * Handles the mouse exited from the specified item. Used to override it.
      * @param item the FileList item that has been clicked.
      */
-    public void onItemExited(FileItem item) {
+    public void onItemExited(@SuppressWarnings("unused") FileItem item) {
     }
 
     /**
@@ -498,11 +500,11 @@ public class ListView extends JComponent {
         return null;
     }
 
+    /* unused
     /**
      * Finds a FileItem that displays the specified file name.
      * @param fileName string to find
      * @return founded fileList item or null if not found.
-     */
     public FileItem getItemByFileName(String fileName) {
         if (fileName != null && !"".equals(fileName))
             for (FileItem item : list) {
@@ -512,5 +514,6 @@ public class ListView extends JComponent {
             }
         return null;
     }
+     */
 
 }

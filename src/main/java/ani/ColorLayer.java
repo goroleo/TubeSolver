@@ -21,7 +21,6 @@ import static gui.MainFrame.palette;
  *
  * @see gui.ColorTube
  */
-@SuppressWarnings("FieldCanBeLocal")
 public class ColorLayer extends JComponent implements Runnable {
 
 // -----------------------------------------------------
@@ -31,11 +30,13 @@ public class ColorLayer extends JComponent implements Runnable {
     /**
      * How many lines will fill (or erase) in the every next frame.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int deltaY = 1;
 
     /**
      * Delay (in milliseconds) before start to calculate and draw next frame.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int delay = 5;
 
     /**

@@ -14,7 +14,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.LOpenSaveDialog.osPanel;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
@@ -156,7 +156,7 @@ public class FoldersPanel extends JComponent implements FolderListener {
      * @param item folder selected.
      */
     public void chooseFolder(FileItem item) {
-        osPan.showFoldersPanel(false);
+        osPanel.showFoldersPanel(false);
         current.setFolder(item.getFile());
     }
 

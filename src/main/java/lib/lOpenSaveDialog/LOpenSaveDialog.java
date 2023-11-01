@@ -24,7 +24,6 @@ import static lib.lOpenSaveDialog.OpenSavePanel.imgFrameIcon;
 /**
  * The OpenSave file chooser dialog.
  */
-@SuppressWarnings("unused")
 public class LOpenSaveDialog extends JDialog {
 
     /**
@@ -50,7 +49,7 @@ public class LOpenSaveDialog extends JDialog {
     /**
      * The OpenSavePanel instance to access of all its routines from anywhere of the dialog.
      */
-    public static OpenSavePanel osPan;
+    public static OpenSavePanel osPanel;
 
     /**
      * Creates the Open file dialog.
@@ -86,7 +85,7 @@ public class LOpenSaveDialog extends JDialog {
         if (!"".equals(getStoredFolder()))
             current.setFolder(new File(getStoredFolder()));
 
-        osPan = new OpenSavePanel(this, true);
+        osPanel = new OpenSavePanel(this, true);
         addListeners();
         this.owner = owner;
         initFrame();
@@ -105,7 +104,7 @@ public class LOpenSaveDialog extends JDialog {
                 && Options.osdSizeX <= r.width
                 && Options.osdSizeY <= r.height) {
             setSize(Options.osdSizeX, Options.osdSizeY);
-            osPan.setColumnWidths(Options.osdSizeX - 37, Options.osdSizeColS, Options.osdSizeColD);
+            osPanel.setColumnWidths(Options.osdSizeX - 37, Options.osdSizeColS, Options.osdSizeColD);
         } else {
             // sets the default size
             setSize(480, 400);
@@ -117,13 +116,13 @@ public class LOpenSaveDialog extends JDialog {
         setBackground(Palette.dialogColor);
         setForeground(Color.white);
 
-        getLayeredPane().add(osPan, 100);
+        getLayeredPane().add(osPanel, 100);
     }
 
     private void calculateSize() {
         Dimension dim = new Dimension();
-        dim.width = osPan.getWidth();
-        dim.height = osPan.getHeight();
+        dim.width = osPanel.getWidth();
+        dim.height = osPanel.getHeight();
         setPreferredSize(dim);
         pack();
         int realW = getContentPane().getWidth();
@@ -149,40 +148,39 @@ public class LOpenSaveDialog extends JDialog {
         }
     }
 
-    @SuppressWarnings("MagicConstant")
     private void addListeners() {
 
         // CLOSE WINDOW click
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                osPan.refuseAndClose();
+                osPanel.refuseAndClose();
             }
         });
 
         // ESCAPE pressed
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> {
-                    if (!osPan.isFoldersPanelVisible()) {
-                        osPan.refuseAndClose();
+                    if (!osPanel.isFoldersPanelVisible()) {
+                        osPanel.refuseAndClose();
                     } else {
-                        osPan.showFoldersPanel(false);
+                        osPanel.showFoldersPanel(false);
                     }
                 },
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
-                (ActionEvent e) -> osPan.confirmAndClose(),
-                KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                (ActionEvent e) -> osPanel.confirmAndClose(),
+                KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), // VK_ENTER + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // Frame resize
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                osPan.setSize(getContentPane().getWidth(),
+                osPanel.setSize(getContentPane().getWidth(),
                         getContentPane().getHeight());
             }
         });
@@ -197,7 +195,7 @@ public class LOpenSaveDialog extends JDialog {
         dialogMode = (mode == SAVE_MODE) ? SAVE_MODE : OPEN_MODE;
         setTitle((dialogMode == SAVE_MODE)
                 ? ResStrings.getString("strSaveFile") : ResStrings.getString("strOpenFile"));
-        osPan.updateButtonCaption();
+        osPanel.updateButtonCaption();
     }
 
     @Override
@@ -243,7 +241,7 @@ public class LOpenSaveDialog extends JDialog {
 
     /**
      * Saves current settings of the dialog to the application settings.
-     * Needs to be relocated.
+     * ?Needs to be relocated?
      */
     public void saveOptions() {
         // todo: relocate this routine
@@ -251,12 +249,12 @@ public class LOpenSaveDialog extends JDialog {
         Options.osdPositionY = getY();
         Options.osdSizeX = getWidth();
         Options.osdSizeY = getHeight();
-        Options.osdSizeColN = osPan.getColumnWidth(1);
-        Options.osdSizeColS = osPan.getColumnWidth(2);
-        Options.osdSizeColD = osPan.getColumnWidth(3);
+        Options.osdSizeColN = osPanel.getColumnWidth(1);
+        Options.osdSizeColS = osPanel.getColumnWidth(2);
+        Options.osdSizeColD = osPanel.getColumnWidth(3);
         Options.osdCurrentDir = current.getFolder().getAbsolutePath();
-        Options.osdSortCol = osPan.getFileSortNumber();
-        Options.osdSortOrder = osPan.getFileSortAscending() ? 1 : 0;
+        Options.osdSortCol = osPanel.getFileSortNumber();
+        Options.osdSortOrder = osPanel.getFileSortAscending() ? 1 : 0;
     }
 
     /**

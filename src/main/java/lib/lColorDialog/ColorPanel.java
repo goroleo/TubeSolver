@@ -80,11 +80,13 @@ public class ColorPanel extends JComponent {
      * <li>4. <b>G</b>reen
      * <li>5. <b>B</b>lue</ul>
      */
+    @SuppressWarnings("SpellCheckingInspection")
     private int dialogMode = 0; // 0-5 means Hue, Sat, Bri, R, G, B
 
     /**
      * colorScheme is an integer value. 0 means HSB/HSV, 1 means HSL
      */
+    @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
     private int colorScheme = 0;
 
 
@@ -219,11 +221,11 @@ public class ColorPanel extends JComponent {
         return colorScheme;
     }
 
+    /* unused
     /**
      * Sets color scheme
      * @param scheme new color scheme
      * @see ColorPanel#colorScheme
-     */
     public void setColorScheme(int scheme) {
         if (scheme == 0 || scheme == 1) {
             colorScheme = scheme;
@@ -232,6 +234,7 @@ public class ColorPanel extends JComponent {
             cLabels.updateColorScheme();
         }
     }
+    */
 
     /**
      * Gets the current color chosen by user
@@ -296,6 +299,7 @@ public class ColorPanel extends JComponent {
 //         Resources loader     
 //         
 /////////////////////////////////////////////////////////
+    @SuppressWarnings("SpellCheckingInspection")
     private void loadResources() {
         lnFrameIcon = createBufImage("lncolordialog_icon.png");
         rbIcon = createIconImage("radiobutton_icon_standard.png");

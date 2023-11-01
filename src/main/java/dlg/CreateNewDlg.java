@@ -13,12 +13,9 @@ import core.Options;
 import gui.Palette;
 import core.ResStrings;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FontMetrics;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JComponent;
@@ -57,7 +54,6 @@ public class CreateNewDlg extends JDialog {
      *
      * @param owner frame owner
      */
-    @SuppressWarnings("MagicConstant")
     public CreateNewDlg(JFrame owner) {
 
         super(owner, ResStrings.getString("strCreateNew"), true);
@@ -78,13 +74,13 @@ public class CreateNewDlg extends JDialog {
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> refuseAndClose(),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> confirmAndClose(),
-                KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), // VK_ENTER + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         LPictureButton btnOk = new LPictureButton(this, "btnDialog");
         btnOk.setText(ResStrings.getString("strCreate"));
@@ -128,7 +124,6 @@ public class CreateNewDlg extends JDialog {
         btnOk.setLocation(
                 btnCancel.getLocation().x - btnOk.getWidth() - 15,
                 btnCancel.getLocation().y);
-
     }
 
     @Override
@@ -230,15 +225,14 @@ public class CreateNewDlg extends JDialog {
      * @param text   label caption.
      * @return label created.
      */
-    @SuppressWarnings("MagicConstant")
     private JLabel addLabel(int number, String text) {
         JLabel lb = new JLabel(text);
         int y;
         if (number == 0) {
-            lb.setFont(lb.getFont().deriveFont(1)); // Font.BOLD
+            lb.setFont(lb.getFont().deriveFont(Font.BOLD)); // Font.BOLD
             y = startY;
         } else {
-            lb.setFont(lb.getFont().deriveFont(0)); //Font.PLAIN
+            lb.setFont(lb.getFont().deriveFont(Font.PLAIN)); //Font.PLAIN
             y = startY + dimY * (number) + 4;
         }
 
@@ -261,6 +255,9 @@ public class CreateNewDlg extends JDialog {
 
         /**
          * Creates the field
+         * @param number field's number
+         * @param aMax maximum value
+         * @param aMin minimum value
          */
         public TubesCountField(int number, int aMin, int aMax) {
             int x = 0;
@@ -283,7 +280,7 @@ public class CreateNewDlg extends JDialog {
             };
             tf.setLocation(x, y);
             add(tf);
-            x = x + tf.getWidth();
+            x += tf.getWidth();
 
             btnPlus = new LToolButton(this, "btnTool22", "plus");
             btnPlus.setColorEnabled(new Color(0xee, 0xee, 0xee));
@@ -291,8 +288,8 @@ public class CreateNewDlg extends JDialog {
             btnPlus.setColorPressed(new Color(0xbb, 0xbb, 0xbb));
             btnPlus.setLocation(x, y);
             add(btnPlus);
-            x = x + btnPlus.getWidth();
-            y = y + btnMinus.getHeight();
+            x += btnPlus.getWidth();
+            y = btnMinus.getHeight();
 
             setSize(x, y);
             setLocation(dimX * 2 + maxLabelWidth, startY + dimY * number);

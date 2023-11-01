@@ -15,11 +15,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import static lib.lColorDialog.ColorPanel.current;
 
@@ -92,7 +91,6 @@ public class LColorDialog extends JDialog {
         }
     }
     
-    @SuppressWarnings("MagicConstant")
     private void addListeners() {
         
         // CLOSE WINDOW click
@@ -107,13 +105,13 @@ public class LColorDialog extends JDialog {
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> cPanel.refuseAndClose(),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> cPanel.confirmAndClose(),
-                KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), // VK_ENTER + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
     }
 
     @Override
@@ -142,34 +140,34 @@ public class LColorDialog extends JDialog {
         cPanel.setDialogMode(newMode);
     }
 
+    /* unused
     /**
      * Gets the color scheme
      * @return color scheme
      * @see ColorPanel#getColorScheme()
-     */
-    @SuppressWarnings("unused")
     public int getColorScheme() {
         return cPanel.getColorScheme();
     }
+     */
 
+    /* unused
     /**
      * Sets the color scheme
      * @param scheme color scheme
      * @see ColorPanel#getColorScheme()
-     */
-    @SuppressWarnings("unused")
     public void setColorScheme(int scheme) {
         cPanel.setColorScheme(scheme);
     }
+     */
 
+    /* unused
     /**
      * Gets chosen color at RGB integer value: 0xAARRGGBB.
      * @return RGB integer value.
-     */
-    @SuppressWarnings("unused")
     public int getColorValue() {
         return cPanel.getColor().getRGB();
     }
+     */
 
     /**
      * Gets chosen color.
@@ -179,50 +177,50 @@ public class LColorDialog extends JDialog {
         return cPanel.getColor();
     }
 
+    /* unused
     /**
      * Sets the initial color.
      * @param rgb color integer value: 0xAARRGGBB.
-     */
-    @SuppressWarnings("unused")
     public void setColor(int rgb) {
         cPanel.setColor(new Color(rgb));
     }
+     */
 
+    /* unused
     /**
      * Sets the initial color.
      * @param clr color
-     */
-    @SuppressWarnings("unused")
     public void setColor(Color clr) {
         cPanel.setColor(clr);
     }
+     */
 
+    /* unused
     /**
      * Sets color to shows as previous color
      * @param rgb color integer value: 0xAARRGGBB.
-     */
-    @SuppressWarnings("unused")
     public void setPrevColor(int rgb) {
         cPanel.setPrevColor(new Color(rgb));
     }
+     */
 
+    /* unused
     /**
      * Sets color to shows as previous color
      * @param clr color
-     */
-    @SuppressWarnings("unused")
     public void setPrevColor(Color clr) {
         cPanel.setPrevColor(clr);
     }
+     */
 
+    /* unused
     /**
      * Sets the both color, initial and previous
      * @param rgb color integer value: 0xAARRGGBB.
-     */
-    @SuppressWarnings("unused")
     public void setColors(int rgb) {
         setColors(new Color(rgb));
     }
+     */
 
     /**
      * Sets the both color, initial and previous

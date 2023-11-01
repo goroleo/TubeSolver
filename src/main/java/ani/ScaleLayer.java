@@ -20,7 +20,6 @@ import javax.swing.JComponent;
  * shows the image resizing (from zero to normal) and its opacity changing
  * (from zero to one).
  */
-@SuppressWarnings("FieldCanBeLocal")
 public class ScaleLayer extends JComponent implements Runnable {
 
     /**
@@ -41,6 +40,7 @@ public class ScaleLayer extends JComponent implements Runnable {
     /**
      * Delay between two frames in milliseconds.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final long delay = 20;
 
     /**
@@ -51,6 +51,7 @@ public class ScaleLayer extends JComponent implements Runnable {
     /**
      * The increment of the opacity between two frames.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final double alphaIncrement = 0.06d;
 
     /**

@@ -100,6 +100,7 @@ public class FileItem extends JComponent {
     /**
      * File extension.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private String fExt;
 
     /**
@@ -211,15 +212,15 @@ public class FileItem extends JComponent {
 //     Main routines
 //
 
+    /* unused
     /**
      * FilItem class constructor with default parameters.
      *
      * @param f file to be precessed and displayed.
-     */
-    @SuppressWarnings("unused")
     public FileItem(File f) {
         this(f, true, 0);
     }
+     */
 
     /**
      * An extended FilItem class constructor.
@@ -309,14 +310,13 @@ public class FileItem extends JComponent {
     /**
      * This routine sets all labels options and fills labels from the class' fields.
      */
-    @SuppressWarnings("MagicConstant")
     private void setLabels() {
         nameLabel.setText(getFileName());
         nameLabel.setBackground(null);
         nameLabel.setForeground(null);
         nameLabel.setHorizontalAlignment(2); // left
         nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
-        nameLabel.setFont(nameLabel.getFont().deriveFont(0));
+        nameLabel.setFont(nameLabel.getFont().deriveFont(Font.PLAIN));
         if (getIcon() != null) {
             nameLabel.setIcon(getIcon());
         }
@@ -327,14 +327,14 @@ public class FileItem extends JComponent {
             sizeLabel.setForeground(null);
             sizeLabel.setHorizontalAlignment(4); // right
             sizeLabel.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
-            sizeLabel.setFont(sizeLabel.getFont().deriveFont(0));
+            sizeLabel.setFont(sizeLabel.getFont().deriveFont(Font.PLAIN));
 
             dateLabel.setText(getTimeStr());
             dateLabel.setBackground(null);
             dateLabel.setForeground(null);
             dateLabel.setHorizontalAlignment(4); // right
             dateLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
-            dateLabel.setFont(dateLabel.getFont().deriveFont(0));
+            dateLabel.setFont(dateLabel.getFont().deriveFont(Font.PLAIN));
         }
     }
 
@@ -362,13 +362,13 @@ public class FileItem extends JComponent {
         return fName;
     }
 
+    /* unused
     /**
      * @return file extension.
-     */
-    @SuppressWarnings("unused")
     public String getExt() {
         return fExt;
     }
+     */
 
     /**
      * @return file icon.
@@ -377,13 +377,14 @@ public class FileItem extends JComponent {
         return fIcon;
     }
 
+    /* unused
     /**
      * @return file length (size) of the file.
-     */
-    @SuppressWarnings("unused")
+     *
     public long getLength() {
         return fLength;
     }
+     */
 
     /**
      * @return current user locale formatted string with the length (size) of the file.
@@ -394,13 +395,13 @@ public class FileItem extends JComponent {
         else return "";
     }
 
+    /* unused
     /**
      * @return file date/time stamp.
-     */
-    @SuppressWarnings("unused")
     public LocalDateTime getTime() {
         return fTime;
     }
+     */
 
     /**
      * @return current user locale formatted string with the date-time stamp of the file.
@@ -551,13 +552,13 @@ public class FileItem extends JComponent {
         } else fLevel = 0;
     }
 
+    /* unused
     /**
      * @return true if this item is a selected item.
-     */
-    @SuppressWarnings("unused")
     public boolean isSelected() {
         return selected;
     }
+     */
 
     /**
      * Sets this file item as selected or not selected.
@@ -576,13 +577,13 @@ public class FileItem extends JComponent {
         }
     }
 
+    /* unused
     /**
      * @return true if the mouse cursor is above this item.
-     */
-    @SuppressWarnings("unused")
     public boolean isMouseOver() {
         return mouseOver;
     }
+     */
 
     /**
      * A setter for the mouseOver field.

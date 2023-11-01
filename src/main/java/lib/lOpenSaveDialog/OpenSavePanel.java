@@ -127,7 +127,6 @@ public class OpenSavePanel extends JPanel {
      *                    controls (i.e. from buttons).
      * @param showButtons true or false
      */
-    @SuppressWarnings("MagicConstant")
     public OpenSavePanel(JDialog ownerFrame, boolean showButtons) {
         dlgFrame = ownerFrame;
         setBackground(null);
@@ -151,18 +150,18 @@ public class OpenSavePanel extends JPanel {
         JLabel folderLabel = new JLabel(ResStrings.getString("strFolder"));
         folderLabel.setBackground(null);
         folderLabel.setForeground(null);
-        folderLabel.setFont(folderLabel.getFont().deriveFont(0, 12.0f));
+        folderLabel.setFont(folderLabel.getFont().deriveFont(Font.PLAIN, 12.0f));
 
         JLabel fileLabel = new JLabel(ResStrings.getString("strFile"));
         fileLabel.setBackground(null);
         fileLabel.setForeground(null);
-        fileLabel.setFont(folderLabel.getFont().deriveFont(0, 12.0f));
+        fileLabel.setFont(folderLabel.getFont().deriveFont(Font.PLAIN, 12.0f));
 
         JLabel extLabel = new JLabel(DEFAULT_EXT);
         extLabel.setBackground(null);
         extLabel.setForeground(null);
         extLabel.setHorizontalAlignment(0);
-        extLabel.setFont(folderLabel.getFont().deriveFont(1, 13.0f));
+        extLabel.setFont(folderLabel.getFont().deriveFont(Font.BOLD, 13.0f));
         extLabel.setPreferredSize(toolsPanel.getPreferredSize());
 
         // create buttons and add them to BoxLayout
@@ -322,7 +321,7 @@ public class OpenSavePanel extends JPanel {
      */
     public void setColumnWidths(int name, int size, int date) {
         if (size >= 50 && date >= 50 && name >= 50) {
-            filesPanel.setColumnWidths(name, size, date);
+            filesPanel.setHeaderColumns(name, size, date);
         }
     }
 

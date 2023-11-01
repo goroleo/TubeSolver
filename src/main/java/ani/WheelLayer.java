@@ -27,7 +27,6 @@ import static gui.MainFrame.palette;
  * The transparency fan will draw above the drum. It rotates in the opposite direction.
  */
 
-@SuppressWarnings("FieldCanBeLocal")
 public class WheelLayer extends JComponent implements Runnable {
 
     // radian constants
@@ -124,16 +123,19 @@ public class WheelLayer extends JComponent implements Runnable {
     /**
      * The angle size of each fun blade, in radians
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final double funSectorAngle = TWO_PI / funSectorsNumber;  // radians
 
     /**
      * Maximum of fun's alpha-channel (from 0 to 1)
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final double maxOpacity = 1.0;
 
     /**
      * Minimum of fun's alpha-channel (from 0 to 1)
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final double minOpacity = 0.4;
 
     // -------------------------------------------------------------------
@@ -143,16 +145,19 @@ public class WheelLayer extends JComponent implements Runnable {
     /**
      * Delay before start creating a new frame, in milliseconds
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final long delay = 30;
 
     /**
      * An angle speed of the Drum Of Colors, in radians.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final double drumAngleIncrement = PI * 0.02;
 
     /**
      * An angle speed of the Transparency Fan, in radians.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final double funAngleIncrement = PI * 0.03;
 
     /**

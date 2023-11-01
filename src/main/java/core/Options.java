@@ -18,11 +18,13 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 /**
  * This class loads, stores and saves all application options and settings. Also, it is
  * the set of additional & auxiliary routines of the application.
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class Options {
 
 // --------- Application options -------------
@@ -335,9 +337,9 @@ public class Options {
         sProps.setProperty("xStatNumberSolverSuccess", Integer.toString(numSolverSuccess));
         sProps.setProperty("xStatNumberSolverCancel", Integer.toString(numSolverCancel));
         sProps.setProperty("xStatNumberSolverNotSolved", Integer.toString(numSolverNotSolved));
-        sProps.setProperty("xStatSolverTimeLast(sec)", DoubleToString1000(solverTimeLast));
-        sProps.setProperty("xStatSolverTimeMax(sec)", DoubleToString1000(solverTimeMax));
-        sProps.setProperty("xStatSolverTimeAverage(sec)", DoubleToString1000(solverTimeAvg));
+        sProps.setProperty("xStatSolverTimeLast(sec)", doubleToString1000(solverTimeLast));
+        sProps.setProperty("xStatSolverTimeMax(sec)", doubleToString1000(solverTimeMax));
+        sProps.setProperty("xStatSolverTimeAverage(sec)", doubleToString1000(solverTimeAvg));
 
         TubesIO.saveOptions(sProps);
         sProps.clear();
@@ -431,53 +433,17 @@ public class Options {
             = createImageIcon("checkbutton_icon_standard.png");     // Icon_non_Selected for menus
 
     /**
-     * Enumeration of possible operating systems.
-     */
-    public enum OS {
-        @SuppressWarnings("MissingJavadoc") WINDOWS,
-        @SuppressWarnings("MissingJavadoc") LINUX,
-        @SuppressWarnings("MissingJavadoc") MAC,
-        @SuppressWarnings("MissingJavadoc") SOLARIS
-    } // Operating systems.
-
-    /**
-     * Stores the current operating system.
-     */
-    private static OS os = null;
-
-    /**
-     * Gets the current operating system.
-     */
-    private static OS getOS() {
-        if (os == null) {
-            String opSys = System.getProperty("os.name").toLowerCase();
-            if (opSys.contains("win")) {
-                os = OS.WINDOWS;
-            } else if (opSys.contains("nix") || opSys.contains("nux")
-                    || opSys.contains("aix")) {
-                os = OS.LINUX;
-            } else if (opSys.contains("mac")) {
-                os = OS.MAC;
-            } else if (opSys.contains("sunos")) {
-                os = OS.SOLARIS;
-            }
-        }
-        return os;
-    }
-
-    /**
      * Gets the main frame icon depends on the current OS;
      *
      * @return application icon image
      */
     public static Image getAppIcon() {
-        switch (getOS()) {
-            case MAC:
-            case LINUX:
-                return createImage("appicon_48.png");
-            default:
-                return createImage("appicon_32.png");
-        }
+        String opSys = System.getProperty("os.name").toLowerCase();
+        // if OS is linux or mac
+        if (Stream.of("nix", "nux", "aix", "mac").anyMatch(opSys::contains))
+            return createImage("appicon_48.png");
+        else // windows or solaris
+            return createImage("appicon_32.png");
     }
 
     /**
@@ -602,7 +568,7 @@ public class Options {
      * @param value double value
      * @return string
      */
-    public static String DoubleToString1000(double value) {
+    public static String doubleToString1000(double value) {
         value = ((double) Math.round(value * 1000)) / 1000;
         return Double.toString(value);
     }

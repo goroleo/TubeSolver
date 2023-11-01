@@ -17,7 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.LOpenSaveDialog.osPanel;
 import static lib.lOpenSaveDialog.OpenSavePanel.imgBtnDown;
 import static lib.lOpenSaveDialog.OpenSavePanel.imgBtnUp;
 
@@ -110,7 +110,6 @@ public class FileListHeader extends JComponent {
      *
      * @param owner a FilesPanel object that owns this header.
      */
-    @SuppressWarnings("MagicConstant")
     public FileListHeader(FilesPanel owner) {
 
         fPanel = owner;
@@ -138,20 +137,20 @@ public class FileListHeader extends JComponent {
         nameLabel = new JLabel(ResStrings.getString("strFileName"));
         nameLabel.setBackground(null);
         nameLabel.setForeground(Color.LIGHT_GRAY);
-        nameLabel.setHorizontalAlignment(0); // center
-        nameLabel.setFont(nameLabel.getFont().deriveFont(0));
+        nameLabel.setHorizontalAlignment(SwingConstants.CENTER); // center
+        nameLabel.setFont(nameLabel.getFont().deriveFont(Font.PLAIN));
 
         sizeLabel = new JLabel(ResStrings.getString("strFileSize"));
         sizeLabel.setBackground(null);
         sizeLabel.setForeground(Color.LIGHT_GRAY);
-        sizeLabel.setHorizontalAlignment(0); // center
-        sizeLabel.setFont(sizeLabel.getFont().deriveFont(0));
+        sizeLabel.setHorizontalAlignment(SwingConstants.CENTER); // center
+        sizeLabel.setFont(sizeLabel.getFont().deriveFont(Font.PLAIN));
 
         dateLabel = new JLabel(ResStrings.getString("strFileDate"));
         dateLabel.setBackground(null);
         dateLabel.setForeground(Color.LIGHT_GRAY);
-        dateLabel.setHorizontalAlignment(0); // center
-        dateLabel.setFont(dateLabel.getFont().deriveFont(0));
+        dateLabel.setHorizontalAlignment(SwingConstants.CENTER); // center
+        dateLabel.setFont(dateLabel.getFont().deriveFont(Font.PLAIN));
 
         add(nameLabel);
         add(sizeLabel);
@@ -160,7 +159,7 @@ public class FileListHeader extends JComponent {
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                if (osPan.isFoldersPanelVisible()) {
+                if (osPanel.isFoldersPanelVisible()) {
                     // nothing to do
                     return;
                 }
@@ -200,8 +199,8 @@ public class FileListHeader extends JComponent {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (osPan.isFoldersPanelVisible()) {
-                    osPan.showFoldersPanel(false);
+                if (osPanel.isFoldersPanelVisible()) {
+                    osPanel.showFoldersPanel(false);
                     return;
                 }
                 if (e.getButton() == MouseEvent.BUTTON1) {
@@ -308,7 +307,7 @@ public class FileListHeader extends JComponent {
         stateLayer.repaint();
 
         if (fPanel != null) {
-            fPanel.updateColumnWidths(nameWidth, sizeWidth, dateWidth);
+            fPanel.setFileListColumns(nameWidth, sizeWidth, dateWidth);
         }
     }
 
