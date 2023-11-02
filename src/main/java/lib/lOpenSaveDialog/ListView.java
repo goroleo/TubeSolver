@@ -135,7 +135,7 @@ public class ListView extends JComponent {
     /**
      * Transfer the FileItems list to the visual component to display it.
      */
-    public void updateView() {
+    public void refreshView() {
         this.removeAll();
         if (!list.isEmpty()) {
             for (FileItem item : list) {

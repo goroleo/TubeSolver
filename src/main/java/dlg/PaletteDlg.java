@@ -22,6 +22,7 @@ import run.Main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -58,12 +59,6 @@ public class PaletteDlg extends JDialog {
     private int btnHeight;
 
     /**
-     * Modal result of the dialog, a number of the button causes it to close.
-     */
-    @SuppressWarnings("unused")
-    public int modalResult = 3;
-
-    /**
      * Old palette colors, to restore the palette if the Cancel button will be pressed/clicked.
      */
     private static final Color[] oldPalette = new Color[palette.size() - 1];
@@ -73,7 +68,6 @@ public class PaletteDlg extends JDialog {
      *
      * @param owner the parent frame to center the dialog.
      */
-    @SuppressWarnings("MagicConstant")
     public PaletteDlg(JFrame owner) {
         super(owner, ResStrings.getString("strPalette"), true);
 
@@ -93,13 +87,13 @@ public class PaletteDlg extends JDialog {
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> clickButton(0),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> clickButton(1),
-                KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), // VK_ENTER + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // adding Palette panel
         palPan = new PalettePanel() {
@@ -127,7 +121,7 @@ public class PaletteDlg extends JDialog {
         cbShowChanges.setBackground(null);
         cbShowChanges.setForeground(null);
         cbShowChanges.setText(ResStrings.getString("strShowChanges"));
-        cbShowChanges.setFont(cbShowChanges.getFont().deriveFont(0));
+        cbShowChanges.setFont(cbShowChanges.getFont().deriveFont(Font.PLAIN));
         cbShowChanges.setIcon(Options.cbIconStandard);
         cbShowChanges.setSelectedIcon(Options.cbIconSelected);
         cbShowChanges.setBorderPainted(false);
@@ -225,7 +219,6 @@ public class PaletteDlg extends JDialog {
      * @param btnNum number of the button clicked
      */
     private void clickButton(int btnNum) {
-        modalResult = btnNum;
         switch (btnNum) {
             case -1: // pressed 'close window' button
             case 0: // pressed 'cancel' button

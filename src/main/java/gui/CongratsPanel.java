@@ -17,8 +17,7 @@ import run.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -81,6 +80,21 @@ public class CongratsPanel extends JComponent {
                 doClick();
             }
         });
+
+        registerKeyboardAction(
+                (ActionEvent e) -> doClick(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
+
+        registerKeyboardAction(
+                (ActionEvent e) -> doClick(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
+
+        registerKeyboardAction(
+                (ActionEvent e) -> doClick(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
     }
 
     @Override

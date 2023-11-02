@@ -37,6 +37,7 @@ public class MessageDlg extends JDialog {
      * The result of the dialog (pressed button number)
      */
     public int result = 0;
+
     @SuppressWarnings({"FieldCanBeLocal", "RedundantSuppression"})
     private final int dimX = 20, dimY = 20, w = 450;
 

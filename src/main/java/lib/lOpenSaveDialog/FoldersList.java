@@ -148,7 +148,7 @@ public class FoldersList extends ListView {
                 getList().add(pathItem);
             }
         }
-        updateView();
+        refreshView();
     }
 
     /**
