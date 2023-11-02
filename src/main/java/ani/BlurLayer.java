@@ -33,7 +33,7 @@ public class BlurLayer extends JComponent implements Runnable {
     private final int opaqueStep = 7;
 
     /**
-     * Time delay after every frame
+     * How many times will the loop run
      */
     @SuppressWarnings("FieldCanBeLocal")
     private final int blurCount = 50;
@@ -74,7 +74,10 @@ public class BlurLayer extends JComponent implements Runnable {
      */
     private BufferedImage frame;
 
-    boolean working = false;
+    /**
+     * True if the loop is working now
+     */
+    private boolean working = false;
 
     /**
      * Sets the original image.
@@ -124,7 +127,7 @@ public class BlurLayer extends JComponent implements Runnable {
         if (!working) {
             working = true;
             Thread t = new Thread(this);
-           t.start();
+            t.start();
         }
     }
 
@@ -134,8 +137,7 @@ public class BlurLayer extends JComponent implements Runnable {
      * <a href="https://github.com/impfromliga/LaplaceBlur">Code</a>.
      * <a href="https://habr.com/ru/articles/427077/">Description</a> (in Russian).
      */
-    @SuppressWarnings("SpellCheckingInspection")
-    private void blurFrame() {
+     private void blurFrame() {
 
         int x01 = 0x010101, x7f = 0x7f7f7f;
 
