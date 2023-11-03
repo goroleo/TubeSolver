@@ -304,38 +304,37 @@ public class ToolPanel extends JPanel {
      */
     public void updateButtons(int gameMode) {
 
-        switch (gameMode) {
-            case MainFrame.FILL_MODE:
-                buttons[0].setVisible(true);
-                buttons[0].setEnabled(true);
+        if (gameMode == MainFrame.BUSY_MODE) {
+            for (int i = 0; i < btnCount; i++)
+                if (buttons[i] != null)
+                    buttons[i].setEnabled(false);
+        } else {
 
-                buttons[2].setVisible(true);
-                buttons[2].setEnabled(true);
+            // these buttons are always visible & enabled
+            buttons[0].setVisible(true); // 0 - new game
+            buttons[0].setEnabled(true);
+            buttons[2].setVisible(true); // 2 - load game
+            buttons[2].setEnabled(true);
+            buttons[13].setVisible(true); // 13 - options
+            buttons[13].setEnabled(true);
+            buttons[14].setVisible(true); // 14 - change palette
+            buttons[14].setEnabled(true);
+            buttons[16].setVisible(true); // 16 - exit
+            buttons[16].setEnabled(true);
+
+            if (gameMode == MainFrame.FILL_MODE) {
                 buttons[3].setEnabled(true);  // 3 - save button
                 buttons[5].setVisible(false); // 5 - refresh board
                 buttons[6].setVisible(false); // 6 - solve button
                 buttons[8].setVisible(false); // 8 - undo move
                 buttons[9].setVisible(false); // 9 - replay / start again
-                buttons[10].setVisible(true); // 10 - clear all tubes 
+                buttons[10].setVisible(true); // 10 - clear all tubes
                 buttons[10].setEnabled(Palette.usedColors.getAllUsedColors() > 0);
                 buttons[11].setVisible(true); // 11 - auto fill button
                 buttons[11].setEnabled(true); // 11 - auto fill button
 
-                buttons[13].setVisible(true);
-                buttons[13].setEnabled(true);
-                buttons[14].setVisible(true);
-                buttons[14].setEnabled(true);
-                buttons[16].setVisible(true);
-                buttons[16].setEnabled(true);
-
-                break;
-            case MainFrame.PLAY_MODE:
-            case MainFrame.ASSIST_MODE:
-                buttons[0].setVisible(true);
-                buttons[0].setEnabled(true);
-                buttons[2].setVisible(true);
-                buttons[2].setEnabled(true);
-
+            } else if (gameMode == MainFrame.PLAY_MODE
+                    || gameMode == MainFrame.ASSIST_MODE) {
                 buttons[3].setEnabled(true); // 3 - save button
                 buttons[5].setVisible(true); // 5 - refresh board
                 buttons[5].setEnabled(true);
@@ -345,42 +344,18 @@ public class ToolPanel extends JPanel {
                 buttons[8].setEnabled(MainFrame.movesDone > 0);
                 buttons[9].setVisible(true); // 9 - replay / start again
                 buttons[9].setEnabled(MainFrame.movesDone > 0);
-                buttons[10].setVisible(false); // 10 - clear all tubes 
+                buttons[10].setVisible(false); // 10 - clear all tubes
                 buttons[11].setVisible(false); // 11 - auto fill button
 
-                buttons[13].setVisible(true);
-                buttons[13].setEnabled(true);
-                buttons[14].setVisible(true);
-                buttons[14].setEnabled(true);
-                buttons[16].setVisible(true);
-                buttons[16].setEnabled(true);
-
-                break;
-            case MainFrame.BUSY_MODE:
-                for (int i = 0; i < btnCount; i++)
-                    if (buttons[i] != null)
-                        buttons[i].setEnabled(false);
-                break;
-            default:
-                buttons[0].setVisible(true);
-                buttons[0].setEnabled(true);
-                buttons[2].setVisible(true);
-                buttons[2].setEnabled(true);
-
+            } else { // end game
                 buttons[3].setEnabled(false); // 3 - save button
                 buttons[5].setVisible(false); // 5 - refresh board
                 buttons[6].setVisible(false); // 6 - solve button
                 buttons[8].setVisible(false); // 8 - undo move
                 buttons[9].setVisible(false); // 9 - replay / start again
-                buttons[10].setVisible(false); // 10 - clear all tubes 
+                buttons[10].setVisible(false); // 10 - clear all tubes
                 buttons[11].setVisible(false); // 11 - auto fill button
-
-                buttons[13].setVisible(true);
-                buttons[13].setEnabled(true);
-                buttons[14].setVisible(true);
-                buttons[14].setEnabled(true);
-                buttons[16].setVisible(true);
-                buttons[16].setEnabled(true);
+            }
         }
 
         if (curMode != gameMode) {

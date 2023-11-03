@@ -97,9 +97,7 @@ public class OptionsDlg extends JDialog {
         getContentPane().add(languagePan);
         getContentPane().add(savePan);
 
-        calculateSize();
         calculatePos();
-
     }
 
     /**
@@ -304,14 +302,8 @@ public class OptionsDlg extends JDialog {
         }
         Options.langCode = ResStrings.getLangCode(num);
         ResStrings.setBundle(Options.langCode);
-        updateLanguage();
         Main.frame.updateLanguage();
-    }
 
-    /**
-     * Updates the frame components due to language changed.
-     */
-    private void updateLanguage() {
         setTitle(ResStrings.getString("strOptions"));
         btnOk.setText(ResStrings.getString("strOk"));
         btnCancel.setText(ResStrings.getString("strCancel"));
