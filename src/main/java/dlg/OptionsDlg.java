@@ -33,7 +33,7 @@ public class OptionsDlg extends JDialog {
     private final JPanel savePan = newPanel();
     private final int dimY = 40;
     private final int dimX = 40;
-    private int w = 400, h;
+    private int w = 400; // width
     private int oldLangNum;
     private final JCheckBox cbSaveAfterFill = newCheckBox();
     private final JCheckBox cbSaveAfterSolve = newCheckBox();
@@ -55,9 +55,42 @@ public class OptionsDlg extends JDialog {
         getContentPane().setLayout(null);
         setResizable(false);
 
-        addLanguages();
-        addSavingOptions();
+        // add languages
+        for (int i = 0; i < ResStrings.getLangsCount(); i++) {
+            JCheckBox cb = newCheckBox();
+            cb.setText(ResStrings.getLangName(i));
+            int langNum = i;
+            cb.addActionListener((ActionEvent e) -> setLangNum(langNum));
+            languagePan.add(cb);
+        }
+        getContentPane().add(languagePan);
 
+        // add saving options
+        cbSaveAfterFill.setLocation(dimX, dimY);
+        savePan.add(cbSaveAfterFill);
+        cbSaveAfterSolve.setLocation(dimX, dimY + 30);
+        savePan.add(cbSaveAfterSolve);
+        cbSaveBeforeClose.setLocation(dimX, dimY + 60);
+        savePan.add(cbSaveBeforeClose);
+        getContentPane().add(savePan);
+
+        btnOk = new LPictureButton(this, "btnDialog");
+        btnOk.setText(ResStrings.getString("strOk"));
+        btnOk.setBackground(null);
+        btnOk.setForeground(null);
+        btnOk.setFocusable(true);
+        btnOk.addActionListener((ActionEvent e) -> confirmAndClose());
+        add(btnOk);
+
+        btnCancel = new LPictureButton(this, "btnDialog");
+        btnCancel.setText(ResStrings.getString("strCancel"));
+        btnCancel.setBackground(null);
+        btnCancel.setForeground(null);
+        btnCancel.setFocusable(true);
+        btnCancel.addActionListener((ActionEvent e) -> refuseAndClose());
+        add(btnCancel);
+
+        // listeners
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -76,28 +109,6 @@ public class OptionsDlg extends JDialog {
                 (ActionEvent e) -> confirmAndClose(),
                 KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), // VK_ENTER + MASK_CTRL
                 JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
-
-        btnOk = new LPictureButton(this, "btnDialog");
-        btnOk.setText(ResStrings.getString("strOk"));
-        btnOk.setBackground(null);
-        btnOk.setForeground(null);
-        btnOk.setFocusable(true);
-        btnOk.addActionListener((ActionEvent e) -> confirmAndClose());
-        add(btnOk);
-
-        btnCancel = new LPictureButton(this, "btnDialog");
-        btnCancel.setText(ResStrings.getString("strCancel"));
-        btnCancel.setBackground(null);
-        btnCancel.setForeground(null);
-        btnCancel.setFocusable(true);
-        btnCancel.addActionListener((ActionEvent e) -> refuseAndClose());
-        add(btnCancel);
-
-
-        getContentPane().add(languagePan);
-        getContentPane().add(savePan);
-
-        calculatePos();
     }
 
     /**
@@ -126,24 +137,14 @@ public class OptionsDlg extends JDialog {
      * Resize dialog window due to language change.
      */
     private void resize() {
-        int maxCheckBoxWidth = cbSaveAfterFill.getPreferredSize().width;
-        if (cbSaveAfterSolve.getPreferredSize().width > maxCheckBoxWidth)
-            maxCheckBoxWidth = cbSaveAfterSolve.getPreferredSize().width;
-        if (cbSaveBeforeClose.getPreferredSize().width > maxCheckBoxWidth)
-            maxCheckBoxWidth = cbSaveBeforeClose.getPreferredSize().width;
-
-        if (w >= maxCheckBoxWidth + dimX * 2)
-            return;
-
-        w = maxCheckBoxWidth + dimX * 2;
-
-        cbSaveAfterFill.setSize(maxCheckBoxWidth, 24);
-        cbSaveAfterSolve.setSize(maxCheckBoxWidth, 24);
-        cbSaveBeforeClose.setSize(maxCheckBoxWidth, 24);
+        cbSaveAfterFill.setSize(w - dimX * 2, 24);
+        cbSaveAfterSolve.setSize(w - dimX * 2, 24);
+        cbSaveBeforeClose.setSize(w - dimX * 2, 24);
 
         int rows = ResStrings.getLangsCount() / 2;
         if (ResStrings.getLangsCount() > rows * 2) rows++;
         languagePan.setSize(w, dimY + rows * 30);
+        languagePan.setLocation(0, 0);
         savePan.setSize(w, dimY + 3 * 30 + 15);
         savePan.setLocation(0, languagePan.getHeight());
 
@@ -153,21 +154,16 @@ public class OptionsDlg extends JDialog {
             cb.setSize(w / 2 - dimX, 24);
         }
 
-        h = languagePan.getHeight() + savePan.getHeight() + dimY / 2 + btnCancel.getHeight();
-
         btnCancel.setLocation(
                 w - btnCancel.getWidth() - dimX,
                 languagePan.getHeight() + savePan.getHeight());
         btnOk.setLocation(
                 btnCancel.getLocation().x - btnOk.getWidth() - 15,
                 btnCancel.getLocation().y);
-        calculateSize();
-    }
 
-    private void calculateSize() {
         Dimension dim = new Dimension();
         dim.width = w;
-        dim.height = h;
+        dim.height = languagePan.getHeight() + savePan.getHeight() + dimY / 2 + btnCancel.getHeight();
         setPreferredSize(dim);
         pack();
 
@@ -180,7 +176,7 @@ public class OptionsDlg extends JDialog {
         setSize(dim);
     }
 
-    private void calculatePos() {
+    private void updatePos() {
         Rectangle r = getGraphicsConfiguration().getBounds();
         if (Options.odPositionX >= 0 && Options.odPositionY >= 0
                 && Options.odPositionX + getWidth() <= r.width
@@ -204,6 +200,7 @@ public class OptionsDlg extends JDialog {
             cbSaveAfterSolve.setSelected(Options.saveGameAfterSolve);
             cbSaveBeforeClose.setSelected(Options.saveGameBeforeClose);
             Main.frame.setGameMode(MainFrame.BUSY_MODE);
+            updatePos();
         }
         super.setVisible(b);
     }
@@ -251,45 +248,6 @@ public class OptionsDlg extends JDialog {
     }
 
     /**
-     * Adds checkboxes with available languages to the languages panel.
-     */
-    private void addLanguages() {
-        for (int i = 0; i < ResStrings.getLangsCount(); i++) {
-            JCheckBox cb = newCheckBox();
-            cb.setText(ResStrings.getLangName(i));
-            cb.setLocation((i % 2) == 0 ? dimX : w / 2, dimY + (i / 2) * 30);
-            cb.setSize(w / 2 - dimX, 24);
-            int langNum = i;
-            cb.addActionListener((ActionEvent e) -> setLangNum(langNum));
-            languagePan.add(cb);
-        }
-        int rows = ResStrings.getLangsCount() / 2;
-        if (ResStrings.getLangsCount() > rows * 2) rows++;
-        languagePan.setSize(w, dimY + rows * 30);
-        languagePan.setLocation(0, 0);
-    }
-
-    /**
-     * Adds checkboxes with auto-save options to the save panel.
-     */
-    private void addSavingOptions() {
-        savePan.setSize(w, dimY + 30 + 30 + 24 + 20);
-        savePan.setLocation(0, languagePan.getHeight());
-
-        cbSaveAfterFill.setLocation(dimX, dimY);
-        cbSaveAfterFill.setSize(w - dimX * 2, 24);
-        savePan.add(cbSaveAfterFill);
-
-        cbSaveAfterSolve.setLocation(dimX, dimY + 30);
-        cbSaveAfterSolve.setSize(w - dimX * 2, 24);
-        savePan.add(cbSaveAfterSolve);
-
-        cbSaveBeforeClose.setLocation(dimX, dimY + 60);
-        cbSaveBeforeClose.setSize(w - dimX * 2, 24);
-        savePan.add(cbSaveBeforeClose);
-    }
-
-    /**
      * Handles the language checkbox click / change.
      *
      * @param num number of the checkbox.
@@ -312,8 +270,15 @@ public class OptionsDlg extends JDialog {
         savePan.setName(ResStrings.getString("strSaveOptions"));
 
         cbSaveAfterFill.setText(ResStrings.getString("strSaveAfterFill"));
+        int maxCheckBoxWidth = cbSaveAfterFill.getPreferredSize().width;
         cbSaveAfterSolve.setText(ResStrings.getString("strSaveAfterSolve"));
+        if (cbSaveAfterSolve.getPreferredSize().width > maxCheckBoxWidth)
+            maxCheckBoxWidth = cbSaveAfterSolve.getPreferredSize().width;
         cbSaveBeforeClose.setText(ResStrings.getString("strSaveBeforeClose"));
+        if (cbSaveBeforeClose.getPreferredSize().width > maxCheckBoxWidth)
+            maxCheckBoxWidth = cbSaveBeforeClose.getPreferredSize().width;
+        w = Math.max(w, maxCheckBoxWidth + dimX * 2);
+
         resize();
     }
 
@@ -350,6 +315,5 @@ public class OptionsDlg extends JDialog {
         Options.odPositionX = getX();
         Options.odPositionY = getY();
     }
-
 
 }
