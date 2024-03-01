@@ -637,6 +637,7 @@ public class MainFrame extends JFrame {
         msgDlg.setVisible(true);
 
         if (msgDlg.result > 0) {
+            saveTempGame();                // avoids crash while solving
             setGameMode(BUSY_MODE);
             Options.numSolverRun++;
             solvePanel.startSolve(tubesPanel.getModel());
