@@ -19,11 +19,11 @@ import java.util.Comparator;
  */
 public class ColorMoveItem {
 
-    /**
-     * This move's number in moves array.
-     */
-    @Deprecated
-    private int number;     // Deprecated. Use array index instead
+//    /**
+//     * This move's number in moves array.
+//     */
+//    @Deprecated
+//    private int number;     // Deprecated. Use array index instead
 
     /**
      * Number (index) of the tube where we'll get the color(s). A.k.a. color's Donor.
@@ -80,7 +80,8 @@ public class ColorMoveItem {
      */
     public boolean doMove() {
         boolean result;
-        BoardModel bmOneOfParents;
+
+//      BoardModel bmOneOfParents;  // Unused! Use hashes instead
 
         // creating tubes' board after the move 
         bmAfter = new BoardModel();
@@ -107,7 +108,10 @@ public class ColorMoveItem {
                 // has any moves at new tubes board?
                 result = bmAfter.calculateMoves() > 0;
             }
-
+/*
+ *  remove "one of parents"
+ *  use every board's crc32 hash value instead
+ *
             if (result) {
                 // is it new configuration? wasn't there before? 
                 // are we going in circles?
@@ -117,6 +121,7 @@ public class ColorMoveItem {
                     bmOneOfParents = bmOneOfParents.parent;
                 } while (result && bmOneOfParents != null);
             }
+*/
         }
 
         if (!result) {

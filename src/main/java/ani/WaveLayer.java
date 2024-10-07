@@ -200,7 +200,7 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * If <b>true</b> then the cycle will work until the external break.
      */
-    private Boolean unlimited = true;
+    private boolean unlimited = true;
 
     /**
      * The switcher to replace the original image with the temporal, when the cycle will stop.

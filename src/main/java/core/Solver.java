@@ -9,6 +9,8 @@
  */
 package core;
 
+import java.util.ArrayList;
+
 import static gui.MainFrame.gameMoves;
 import static gui.MainFrame.movesDone;
 
@@ -21,7 +23,6 @@ public class Solver implements Runnable {
      * Current game board with some color tubes
      */
     private BoardModel board;
-
 
     /**
      * If <i>true</i> we have limited tries to solve the board and then to we have to stop and start with another color.
@@ -43,6 +44,12 @@ public class Solver implements Runnable {
      * It becomes <i>true</i> when user has pressed the BREAK key.
      */
     public boolean externalBreak;
+
+    /**
+     * The stack of hash values of all calculated board to avoid
+     * repeating and recalculating their moves.
+     */
+    private final ArrayList<Long> hashes = new ArrayList<>();
 
     /**
      * Constructor of the class Solver
@@ -120,6 +127,8 @@ public class Solver implements Runnable {
         // external break is true if a user interrupts process
         externalBreak = false;
 
+        hashes.clear();
+
         // time when the routine starts
         long startTime = System.currentTimeMillis();
 
@@ -130,18 +139,24 @@ public class Solver implements Runnable {
         if (move != null) { // if this board has any moves 
 
             do {
+                boolean moveSuccess = move.doMove();
 
-                // doMove returns true if the move was successful and false otherwise. 
-                if (move.doMove()) {
-
-                    // Successful (true) means we have a continuation.
-                    // So we'll put this move to the stack and go with a new combination
+                if (moveSuccess) {
                     // counts
                     // myCount++; // not used
                     breakCount++;
 
+                    // check if the board was any time before
+                    moveSuccess = !hashes.contains(move.bmAfter.hash);
+                }
+
+                if (moveSuccess) {
+
                     // now we'll go with a new tubes configuration that we got after the move
                     board = move.bmAfter;
+
+                    // add hash value of the new board to hashes stack
+                    hashes.add(board.hash);
 
                     // is it solved already?
                     solved = board.isSolved();
@@ -151,7 +166,7 @@ public class Solver implements Runnable {
                         move = board.currentMove;
                     }  // else the cycle will be finished
 
-                } else { // move.doMove() == false
+                } else { // unsuccessful move
 
                     // doMove wasn't successful due to any reason (no continue, repeated combination etc.)
                     // counts

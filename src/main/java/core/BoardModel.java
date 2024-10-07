@@ -9,10 +9,14 @@
  */
 package core;
 
-import static gui.Palette.usedColors;
-
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.zip.CRC32;
+
+import static gui.Palette.usedColors;
 
 /**
  * The logical model of the board with some color tubes.
@@ -43,6 +47,14 @@ public class BoardModel extends ArrayList<TubeModel> {
      * The move that resulted in the current configuration.
      */
     public ColorMoveItem parentMove;
+
+    /**
+     * Hash is a CRC32 value to compare this board to others. Call calculateHash()
+     * before using this value.
+     *
+     * @see #calculateHash()
+     */
+    public long hash;
 
     /**
      * Create the new tube object and add it to the list
@@ -92,12 +104,48 @@ public class BoardModel extends ArrayList<TubeModel> {
     }
 
     /**
+     * Calculates the hash value of this board to compare it to others.
+     * Using CRC32 algorithm.
+     */
+    public void calculateHash() {
+        int s = this.size();
+
+        // store and sort tubes
+        int[] stored = new int[s];
+        for (int i = 0; i < s; i++) {
+            stored[i] = this.get(i).storeColors();
+        }
+        Arrays.sort(stored);
+
+        // calculate crc32 checksum
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        DataOutputStream data = new DataOutputStream(bytes);
+        try {
+            for (int i = 0; i < s; i++) {
+                data.write((stored[i] >> 24) & 0xff);
+                data.write((stored[i] >> 16) & 0xff);
+                data.write((stored[i] >> 8) & 0xff);
+                data.write(stored[i] & 0xff);
+            }
+            data.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        CRC32 crc = new CRC32();
+        crc.update(bytes.toByteArray());
+        hash = crc.getValue();
+    }
+
+    /*
      * Is this board equal to another tubes board? The routine stores both
      * boards to integer arrays then sort and compares them.
      *
      * @param tm another tubes board
      * @return true or false
-     */
+     *
+     * !! unused !! Use hash value instead
+
     public boolean equalsTo(BoardModel tm) {
         boolean result = this.size() == tm.size();
 
@@ -125,6 +173,8 @@ public class BoardModel extends ArrayList<TubeModel> {
         }
         return result;
     }
+
+*/
 
     /**
      * Creates and adds new move to the move's list.
@@ -248,6 +298,8 @@ public class BoardModel extends ArrayList<TubeModel> {
      * @see ColorMoveItem
      */
     public int calculateMoves() {
+
+        calculateHash();
 
         int dColorsToGet; // donor's ColorsToGet
         int rColorsToGet; // recipient's ColorsToGet
