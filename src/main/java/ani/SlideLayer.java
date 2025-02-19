@@ -22,7 +22,6 @@ import java.awt.image.BufferedImage;
  * exponential function, not linear.<br>
  * Also, both of images can be <i>null</i>
  */
-@SuppressWarnings("FieldCanBeLocal")
 public class SlideLayer extends JComponent implements Runnable {
 
 // -----------------------------------------------------
@@ -31,11 +30,13 @@ public class SlideLayer extends JComponent implements Runnable {
     /**
      * Delay (in milliseconds) before start to calculate and draw the next frame.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int delay = 12;
 
     /**
      * Size of step for movement in every frame. Must be more than 0 and less than 1
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final double pathStep = 0.055d;
 
     /**
@@ -259,11 +260,11 @@ public class SlideLayer extends JComponent implements Runnable {
      * Positive vertical value means move an image to bottom / negative moves to top.
      * 0 means it stands right in the frame.
      *
-     * @param imgFirstHoriz horizontal position
+     * @param imgFirstHor horizontal position
      * @param imgFirstVert  vertical position
      */
-    public void setEndPosOfFirstImg(int imgFirstHoriz, int imgFirstVert) {
-        endH1 = imgFirstHoriz;
+    public void setEndPosOfFirstImg(int imgFirstHor, int imgFirstVert) {
+        endH1 = imgFirstHor;
         endV1 = imgFirstVert;
     }
 
@@ -273,11 +274,11 @@ public class SlideLayer extends JComponent implements Runnable {
      * Positive vertical value means move an image from bottom / negative moves from top.
      * 0 means it stands right in the frame.
      *
-     * @param imgSecondHoriz horizontal position
+     * @param imgSecondHor horizontal position
      * @param imgSecondVert  vertical position
      */
-    public void setStartPosOfSecondImg(int imgSecondHoriz, int imgSecondVert) {
-        startH2 = imgSecondHoriz;
+    public void setStartPosOfSecondImg(int imgSecondHor, int imgSecondVert) {
+        startH2 = imgSecondHor;
         startV2 = imgSecondVert;
     }
 

@@ -17,8 +17,7 @@ import run.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -81,6 +80,21 @@ public class CongratsPanel extends JComponent {
                 doClick();
             }
         });
+
+        registerKeyboardAction(
+                (ActionEvent e) -> doClick(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
+
+        registerKeyboardAction(
+                (ActionEvent e) -> doClick(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
+
+        registerKeyboardAction(
+                (ActionEvent e) -> doClick(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
     }
 
     @Override
@@ -112,8 +126,8 @@ public class CongratsPanel extends JComponent {
      */
     public void updateSizeAndPos() {
         Rectangle r = Main.frame.getTubesArea();
-        int w = Math.max(imgRibbon.getWidth(), MainFrame.tubesPan.getWidth());
-        int h = Math.max(imgRibbon.getHeight(), MainFrame.tubesPan.getHeight());
+        int w = Math.max(imgRibbon.getWidth(), MainFrame.tubesPanel.getWidth());
+        int h = Math.max(imgRibbon.getHeight(), MainFrame.tubesPanel.getHeight());
         setBounds(r.x + (r.width - w) / 2, r.y + (r.height - h) / 2, w, h);
     }
 
@@ -122,10 +136,10 @@ public class CongratsPanel extends JComponent {
      */
     public void doClick() {
 
-        for (int i = 0; i < MainFrame.tubesPan.getTubesCount(); i++) {
-            MainFrame.tubesPan.getTube(i).setClosed(true);
-            MainFrame.tubesPan.getTube(i).setFrame(4);
-            MainFrame.tubesPan.getTube(i).showFrame();
+        for (int i = 0; i < MainFrame.tubesPanel.getTubesCount(); i++) {
+            MainFrame.tubesPanel.getTube(i).setClosed(true);
+            MainFrame.tubesPanel.getTube(i).setFrame(4);
+            MainFrame.tubesPanel.getTube(i).showFrame();
         }
 
         setVisible(false);

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.LOpenSaveDialog.osPanel;
 import static lib.lOpenSaveDialog.OpenSavePanel.DEFAULT_EXT;
 
 /**
@@ -65,20 +65,19 @@ public class FolderChanger {
         return currentFolder;
     }
 
+    /* unused
     /**
      * This gets the full path of the current folder as a string.
      *
      * @return absolute path of the current folder.
-     */
-    @SuppressWarnings("unused")
     public String getFolderPath() {
         return currentFolder.getAbsolutePath();
     }
+    */
 
+    /* unused
     /**
      * @return the current file if it exists or null otherwise.
-     */
-    @SuppressWarnings("unused")
     public File getFile() {
         if (!"".equals(currentFileName)) {
             return OpenSavePanel.fsv.getChild(currentFolder, currentFileName);
@@ -86,6 +85,7 @@ public class FolderChanger {
             return null;
         }
     }
+    */
 
     /**
      * @return the current file name as string.
@@ -190,12 +190,12 @@ public class FolderChanger {
                 && folder.exists()
                 && folder.isDirectory()
                 && !currentFolder.getAbsolutePath().equals(folder.getAbsolutePath())) {
-            if (osPan != null)
-                osPan.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            if (osPanel != null)
+                osPanel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             currentFolder = folder;
             updateFolder();
-            if (osPan != null)
-                osPan.setCursor(Cursor.getDefaultCursor());
+            if (osPanel != null)
+                osPanel.setCursor(Cursor.getDefaultCursor());
         }
     }
 

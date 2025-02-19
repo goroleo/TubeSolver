@@ -20,7 +20,7 @@ import java.util.Properties;
 /**
  * All load and save routines for the application. And description of the file format when saves/loads the game.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("SpellCheckingInspection")
 public class TubesIO {
 
 ///////////////////////////////////////////////////////////////////////////
@@ -511,15 +511,16 @@ public class TubesIO {
 //
 ///////////////////////////////////////////////////////////////////////////
 
+    /* unused
     /**
      * Saving game data to an abstract output stream. Uses format version 2
      *
      * @param S stream to save JCTL format
      * @return true if success, false in other case
-     */
     public static boolean saveToStream(OutputStream S) {
         return saveToStream(S, 2);
     }
+     */
 
     /**
      * Saving game data to an abstract output stream
@@ -735,14 +736,15 @@ public class TubesIO {
         return result;
     }
 
+    /* unused
     /**
      * Saves JCTL format to specified file. Using format version 2 by default.
      *
-     * @param fileName file name ))
-     */
+     * @param fileName file name :)
     public static void saveToFile(String fileName) {
         saveToFile(fileName, 2);
     }
+     */
 
     /**
      * Saves JCTL format to specified file.

@@ -68,6 +68,8 @@ public class LHexTextField extends JTextField {
                     return;
                 }
                 boolean doInsert = true;
+
+                @SuppressWarnings("SpellCheckingInspection")
                 String chars = "0123456789ABCDEFabcdef";
                 for (int i = 0; i < str.length(); i++) {
                     if (!chars.contains(str.substring(i, i + 1))) {

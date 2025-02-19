@@ -109,10 +109,10 @@ public class ColorLabels extends JComponent {
         setBounds(0, 0, 118, 192);
     }
 
+    /* unused
     /**
      * Updates the panel in depends on the ColorScheme.
      * @see ColorPanel#getColorScheme()
-     */
     public void updateColorScheme() {
             if (cPanel.getColorScheme() == 0) {
                 lnRadioBri.setText("B");
@@ -123,6 +123,7 @@ public class ColorLabels extends JComponent {
             lnTextSat.updateColor();
             lnTextBri.updateColor();
     }
+    */
 
     /**
      * Updates the panel in depends on the DialogMode.

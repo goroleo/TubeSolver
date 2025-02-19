@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
  * by Fedor Tukmakov <a href="https://github.com/impfromliga">@impfromliga</a>.<br>
  * After blurring, this layer will be hidden by changing its opacity.
  */
-@SuppressWarnings({"FieldCanBeLocal", "SpellCheckingInspection"})
+@SuppressWarnings("SpellCheckingInspection")
 public class BlurLayer extends JComponent implements Runnable {
 
     /**
@@ -29,11 +29,13 @@ public class BlurLayer extends JComponent implements Runnable {
     /**
      * Step value of opaque for the next frame
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int opaqueStep = 7;
 
     /**
-     * Time delay after every frame
+     * How many times will the loop run
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int blurCount = 50;
 
     /**
@@ -44,9 +46,10 @@ public class BlurLayer extends JComponent implements Runnable {
     /**
      * Time delay after every frame
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int delay = 7;
 
-    /**
+     /**
      * An animation direction: blurring or hiding
      */
     private boolean appearing = true;
@@ -71,14 +74,10 @@ public class BlurLayer extends JComponent implements Runnable {
      */
     private BufferedImage frame;
 
-    boolean working = false;
-
     /**
-     * Creates of the blur layer.
+     * True if the loop is working now
      */
-    @SuppressWarnings("unused")
-    public BlurLayer() {
-    }
+    private boolean working = false;
 
     /**
      * Sets the original image.
@@ -97,7 +96,6 @@ public class BlurLayer extends JComponent implements Runnable {
                 buf[x + y * w] = bi.getRGB(x, y);
             }
         }
-//        setSize(w, h);
     }
 
     @Override
@@ -139,8 +137,7 @@ public class BlurLayer extends JComponent implements Runnable {
      * <a href="https://github.com/impfromliga/LaplaceBlur">Code</a>.
      * <a href="https://habr.com/ru/articles/427077/">Description</a> (in Russian).
      */
-    @SuppressWarnings("SpellCheckingInspection")
-    private void blurFrame() {
+     private void blurFrame() {
 
         int x01 = 0x010101, x7f = 0x7f7f7f;
 

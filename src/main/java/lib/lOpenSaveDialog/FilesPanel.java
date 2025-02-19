@@ -15,7 +15,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.LOpenSaveDialog.osPanel;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
@@ -60,8 +60,8 @@ public class FilesPanel extends JComponent implements FolderListener {
         viewport.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (osPan.isFoldersPanelVisible()) {
-                    osPan.showFoldersPanel(false);
+                if (osPanel.isFoldersPanelVisible()) {
+                    osPanel.showFoldersPanel(false);
                 }
             }
 
@@ -83,15 +83,15 @@ public class FilesPanel extends JComponent implements FolderListener {
 
             @Override
             public boolean isActive() {
-                return !osPan.isFoldersPanelVisible();
+                return !osPanel.isFoldersPanelVisible();
             }
 
             @Override
             public void mouseClicked(int mousePos) {
-                if (!osPan.isFoldersPanelVisible()) {
+                if (!osPanel.isFoldersPanelVisible()) {
                     super.mouseClicked(mousePos);
                 } else {
-                    osPan.showFoldersPanel(false);
+                    osPanel.showFoldersPanel(false);
                 }
             }
         };
@@ -238,8 +238,7 @@ public class FilesPanel extends JComponent implements FolderListener {
      * @param size width of the FileSize column.
      * @param date width of the FileDate column.
      */
-    @SuppressWarnings("unused")
-    public void updateColumnWidths(int name, int size, int date) {
+    public void setFileListColumns(@SuppressWarnings("unused") int name, int size, int date) {
         if (fileList != null) {
             fileList.setColumnWidths(size, date);
         }
@@ -252,7 +251,7 @@ public class FilesPanel extends JComponent implements FolderListener {
      * @param size width of the FileSize column.
      * @param date width of the FileDate column.
      */
-    public void setColumnWidths(int name, int size, int date) {
+    public void setHeaderColumns(int name, int size, int date) {
         header.setColumnWidths(name, size, date);
     }
 
@@ -310,7 +309,7 @@ public class FilesPanel extends JComponent implements FolderListener {
      * @param file File selected.
      */
     public void chooseFile(File file) {
-        osPan.setFileName(file);
+        osPanel.setFileName(file);
     }
 
     /**

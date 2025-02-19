@@ -22,7 +22,6 @@ import java.util.ArrayList;
  *     <li> <b>color</b> - color number (from the palette) of moved cell(s).
  * </ul>
  */
-@SuppressWarnings("unused")
 public class GameMoves extends ArrayList<Integer> {
 
     /*
@@ -41,14 +40,15 @@ public class GameMoves extends ArrayList<Integer> {
         return get(index);
     }
 
+    /* unused
     /**
      * Sets the move by its index.
-     * @param index index of the move
+     * @param index an index of the move
      * @param storedMove an integer value stored the move data
-     */
     public void setStoredMove(int index, int storedMove) {
         this.set(index, storedMove);
     }
+    */
 
     /**
      * Gets the tubeFrom value from the move with specific index.
@@ -100,36 +100,39 @@ public class GameMoves extends ArrayList<Integer> {
                 + (((int) color) & 0xff));
     }
 
+    /*  unused
     /**
      * Adds a game move to the specified place of the moves array.
      * @param index an array index to place this move before it.
      * @param idxFrom index (number) of the tubeFrom.
      * @param idxTo index (number) of the tubeTo.
      * @param count movesCount - how many colored cells were moved during this move.
-     * @param color color number (from the palette) of moved cell(s).
-     */
+     * @param color a color number (from the palette) of moved cell(s).
     public void addMove(int index, int idxFrom, int idxTo, int count, byte color) {
         this.add(index, ((idxFrom & 0xff) << 24)
                 + ((idxTo & 0xff) << 16)
                 + ((count & 0xff) << 8)
                 + (((int) color) & 0xff));
     }
+    */
 
+    /*  unused
     /**
      * Adds a game move to the end of the moves array.
      * @param storedMove an integer value that already has the stored move
-     */
     public void addMove(int storedMove) {
         this.add(storedMove);
     }
+    */
 
+    /*
     /**
      * Adds a game move to the specified place of the moves array.
      * @param index an array index to place this move before it.
      * @param storedMove an integer value that already has the stored move
-     */
     public void addMove(int index, int storedMove) {
         this.add(index, storedMove);
     }
+     */
 
 }

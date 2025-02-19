@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.LOpenSaveDialog.osPanel;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 
 /**
@@ -69,14 +69,14 @@ public class FolderComboBox extends JComponent implements FolderListener {
                     case KeyEvent.VK_UP:
                     case KeyEvent.VK_KP_UP:
                     case KeyEvent.VK_PAGE_UP:
-                        if (osPan.isFoldersPanelVisible()) {
+                        if (osPanel.isFoldersPanelVisible()) {
                             doClick();
                         }
                         break;
                     case KeyEvent.VK_PAGE_DOWN:
                     case KeyEvent.VK_DOWN:
                     case KeyEvent.VK_KP_DOWN:
-                        if (!osPan.isFoldersPanelVisible()) {
+                        if (!osPanel.isFoldersPanelVisible()) {
                             doClick();
                         }
                         break;
@@ -137,7 +137,7 @@ public class FolderComboBox extends JComponent implements FolderListener {
 
     @Override
     public void paintComponent(Graphics g) {
-        updateBtn();
+        updateImage();
 
         g.setColor(getBackground());
         g.fillRect(2, 2, getWidth() - 4, getHeight() - 4);
@@ -163,10 +163,10 @@ public class FolderComboBox extends JComponent implements FolderListener {
     /**
      * Updates UpDown image in depends on FoldersPanel visibility.
      */
-    public void updateBtn() {
+    public void updateImage() {
 
         BufferedImage imgSource;
-        if (osPan.isFoldersPanelVisible()) {
+        if (osPanel.isFoldersPanelVisible()) {
             imgSource = OpenSavePanel.imgBtnUp;
         } else {
             imgSource = OpenSavePanel.imgBtnDown;
@@ -187,8 +187,8 @@ public class FolderComboBox extends JComponent implements FolderListener {
      * Handles the mouse click event.
      */
     public void doClick() {
-        if (osPan != null) {
-            osPan.showFoldersPanel(this, !osPan.isFoldersPanelVisible());
+        if (osPanel != null) {
+            osPanel.showFoldersPanel(this, !osPanel.isFoldersPanelVisible());
         }
         repaint();
     }

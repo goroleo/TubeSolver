@@ -30,7 +30,7 @@ public class SolvePanel extends JComponent {
     /**
      * The solver of the game.
      */
-    private static Solver ts;
+    private static Solver tubeSolver;
 
     /**
      * The layer that blurs the MainFrame's content .
@@ -45,7 +45,7 @@ public class SolvePanel extends JComponent {
     /**
      * The button to cancel calculation solve.
      */
-    private static LPictureButton btn;
+    private static LPictureButton button;
 
     /**
      * How much tries before we'll break the solving and start it again with the new color
@@ -65,28 +65,26 @@ public class SolvePanel extends JComponent {
     /**
      * Creates the SolvePanel.
      */
-    @SuppressWarnings("unused")
     public SolvePanel() {
 
         setVisible(false);
         add(wheel);
 
-        btn = new LPictureButton(this, "btnDialog");
-        btn.setText(ResStrings.getString("strCancel"));
-        btn.setFocusable(true);
-        btn.addActionListener((ActionEvent e) -> stopSolver(1));
-        btn.setVisible(false);
-        add(btn);
+        button = new LPictureButton(this, "btnDialog");
+        button.setText(ResStrings.getString("strCancel"));
+        button.setFocusable(true);
+        button.addActionListener((ActionEvent e) -> stopSolver(1));
+        button.setVisible(false);
+        add(button);
 
         blur = new BlurLayer() {
 
-            @SuppressWarnings("unused")
             @Override
             public void onThreadFinished(boolean appeared) {
                 if (appeared) {
                     // after blurring shows the button and the wheel circle
-                    btn.setVisible(true);
-                    btn.requestFocus();
+                    button.setVisible(true);
+                    button.requestFocus();
                     wheel.setVisible(true);
                     wheel.start();
                 } else {
@@ -109,7 +107,6 @@ public class SolvePanel extends JComponent {
      *
      * @param startBoard - the current position at the game board that applies as the start combination.
      */
-    @SuppressWarnings("unused")
     public void startSolve(BoardModel startBoard) {
 
         BufferedImage img = new BufferedImage(
@@ -126,7 +123,7 @@ public class SolvePanel extends JComponent {
 
         breakCount = 100000;
 
-        ts = new Solver(startBoard, breakCount) {
+        tubeSolver = new Solver(startBoard, breakCount) {
             @Override
             public void onSolved() {
                 stopSolver(3);
@@ -146,7 +143,7 @@ public class SolvePanel extends JComponent {
                 }
             }
         };
-        ts.startSolve();
+        tubeSolver.startSolve();
     }
 
     /**
@@ -157,15 +154,15 @@ public class SolvePanel extends JComponent {
      */
     public void stopSolver(int result) {
 
-        if (result < 2 && ts != null) {
+        if (result < 2 && tubeSolver != null) {
             // solver is still working, we have to stop it before close.
-            ts.stopProcess();
+            tubeSolver.stopProcess();
         }
 
         solveResult = result;
         wheel.stop();
         wheel.setVisible(false);
-        btn.setVisible(false);
+        button.setVisible(false);
         blur.startHide();
         Main.frame.endSolve(solveResult);
     }
@@ -173,9 +170,8 @@ public class SolvePanel extends JComponent {
     /**
      * Updates a button caption when the language of the application is changed.
      */
-    @SuppressWarnings("unused")
     public void updateLanguage() {
-        btn.setText(ResStrings.getString("strCancel"));
+        button.setText(ResStrings.getString("strCancel"));
     }
 
     /**
@@ -184,13 +180,13 @@ public class SolvePanel extends JComponent {
     public void updateSizeAndPos() {
         setBounds(Main.frame.getContentPane().getBounds());
 
-        int h = wheel.getHeight() + btn.getHeight() + 30;
+        int h = wheel.getHeight() + button.getHeight() + 30;
         Rectangle r = Main.frame.getTubesArea();
 
         wheel.setLocation(r.x + (r.width - wheel.getWidth()) / 2,
                 r.y + (r.height - h) / 2);
-        btn.setLocation(r.x + (r.width - btn.getWidth()) / 2,
-                r.y + (r.height + h) / 2 - btn.getHeight());
+        button.setLocation(r.x + (r.width - button.getWidth()) / 2,
+                r.y + (r.height + h) / 2 - button.getHeight());
 
         blur.setSize(getSize());
     }

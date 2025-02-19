@@ -21,18 +21,12 @@ import java.util.function.Function;
 //         
 /////////////////////////////////////////////////////////
 
-
-// The most interesting class. It changes the current color, calculates new
-// values for all color components and then broadcast new values to all other
-// controls.
-
-
-
 /**
  * The color changer. It changes the current color, calculates new
  * values for all color components and then broadcast new values to all other
  * controls.
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class ColorChanger {
 
     /**
@@ -294,7 +288,6 @@ public class ColorChanger {
             calculateHSLfromRGB();
 //          calculateLABfromRGB(); // reserved for the future use
             clr = 0xff000000 | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
-
             invoker = obj;
             updateColor();
             invoker = null;
@@ -418,7 +411,7 @@ public class ColorChanger {
     }
 
 /////////////////////////////////////////////////////////
-//  Listeners routunes
+//  Listeners routines
 //
 
     /**

@@ -29,7 +29,6 @@ import java.awt.image.BufferedImage;
  * @see #axis
  * @see #forward
  */
-@SuppressWarnings({"unused", "FieldCanBeLocal"})
 public class WaveLayer extends JComponent implements Runnable {
 
 // -----------------------------------------------------
@@ -38,17 +37,20 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * Delay (in milliseconds) before start to calculate and draw next frame.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final int delay = 35;
 
     /**
      * Path Increment is the part of the picture which the wave pass in one frame. Can be from 0 to 1.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final float pathInc = 0.015f;
 
     /**
      * Alpha Increment is the alpha-channel value for appearing and disappearing whole the picture.
      * Master alpha-channel value increases (or decreases) whole the picture transparency in every single frame.
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final float alphaInc = 0.08f;
 
 // -----------------------------------------------------
@@ -88,6 +90,7 @@ public class WaveLayer extends JComponent implements Runnable {
      * @see #axis
      * @see #forward
      */
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
     @Deprecated
     private int direction = 0;   // deprecated
 
@@ -135,11 +138,13 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * Minimum opacity value (0 - fully transparent, 1 - fully opacity).
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final float minOpacity = 0.5f;
 
     /**
      * Maximum opacity value (0 - fully transparent, 1 - fully opacity).
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final float maxOpacity = 1.0f;
 
 // -----------------------------------------------------
@@ -174,7 +179,7 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * The size of the image's diagonal (in pixels).
      */
-    private float diagSize;
+    private float diagonalSize;
 
     /**
      * Size of the wave shape (in pixels).
@@ -248,7 +253,7 @@ public class WaveLayer extends JComponent implements Runnable {
         if (imgFrame == null || w != bi.getWidth() || h != bi.getHeight()) {
             w = bi.getWidth();
             h = bi.getHeight();
-            diagSize = (float) Math.sqrt(w * w + h * h);
+            diagonalSize = (float) Math.sqrt(w * w + h * h);
             calculateShapeSize();
             imgFrame = new BufferedImage(w, h, 2);
             setBounds(0, 0, w, h);
@@ -326,6 +331,7 @@ public class WaveLayer extends JComponent implements Runnable {
      * @see #axis
      * @see #forward
      */
+    @SuppressWarnings("unused")
     public void setDirection(int a, boolean f) {
         if (a >= 0 && a <= 3) {
             axis = a;
@@ -343,6 +349,7 @@ public class WaveLayer extends JComponent implements Runnable {
      * @param s space
      * @see #body
      */
+    @SuppressWarnings("unused")
     public void setWaveShape(float p, float b, float t, float s) {
         prow = p;
         body = b;
@@ -373,7 +380,7 @@ public class WaveLayer extends JComponent implements Runnable {
                 break;
             case 2: // diagonal 1 (SW-NE, BottomLeft to TopRight)
             case 3: // diagonal 2 (NW-SE, TopLeft to BottomRight)
-                shapeSize = shapeSize * diagSize;
+                shapeSize = shapeSize * diagonalSize;
         }
     }
 
@@ -414,6 +421,7 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * Starts the animation to show the picture. The cycle will repeat once: from full transparency to full opacity.
      */
+    @SuppressWarnings("unused")
     public void startShow() {
         curPos = -1.0f / (prow + body + tail + space);
         unlimited = false;
@@ -424,6 +432,7 @@ public class WaveLayer extends JComponent implements Runnable {
     /**
      * Starts the animation to hide the picture. The cycle will repeat once: from current opacity to full transparency.
      */
+    @SuppressWarnings("unused")
     public void startHide() {
         curPos = tailLimit - 1.0f / (prow + body + tail + space);
         disappear = true;
@@ -461,14 +470,14 @@ public class WaveLayer extends JComponent implements Runnable {
                 } else {
                     y = h - y;
                 }
-                coordinate = (x * w + y * h) / diagSize;
+                coordinate = (x * w + y * h) / diagonalSize;
                 break;
             default: // diagonal 2 (NW-SE, TopLeft - BottomRight)
                 if (forward) {
                     x = w - x;
                     y = h - y;
                 }
-                coordinate = (x * w + y * h) / diagSize;
+                coordinate = (x * w + y * h) / diagonalSize;
         }
 
         // second calculate the fraction and find alpha-channel value from the shape

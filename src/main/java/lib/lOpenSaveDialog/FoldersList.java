@@ -86,7 +86,7 @@ public class FoldersList extends ListView {
      * Fills the paths list. It scans the current folder path and finds the correct
      * root for the folder.
      *
-     * @param folder - current folder
+     * @param folder current folder
      */
     private void fillPaths(File folder) {
 
@@ -148,7 +148,7 @@ public class FoldersList extends ListView {
                 getList().add(pathItem);
             }
         }
-        updateView();
+        refreshView();
     }
 
     /**
@@ -164,19 +164,16 @@ public class FoldersList extends ListView {
         setCurrentItem(getItemByFile(folder));
     }
 
-    @SuppressWarnings("unused")
     @Override
     public void onItemClicked(FileItem item, MouseEvent e) {
         foldersPanel.chooseFolder(item);
     }
 
-    @SuppressWarnings("unused")
     @Override
     public void onItemEntered(FileItem item) {
         setCurrentItem(item);
     }
 
-    @SuppressWarnings("unused")
     @Override
     public void onItemPressed(FileItem item) {
         if (!foldersPanel.isFocusOwner()) {

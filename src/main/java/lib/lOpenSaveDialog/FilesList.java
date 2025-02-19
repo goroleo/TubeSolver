@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import static lib.lOpenSaveDialog.LOpenSaveDialog.osPan;
+import static lib.lOpenSaveDialog.LOpenSaveDialog.osPanel;
 import static lib.lOpenSaveDialog.OpenSavePanel.current;
 import static lib.lOpenSaveDialog.OpenSavePanel.fsv;
 
@@ -58,7 +58,7 @@ public class FilesList extends ListView {
                 }
             }
             doSort();
-            updateView();
+            refreshView();
         }
     }
 
@@ -70,8 +70,8 @@ public class FilesList extends ListView {
      * @param clickCount number of clicks
      */
     public void clickItem(FileItem item, int button, int clickCount) {
-        if (osPan.isFoldersPanelVisible()) {
-            osPan.showFoldersPanel(false);
+        if (osPanel.isFoldersPanelVisible()) {
+            osPanel.showFoldersPanel(false);
             return;
         }
         if (button == 1) { // left mouse button
@@ -90,7 +90,7 @@ public class FilesList extends ListView {
                         current.setFolder(item.getFile());
                     }
                 } else { // item is not a folder and clicks count is 2
-                    osPan.confirmAndClose();
+                    osPanel.confirmAndClose();
                 }
             } else { // clicks count is 1
                 setCurrentItem(item);
@@ -110,7 +110,7 @@ public class FilesList extends ListView {
 
     @Override
     public void onItemEntered(FileItem item) {
-        if (!osPan.isFoldersPanelVisible()) {
+        if (!osPanel.isFoldersPanelVisible()) {
             setMouseOverItem(item);
         }
     }

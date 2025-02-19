@@ -15,11 +15,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import static lib.lColorDialog.ColorPanel.current;
 
@@ -29,7 +28,6 @@ import static lib.lColorDialog.ColorPanel.current;
  * window.
  *
  */
-@SuppressWarnings("unused")
 public class LColorDialog extends JDialog {
 
     private final JFrame owner;
@@ -39,14 +37,11 @@ public class LColorDialog extends JDialog {
      */
     public static ColorPanel cPanel;
 
-    public LColorDialog(JFrame owner) {
-        this(owner, Color.white);
-    }
-
-    public LColorDialog(Color clr) {
-        this(null, clr);
-    }
-    
+    /**
+     * Creates the color chooser dialog
+     * @param owner owner frame to center the dialog
+     * @param clr initial color
+     */
     public LColorDialog(JFrame owner, Color clr) {
         super(owner, ResStrings.getString("strChangeColorTitle"), true);
         this.owner = owner;
@@ -96,7 +91,6 @@ public class LColorDialog extends JDialog {
         }
     }
     
-    @SuppressWarnings("MagicConstant")
     private void addListeners() {
         
         // CLOSE WINDOW click
@@ -111,13 +105,13 @@ public class LColorDialog extends JDialog {
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> cPanel.refuseAndClose(),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> cPanel.confirmAndClose(),
-                KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), // VK_ENTER + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
     }
 
     @Override
@@ -146,54 +140,118 @@ public class LColorDialog extends JDialog {
         cPanel.setDialogMode(newMode);
     }
 
+    /* unused
+    /**
+     * Gets the color scheme
+     * @return color scheme
+     * @see ColorPanel#getColorScheme()
     public int getColorScheme() {
         return cPanel.getColorScheme();
     }
+     */
+
+    /* unused
+    /**
+     * Sets the color scheme
+     * @param scheme color scheme
+     * @see ColorPanel#getColorScheme()
     public void setColorScheme(int scheme) {
         cPanel.setColorScheme(scheme);
     }
+     */
 
+    /* unused
+    /**
+     * Gets chosen color at RGB integer value: 0xAARRGGBB.
+     * @return RGB integer value.
     public int getColorValue() {
         return cPanel.getColor().getRGB();
     }
+     */
 
+    /**
+     * Gets chosen color.
+     * @return color
+     */
     public Color getColor() {
         return cPanel.getColor();
     }
 
+    /* unused
+    /**
+     * Sets the initial color.
+     * @param rgb color integer value: 0xAARRGGBB.
     public void setColor(int rgb) {
         cPanel.setColor(new Color(rgb));
     }
+     */
 
+    /* unused
+    /**
+     * Sets the initial color.
+     * @param clr color
     public void setColor(Color clr) {
         cPanel.setColor(clr);
     }
+     */
 
+    /* unused
+    /**
+     * Sets color to shows as previous color
+     * @param rgb color integer value: 0xAARRGGBB.
     public void setPrevColor(int rgb) {
         cPanel.setPrevColor(new Color(rgb));
     }
+     */
 
+    /* unused
+    /**
+     * Sets color to shows as previous color
+     * @param clr color
     public void setPrevColor(Color clr) {
         cPanel.setPrevColor(clr);
     }
+     */
 
+    /* unused
+    /**
+     * Sets the both color, initial and previous
+     * @param rgb color integer value: 0xAARRGGBB.
     public void setColors(int rgb) {
         setColors(new Color(rgb));
     }
+     */
 
+    /**
+     * Sets the both color, initial and previous
+     * @param clr color
+     */
     public void setColors(Color clr) {
         cPanel.setPrevColor(clr);
         cPanel.setColor(clr);
     }
 
+    /**
+     * Adds en external color's change listener
+     * @param toAdd listener
+     */
     public void addColorListener(ColorListener toAdd) {
         current.addListener(toAdd);
     }
 
+    /**
+     * Removes an external listener
+     * @param toRemove listener
+     */
+    @SuppressWarnings("unused")
     public void removeColorListener(ColorListener toRemove) {
         current.removeListener(toRemove);
     }
 
+    /**
+     * shows the color choose dialog
+     * @return chosen color
+     */
     public Color chooseColor() {
         setVisible(true);
         return current.getColor();

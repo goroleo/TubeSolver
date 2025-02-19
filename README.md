@@ -1,5 +1,5 @@
 # TubeSolver
-Introducing **TubeSolver**, another variation on the classic casual tube-to-tube color transfusion game.
+Introducing **TubeSolver**, another variation on the classic tube-to-tube color transfusion game.
 
 ## Key features
 Two modes of initial filling of tubes:
@@ -29,15 +29,21 @@ Language support: English, Russian, Ukrainian, Bulgarian. (Please report me any 
 
 ## License
 **MIT License.** 
+
 https://choosealicense.com/licenses/mit/ 
 
 Use it as you want. 
 
-## Compiling
-Made with pure Java Swing (Java 9), with neither any third-party libraries no any dependencies. All animation, drawings, pictures, dialogs are completely homemade.
+## Compiling 
+Made with pure Java Swing (Java 9), with neither third-party libraries no any dependencies. All animation, drawings, pictures, dialogs are completely homemade.
 
-To compile, just specify `run/Main.java` as the main class of the application.
+To compile just specify `run/Main.java` as the main class of the application. 
+
+The compiled JAR file is located in the `target` folder. Some saved games are in the `examples` folder.
+
+Tested at Windows 10 with OpenJDK20 and Linux Mint 21.2 (Ubuntu 22.04) with OpenJDK11.
 
 ## Screenshots
+![Screenshot1](/screenshot1.png)
 ![Screenshot2](/screenshot2.png)
 

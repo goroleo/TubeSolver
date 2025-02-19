@@ -49,7 +49,6 @@ public class NewFolderDialog extends JDialog{
      * @param owner parent frame/window to center this dialog. If <i>null</i>
      *              than this dialog will be placed in the center of the screen.
      */
-    @SuppressWarnings("MagicConstant")
     public NewFolderDialog(Window owner) {
         super(owner, ResStrings.getString("strNewFolder"), ModalityType.APPLICATION_MODAL);
         this.owner = owner;
@@ -67,7 +66,7 @@ public class NewFolderDialog extends JDialog{
         nameLabel.setForeground(null);
         nameLabel.setLocation(10, 10);
         nameLabel.setSize(w - 20, 22);
-        nameLabel.setFont(nameLabel.getFont().deriveFont(0));
+        nameLabel.setFont(nameLabel.getFont().deriveFont(Font.PLAIN));
         getContentPane().add(nameLabel);
 
         nameField = new LTextField() {
@@ -151,7 +150,6 @@ public class NewFolderDialog extends JDialog{
         }
     }
 
-    @SuppressWarnings("MagicConstant")
     private void addListeners() {
 
         // CLOSE WINDOW click
@@ -166,13 +164,13 @@ public class NewFolderDialog extends JDialog{
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> refuseAndClose(),
                 KeyStroke.getKeyStroke(0x1B, 0), // VK_ESCAPE
-                2); // WHEN_IN_FOCUSED_WINDOW
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
 
         // CTRL+ENTER pressed
         getRootPane().registerKeyboardAction(
                 (ActionEvent e) -> confirmAndClose(),
-                KeyStroke.getKeyStroke('\n', 2), // VK_ENTER + MASK_CTRL
-                2); // WHEN_IN_FOCUSED_WINDOW
+                KeyStroke.getKeyStroke('\n', InputEvent.CTRL_DOWN_MASK), // VK_ENTER + MASK_CTRL
+                JComponent.WHEN_IN_FOCUSED_WINDOW); // WHEN_IN_FOCUSED_WINDOW
     }
 
     /**

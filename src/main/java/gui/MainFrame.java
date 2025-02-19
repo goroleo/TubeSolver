@@ -132,27 +132,27 @@ public class MainFrame extends JFrame {
     /**
      * Application control panels: The panel of color buttons for manual fill mode
      */
-    public static PalettePanel palPan;
+    public static PalettePanel palettePanel;
 
     /**
      * Application control panels: The Tubes Board panel with color tubes
      */
-    public static BoardPanel tubesPan;
+    public static BoardPanel tubesPanel;
 
     /**
      * The toolbar with action buttons.
      */
-    public static final ToolPanel toolPan = new ToolPanel();
+    public static final ToolPanel toolPanel = new ToolPanel();
 
     /**
      * Application panels: The panel with congratulations that showing when the game is done
      */
-    private final static CongratsPanel congPan = new CongratsPanel();
+    private final static CongratsPanel congratsPanel = new CongratsPanel();
 
     /**
      * Application panels: The panel shows when application seeks for the solution
      */
-    private final static SolvePanel solvePan = new SolvePanel();
+    private final static SolvePanel solvePanel = new SolvePanel();
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -196,8 +196,7 @@ public class MainFrame extends JFrame {
         getContentPane().setLayout(null);
         getContentPane().setBackground(Palette.backgroundColor);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        Image img = Options.getAppIcon();
-        setIconImage(img);
+        setIconImage(Options.getAppIcon());
 
         int width = 1000; // default frame width
         int height = 760; // default frame height
@@ -223,14 +222,14 @@ public class MainFrame extends JFrame {
         }
 
         // Creating and adding panels except Palette & Tubes panels - they will be added in depend on the game mode.
-        solvePan.setVisible(false);
-        getLayeredPane().add(solvePan, JLayeredPane.MODAL_LAYER);
+        solvePanel.setVisible(false);
+        getLayeredPane().add(solvePanel, JLayeredPane.MODAL_LAYER);
 
-        congPan.setVisible(false);
-        getLayeredPane().add(congPan, JLayeredPane.MODAL_LAYER);
+        congratsPanel.setVisible(false);
+        getLayeredPane().add(congratsPanel, JLayeredPane.MODAL_LAYER);
 
-        toolPan.setVisible(true);
-        getLayeredPane().add(toolPan, JLayeredPane.PALETTE_LAYER);
+        toolPanel.setVisible(true);
+        getLayeredPane().add(toolPanel, JLayeredPane.PALETTE_LAYER);
 
         // Adding the background layer
         getLayeredPane().add(pattern, JLayeredPane.DEFAULT_LAYER);
@@ -276,21 +275,21 @@ public class MainFrame extends JFrame {
      * Closes the application frame and saves its options.
      */
     public void closeFrame() {
-        if (solvePan.isVisible()) {
-            solvePan.stopSolver(1);
+        if (solvePanel.isVisible()) {
+            solvePanel.stopSolver(1);
             return;
         }
 
         saveOptions();
         palette.savePalette();
-        if (toolPan != null) {
-            toolPan.saveOptions();
+        if (toolPanel != null) {
+            toolPanel.saveOptions();
         }
-        if (palPan != null) {
-            palPan.saveOptions();
+        if (palettePanel != null) {
+            palettePanel.saveOptions();
         }
-        if (tubesPan != null) {
-            tubesPan.saveOptions();
+        if (tubesPanel != null) {
+            tubesPanel.saveOptions();
         }
 
         Options.saveOptions();
@@ -308,13 +307,13 @@ public class MainFrame extends JFrame {
      */
     public void resizeFrame() {
         pattern.setBounds(getColorsArea());
-        toolPan.resize();
+        toolPanel.resize();
         updatePanelsPos();
-        if (congPan.isVisible()) {
-            congPan.updateSizeAndPos();
+        if (congratsPanel.isVisible()) {
+            congratsPanel.updateSizeAndPos();
         }
-        if (solvePan.isVisible()) {
-            solvePan.updateSizeAndPos();
+        if (solvePanel.isVisible()) {
+            solvePanel.updateSizeAndPos();
         }
     }
 
@@ -323,10 +322,10 @@ public class MainFrame extends JFrame {
      */
     public void updateLanguage() {
         setTitle(ResStrings.getString("strColorTubes"));
-        if (toolPan != null)
-            toolPan.updateLanguage();
-        if (solvePan != null)
-            solvePan.updateLanguage();
+        if (toolPanel != null)
+            toolPanel.updateLanguage();
+        if (solvePanel != null)
+            solvePanel.updateLanguage();
     }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -349,18 +348,18 @@ public class MainFrame extends JFrame {
             if (gameMode == FILL_MODE) {
                 addColorsPanel();
                 addTubesPanel(0, 0);
-                TubesIO.restoreTubes(tubesPan);
+                TubesIO.restoreTubes(tubesPanel);
                 filledTubes = TubesIO.getFilledTubes();
                 emptyTubes = TubesIO.getEmptyTubes();
 
                 for (int i = 0; i < filledTubes; i++) {
-                    ColorTube tube = tubesPan.getTube(i);
+                    ColorTube tube = tubesPanel.getTube(i);
                     for (int c = 0; c < tube.getColorsCount(); c++) {
                         int clr = tube.getColor(c);
                         Palette.usedColors.incColorCount((byte) clr);
-                        palPan.getButtonByColor(clr).decCount();
+                        palettePanel.getButtonByColor(clr).decCount();
                         if (Palette.usedColors.getColorCount((byte) clr) == 4) {
-                            palPan.getButtonByColor(clr).decCount();
+                            palettePanel.getButtonByColor(clr).decCount();
                         }
                     }
                 }
@@ -368,11 +367,11 @@ public class MainFrame extends JFrame {
                     disableUnusedColors();
                 }
                 for (int i = 0; i < emptyTubes; i++) {
-                    tubesPan.getTube(filledTubes + i).setClosed(true);
+                    tubesPanel.getTube(filledTubes + i).setClosed(true);
                 }
             } else {
                 addTubesPanel(0, 0);
-                TubesIO.restoreTubes(tubesPan);
+                TubesIO.restoreTubes(tubesPanel);
                 movesDone = TubesIO.restoreMoves(gameMoves);
             }
         }
@@ -392,13 +391,13 @@ public class MainFrame extends JFrame {
      * @param fileName name of the file.
      */
     public void saveGame(String fileName) {
-        if (tubesPan != null) {
+        if (tubesPanel != null) {
             if (gameMode != BUSY_MODE)
                 TubesIO.storeGameMode(gameMode);
             else
                 TubesIO.storeGameMode(prevMode);
 
-            TubesIO.storeTubes(tubesPan,
+            TubesIO.storeTubes(tubesPanel,
                     (gameMode != FILL_MODE) ? 0 : emptyTubes);
             TubesIO.storeMoves(gameMoves, movesDone);
             TubesIO.saveToFile(fileName, 2);
@@ -463,7 +462,7 @@ public class MainFrame extends JFrame {
         if (aMode != gameMode) {
             prevMode = gameMode;
             gameMode = aMode;
-            toolPan.updateButtons(aMode);
+            toolPanel.updateButtons(aMode);
         }
     }
 
@@ -471,24 +470,24 @@ public class MainFrame extends JFrame {
      * Clears the game board and prepares it to the new game.
      */
     public void clearBoard() {
-        congPan.setVisible(false);
-        solvePan.setVisible(false);
-        if (tubesPan != null) {
-            tubesPan.saveOptions();
-            getLayeredPane().remove(tubesPan);
-            tubesPan.emptyBoard();
-            tubesPan = null;
+        congratsPanel.setVisible(false);
+        solvePanel.setVisible(false);
+        if (tubesPanel != null) {
+            tubesPanel.saveOptions();
+            getLayeredPane().remove(tubesPanel);
+            tubesPanel.emptyBoard();
+            tubesPanel = null;
         }
-        if (palPan != null) {
-            palPan.saveOptions();
-            getLayeredPane().remove(palPan);
-            palPan.removeAll();
-            palPan = null;
+        if (palettePanel != null) {
+            palettePanel.saveOptions();
+            getLayeredPane().remove(palettePanel);
+            palettePanel.removeAll();
+            palettePanel = null;
         }
         gameMoves.clear();
         movesDone = 0;
         Palette.usedColors.clearColorCounts();
-        toolPan.updateButtons();
+        toolPanel.updateButtons();
         repaint();
     }
 
@@ -544,7 +543,6 @@ public class MainFrame extends JFrame {
         addTubesPanel(aFilled, aEmpty);
         filledTubes = aFilled;
         emptyTubes = aEmpty;
-//        tubesPan.paintImmediately(tubesPan.getBounds());
         autoFillTheRest();
     }
 
@@ -552,12 +550,15 @@ public class MainFrame extends JFrame {
      * Ends the fill mode and starts the game.
      */
     public void endFillMode() {
-        // hiding palette
-        if (palPan != null) {
-            palPan.setVisible(false);
+        // removing palette
+        if (palettePanel != null) {
+            palettePanel.setVisible(false);
+            palettePanel.saveOptions();
+            getLayeredPane().remove(palettePanel);
+            palettePanel.removeAll();
+            palettePanel = null;
             updateTubesPos();
         }
-        //
         setTubeTo(null);
 
         // starting PLAY_MODE
@@ -577,11 +578,11 @@ public class MainFrame extends JFrame {
     public void startPlayMode() {
         setGameMode(PLAY_MODE);
 
-        for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            tubesPan.getTube(i).setClosed(tubesPan.getTube(i).getModel().getState() == 3);
+        for (int i = 0; i < tubesPanel.getTubesCount(); i++) {
+            tubesPanel.getTube(i).setClosed(tubesPanel.getTube(i).getModel().getState() == 3);
         }
 
-        if (tubesPan.isSolved())
+        if (tubesPanel.isSolved())
             setGameMode(END_GAME);
         else {
             saveTempGame();
@@ -594,7 +595,7 @@ public class MainFrame extends JFrame {
      * Starts the Assistant play mode.
      */
     public void startAssistMode() {
-        if (tubesPan.isSolved())
+        if (tubesPanel.isSolved())
             setGameMode(END_GAME);
         else {
             setGameMode(ASSIST_MODE);
@@ -636,9 +637,10 @@ public class MainFrame extends JFrame {
         msgDlg.setVisible(true);
 
         if (msgDlg.result > 0) {
+            saveTempGame();                // avoids crash while solving
             setGameMode(BUSY_MODE);
             Options.numSolverRun++;
-            solvePan.startSolve(tubesPan.getModel());
+            solvePanel.startSolve(tubesPanel.getModel());
         } else {
             setGameMode(prevMode);
         }
@@ -700,15 +702,15 @@ public class MainFrame extends JFrame {
         saveTempOnExit = false;
         TubesIO.fileDelete(TubesIO.tempFileName);
 
-        for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            tubesPan.getTube(i).setClosed(true);
+        for (int i = 0; i < tubesPanel.getTubesCount(); i++) {
+            tubesPanel.getTube(i).setClosed(true);
         }
 
         setGameMode(END_GAME);
         gameMoves.clear();
         movesDone = 0;
 
-        congPan.setVisible(true);
+        congratsPanel.setVisible(true);
     }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -721,7 +723,7 @@ public class MainFrame extends JFrame {
      * Adds the Palette panel with Color Buttons in manual fill mode.
      */
     public void addColorsPanel() {
-        palPan = new PalettePanel() {
+        palettePanel = new PalettePanel() {
             @Override
             public void clickButton(ColorButton cb) {
                 clickColorButton(cb);
@@ -734,23 +736,23 @@ public class MainFrame extends JFrame {
                 super.changeColor(cb);
                 Color newColor = palette.getColor(colorNumber);
                 if (newColor != oldColor) {
-                    tubesPan.updateColor(colorNumber);
+                    tubesPanel.updateColor(colorNumber);
                 }
             }
 
             @Override
             public void setDefaultPalette() {
                 super.setDefaultPalette();
-                tubesPan.updateColors();
+                tubesPanel.updateColors();
             }
         };
         for (int i = 0; i < palette.size() - 1; i++) {
-            palPan.getButton(i).setCount(4);
+            palettePanel.getButton(i).setCount(4);
         }
-        palPan.addPopups();
-        palPan.reDock();
-        palPan.setVisible(true);
-        getLayeredPane().add(palPan, JLayeredPane.PALETTE_LAYER);
+        palettePanel.addPopups();
+        palettePanel.reDock();
+        palettePanel.setVisible(true);
+        getLayeredPane().add(palettePanel, JLayeredPane.PALETTE_LAYER);
     }
 
     /**
@@ -761,7 +763,7 @@ public class MainFrame extends JFrame {
      */
     public void addTubesPanel(int aFilled, int aEmpty) {
 
-        tubesPan = new BoardPanel() {
+        tubesPanel = new BoardPanel() {
             @Override
             public void clickTube(ColorTube tube) {
                 MainFrame.this.clickTube(tube);
@@ -791,14 +793,14 @@ public class MainFrame extends JFrame {
         if (aFilled + aEmpty > 0) {
             filledTubes = aFilled;
             emptyTubes = aEmpty;
-            tubesPan.addNewTubes(aFilled, aEmpty);
+            tubesPanel.addNewTubes(aFilled, aEmpty);
         }
 
-        tubesPan.setDockedTo(0);
-        tubesPan.restoreLocation();
+        tubesPanel.setDockedTo(0);
+        tubesPanel.restoreLocation();
 
-        getLayeredPane().add(tubesPan, JLayeredPane.PALETTE_LAYER);
-        tubesPan.setVisible(true);
+        getLayeredPane().add(tubesPanel, JLayeredPane.PALETTE_LAYER);
+        tubesPanel.setVisible(true);
     }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -820,15 +822,15 @@ public class MainFrame extends JFrame {
                 return tube.canPutColor(0) && tube != getTubeTo();
             case PLAY_MODE:
                 if (getTubeFrom() == null) {
-                    return tubesPan.canGetColor(tube);
+                    return tubesPanel.canGetColor(tube);
                 } else {
                     return tube.canPutColor(getTubeFrom().getCurrentColor())
                             && tube != getTubeFrom();
                 }
             case ASSIST_MODE:
                 return movesDone < gameMoves.size()
-                        && ((tubesPan.getTubeNumber(tube) == gameMoves.getTubeTo(movesDone)
-                        || tubesPan.getTubeNumber(tube) == gameMoves.getTubeFrom(movesDone))
+                        && ((tubesPanel.getTubeNumber(tube) == gameMoves.getTubeTo(movesDone)
+                        || tubesPanel.getTubeNumber(tube) == gameMoves.getTubeFrom(movesDone))
                         && (tube != getTubeFrom()));
             default:
                 return false;
@@ -841,7 +843,7 @@ public class MainFrame extends JFrame {
      * @return Donor color tube
      */
     public ColorTube getTubeFrom() {
-        return tubesPan.getTubeFrom();
+        return tubesPanel.getTubeFrom();
     }
 
     /**
@@ -850,7 +852,7 @@ public class MainFrame extends JFrame {
      * @param tube Donor color tube
      */
     public void setTubeFrom(ColorTube tube) {
-        tubesPan.setTubeFrom(tube);
+        tubesPanel.setTubeFrom(tube);
 
         if (gameMode == PLAY_MODE) {
             if (tube == null) {
@@ -862,13 +864,13 @@ public class MainFrame extends JFrame {
 
         } else if (gameMode == ASSIST_MODE) {
             if (tube == null) {
-                if (!tubesPan.isSolved()) {
+                if (!tubesPanel.isSolved()) {
                     setTubeTo(null);
                     showMove();
                 }
             } else {
                 tube.hideArrow();
-                ColorTube tubeTo = tubesPan.getTube(gameMoves.getTubeTo(movesDone));
+                ColorTube tubeTo = tubesPanel.getTube(gameMoves.getTubeTo(movesDone));
                 tubeTo.setArrow(ColorTube.ARROW_YELLOW);
                 tubeTo.setFrame(3);
 
@@ -885,7 +887,7 @@ public class MainFrame extends JFrame {
      * @return Recipient color tube
      */
     public ColorTube getTubeTo() {
-        return tubesPan.getTubeTo();
+        return tubesPanel.getTubeTo();
     }
 
     /**
@@ -898,26 +900,26 @@ public class MainFrame extends JFrame {
         int howMuch;
         if (gameMode == FILL_MODE) {
 
-            tubesPan.setTubeTo(tube);
+            tubesPanel.setTubeTo(tube);
             if (tube != null && getTubeTo() != null) {
                 getTubeTo().hideArrow();
             }
 
         } else if (gameMode == PLAY_MODE) {
             if (tube != null && getTubeFrom() != null) {
-                howMuch = tubesPan.moveColor(getTubeFrom(), tube);
+                howMuch = tubesPanel.moveColor(getTubeFrom(), tube);
                 if (howMuch > 0) {
                     gameMoves.addMove(
-                            tubesPan.getTubeNumber(getTubeFrom()),
-                            tubesPan.getTubeNumber(tube),
+                            tubesPanel.getTubeNumber(getTubeFrom()),
+                            tubesPanel.getTubeNumber(tube),
                             howMuch,
                             tube.getCurrentColor());
                     movesDone++;
-                    toolPan.updateButtons();
+                    toolPanel.updateButtons();
                 }
                 setTubeTo(null);
                 setTubeFrom(null);
-                if (tubesPan.isSolved()) {
+                if (tubesPanel.isSolved()) {
                     // do congratulations!
                     endGame();
                 }
@@ -925,11 +927,11 @@ public class MainFrame extends JFrame {
         } else if (gameMode == ASSIST_MODE) {
 
             if (tube != null) {
-                if (tubesPan.getTubeNumber(tube) == gameMoves.getTubeTo(movesDone)) {
-                    howMuch = tubesPan.moveColor(getTubeFrom(), tube);
+                if (tubesPanel.getTubeNumber(tube) == gameMoves.getTubeTo(movesDone)) {
+                    howMuch = tubesPanel.moveColor(getTubeFrom(), tube);
                     if (howMuch == gameMoves.getMoveCount(movesDone)) {
                         movesDone++;
-                        toolPan.updateButtons();
+                        toolPanel.updateButtons();
                     }
                     tube.hideArrow();
                     if (!tube.isClosed()) {
@@ -939,7 +941,7 @@ public class MainFrame extends JFrame {
 
                     getTubeFrom().hideArrow();
                     setTubeFrom(null);
-                    if (tubesPan.isSolved()) {
+                    if (tubesPanel.isSolved()) {
                         // do congratulations!
                         endGame();
                     } else {
@@ -960,11 +962,11 @@ public class MainFrame extends JFrame {
      * Starts to find the Donor tube. Sets all arrows to green.
      */
     public void startFindTubesFrom() {
-        for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            if (!tubesPan.getTube(i).isClosed()) {
-                tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_GREEN);
+        for (int i = 0; i < tubesPanel.getTubesCount(); i++) {
+            if (!tubesPanel.getTube(i).isClosed()) {
+                tubesPanel.getTube(i).setArrowWhenHide(ColorTube.ARROW_GREEN);
             } else {
-                tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_NO_COLOR);
+                tubesPanel.getTube(i).setArrowWhenHide(ColorTube.ARROW_NO_COLOR);
             }
         }
     }
@@ -973,11 +975,11 @@ public class MainFrame extends JFrame {
      * Starts to find the Recipient tube. Sets all arrows to yellow.
      */
     public void startFindTubesTo() {
-        for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            if (!tubesPan.getTube(i).isClosed()) {
-                tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_YELLOW);
+        for (int i = 0; i < tubesPanel.getTubesCount(); i++) {
+            if (!tubesPanel.getTube(i).isClosed()) {
+                tubesPanel.getTube(i).setArrowWhenHide(ColorTube.ARROW_YELLOW);
             } else {
-                tubesPan.getTube(i).setArrowWhenHide(ColorTube.ARROW_NO_COLOR);
+                tubesPanel.getTube(i).setArrowWhenHide(ColorTube.ARROW_NO_COLOR);
             }
         }
     }
@@ -1002,7 +1004,7 @@ public class MainFrame extends JFrame {
                     clrNum = tube.getCurrentColor();
                     tube.extractColor();
 
-                    ColorButton pb = palPan.getButtonByColor(clrNum);
+                    ColorButton pb = palettePanel.getButtonByColor(clrNum);
                     if (pb.getCount() <= 0) {
                         pb.setCount(1);
                     } else {
@@ -1011,7 +1013,7 @@ public class MainFrame extends JFrame {
                     Palette.usedColors.decColorCount(clrNum);
                 }
             }
-            toolPan.updateButtons();
+            toolPanel.updateButtons();
             setTubeTo(tube);
         }
     }
@@ -1021,17 +1023,17 @@ public class MainFrame extends JFrame {
      */
     public void clearAllTubes() {
         // clear all tubes
-        for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-            clearTube(tubesPan.getTube(i));
+        for (int i = 0; i < tubesPanel.getTubesCount(); i++) {
+            clearTube(tubesPanel.getTube(i));
         }
 
         // clear all buttons counts 
-        for (int i = 0; i < palPan.getColorsCount(); i++) {
-            palPan.getButton(i).setCount(4);
+        for (int i = 0; i < palettePanel.getColorsCount(); i++) {
+            palettePanel.getButton(i).setCount(4);
         }
 
         Palette.usedColors.clearColorCounts();
-        toolPan.updateButtons();
+        toolPanel.updateButtons();
         nextTubeTo(0);
     }
 
@@ -1045,8 +1047,8 @@ public class MainFrame extends JFrame {
         for (int i = 1; i < palette.size(); i++) {
             if (Palette.usedColors.getColorCount((byte) i) == 0) {
                 Palette.usedColors.setColorCount((byte) i, 4);
-                if (palPan != null)
-                    palPan.getButton(i - 1).setCount(-1);
+                if (palettePanel != null)
+                    palettePanel.getButton(i - 1).setCount(-1);
             }
         }
     }
@@ -1057,9 +1059,9 @@ public class MainFrame extends JFrame {
     public void autoFillTheRest() {
         fileNameEnding = ResStrings.getString("strSaveIDAutoFill");
         for (int t = 0; t < filledTubes; t++) {
-            for (int i = tubesPan.getTube(t).getColorsCount(); i < 4; i++) {
+            for (int i = tubesPanel.getTube(t).getColorsCount(); i < 4; i++) {
                 int clr = Palette.usedColors.getRandomColor();
-                tubesPan.getTube(t).putColor(clr);
+                tubesPanel.getTube(t).putColor(clr);
                 Palette.usedColors.incColorCount((byte) clr);
                 if (Palette.usedColors.getAllUsedColors() >= filledTubes) {
                     disableUnusedColors();
@@ -1067,7 +1069,7 @@ public class MainFrame extends JFrame {
             }
         }
         Options.numRandomFill ++;
-        tubesPan.paintImmediately(tubesPan.getBounds());
+        tubesPanel.paintImmediately(tubesPanel.getBounds());
         endFillMode();
     }
 
@@ -1086,19 +1088,19 @@ public class MainFrame extends JFrame {
         }
 
         ColorTube tube;
-        if (startNumber == tubesPan.getTubesCount()) {
-            startNumber -= tubesPan.getTubesCount();
+        if (startNumber == tubesPanel.getTubesCount()) {
+            startNumber -= tubesPanel.getTubesCount();
         }
         num = startNumber;
         do {
-            tube = tubesPan.getTube(num);
+            tube = tubesPanel.getTube(num);
             if (tube.canPutColor(0)) {
                 setTubeTo(tube);
                 done = true;
             }
             num++;
-            if (num == tubesPan.getTubesCount()) {
-                num -= tubesPan.getTubesCount();
+            if (num == tubesPanel.getTubesCount()) {
+                num -= tubesPanel.getTubesCount();
                 over = true;
             }
             if (num == startNumber && over) {
@@ -1127,8 +1129,8 @@ public class MainFrame extends JFrame {
                 getTubeTo().hideArrow();
             }
             if (gameMoves.size() > movesDone) {
-                ColorTube tFrom = tubesPan.getTube(gameMoves.getTubeFrom(movesDone));
-                ColorTube tTo = tubesPan.getTube(gameMoves.getTubeTo(movesDone));
+                ColorTube tFrom = tubesPanel.getTube(gameMoves.getTubeFrom(movesDone));
+                ColorTube tTo = tubesPanel.getTube(gameMoves.getTubeTo(movesDone));
 
                 tFrom.setArrow(ColorTube.ARROW_GREEN);
                 tFrom.showArrow();
@@ -1147,10 +1149,10 @@ public class MainFrame extends JFrame {
      */
     public void hideMove() {
         if (gameMode == ASSIST_MODE) {
-            for (int i = 0; i < tubesPan.getTubesCount(); i++) {
-                tubesPan.getTube(i).hideArrow();
-                if (!tubesPan.getTube(i).isClosed()) {
-                    tubesPan.getTube(i).hideFrame();
+            for (int i = 0; i < tubesPanel.getTubesCount(); i++) {
+                tubesPanel.getTube(i).hideArrow();
+                if (!tubesPanel.getTube(i).isClosed()) {
+                    tubesPanel.getTube(i).hideFrame();
                 }
             }
         }
@@ -1165,8 +1167,8 @@ public class MainFrame extends JFrame {
     public boolean canHideArrow(ColorTube tube) {
         if (gameMode == ASSIST_MODE) {
             return movesDone < gameMoves.size()
-                    && (tubesPan.getTubeNumber(tube) != gameMoves.getTubeFrom(movesDone))
-                    && (tubesPan.getTubeNumber(tube) != gameMoves.getTubeTo(movesDone));
+                    && (tubesPanel.getTubeNumber(tube) != gameMoves.getTubeFrom(movesDone))
+                    && (tubesPanel.getTubeNumber(tube) != gameMoves.getTubeTo(movesDone));
         }
         return true;
     }
@@ -1193,14 +1195,14 @@ public class MainFrame extends JFrame {
                     if (tubeTo.getColorsCount() < 4) {
                         tubeTo.putColor(cb.getColorNumber());
                         Palette.usedColors.incColorCount((byte) cb.getColorNumber());
-                        toolPan.updateButtons();
+                        toolPanel.updateButtons();
                         cb.decCount();
                         if (cb.getCount() == 0) {
                             cb.setCount(-1);
                         }
                     }
                     if (tubeTo.getColorsCount() == 4) {
-                        nextTubeTo(tubesPan.getTubeNumber(tubeTo) + 1);
+                        nextTubeTo(tubesPanel.getTubeNumber(tubeTo) + 1);
                     }
                     if (Palette.usedColors.getAllUsedColors() >= filledTubes) {
                         disableUnusedColors();
@@ -1233,13 +1235,13 @@ public class MainFrame extends JFrame {
                     setTubeFrom(null);
                 } else if (canShowArrow(tube)) {
                     setTubeTo(tube);
-                } else if (tubesPan.canGetColor(tube)) {
+                } else if (tubesPanel.canGetColor(tube)) {
                     setTubeFrom(tube);
                 }
                 break;
             case ASSIST_MODE:
                 if (getTubeFrom() == null) {
-                    if (!gameMoves.isEmpty() && tubesPan.getTubeNumber(tube) == gameMoves.getTubeFrom(movesDone)) {
+                    if (!gameMoves.isEmpty() && tubesPanel.getTubeNumber(tube) == gameMoves.getTubeFrom(movesDone)) {
                         setTubeFrom(tube);
                     } else {
                         if (!tube.isClosed() && !tube.isEmpty()) {
@@ -1259,7 +1261,7 @@ public class MainFrame extends JFrame {
                     }
                 } else if (getTubeFrom() == tube) {
                     setTubeFrom(null);
-                } else if (tubesPan.getTubeNumber(tube) == gameMoves.getTubeTo(movesDone)) {
+                } else if (tubesPanel.getTubeNumber(tube) == gameMoves.getTubeTo(movesDone)) {
                     setTubeTo(tube);
                 } else {
                     if (!tube.isClosed()) {
@@ -1307,21 +1309,21 @@ public class MainFrame extends JFrame {
      */
     public Rectangle getColorsArea() {
         Rectangle area = getClientArea();
-        if (toolPan != null) {
-            switch (toolPan.getDockedTo()) {
+        if (toolPanel != null) {
+            switch (toolPanel.getDockedTo()) {
                 case 0: // top
-                    area.y += toolPan.getHeight();
-                    area.height -= toolPan.getHeight();
+                    area.y += toolPanel.getHeight();
+                    area.height -= toolPanel.getHeight();
                     break;
                 case 1: // bottom
-                    area.height -= toolPan.getHeight();
+                    area.height -= toolPanel.getHeight();
                     break;
                 case 2: // left
-                    area.x += toolPan.getWidth();
-                    area.width -= toolPan.getWidth();
+                    area.x += toolPanel.getWidth();
+                    area.width -= toolPanel.getWidth();
                     break;
                 case 3: // right
-                    area.width -= toolPan.getWidth();
+                    area.width -= toolPanel.getWidth();
                     break;
             }
         }
@@ -1336,21 +1338,21 @@ public class MainFrame extends JFrame {
      */
     public Rectangle getTubesArea() {
         Rectangle area = getColorsArea();
-        if (palPan != null && palPan.isVisible()) {
-            switch (palPan.getDockedTo()) {
+        if (palettePanel != null && palettePanel.isVisible()) {
+            switch (palettePanel.getDockedTo()) {
                 case 0: // top
-                    area.y += palPan.getHeight();
-                    area.height -= palPan.getHeight();
+                    area.y += palettePanel.getHeight();
+                    area.height -= palettePanel.getHeight();
                     break;
                 case 1: // bottom
-                    area.height -= palPan.getHeight();
+                    area.height -= palettePanel.getHeight();
                     break;
                 case 2: // left
-                    area.x += palPan.getWidth();
-                    area.width -= palPan.getWidth();
+                    area.x += palettePanel.getWidth();
+                    area.width -= palettePanel.getWidth();
                     break;
                 case 3: // right
-                    area.width -= palPan.getWidth();
+                    area.width -= palettePanel.getWidth();
                     break;
             }
         }
@@ -1361,8 +1363,8 @@ public class MainFrame extends JFrame {
      * Re-docks and/or rearranges all panels after resizing the frame or re-docking.
      */
     public void updatePanelsPos() {
-        if (palPan != null) {
-            palPan.reDock();
+        if (palettePanel != null) {
+            palettePanel.reDock();
         }
         updateTubesPos();
         updateMinSize();
@@ -1372,8 +1374,8 @@ public class MainFrame extends JFrame {
      * Re-docks and/or rearranges the Tubes Board panel only.
      */
     public void updateTubesPos() {
-        if (tubesPan != null) {
-            tubesPan.reDock();
+        if (tubesPanel != null) {
+            tubesPanel.reDock();
         }
     }
 
@@ -1383,26 +1385,26 @@ public class MainFrame extends JFrame {
     public void updateMinSize() {
         Dimension dim = new Dimension(100, 100);
 
-        if (tubesPan != null) {
-            dim.width = tubesPan.getWidth();
-            dim.height = tubesPan.getHeight();
+        if (tubesPanel != null) {
+            dim.width = tubesPanel.getWidth();
+            dim.height = tubesPanel.getHeight();
 
-            if (palPan != null) {
-                if (palPan.getDockedTo() > 1) { // left, right
-                    dim.width += palPan.getWidth();
-                    dim.height = Math.max(dim.height, palPan.getHeight());
+            if (palettePanel != null) {
+                if (palettePanel.getDockedTo() > 1) { // left, right
+                    dim.width += palettePanel.getWidth();
+                    dim.height = Math.max(dim.height, palettePanel.getHeight());
                 } else { // top, bottom
-                    dim.width = Math.max(dim.width, palPan.getWidth());
-                    dim.height += palPan.getHeight();
+                    dim.width = Math.max(dim.width, palettePanel.getWidth());
+                    dim.height += palettePanel.getHeight();
                 }
             }
-            if (toolPan != null) {
-                if (toolPan.getDockedTo() > 1) { // left, right
-                    dim.width += toolPan.getToolbarY();
-                    dim.height = Math.max(dim.height, toolPan.getButtonsLength());
+            if (toolPanel != null) {
+                if (toolPanel.getDockedTo() > 1) { // left, right
+                    dim.width += toolPanel.getToolbarY();
+                    dim.height = Math.max(dim.height, toolPanel.getButtonsLength());
                 } else { // top, bottom
-                    dim.width = Math.max(dim.width, toolPan.getButtonsLength());
-                    dim.height += toolPan.getToolbarY();
+                    dim.width = Math.max(dim.width, toolPanel.getButtonsLength());
+                    dim.height += toolPanel.getToolbarY();
                 }
             }
 
